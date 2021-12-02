@@ -18,8 +18,7 @@ def genDict(directivesLst):
         directivesDict[title] = specs
     return directivesDict
 
-def fileParser(path):
-    directivesTxt = Path(path).read_text()
+def fileParser(directivesTxt):
     directivesLst = directivesTxt.split(dierectiveMarker)
     directivesLst = parseDirective(directivesLst)
     directiveDic = genDict(directivesLst)

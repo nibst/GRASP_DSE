@@ -1,6 +1,13 @@
+from pathlib import Path
 import readDirectivesFile
 
-dict = readDirectivesFile.fileParser('directivesFile.txt')
-for element in dict:
-    print(element)
-    print(dict[element])
+
+class Heuristic:
+
+    def __init__(self,filePath):
+        self.directivesTxt = Path(filePath).read_text()
+        
+    def parsedTxt(self):
+        return readDirectivesFile.fileParser(self.directivesTxt)
+    
+
