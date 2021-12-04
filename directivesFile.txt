@@ -1,5 +1,5 @@
+*
 pipeline
-
 pipe 1
 pipe 2
 *
@@ -8,6 +8,10 @@ df 1
 df 2
 *
 batata
-
 frita
 pure
+*
+carne
+vazio
+costela
+*

@@ -1,0 +1,81 @@
+{'diretivas': {'pipeline': '', 'dataflow': '', 'batata': '', 'carne': ''}, 'resultados': 5}
+{'diretivas': {'pipeline': '', 'dataflow': '', 'batata': '', 'carne': 'vazio'}, 'resultados': 4}
+{'diretivas': {'pipeline': '', 'dataflow': '', 'batata': '', 'carne': 'costela'}, 'resultados': 5}
+{'diretivas': {'pipeline': '', 'dataflow': '', 'batata': 'frita', 'carne': ''}, 'resultados': 2}
+{'diretivas': {'pipeline': '', 'dataflow': '', 'batata': 'frita', 'carne': 'vazio'}, 'resultados': 6}
+{'diretivas': {'pipeline': '', 'dataflow': '', 'batata': 'frita', 'carne': 'costela'}, 'resultados': 6}
+{'diretivas': {'pipeline': '', 'dataflow': '', 'batata': 'pure', 'carne': ''}, 'resultados': 2}
+{'diretivas': {'pipeline': '', 'dataflow': '', 'batata': 'pure', 'carne': 'vazio'}, 'resultados': 2}
+{'diretivas': {'pipeline': '', 'dataflow': '', 'batata': 'pure', 'carne': 'costela'}, 'resultados': 8}
+{'diretivas': {'pipeline': '', 'dataflow': 'df 1', 'batata': '', 'carne': ''}, 'resultados': 9}
+{'diretivas': {'pipeline': '', 'dataflow': 'df 1', 'batata': '', 'carne': 'vazio'}, 'resultados': 2}
+{'diretivas': {'pipeline': '', 'dataflow': 'df 1', 'batata': '', 'carne': 'costela'}, 'resultados': 0}
+{'diretivas': {'pipeline': '', 'dataflow': 'df 1', 'batata': 'frita', 'carne': ''}, 'resultados': 0}
+{'diretivas': {'pipeline': '', 'dataflow': 'df 1', 'batata': 'frita', 'carne': 'vazio'}, 'resultados': 7}
+{'diretivas': {'pipeline': '', 'dataflow': 'df 1', 'batata': 'frita', 'carne': 'costela'}, 'resultados': 7}
+{'diretivas': {'pipeline': '', 'dataflow': 'df 1', 'batata': 'pure', 'carne': ''}, 'resultados': 0}
+{'diretivas': {'pipeline': '', 'dataflow': 'df 1', 'batata': 'pure', 'carne': 'vazio'}, 'resultados': 8}
+{'diretivas': {'pipeline': '', 'dataflow': 'df 1', 'batata': 'pure', 'carne': 'costela'}, 'resultados': 5}
+{'diretivas': {'pipeline': '', 'dataflow': 'df 2', 'batata': '', 'carne': ''}, 'resultados': 3}
+{'diretivas': {'pipeline': '', 'dataflow': 'df 2', 'batata': '', 'carne': 'vazio'}, 'resultados': 6}
+{'diretivas': {'pipeline': '', 'dataflow': 'df 2', 'batata': '', 'carne': 'costela'}, 'resultados': 4}
+{'diretivas': {'pipeline': '', 'dataflow': 'df 2', 'batata': 'frita', 'carne': ''}, 'resultados': 3}
+{'diretivas': {'pipeline': '', 'dataflow': 'df 2', 'batata': 'frita', 'carne': 'vazio'}, 'resultados': 8}
+{'diretivas': {'pipeline': '', 'dataflow': 'df 2', 'batata': 'frita', 'carne': 'costela'}, 'resultados': 7}
+{'diretivas': {'pipeline': '', 'dataflow': 'df 2', 'batata': 'pure', 'carne': ''}, 'resultados': 9}
+{'diretivas': {'pipeline': '', 'dataflow': 'df 2', 'batata': 'pure', 'carne': 'vazio'}, 'resultados': 2}
+{'diretivas': {'pipeline': '', 'dataflow': 'df 2', 'batata': 'pure', 'carne': 'costela'}, 'resultados': 1}
+{'diretivas': {'pipeline': 'pipe 1', 'dataflow': '', 'batata': '', 'carne': ''}, 'resultados': 7}
+{'diretivas': {'pipeline': 'pipe 1', 'dataflow': '', 'batata': '', 'carne': 'vazio'}, 'resultados': 0}
+{'diretivas': {'pipeline': 'pipe 1', 'dataflow': '', 'batata': '', 'carne': 'costela'}, 'resultados': 8}
+{'diretivas': {'pipeline': 'pipe 1', 'dataflow': '', 'batata': 'frita', 'carne': ''}, 'resultados': 3}
+{'diretivas': {'pipeline': 'pipe 1', 'dataflow': '', 'batata': 'frita', 'carne': 'vazio'}, 'resultados': 7}
+{'diretivas': {'pipeline': 'pipe 1', 'dataflow': '', 'batata': 'frita', 'carne': 'costela'}, 'resultados': 7}
+{'diretivas': {'pipeline': 'pipe 1', 'dataflow': '', 'batata': 'pure', 'carne': ''}, 'resultados': 1}
+{'diretivas': {'pipeline': 'pipe 1', 'dataflow': '', 'batata': 'pure', 'carne': 'vazio'}, 'resultados': 1}
+{'diretivas': {'pipeline': 'pipe 1', 'dataflow': '', 'batata': 'pure', 'carne': 'costela'}, 'resultados': 7}
+{'diretivas': {'pipeline': 'pipe 1', 'dataflow': 'df 1', 'batata': '', 'carne': ''}, 'resultados': 5}
+{'diretivas': {'pipeline': 'pipe 1', 'dataflow': 'df 1', 'batata': '', 'carne': 'vazio'}, 'resultados': 9}
+{'diretivas': {'pipeline': 'pipe 1', 'dataflow': 'df 1', 'batata': '', 'carne': 'costela'}, 'resultados': 1}
+{'diretivas': {'pipeline': 'pipe 1', 'dataflow': 'df 1', 'batata': 'frita', 'carne': ''}, 'resultados': 3}
+{'diretivas': {'pipeline': 'pipe 1', 'dataflow': 'df 1', 'batata': 'frita', 'carne': 'vazio'}, 'resultados': 9}
+{'diretivas': {'pipeline': 'pipe 1', 'dataflow': 'df 1', 'batata': 'frita', 'carne': 'costela'}, 'resultados': 4}
+{'diretivas': {'pipeline': 'pipe 1', 'dataflow': 'df 1', 'batata': 'pure', 'carne': ''}, 'resultados': 7}
+{'diretivas': {'pipeline': 'pipe 1', 'dataflow': 'df 1', 'batata': 'pure', 'carne': 'vazio'}, 'resultados': 2}
+{'diretivas': {'pipeline': 'pipe 1', 'dataflow': 'df 1', 'batata': 'pure', 'carne': 'costela'}, 'resultados': 6}
+{'diretivas': {'pipeline': 'pipe 1', 'dataflow': 'df 2', 'batata': '', 'carne': ''}, 'resultados': 4}
+{'diretivas': {'pipeline': 'pipe 1', 'dataflow': 'df 2', 'batata': '', 'carne': 'vazio'}, 'resultados': 4}
+{'diretivas': {'pipeline': 'pipe 1', 'dataflow': 'df 2', 'batata': '', 'carne': 'costela'}, 'resultados': 2}
+{'diretivas': {'pipeline': 'pipe 1', 'dataflow': 'df 2', 'batata': 'frita', 'carne': ''}, 'resultados': 3}
+{'diretivas': {'pipeline': 'pipe 1', 'dataflow': 'df 2', 'batata': 'frita', 'carne': 'vazio'}, 'resultados': 6}
+{'diretivas': {'pipeline': 'pipe 1', 'dataflow': 'df 2', 'batata': 'frita', 'carne': 'costela'}, 'resultados': 6}
+{'diretivas': {'pipeline': 'pipe 1', 'dataflow': 'df 2', 'batata': 'pure', 'carne': ''}, 'resultados': 6}
+{'diretivas': {'pipeline': 'pipe 1', 'dataflow': 'df 2', 'batata': 'pure', 'carne': 'vazio'}, 'resultados': 8}
+{'diretivas': {'pipeline': 'pipe 1', 'dataflow': 'df 2', 'batata': 'pure', 'carne': 'costela'}, 'resultados': 4}
+{'diretivas': {'pipeline': 'pipe 2', 'dataflow': '', 'batata': '', 'carne': ''}, 'resultados': 6}
+{'diretivas': {'pipeline': 'pipe 2', 'dataflow': '', 'batata': '', 'carne': 'vazio'}, 'resultados': 4}
+{'diretivas': {'pipeline': 'pipe 2', 'dataflow': '', 'batata': '', 'carne': 'costela'}, 'resultados': 9}
+{'diretivas': {'pipeline': 'pipe 2', 'dataflow': '', 'batata': 'frita', 'carne': ''}, 'resultados': 6}
+{'diretivas': {'pipeline': 'pipe 2', 'dataflow': '', 'batata': 'frita', 'carne': 'vazio'}, 'resultados': 2}
+{'diretivas': {'pipeline': 'pipe 2', 'dataflow': '', 'batata': 'frita', 'carne': 'costela'}, 'resultados': 8}
+{'diretivas': {'pipeline': 'pipe 2', 'dataflow': '', 'batata': 'pure', 'carne': ''}, 'resultados': 8}
+{'diretivas': {'pipeline': 'pipe 2', 'dataflow': '', 'batata': 'pure', 'carne': 'vazio'}, 'resultados': 2}
+{'diretivas': {'pipeline': 'pipe 2', 'dataflow': '', 'batata': 'pure', 'carne': 'costela'}, 'resultados': 0}
+{'diretivas': {'pipeline': 'pipe 2', 'dataflow': 'df 1', 'batata': '', 'carne': ''}, 'resultados': 8}
+{'diretivas': {'pipeline': 'pipe 2', 'dataflow': 'df 1', 'batata': '', 'carne': 'vazio'}, 'resultados': 5}
+{'diretivas': {'pipeline': 'pipe 2', 'dataflow': 'df 1', 'batata': '', 'carne': 'costela'}, 'resultados': 5}
+{'diretivas': {'pipeline': 'pipe 2', 'dataflow': 'df 1', 'batata': 'frita', 'carne': ''}, 'resultados': 4}
+{'diretivas': {'pipeline': 'pipe 2', 'dataflow': 'df 1', 'batata': 'frita', 'carne': 'vazio'}, 'resultados': 0}
+{'diretivas': {'pipeline': 'pipe 2', 'dataflow': 'df 1', 'batata': 'frita', 'carne': 'costela'}, 'resultados': 6}
+{'diretivas': {'pipeline': 'pipe 2', 'dataflow': 'df 1', 'batata': 'pure', 'carne': ''}, 'resultados': 1}
+{'diretivas': {'pipeline': 'pipe 2', 'dataflow': 'df 1', 'batata': 'pure', 'carne': 'vazio'}, 'resultados': 0}
+{'diretivas': {'pipeline': 'pipe 2', 'dataflow': 'df 1', 'batata': 'pure', 'carne': 'costela'}, 'resultados': 0}
+{'diretivas': {'pipeline': 'pipe 2', 'dataflow': 'df 2', 'batata': '', 'carne': ''}, 'resultados': 1}
+{'diretivas': {'pipeline': 'pipe 2', 'dataflow': 'df 2', 'batata': '', 'carne': 'vazio'}, 'resultados': 7}
+{'diretivas': {'pipeline': 'pipe 2', 'dataflow': 'df 2', 'batata': '', 'carne': 'costela'}, 'resultados': 9}
+{'diretivas': {'pipeline': 'pipe 2', 'dataflow': 'df 2', 'batata': 'frita', 'carne': ''}, 'resultados': 9}
+{'diretivas': {'pipeline': 'pipe 2', 'dataflow': 'df 2', 'batata': 'frita', 'carne': 'vazio'}, 'resultados': 5}
+{'diretivas': {'pipeline': 'pipe 2', 'dataflow': 'df 2', 'batata': 'frita', 'carne': 'costela'}, 'resultados': 6}
+{'diretivas': {'pipeline': 'pipe 2', 'dataflow': 'df 2', 'batata': 'pure', 'carne': ''}, 'resultados': 7}
+{'diretivas': {'pipeline': 'pipe 2', 'dataflow': 'df 2', 'batata': 'pure', 'carne': 'vazio'}, 'resultados': 1}
+{'diretivas': {'pipeline': 'pipe 2', 'dataflow': 'df 2', 'batata': 'pure', 'carne': 'costela'}, 'resultados': 4}

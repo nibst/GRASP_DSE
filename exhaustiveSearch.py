@@ -14,19 +14,17 @@ class ExhaustiveSearch(Heuristic):
         return permutation
     
     def createSolutions(self,permutation):
+        solLst = []
         for diretivas in permutation:
             solution = Solution(diretivas)
             solution.runSynthesis()
-            print(diretivas)
-            print(solution.resultados)
-            
-            
-            
+            solLst.append(solution)
+        return solLst
+
+          
 
 
 
 
-h0 = ExhaustiveSearch('directivesFile.txt')
-permutation = h0.listOfDictsDirectives()
-h0.createSolutions(permutation)
+
 
