@@ -1,23 +1,22 @@
+from abc import ABC, abstractmethod
 from pathlib import Path
 import readDirectivesFile
-from solution import Solution
 
-class Heuristic:
+class Heuristic(ABC):
 
-    def __init__(self,filePath,outPath):
-        self.directivesTxt = Path(filePath).read_text()
-        self.outPath = outPath
-        
+
     def parsedTxt(self):
         return readDirectivesFile.fileParser(self.directivesTxt)
+    #Passa para o arquivo readDirectivesFile.py o texto lido do arquivo
 
-    def writeSolutions(self,data):
-        output = ""
-        for element in data:
-            diretivaResultado = str(element.__dict__)
-            output += diretivaResultado
-            output += "\n"
-        Path(self.outPath).write_text(output)
+    @abstractmethod                         # Métodos abstratos a serem herdados e implementados
+    def createSolutionsLst(self):           # pelas classes filhas, com suas especificidafes
+        pass
+    @abstractmethod
+    def writeSolutions(self):
+        pass
+      
+    
 
 
 
