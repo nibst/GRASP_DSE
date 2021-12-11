@@ -6,7 +6,7 @@ class Solution:
         
     
     def runSynthesis(self):
-        result = randrange(10)
+        result = randrange(100)
         self.resultados = result
     
     

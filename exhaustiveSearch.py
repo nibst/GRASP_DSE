@@ -13,12 +13,13 @@ class ExhaustiveSearch(Heuristic):
     #Gera soluções conforme métodos abaixo e as salva numa lista em solutions
     
 
+
     def listOfDictsDirectives(self):
         dictDir = self.parsedTxt()                  
         keys, values = zip(*dictDir.items())
-        permutation = [dict(zip(keys,v)) for v in itertools.product(*values)]
+        permutations = [dict(zip(keys,v)) for v in itertools.product(*values)]
         #Gera uma lista de dicionários contendo todas as permutações possívels entre diretivas e valores 
-        return permutation
+        return permutations
     
     def createSolutionsLst(self):
         permutation = self.listOfDictsDirectives()
