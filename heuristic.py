@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 import readDirectivesFile
+from pathlib import Path
 
 class Heuristic(ABC):
 
@@ -10,12 +11,22 @@ class Heuristic(ABC):
 
     
 
-    @abstractmethod                         # Métodos abstratos a serem herdados e implementados
-    def createSolutionsLst(self):           # pelas classes filhas, com suas especificidafes
+    @abstractmethod                         # Método abstrato a sere herdados e implementado
+    def createSolutionsLst(self):           # pelas classes filhas
         pass
-    @abstractmethod
+
     def writeSolutions(self):
-        pass
+        output = ""                         #Percorre a lista de diretivas da solução escolhida
+        data = self.solutions               #   pela heurística e o imprime usando a biblio Path
+
+        for element in data:
+            diretivaResultado = data[element]
+            output += '{'+element+' : '
+            output += diretivaResultado + '}'
+            output += "\n"
+            
+        print(output)
+        Path(self.outPath).write_text(output)
       
     
 

@@ -1,0 +1,12 @@
+{unroll gsm_div_label0 : }
+{array_partition gsm_abs : set_directive_array_partition -type block -factor 16 -dim 1 "gsm_abs" bitoff}
+{array_partition main inData : set_directive_array_partition -type block -factor 2 -dim 1 "main" inData}
+{array_partition main outData : set_directive_array_partition -type block -factor 8 -dim 1 "main" outData}
+{unroll Autocorrelation_label0 : set_directive_unroll -factor 3 "Autocorrelation/Autocorrelation_label0"}
+{unroll main_label0 : }
+{unroll main_label1 : set_directive_unroll "main/main_label1"}
+{pipeline main_label2 : set_directive_pipeline "main/main_label2"}
+{pipeline main_label0 : set_directive_pipeline "main/main_label0"}
+{pipeline main_label1 : }
+{loop_merge Reflection_coefficients : }
+{loop_merge Reflection_coefficients_label4 : set_directive_loop_merge "Reflection_coefficients/Reflection_coefficients_label4"}
