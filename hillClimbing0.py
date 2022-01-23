@@ -21,6 +21,7 @@ class HillClimbing(Heuristic):
                 if solution.resultados>best:
                     best = solution.resultados
                     currentBest[diretiva] = valor
+                elif solution.resultados<=best:
                     break
                 
         

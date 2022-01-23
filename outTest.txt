@@ -1,0 +1,3 @@
+{pipeline main_label0 : set_directive_pipeline "main/main_label0"}
+{array_partition main : set_directive_array_partition -type block -factor 10 -dim 0 "main" indata}
+{unroll sha_update_label4 : set_directive_unroll -factor 8 "sha_update/sha_update_label4"}
