@@ -1,4 +1,5 @@
 from random import randrange
+import os
 class Solution:
 
     def __init__(self,diretivas):
