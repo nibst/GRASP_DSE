@@ -1,22 +1,13 @@
 from ast import arguments
+from pickle import TRUE
+
+from setuptools import Require
 from greedy import Greedy
 from hillClimbing0 import HillClimbing
 import sys, os, subprocess, argparse
 
-# h0 = HillClimbing('test.txt','outTest.txt')
-# h0.writeSolutions()
 
-# h1 = HillClimbing('arq_input_aes.txt','outAesHill.txt')
-# h1.writeSolutions()
 
-# h2 = HillClimbing('arq_input_gsm.txt','outGsmHill.txt')
-# h2.writeSolutions()
-
-# h3 = HillClimbing('arq_input_sha.txt','outShaHill.txt')
-# h3.writeSolutions()
-
-# h4 = Greedy('arq_input_sha.txt','outShaGreedy.txt')
-# h4.writeSolutions()
 if __name__ == "__main__":
     #subprocess.call([r'C:\Xilinx\Vivado\2020.2\settings64.bat'])
     #benchmark = sys.argv[1]
@@ -40,17 +31,20 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
  
     # Adding optional argument
-    parser.add_argument("-c", "--cFile", help = "C input file")
-    parser.add_argument("-d", "--dFile", help = "Directives input file")
-    parser.add_argument("-p", "--prjFile", help = "Prj. top file")
+    parser.add_argument("-c", "--cFile", help = "C input file", required=TRUE)
+    parser.add_argument("-d", "--dFile", help = "Directives input file",required=TRUE)
+    parser.add_argument("-p", "--prjFile", help = "Prj. top file",required=TRUE)
 
  
     # Read arguments from command line
     args = parser.parse_args()
- 
-    if args.cFile:
-        print("Using: % s" % args.cFile)
-    if args.dFile:
-        print("Directives are in: % s" % args.dFile)
-    if args.prjFile:
-        print("Using: % s" % args.prjFile)
+    
+    filesDict = {}
+    filesDict['cFile'] = args.cFile
+    filesDict['dFile'] = args.dFile
+    filesDict['prjFile'] = args.prjFile
+
+
+    
+    shaHill0 = HillClimbing(filesDict,'outShaHill.txt')
+    shaHill0.writeSolutions()

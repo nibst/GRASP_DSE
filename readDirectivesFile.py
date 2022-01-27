@@ -27,7 +27,6 @@ def fileParser(directivesTxt):
     directivesLst = list(filter(lambda x: x!= '', directivesLst))
     directivesLst = parseDirective(directivesLst)
     directivesLst = [e for e in directivesLst if e]
-    print(directivesLst)
     directiveDic = genDict(directivesLst)
     
     return directiveDic
