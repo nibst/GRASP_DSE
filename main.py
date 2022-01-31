@@ -46,5 +46,5 @@ if __name__ == "__main__":
 
 
     
-    shaHill0 = HillClimbing(filesDict,'outShaHill.txt')
-    shaHill0.writeSolutions()
+    shaHill0 = HillClimbing(filesDict,'directives.tcl')
+    shaHill0.writeSolutionsTcl()

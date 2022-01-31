@@ -10,7 +10,6 @@ class Solution:
     
     def runSynthesis(self):
         result = randrange(100)
-        print(self.diretivas)
         self.resultados = result
     
     

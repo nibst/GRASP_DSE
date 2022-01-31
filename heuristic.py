@@ -25,10 +25,20 @@ class Heuristic(ABC):
             output += diretivaResultado + '}'
             output += "\n"
             
-        print(output)
+
         Path(self.outPath).write_text(output)
-      
     
+    def writeSolutionsTcl(self):
+        output = ""                         #Percorre a lista de diretivas da solução escolhida
+        data = self.solutions               #   pela heurística e o imprime usando a biblio Path
+
+        for element in data:
+            diretivaResultado = data[element]
+            if diretivaResultado != '':
+                output += diretivaResultado + "\n"
+        
+
+        Path(self.outPath).write_text(output)
 
 
 
