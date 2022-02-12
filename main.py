@@ -48,3 +48,4 @@ if __name__ == "__main__":
     
     shaHill0 = HillClimbing(filesDict,'directives.tcl')
     shaHill0.writeSolutionsDict()
+   

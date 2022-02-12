@@ -2,6 +2,7 @@ from abc import ABC, abstractmethod
 from importlib.resources import path
 import readDirectivesFile
 from pathlib import Path
+import os,glob
 
 class Heuristic(ABC):
 
@@ -30,26 +31,25 @@ class Heuristic(ABC):
             for diretiva in data[element]:
                 outputGeral+= diretiva + ':' + data[element][diretiva] +'\n'
                 outputSolution+= diretiva + ':' + data[element][diretiva] +'\n'
-             #   print (diretiva, ':', data[element][diretiva])
-            solDirPath = str(element) + '.txt'
-            Path(solDirPath).write_text(outputSolution)
-        Path(self.outPath).write_text(outputGeral)
             
-        pass
+            pathFolder = 'directivesBySolution'
+            files = glob.glob(pathFolder)
+            for file in files:
+                os.remove(file)
+            solDirPath =pathFolder+'/' + str(element) + '.tcl'
+            
+            try: os.mkdir(pathFolder)
+            except:pass
+            Path(solDirPath).write_text(outputSolution)
+        outPathGeneral='directivesGroupBySolution.tcl'
+        Path(outPathGeneral).write_text(outputGeral)
+
+
+        
             
         
     
-    def writeSolutionsTcl(self):
-        output = ""                         #Percorre a lista de dirpetivas da solução escolhida
-        data = self.solutions               #   pela heurística e o imprime usando a biblio Path
-        
-        for element in data:
-            diretivaResultado = data[element]
-            if diretivaResultado != '':
-                output += diretivaResultado + "\n"
-        
-
-        Path(self.outPath).write_text(output)
+    
 
     
 
