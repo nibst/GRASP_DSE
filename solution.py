@@ -7,9 +7,13 @@ class Solution:
         self.cFile = cFile
         self.prjFile = prjFile
         
-    
     def runSynthesis(self):
-        result = randrange(100)
-        self.resultados = result
-    
-    
+        resultados = {}
+        resultados['LUT'] = randrange(100)
+        resultados['FF'] = randrange(100)
+        resultados['DSP'] = randrange(100)
+        resultados['BRAM'] = randrange(100)
+        resultados['latency'] = randrange(100)
+
+        self.resultados = resultados
+   

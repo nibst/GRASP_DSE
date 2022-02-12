@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from importlib.resources import path
 import readDirectivesFile
 from pathlib import Path
 
@@ -12,26 +13,36 @@ class Heuristic(ABC):
     
 
     @abstractmethod                         # Método abstrato a sere herdados e implementado
-    def createSolutionsLst(self):           # pelas classes filhas
+    def createSolutionsDict(self):           # pelas classes filhas
         pass
 
-    def writeSolutions(self):
-        output = ""                         #Percorre a lista de diretivas da solução escolhida
+    def writeSolutionsDict(self):
+        outputGeral = ""    
+                             #Percorre a lista de diretivas da solução escolhida
         data = self.solutions               #   pela heurística e o imprime usando a biblio Path
 
+        
         for element in data:
-            diretivaResultado = data[element]
-            output += '{'+element+' : '
-            output += diretivaResultado + '}'
-            output += "\n"
+            outputSolution = ""
+            #print("########## \n#Solução de Índice " + str(element) + "\n------------")
+            outputGeral+="########## \n#Solucao de indice " + str(element) + "\n##########\n"
+            outputSolution+="########## \n#Solucao de indice " + str(element) + "\n##########\n"
+            for diretiva in data[element]:
+                outputGeral+= diretiva + ':' + data[element][diretiva] +'\n'
+                outputSolution+= diretiva + ':' + data[element][diretiva] +'\n'
+             #   print (diretiva, ':', data[element][diretiva])
+            solDirPath = str(element) + '.txt'
+            Path(solDirPath).write_text(outputSolution)
+        Path(self.outPath).write_text(outputGeral)
             
-
-        Path(self.outPath).write_text(output)
+        pass
+            
+        
     
     def writeSolutionsTcl(self):
-        output = ""                         #Percorre a lista de diretivas da solução escolhida
+        output = ""                         #Percorre a lista de dirpetivas da solução escolhida
         data = self.solutions               #   pela heurística e o imprime usando a biblio Path
-
+        
         for element in data:
             diretivaResultado = data[element]
             if diretivaResultado != '':
@@ -39,6 +50,9 @@ class Heuristic(ABC):
         
 
         Path(self.outPath).write_text(output)
+
+    
+
 
 
 
