@@ -33,9 +33,7 @@ class Heuristic(ABC):
                 outputSolution+= diretiva + ':' + data[element][diretiva] +'\n'
             
             pathFolder = 'directivesBySolution'
-            files = glob.glob(pathFolder)
-            for file in files:
-                os.remove(file)
+            
             solDirPath =pathFolder+'/' + str(element) + '.tcl'
             
             try: os.mkdir(pathFolder)
