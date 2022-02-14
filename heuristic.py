@@ -17,6 +17,15 @@ class Heuristic(ABC):
     def createSolutionsDict(self):           # pelas classes filhas
         pass
 
+    def writeDirectivesFile(self,directive,path):
+        output = ""
+        for element in directive:
+            output += element
+            output+= '\n'
+            output+=directive[element]
+            output+= '\n'
+        Path(path).write_text(output)
+
     def writeSolutionsDict(self):
         outputGeral = ""    
                              #Percorre a lista de diretivas da solução escolhida
@@ -42,19 +51,4 @@ class Heuristic(ABC):
         outPathGeneral='directivesGroupBySolution.tcl'
         Path(outPathGeneral).write_text(outputGeral)
 
-
-        
-            
-        
     
-    
-
-    
-
-
-
-
-    
-    
-
-

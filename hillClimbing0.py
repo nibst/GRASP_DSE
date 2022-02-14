@@ -1,4 +1,4 @@
-from importlib.metadata import files
+from importlib.metadata import PathDistribution, files
 from re import S
 from xml.dom.minidom import Element
 from heuristic import Heuristic
@@ -34,7 +34,9 @@ class HillClimbing(Heuristic):
             
             for option in dictDir[diretiva]:     #que o atual melhor. Isto quebra o laço e passa para
             
-                currentBest[diretiva] = option
+                currentBest[diretiva] = option 
+                self.writeDirectivesFile(currentBest,self.outPath)
+                       
                 solution = Solution(currentBest,self.cFile,self.prjFile)    #a próxima diretiva.
                 solution.runSynthesis()
                 
