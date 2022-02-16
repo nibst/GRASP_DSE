@@ -4,6 +4,7 @@ from xml.dom.minidom import Element
 from heuristic import Heuristic
 from pathlib import Path
 from solution import Solution
+from Script_tcl import generateScript
 import copy 
 
 class HillClimbing(Heuristic):
@@ -26,6 +27,7 @@ class HillClimbing(Heuristic):
         currentBest = {}
         solutionsDict = {}
         solutionIndex=0
+        generateScript(self, self.directivesTxt,self.cFile, self.prjFile)
         for diretiva in dictDir:  
 
             best = 0

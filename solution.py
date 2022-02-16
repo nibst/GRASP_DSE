@@ -6,8 +6,10 @@ class Solution:
         self.diretivas = diretivas
         self.cFile = cFile
         self.prjFile = prjFile
-        
+
+    
     def runSynthesis(self):
+
         resultados = {}
         resultados['LUT'] = randrange(100)
         resultados['FF'] = randrange(100)
