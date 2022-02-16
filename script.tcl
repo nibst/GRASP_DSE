@@ -3,13 +3,13 @@
 ## Please DO NOT edit it.
 ## Copyright (C) 1986-2020 Xilinx, Inc. All Rights Reserved.
 ############################################################
-open_project $nome_projeto
-set_top $fun_top
-add_files $arq_cpp
-open_solution "$solution_name"
+open_project Raise_dse
+set_top test.prj
+add_files hid.c
+open_solution "solution1"
 set_part {xcvu9p-flgb2104-1-e}
 create_clock -period 8 -name default
-source "$fonte_diretivas"
+source "..\directives.tcl"
 csim_design
 csynth_design
 cosim_design

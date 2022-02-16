@@ -15,7 +15,7 @@ def generateScript(self,diretivas, cFile, prjFile):
      result = src.substitute(subtituicoes)
 
      # open text file
-     text_file = open(r'..\script.tcl' , 'w')
+     text_file = open('script.tcl' , 'w')
  
      # write string to file
      text_file.write(result)
