@@ -8,56 +8,62 @@ from Script_tcl import generateScript
 import copy 
 
 class HillClimbing(Heuristic):
+
+
+    #A classe executa o a pseudo-heurística Hill-Climbing sobre as possíveis
+    #   combinações de diretivas contidas no arquivo 'dFile' fornecido via terminal.
+    #Um dicionário de soluções é criado.
+
     def __init__(self,filesDict,outPath):
         self.directivesTxt = Path(filesDict['dFile']).read_text()
-        self.cFile = filesDict['cFile']
+        self.cFiles = filesDict['cFiles']
         self.prjFile = filesDict['prjFile']
         self.outPath = outPath
         self.solutions = self.createSolutionsDict()
         
-    #Atributos dos caminhos dos arquivos de entrada e saída.
-    #Gera soluções conforme métodos abaixo e as salva numa lista em solutions
-        
+
 
     def createSolutionsDict(self):
-        pass
-        dictDir=self.parsedTxt() 
         
-        solutionLst = []
-        currentBest = {}
+        dictDir=self.parsedTxt() 
         solutionsDict = {}
+        final = dict.fromkeys(dictDir,None) #Cria um dicionário 'final' a partir do 'dictDir' mas 
+                                                #mantendo apenas os títulos das diretivas - seu valores são
+                                                #trocados por None
+            
         solutionIndex=0
-        generateScript(self, self.directivesTxt,self.cFile, self.prjFile)
+        generateScript(self, self.directivesTxt,self.cFiles, self.prjFile)
+        
         for diretiva in dictDir:  
-
-            best = 0
-
-            #print("###"+diretiva)     #Percorre o dict de diretivas procurando o melhor valor             
             
-            for option in dictDir[diretiva]:     #que o atual melhor. Isto quebra o laço e passa para
-            
-                currentBest[diretiva] = option 
-                self.writeDirectivesFile(currentBest,self.outPath)
+            bestLUT = 999
+            ##print(dictDir[diretiva])
+            for option in dictDir[diretiva]:     
+                
+                if option == '':
+                    option = None
+                
+                
                        
-                solution = Solution(currentBest,self.cFile,self.prjFile)    #a próxima diretiva.
+                final[diretiva] = option
+                solution = Solution(final,self.cFiles,self.prjFile)    
                 solution.runSynthesis()
+                                                            #Progressivamente popula o dicionário 'final' e cria
+                                                                #Solutions a partir deste
                 
                 
-                if solution.resultados['LUT']>best:
-                    best = solution.resultados['LUT']
-                    #print("Best: "+option)
-                    #print(best)
+                if solution.resultados['LUT']<bestLUT:          #mantendo aquelas onde o nro de LUTs é estritamente
+                    bestLUT = solution.resultados['LUT']        #menor que o da anterior.
                     
-                    currentBest[diretiva] = option
-                    
-                    deep = copy.deepcopy(solution.diretivas)   #shallow copia os dados em cada ireração
-                    
+                    deep = copy.deepcopy(solution)   
                     solutionsDict[solutionIndex] = deep
                     solutionIndex+=1
                                         
-                if solution.resultados['LUT']<best:
+                if solution.resultados['LUT']>bestLUT:
                     break
-        
+
+                                    # Retorna o dicionário de soluções para o 'main'
+    
         return solutionsDict
 
     

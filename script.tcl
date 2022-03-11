@@ -5,7 +5,7 @@
 ############################################################
 open_project Raise_dse
 set_top test.prj
-add_files hid.c
+add_files ['hid.c', 'example.c']
 open_solution "solution1"
 set_part {xcvu9p-flgb2104-1-e}
 create_clock -period 8 -name default

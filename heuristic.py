@@ -17,38 +17,41 @@ class Heuristic(ABC):
     def createSolutionsDict(self):           # pelas classes filhas
         pass
 
-    def writeDirectivesFile(self,directive,path):
-        output = ""
-        for element in directive:
-            output += element
-            output+= '\n'
-            output+=directive[element]
-            output+= '\n'
-        Path(path).write_text(output)
+    # def writeDirectivesFile(self,directive,path):
+    #     output = ""
+    #     for element in directive:
+    #         output += element
+    #         output+= '\n'
+    #         output+=directive[element]
+    #         output+= '\n'
+    #     Path(path).write_text(output)
 
     def writeSolutionsDict(self):
         outputGeral = ""    
-                             #Percorre a lista de diretivas da solução escolhida
-        data = self.solutions               #   pela heurística e o imprime usando a biblio Path
-
-        
-        for element in data:
+                             
+        data = self.solutions               
+                
+        for solutionNmbr in data:
             outputSolution = ""
-            #print("########## \n#Solução de Índice " + str(element) + "\n------------")
-            outputGeral+="########## \n#Solucao de indice " + str(element) + "\n##########\n"
-            outputSolution+="########## \n#Solucao de indice " + str(element) + "\n##########\n"
-            for diretiva in data[element]:
-                outputGeral+= diretiva + ':' + data[element][diretiva] +'\n'
-                outputSolution+= diretiva + ':' + data[element][diretiva] +'\n'
+        #     outputGeral+="########## \n#Solucao de indice " + str(element) + "\n##########\n"
+            outputSolution+="########## \n#Solucao de indice " + str(solutionNmbr) + "\n##########\n"
+            #print(solutionNmbr)
+            #print(data[solutionNmbr].diretivas)
+            for diretiva in data[solutionNmbr].diretivas:
+                #print(diretiva)
+                #print(data[solutionNmbr].diretivas[diretiva])
+        #         outputGeral+= diretiva + ':' + data[element][diretiva] +'\n'
+                outputSolution+= diretiva + ' : ' + str(data[solutionNmbr].diretivas[diretiva]) +'\n'
+            print (outputSolution)
             
-            pathFolder = 'directivesBySolution'
+        #     pathFolder = 'directivesBySolution'
             
-            solDirPath =pathFolder+'/' + str(element) + '.tcl'
+        #     solDirPath =pathFolder+'/' + str(element) + '.tcl'
             
-            try: os.mkdir(pathFolder)
-            except:pass
-            Path(solDirPath).write_text(outputSolution)
-        outPathGeneral='directivesGroupBySolution.tcl'
-        Path(outPathGeneral).write_text(outputGeral)
+        #     try: os.mkdir(pathFolder)
+        #     except:pass
+        #     Path(solDirPath).write_text(outputSolution)
+        # outPathGeneral='directivesGroupBySolution.tcl'
+        # Path(outPathGeneral).write_text(outputGeral)
 
     
