@@ -4,8 +4,14 @@ from xml.dom.minidom import Element
 from heuristic import Heuristic
 from pathlib import Path
 from solution import Solution
+from solutionTimeXLUT import SolutionTimeXLUT
 from Script_tcl import generateScript
-import copy 
+
+import time
+from datetime import timedelta
+
+import copy
+
 
 class HillClimbing(Heuristic):
 
@@ -27,6 +33,7 @@ class HillClimbing(Heuristic):
         
         dictDir=self.parsedTxt() 
         solutionsDict = {}
+        txlDict = {}
         final = dict.fromkeys(dictDir,None) #Cria um dicionário 'final' a partir do 'dictDir' mas 
                                                 #mantendo apenas os títulos das diretivas - seu valores são
                                                 #trocados por None
@@ -45,11 +52,14 @@ class HillClimbing(Heuristic):
                 
                 
                        
-                final[diretiva] = option
-                solution = Solution(final,self.cFiles,self.prjFile)    
-                solution.runSynthesis()
-                                                            #Progressivamente popula o dicionário 'final' e cria
-                                                                #Solutions a partir deste
+                final[diretiva] = option                             #Progressivamente popula o dicionário 'final' e cria
+                solution = Solution(final,self.cFiles,self.prjFile)         #Solutions a partir deste
+                solutionTimeXLUT = SolutionTimeXLUT(solution)
+                
+                timeXLUT = solutionTimeXLUT.runSynthesisTXL()
+                
+                                                            
+                                                                
                 
                 
                 if solution.resultados['LUT']<bestLUT:          #mantendo aquelas onde o nro de LUTs é estritamente
@@ -57,6 +67,7 @@ class HillClimbing(Heuristic):
                     
                     deep = copy.deepcopy(solution)   
                     solutionsDict[solutionIndex] = deep
+                    txlDict[solutionIndex] = timeXLUT
                     solutionIndex+=1
                                         
                 if solution.resultados['LUT']>bestLUT:
