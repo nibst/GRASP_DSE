@@ -54,4 +54,35 @@ class Heuristic(ABC):
         # outPathGeneral='directivesGroupBySolution.tcl'
         # Path(outPathGeneral).write_text(outputGeral)
 
-    
+    def __compareSolutions(self,Solution1,Solution2,metric1,metric2):
+        #testa se a Solution1  domina a Solution2
+        return ((Solution2.resultados[metric1]>Solution1.resultados[metric1]) and (Solution2.resultados[metric2] > Solution1.resultados[metric2]))
+    def paretoSolutions(self,metric1,metric2 ):
+        """consegue as soluções que são dominadas por outras. Eliminas essas soluções, resultando só nas que são pareto"""
+        toRemove = [] #armazena o indice da solução que deve ser eliminada
+        paretoCandidates = [] #armazena indice das solucoes candidatas a pareto, é inicializada com todos indices
+        i = 0
+        solutionsIndex = []
+        #inicializa
+        for solution in self.solutions:
+            paretoCandidates.append(i)
+            solutionsIndex.append(i)
+            #print(f'{i}: {solution.resultados} ')
+            i+=1
+        for currentSolutionIndex in solutionsIndex:
+            if currentSolutionIndex in paretoCandidates:
+                for paretoSolutionIndex in paretoCandidates:
+                    if currentSolutionIndex != paretoSolutionIndex:
+                        #se current solution dominar a solucao candidate a pareto
+                        if(self.__compareSolutions(self.solutions[currentSolutionIndex],self.solutions[paretoSolutionIndex],metric1,metric2)):
+                            toRemove.append(paretoSolutionIndex)
+                        #se a solucao candidata a pareto dominar a current solution
+                        elif(self.__compareSolutions(self.solutions[paretoSolutionIndex],self.solutions[currentSolutionIndex],metric1,metric2)):
+                            toRemove.append(currentSolutionIndex)
+                            break
+                for discardedSolution in toRemove:
+                    paretoCandidates.remove(discardedSolution)
+                toRemove = []
+        #depois talvez retornar os paretos, não sei. Por enquanto printa
+        for paretoSolutionIndex in paretoCandidates:
+            print(paretoSolutionIndex)
