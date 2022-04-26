@@ -56,22 +56,6 @@ if __name__ == "__main__":
     
     
     fig, ax = plt.subplots(1)
-    plt.plot(listLUT,listLat,'--r',)
-    plt.plot(listLUT,listLat,'s',)
-    plt.title('SHA')
-    plt.xlabel(x_name)
-    plt.ylabel(y_name)
-
-
-    x_name = 'LUT'
-    y_name = 'Latency'
-    df = pd.DataFrame(list(zip([listLUT], listLat)),
-               columns =[x_name, y_name])
-    x = df[x_name]
-    y = df[y_name]
-    
-    
-    fig, ax = plt.subplots(1)
     plt.plot(listLUT,listLat,'s',)
     plt.title('SHA')
     plt.xlabel(x_name)
