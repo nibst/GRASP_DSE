@@ -4,15 +4,7 @@
 ## Copyright (C) 1986-2020 Xilinx, Inc. All Rights Reserved.
 ############################################################
 open_project Raise_dse
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-set_top test.prj
-add_files ['hid.c', 'example.c']
-=======
-set_top sha_stream
-add_files {benchmarks/sha/sha.c }
->>>>>>> Stashed changes
-=======
+
 set_top sha_stream
 add_files {benchmarks/sha/sha.c }
 >>>>>>> Stashed changes
