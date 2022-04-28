@@ -1,12 +1,14 @@
 from ast import arguments
 from pickle import TRUE
-
+from re import A
 from setuptools import Require
 from greedy import Greedy
+from heuristic import Heuristic
 from hillClimbing0 import HillClimbing
 import argparse
-
-
+import matplotlib.pyplot as plt
+from matplotlib.widgets import Cursor
+import pandas as pd
 
 if __name__ == "__main__":
     
@@ -31,6 +33,47 @@ if __name__ == "__main__":
     
 
     
-    shaHill0 = HillClimbing(filesDict,'directives.tcl')
-    shaHill0.writeSolutionsDict()
+    heuristic = HillClimbing(filesDict,'directives.tcl')
+    #heuristic.writeSolutionsDict()
+    
+    ######################### GRAPH
+    listLUT = []
+    listLat = []
+
+    for element in heuristic.solutions:
+        lut = heuristic.solutions[element].resultados['LUT']
+        lat = heuristic.solutions[element].resultados['latency']
+        listLUT.append(lut)
+        listLat.append(lat)
+    
+
+    x_name = 'LUT'
+    y_name = 'Latency'
+    df = pd.DataFrame(list(zip(listLUT, listLat)),
+               columns =[x_name, y_name])
+    x = df[x_name]
+    y = df[y_name]
+    
+    
+    fig, ax = plt.subplots(1)
+    plt.plot(listLUT,listLat,'s',)
+    plt.title('SHA')
+    plt.xlabel(x_name)
+    plt.ylabel(y_name)
+    plt.xlim(left=0)
+    plt.ylim(bottom=0)
+    # hText = 0.8
+    # for solution in heuristic.solutions:
+    #     plt.figtext(0.05, hText,solution, fontsize=9)
+    #     plt.figtext(0.05 , hText-0.05, 'Latency:', fontsize=8)
+    #     plt.figtext(0.15 , hText-0.05, listLat[solution-1], fontsize=8)
+    #     plt.figtext(0.05 , hText-0.1, '#LUT:', fontsize=8)
+    #     plt.figtext(0.15 , hText-0.1, listLUT[solution-1], fontsize=8)
+    #     hText -= 0.15  
+
+
+    
+    plt.show() 
+    #shaHill0.teste()
+
    

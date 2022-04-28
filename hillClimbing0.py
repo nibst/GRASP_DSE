@@ -38,7 +38,7 @@ class HillClimbing(Heuristic):
                                                 #mantendo apenas os títulos das diretivas - seu valores são
                                                 #trocados por None
             
-        solutionIndex=0
+        solutionIndex=1
         generateScript(self, self.directivesTxt,self.cFiles, self.prjFile)
         
         for diretiva in dictDir:  
