@@ -28,46 +28,47 @@ class HillClimbing(Heuristic):
         self.solutions = self.createSolutionsDict()
         
 
-
     def createSolutionsDict(self):
-        
         dictDir=self.parsedTxt() 
         solutionsDict = {}
         txlDict = {}
         final = dict.fromkeys(dictDir,None) #Cria um dicionário 'final' a partir do 'dictDir' mas 
                                                 #mantendo apenas os títulos das diretivas - seu valores são
                                                 #trocados por None
-            
-        solutionIndex=1
+        
+        fileName = 'directives.tcl'
+
+        #deleta o interior de directives.tcl
+        directivesFile = open(fileName, "w")
+        directivesFile.close()    
+        solutionIndex=0
         generateScript(self, self.directivesTxt,self.cFiles, self.prjFile)
         
         for diretiva in dictDir:  
             
-            bestLUT = 999
+            bestLUT = 9999999
             ##print(dictDir[diretiva])
             for option in dictDir[diretiva]:     
                 
                 if option == '':
                     option = None
-                
-                
                        
                 final[diretiva] = option                             #Progressivamente popula o dicionário 'final' e cria
                 solution = Solution(final,self.cFiles,self.prjFile)         #Solutions a partir deste
-                solutionTimeXLUT = SolutionTimeXLUT(solution)
-                
-                timeXLUT = solutionTimeXLUT.runSynthesisTXL()
-                
-                                                            
-                                                                
-                
+                solution.runSynthesis()
+                print(solution.resultados)
+                directivesFile = open(fileName, "w")
+                for value in solution.diretivas.values():
+                    if value is not None:
+                        directivesFile.write(value + '\n')
+                    print(value)
+                directivesFile.close()                
                 
                 if solution.resultados['LUT']<bestLUT:          #mantendo aquelas onde o nro de LUTs é estritamente
                     bestLUT = solution.resultados['LUT']        #menor que o da anterior.
                     
                     deep = copy.deepcopy(solution)   
                     solutionsDict[solutionIndex] = deep
-                    txlDict[solutionIndex] = timeXLUT
                     solutionIndex+=1
                                         
                 if solution.resultados['LUT']>bestLUT:
@@ -76,6 +77,7 @@ class HillClimbing(Heuristic):
                                     # Retorna o dicionário de soluções para o 'main'
     
         return solutionsDict
+
 
     
 

@@ -1,12 +1,12 @@
 from string import Template
 
-
-
-def generateScript(self,diretivas, cFile, prjFile):
-
+def generateScript(cFile, prjFile):
+     filesSeparatedBySpace = ""
+     for file in cFile:
+          filesSeparatedBySpace = (filesSeparatedBySpace+ file + " ")
      subtituicoes = {
      'fun_top': prjFile,
-     'arq_cpp': cFile,
+     'arq_cpp': filesSeparatedBySpace, 
      }
 
 
@@ -22,3 +22,4 @@ def generateScript(self,diretivas, cFile, prjFile):
 
      # close file
      text_file.close()
+     
