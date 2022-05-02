@@ -10,8 +10,8 @@
 
 
 
-# 1 "D:/Xilinx/Vivado/2019.1/common/technology/autopilot\\etc/autopilot_ssdm_op.h" 1
-# 305 "D:/Xilinx/Vivado/2019.1/common/technology/autopilot\\etc/autopilot_ssdm_op.h"
+# 1 "C:/Xilinx/Vivado/2020.1/common/technology/autopilot\\etc/autopilot_ssdm_op.h" 1
+# 307 "C:/Xilinx/Vivado/2020.1/common/technology/autopilot\\etc/autopilot_ssdm_op.h"
     void _ssdm_op_IfRead() __attribute__ ((nothrow));
     void _ssdm_op_IfWrite() __attribute__ ((nothrow));
     unsigned int __attribute__ ((bitwidth(1))) _ssdm_op_IfNbRead() __attribute__ ((nothrow));
@@ -22,6 +22,8 @@
 
     void _ssdm_StreamRead() __attribute__ ((nothrow));
     void _ssdm_StreamWrite() __attribute__ ((nothrow));
+    void _ssdm_SetStreamDepth() __attribute__ ((nothrow));
+
     unsigned int __attribute__ ((bitwidth(1))) _ssdm_StreamNbRead() __attribute__ ((nothrow));
     unsigned int __attribute__ ((bitwidth(1))) _ssdm_StreamNbWrite() __attribute__ ((nothrow));
     unsigned int __attribute__ ((bitwidth(1))) _ssdm_StreamCanRead() __attribute__ ((nothrow));
@@ -193,9 +195,6 @@ local_memcpy (INT32 * s1, const BYTE * s2, int n)
 
   local_memcpy_label3: while (m-- > 0)
     {
-#pragma HLS PIPELINE
-# 82 "benchmarks/sha/sha.c"
-
       tmp = 0;
       tmp |= 0xFF & *p2++;
       tmp |= (0xFF & *p2++) << 8;
@@ -211,9 +210,6 @@ local_memcpy (INT32 * s1, const BYTE * s2, int n)
 static void
 sha_transform ()
 {
-#pragma HLS LOOP_MERGE
-# 97 "benchmarks/sha/sha.c"
-
   int i;
   INT32 temp, A, B, C, D, E, W[80];
 
@@ -282,9 +278,6 @@ sha_update (const BYTE * buffer, int count)
   sha_info_count_hi += (INT32) count >> 29;
   sha_update_label4: while (count >= 64)
     {
-#pragma HLS PIPELINE
-# 165 "benchmarks/sha/sha.c"
-
 #pragma HLS UNROLL factor=32
 # 165 "benchmarks/sha/sha.c"
 

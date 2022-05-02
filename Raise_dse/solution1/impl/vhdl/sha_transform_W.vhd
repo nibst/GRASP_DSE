@@ -1,6 +1,6 @@
 -- ==============================================================
--- Vivado(TM) HLS - High-Level Synthesis from C, C++ and SystemC v2019.1 (64-bit)
--- Copyright 1986-2019 Xilinx, Inc. All Rights Reserved.
+-- Vivado(TM) HLS - High-Level Synthesis from C, C++ and SystemC v2020.1 (64-bit)
+-- Copyright 1986-2020 Xilinx, Inc. All Rights Reserved.
 -- ==============================================================
 --
 library ieee; 
@@ -61,10 +61,10 @@ p_memory_access_0: process (clk)
 begin 
     if (clk'event and clk = '1') then
         if (ce0 = '1') then 
+            q0 <= ram(CONV_INTEGER(addr0_tmp));
             if (we0 = '1') then 
                 ram(CONV_INTEGER(addr0_tmp)) := d0; 
             end if;
-            q0 <= ram(CONV_INTEGER(addr0_tmp)); 
         end if;
     end if;
 end process;
@@ -85,10 +85,10 @@ p_memory_access_1: process (clk)
 begin 
     if (clk'event and clk = '1') then
         if (ce1 = '1') then 
+            q1 <= ram(CONV_INTEGER(addr1_tmp));
             if (we1 = '1') then 
                 ram(CONV_INTEGER(addr1_tmp)) := d1; 
             end if;
-            q1 <= ram(CONV_INTEGER(addr1_tmp)); 
         end if;
     end if;
 end process;

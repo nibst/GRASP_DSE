@@ -13,18 +13,8 @@
     "Speed": "-1-e"
   },
   "HlsSolution": {
-    "DirectiveTcl": [
-      "set_directive_pipeline local_memcpy\/local_memcpy_label3 ",
-      "set_directive_loop_merge sha_transform ",
-      "set_directive_pipeline sha_update\/sha_update_label4 ",
-      "set_directive_unroll sha_update\/sha_update_label4 -factor 32"
-    ],
-    "DirectiveInfo": [
-      "pipeline local_memcpy\/local_memcpy_label3 {} {}",
-      "loop_merge sha_transform {{merge positionBooleanCmd}} {}",
-      "pipeline sha_update\/sha_update_label4 {} {}",
-      "unroll sha_update\/sha_update_label4 {{factor 32}} {}"
-    ]
+    "DirectiveTcl": ["set_directive_unroll sha_update\/sha_update_label4 -factor 32"],
+    "DirectiveInfo": ["unroll sha_update\/sha_update_label4 {{factor 32}} {}"]
   },
   "Args": {
     
@@ -37,7 +27,7 @@
     "ClockPeriod": "8",
     "IsCombLogic": "0",
     "II": "x",
-    "Latency": "65",
+    "Latency": "416",
     "Uncertainty": "1"
   },
   "Xdc": {"OocClocks": ["create_clock -name ap_clk -period 8.000 [get_ports ap_clk]"]},
@@ -71,9 +61,9 @@
       "impl\/verilog\/sha_stream.v"
     ],
     "Misc": ["impl\/misc\/logo.png"],
-    "DesignXml": "C:\/Users\/guilh\/OneDrive\/Documentos\/GitHub\/raise_dse\/Raise_dse\/solution1\/.autopilot\/db\/sha_stream.design.xml",
-    "DebugDir": "C:\/Users\/guilh\/OneDrive\/Documentos\/GitHub\/raise_dse\/Raise_dse\/solution1\/.debug",
-    "ProtoInst": ["C:\/Users\/guilh\/OneDrive\/Documentos\/GitHub\/raise_dse\/Raise_dse\/solution1\/.debug\/sha_stream.protoinst"]
+    "DesignXml": "C:\/Users\/guilh\/raise\/raise_dse\/Raise_dse\/solution1\/.autopilot\/db\/sha_stream.design.xml",
+    "DebugDir": "C:\/Users\/guilh\/raise\/raise_dse\/Raise_dse\/solution1\/.debug",
+    "ProtoInst": ["C:\/Users\/guilh\/raise\/raise_dse\/Raise_dse\/solution1\/.debug\/sha_stream.protoinst"]
   },
   "SubcoreInfo": {
     "HasXpmMemory": false,
@@ -159,39 +149,83 @@
     "Metrics": {
       "sha_transform": {
         "Latency": {
-          "LatencyBest": "44",
-          "LatencyAvg": "44",
-          "LatencyWorst": "44",
-          "PipelineII": "44",
+          "LatencyBest": "395",
+          "LatencyAvg": "395",
+          "LatencyWorst": "395",
+          "PipelineII": "395",
           "PipelineDepth": "",
           "PipelineType": "none"
         },
         "Timing": {
           "Target": "8.00",
           "Uncertainty": "1.00",
-          "Estimate": "6.985"
+          "Estimate": "2.883"
         },
+        "Loops": [
+          {
+            "Name": "Loop 1",
+            "TripCount": "16",
+            "Latency": "32",
+            "PipelineII": "",
+            "PipelineDepth": "2"
+          },
+          {
+            "Name": "Loop 2",
+            "TripCount": "64",
+            "Latency": "192",
+            "PipelineII": "",
+            "PipelineDepth": "3"
+          },
+          {
+            "Name": "Loop 3",
+            "TripCount": "20",
+            "Latency": "40",
+            "PipelineII": "",
+            "PipelineDepth": "2"
+          },
+          {
+            "Name": "Loop 4",
+            "TripCount": "20",
+            "Latency": "40",
+            "PipelineII": "",
+            "PipelineDepth": "2"
+          },
+          {
+            "Name": "Loop 5",
+            "TripCount": "20",
+            "Latency": "40",
+            "PipelineII": "",
+            "PipelineDepth": "2"
+          },
+          {
+            "Name": "Loop 6",
+            "TripCount": "20",
+            "Latency": "40",
+            "PipelineII": "",
+            "PipelineDepth": "2"
+          }
+        ],
         "Area": {
           "BRAM_18K": "2",
-          "FF": "6253",
-          "LUT": "25378",
+          "FF": "1113",
+          "LUT": "1890",
           "URAM": "0",
           "DSP48E": "0"
         }
       },
       "sha_stream": {
         "Latency": {
-          "LatencyBest": "65",
-          "LatencyAvg": "65",
-          "LatencyWorst": "65",
-          "PipelineII": "66",
+          "LatencyBest": "416",
+          "LatencyAvg": "416",
+          "LatencyWorst": "416",
+          "PipelineII": "417",
           "PipelineDepth": "",
           "PipelineType": "none"
         },
         "Timing": {
           "Target": "8.00",
           "Uncertainty": "1.00",
-          "Estimate": "6.985"
+          "Estimate": "2.883"
         },
         "Loops": [
           {
@@ -211,8 +245,8 @@
         ],
         "Area": {
           "BRAM_18K": "6",
-          "FF": "6327",
-          "LUT": "25804",
+          "FF": "1187",
+          "LUT": "2286",
           "URAM": "0",
           "DSP48E": "0"
         }
@@ -229,8 +263,8 @@
   },
   "GenData": {
     "DataVersion": "0.2",
-    "Time": "2022-04-23 16:59:26 -0300",
+    "Time": "2022-05-02 16:40:36 -0300",
     "ToolName": "vivado_hls",
-    "ToolVersion": "2019.1"
+    "ToolVersion": "2020.1"
   }
 }

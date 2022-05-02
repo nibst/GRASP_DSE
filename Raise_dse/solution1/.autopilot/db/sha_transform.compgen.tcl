@@ -103,7 +103,7 @@ eval "::AESL_LIB_XILADAPTER::xil_bram_gen { \
     dir I \
     corename sha_info_data \
     op interface \
-    ports { sha_info_data_address0 { O 4 vector } sha_info_data_ce0 { O 1 bit } sha_info_data_q0 { I 32 vector } sha_info_data_address1 { O 4 vector } sha_info_data_ce1 { O 1 bit } sha_info_data_q1 { I 32 vector } } \
+    ports { sha_info_data_address0 { O 4 vector } sha_info_data_ce0 { O 1 bit } sha_info_data_q0 { I 32 vector } } \
 } "
 } else {
 puts "@W \[IMPL-110\] Cannot find bus interface model in the library. Ignored generation of bus interface for 'sha_info_data'"

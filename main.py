@@ -33,7 +33,8 @@ if __name__ == "__main__":
     
 
     
-    heuristic = HillClimbing(filesDict,'directives.tcl')
+    #heuristic = HillClimbing(filesDict,'directives.tcl')
+    heuristic = Greedy(filesDict,'directives.tcl')
     #heuristic.writeSolutionsDict()
     
     ######################### GRAPH

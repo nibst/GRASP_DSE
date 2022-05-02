@@ -42,7 +42,7 @@ class HillClimbing(Heuristic):
         directivesFile = open(fileName, "w")
         directivesFile.close()    
         solutionIndex=0
-        generateScript(self, self.directivesTxt,self.cFiles, self.prjFile)
+        generateScript(self.cFiles, self.prjFile)
         
         for diretiva in dictDir:  
             

@@ -42,7 +42,7 @@ set RtlHierarchyInfo {[
 		"ControlExist" : "1", "ap_start" : "1", "ap_ready" : "1", "ap_done" : "1", "ap_continue" : "0", "ap_idle" : "1",
 		"Pipeline" : "None", "UnalignedPipeline" : "0", "RewindPipeline" : "0", "ProcessNetwork" : "0",
 		"II" : "0",
-		"VariableLatency" : "1", "ExactLatency" : "-1", "EstimateLatencyMin" : "65", "EstimateLatencyMax" : "65",
+		"VariableLatency" : "1", "ExactLatency" : "-1", "EstimateLatencyMin" : "416", "EstimateLatencyMax" : "416",
 		"Combinational" : "0",
 		"Datapath" : "0",
 		"ClockEnable" : "0",
@@ -66,7 +66,7 @@ set RtlHierarchyInfo {[
 		"ControlExist" : "1", "ap_start" : "1", "ap_ready" : "1", "ap_done" : "1", "ap_continue" : "0", "ap_idle" : "1",
 		"Pipeline" : "None", "UnalignedPipeline" : "0", "RewindPipeline" : "0", "ProcessNetwork" : "0",
 		"II" : "0",
-		"VariableLatency" : "1", "ExactLatency" : "-1", "EstimateLatencyMin" : "44", "EstimateLatencyMax" : "44",
+		"VariableLatency" : "1", "ExactLatency" : "-1", "EstimateLatencyMin" : "395", "EstimateLatencyMax" : "395",
 		"Combinational" : "0",
 		"Datapath" : "0",
 		"ClockEnable" : "0",
@@ -84,14 +84,14 @@ set ArgLastReadFirstWriteLatency {
 		sha_info_data {Type IO LastRead -1 FirstWrite -1}
 		sha_info_digest {Type IO LastRead -1 FirstWrite -1}}
 	sha_transform {
-		sha_info_data {Type I LastRead 8 FirstWrite -1}
-		sha_info_digest {Type IO LastRead 6 FirstWrite 17}}}
+		sha_info_data {Type I LastRead 1 FirstWrite -1}
+		sha_info_digest {Type IO LastRead 5 FirstWrite 9}}}
 
 set hasDtUnsupportedChannel 0
 
 set PerformanceInfo {[
-	{"Name" : "Latency", "Min" : "65", "Max" : "65"}
-	, {"Name" : "Interval", "Min" : "66", "Max" : "66"}
+	{"Name" : "Latency", "Min" : "416", "Max" : "416"}
+	, {"Name" : "Interval", "Min" : "417", "Max" : "417"}
 ]}
 
 set PipelineEnableSignalInfo {[

@@ -1,6 +1,6 @@
 // ==============================================================
-// Vivado(TM) HLS - High-Level Synthesis from C, C++ and SystemC v2019.1 (64-bit)
-// Copyright 1986-2019 Xilinx, Inc. All Rights Reserved.
+// Vivado(TM) HLS - High-Level Synthesis from C, C++ and SystemC v2020.1 (64-bit)
+// Copyright 1986-2020 Xilinx, Inc. All Rights Reserved.
 // ==============================================================
 `timescale 1 ns / 1 ps
 module sha_transform_W_ram (addr0, ce0, d0, we0, q0, addr1, ce1, d1, we1, q1,  clk);
@@ -28,12 +28,9 @@ input clk;
 
 always @(posedge clk)  
 begin 
-    if (ce0) 
-    begin
+    if (ce0) begin
         if (we0) 
-        begin 
             ram[addr0] <= d0; 
-        end 
         q0 <= ram[addr0];
     end
 end
@@ -41,12 +38,9 @@ end
 
 always @(posedge clk)  
 begin 
-    if (ce1) 
-    begin
+    if (ce1) begin
         if (we1) 
-        begin 
             ram[addr1] <= d1; 
-        end 
         q1 <= ram[addr1];
     end
 end
