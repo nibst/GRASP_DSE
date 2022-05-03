@@ -5,6 +5,7 @@ from setuptools import Require
 from greedy import Greedy
 from heuristic import Heuristic
 from hillClimbing0 import HillClimbing
+from exhaustiveSearch import ExhaustiveSearch
 import argparse
 import matplotlib.pyplot as plt
 from matplotlib.widgets import Cursor
@@ -34,8 +35,10 @@ if __name__ == "__main__":
 
     
     #heuristic = HillClimbing(filesDict,'directives.tcl')
-    heuristic = Greedy(filesDict,'directives.tcl')
+    #heuristic = Greedy(filesDict,'directives.tcl')
+    heuristic = ExhaustiveSearch(filesDict,'directives.tcl')
     #heuristic.writeSolutionsDict()
+
     
     ######################### GRAPH
     listLUT = []
