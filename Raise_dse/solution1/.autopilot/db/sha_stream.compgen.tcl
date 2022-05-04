@@ -5,7 +5,7 @@ set ID 4
 set hasByteEnable 0
 set MemName sha_stream_sha_inbkb
 set CoreName ap_simcore_mem
-set PortList { 2 2 }
+set PortList { 2 0 }
 set DataWd 32
 set AddrRange 16
 set AddrWd 4

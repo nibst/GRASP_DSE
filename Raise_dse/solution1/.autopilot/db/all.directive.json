@@ -1,25 +1,6 @@
 {"sourceFile": [{
       "name": "",
-      "directive": [
-        {
-          "functionName": "local_memcpy",
-          "label": "local_memcpy_label3",
-          "functionLabel": "",
-          "pragma": {"name": "PIPELINE"}
-        },
-        {
-          "functionName": "sha_transform",
-          "label": "",
-          "functionLabel": "",
-          "pragma": {"name": "LOOP_MERGE"}
-        },
-        {
-          "functionName": "sha_update",
-          "label": "sha_update_label4",
-          "functionLabel": "",
-          "pragma": {"name": "PIPELINE"}
-        },
-        {
+      "directive": [{
           "functionName": "sha_update",
           "label": "sha_update_label4",
           "functionLabel": "",
@@ -30,6 +11,5 @@
                 "value": "32"
               }]
           }
-        }
-      ]
+        }]
     }]}

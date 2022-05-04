@@ -3,9 +3,9 @@
 ================================================================
 == Vivado HLS Report for 'sha_stream'
 ================================================================
-* Date:           Sat Apr 23 16:59:18 2022
+* Date:           Mon May  2 16:40:32 2022
 
-* Version:        2019.1 (Build 2552052 on Fri May 24 15:28:33 MDT 2019)
+* Version:        2020.1 (Build 2897737 on Wed May 27 20:21:37 MDT 2020)
 * Project:        Raise_dse
 * Solution:       solution1
 * Product family: virtexuplus
@@ -15,35 +15,35 @@
 ================================================================
 == Performance Estimates
 ================================================================
-+ Timing (ns): 
++ Timing: 
     * Summary: 
-    +--------+-------+----------+------------+
-    |  Clock | Target| Estimated| Uncertainty|
-    +--------+-------+----------+------------+
-    |ap_clk  |   8.00|     6.985|        1.00|
-    +--------+-------+----------+------------+
+    +--------+---------+----------+------------+
+    |  Clock |  Target | Estimated| Uncertainty|
+    +--------+---------+----------+------------+
+    |ap_clk  | 8.00 ns | 2.883 ns |   1.00 ns  |
+    +--------+---------+----------+------------+
 
-+ Latency (clock cycles): 
++ Latency: 
     * Summary: 
-    +-----+-----+-----+-----+---------+
-    |  Latency  |  Interval | Pipeline|
-    | min | max | min | max |   Type  |
-    +-----+-----+-----+-----+---------+
-    |   65|   65|   65|   65|   none  |
-    +-----+-----+-----+-----+---------+
+    +---------+---------+----------+----------+-----+-----+---------+
+    |  Latency (cycles) |  Latency (absolute) |  Interval | Pipeline|
+    |   min   |   max   |    min   |    max   | min | max |   Type  |
+    +---------+---------+----------+----------+-----+-----+---------+
+    |      416|      416| 3.328 us | 3.328 us |  416|  416|   none  |
+    +---------+---------+----------+----------+-----+-----+---------+
 
     + Detail: 
         * Instance: 
         N/A
 
         * Loop: 
-        +----------+-----+-----+----------+-----------+-----------+------+----------+
-        |          |  Latency  | Iteration|  Initiation Interval  | Trip |          |
-        | Loop Name| min | max |  Latency |  achieved |   target  | Count| Pipelined|
-        +----------+-----+-----+----------+-----------+-----------+------+----------+
-        |- Loop 1  |    2|    2|         1|          -|          -|     3|    no    |
-        |- Loop 2  |   13|   13|         1|          -|          -|    13|    no    |
-        +----------+-----+-----+----------+-----------+-----------+------+----------+
+        +----------+---------+---------+----------+-----------+-----------+------+----------+
+        |          |  Latency (cycles) | Iteration|  Initiation Interval  | Trip |          |
+        | Loop Name|   min   |   max   |  Latency |  achieved |   target  | Count| Pipelined|
+        +----------+---------+---------+----------+-----------+-----------+------+----------+
+        |- Loop 1  |        2|        2|         1|          -|          -|     3|    no    |
+        |- Loop 2  |       13|       13|         1|          -|          -|    13|    no    |
+        +----------+---------+---------+----------+-----------+-----------+------+----------+
 
 ============================================================
 + Verbose Summary: Synthesis Manager
@@ -110,13 +110,13 @@ ST_4 : Operation 21 [1/1] (0.73ns)   --->   "br label %.preheader.i"   --->   Op
 
 State 5 <SV = 4> <Delay = 1.57>
 ST_5 : Operation 22 [1/1] (0.00ns)   --->   "%p_1_rec_i = phi i64 [ %add_ln66, %1 ], [ 0, %sha_final.exit ]" [benchmarks/sha/sha.c:66->benchmarks/sha/sha.c:195->benchmarks/sha/sha.c:216]   --->   Operation 22 'phi' 'p_1_rec_i' <Predicate = true> <Delay = 0.00>
-ST_5 : Operation 23 [1/1] (0.00ns)   --->   "%empty_5 = trunc i64 %p_1_rec_i to i6" [benchmarks/sha/sha.c:66->benchmarks/sha/sha.c:195->benchmarks/sha/sha.c:216]   --->   Operation 23 'trunc' 'empty_5' <Predicate = true> <Delay = 0.00>
-ST_5 : Operation 24 [1/1] (0.84ns)   --->   "%sum_i = add i6 1, %empty_5" [benchmarks/sha/sha.c:66->benchmarks/sha/sha.c:195->benchmarks/sha/sha.c:216]   --->   Operation 24 'add' 'sum_i' <Predicate = true> <Delay = 0.84> <Core = "AddSub">   --->   Core 14 'AddSub' <Latency = 0> <II = 1> <Delay = 1.36> <FuncUnit> <Opcode : 'add' 'sub'> <InPorts = 2> <OutPorts = 1>
+ST_5 : Operation 23 [1/1] (0.00ns)   --->   "%empty_10 = trunc i64 %p_1_rec_i to i6" [benchmarks/sha/sha.c:66->benchmarks/sha/sha.c:195->benchmarks/sha/sha.c:216]   --->   Operation 23 'trunc' 'empty_10' <Predicate = true> <Delay = 0.00>
+ST_5 : Operation 24 [1/1] (0.84ns)   --->   "%sum_i = add i6 1, %empty_10" [benchmarks/sha/sha.c:66->benchmarks/sha/sha.c:195->benchmarks/sha/sha.c:216]   --->   Operation 24 'add' 'sum_i' <Predicate = true> <Delay = 0.84> <Core = "AddSub">   --->   Core 14 'AddSub' <Latency = 0> <II = 1> <Delay = 1.36> <FuncUnit> <Opcode : 'add' 'sub'> <InPorts = 2> <OutPorts = 1>
 ST_5 : Operation 25 [1/1] (0.00ns)   --->   "%sum_i_cast = zext i6 %sum_i to i64" [benchmarks/sha/sha.c:66->benchmarks/sha/sha.c:195->benchmarks/sha/sha.c:216]   --->   Operation 25 'zext' 'sum_i_cast' <Predicate = true> <Delay = 0.00>
 ST_5 : Operation 26 [1/1] (0.00ns)   --->   "%sha_info_data_addr = getelementptr [16 x i32]* @sha_info_data, i64 0, i64 %sum_i_cast" [benchmarks/sha/sha.c:66->benchmarks/sha/sha.c:195->benchmarks/sha/sha.c:216]   --->   Operation 26 'getelementptr' 'sha_info_data_addr' <Predicate = true> <Delay = 0.00>
 ST_5 : Operation 27 [1/1] (0.00ns)   --->   "%trunc_ln64 = trunc i64 %p_1_rec_i to i32" [benchmarks/sha/sha.c:64->benchmarks/sha/sha.c:195->benchmarks/sha/sha.c:216]   --->   Operation 27 'trunc' 'trunc_ln64' <Predicate = true> <Delay = 0.00>
 ST_5 : Operation 28 [1/1] (0.80ns)   --->   "%icmp_ln64 = icmp eq i32 %trunc_ln64, 13" [benchmarks/sha/sha.c:64->benchmarks/sha/sha.c:195->benchmarks/sha/sha.c:216]   --->   Operation 28 'icmp' 'icmp_ln64' <Predicate = true> <Delay = 0.80> <Core = "Cmp">   --->   Core 25 'Cmp' <Latency = 0> <II = 1> <Delay = 0.80> <FuncUnit> <Opcode : 'icmp'> <InPorts = 2> <OutPorts = 1>
-ST_5 : Operation 29 [1/1] (0.00ns)   --->   "%empty_6 = call i32 (...)* @_ssdm_op_SpecLoopTripCount(i64 13, i64 13, i64 13) nounwind"   --->   Operation 29 'speclooptripcount' 'empty_6' <Predicate = true> <Delay = 0.00>
+ST_5 : Operation 29 [1/1] (0.00ns)   --->   "%empty_11 = call i32 (...)* @_ssdm_op_SpecLoopTripCount(i64 13, i64 13, i64 13) nounwind"   --->   Operation 29 'speclooptripcount' 'empty_11' <Predicate = true> <Delay = 0.00>
 ST_5 : Operation 30 [1/1] (1.36ns)   --->   "%add_ln66 = add i64 1, %p_1_rec_i" [benchmarks/sha/sha.c:66->benchmarks/sha/sha.c:195->benchmarks/sha/sha.c:216]   --->   Operation 30 'add' 'add_ln66' <Predicate = true> <Delay = 1.36> <Core = "AddSub">   --->   Core 14 'AddSub' <Latency = 0> <II = 1> <Delay = 1.36> <FuncUnit> <Opcode : 'add' 'sub'> <InPorts = 2> <OutPorts = 1>
 ST_5 : Operation 31 [1/1] (0.00ns)   --->   "br i1 %icmp_ln64, label %local_memset.exit, label %1" [benchmarks/sha/sha.c:64->benchmarks/sha/sha.c:195->benchmarks/sha/sha.c:216]   --->   Operation 31 'br' <Predicate = true> <Delay = 0.00>
 ST_5 : Operation 32 [1/1] (0.73ns)   --->   "store i32 0, i32* %sha_info_data_addr, align 4" [benchmarks/sha/sha.c:66->benchmarks/sha/sha.c:195->benchmarks/sha/sha.c:216]   --->   Operation 32 'store' <Predicate = (!icmp_ln64)> <Delay = 0.73> <Core = "RAM">   --->   Core 37 'RAM' <Latency = 1> <II = 1> <Delay = 0.73> <Storage> <Opcode : 'load' 'store'> <Ports = 2> <Width = 32> <Depth = 16> <RAM>
@@ -139,26 +139,26 @@ Target clock period: 8ns, clock uncertainty: 1ns.
 
  <State 1>: 0.73ns
 The critical path consists of the following:
-	'store' operation ('store_ln144', benchmarks/sha/sha.c:144->benchmarks/sha/sha.c:209) of constant 1732584193 on array 'sha_info_digest' [4]  (0.73 ns)
+	'store' operation ('store_ln144', benchmarks/sha/sha.c:144->benchmarks/sha/sha.c:209) of constant 1732584193 on array 'sha_info_digest' [6]  (0.73 ns)
 
  <State 2>: 0.73ns
 The critical path consists of the following:
-	'store' operation ('store_ln145', benchmarks/sha/sha.c:145->benchmarks/sha/sha.c:209) of constant 4023233417 on array 'sha_info_digest' [5]  (0.73 ns)
+	'store' operation ('store_ln145', benchmarks/sha/sha.c:145->benchmarks/sha/sha.c:209) of constant 4023233417 on array 'sha_info_digest' [7]  (0.73 ns)
 
  <State 3>: 0.736ns
 The critical path consists of the following:
-	multiplexor before 'phi' operation ('j') with incoming values : ('j', benchmarks/sha/sha.c:210) [11]  (0.736 ns)
+	multiplexor before 'phi' operation ('j') with incoming values : ('j', benchmarks/sha/sha.c:210) [13]  (0.736 ns)
 
  <State 4>: 0.736ns
 The critical path consists of the following:
-	multiplexor before 'phi' operation ('p_1_rec_i', benchmarks/sha/sha.c:66->benchmarks/sha/sha.c:195->benchmarks/sha/sha.c:216) with incoming values : ('add_ln66', benchmarks/sha/sha.c:66->benchmarks/sha/sha.c:195->benchmarks/sha/sha.c:216) [20]  (0.736 ns)
+	multiplexor before 'phi' operation ('p_1_rec_i', benchmarks/sha/sha.c:66->benchmarks/sha/sha.c:195->benchmarks/sha/sha.c:216) with incoming values : ('add_ln66', benchmarks/sha/sha.c:66->benchmarks/sha/sha.c:195->benchmarks/sha/sha.c:216) [22]  (0.736 ns)
 
  <State 5>: 1.57ns
 The critical path consists of the following:
-	'phi' operation ('p_1_rec_i', benchmarks/sha/sha.c:66->benchmarks/sha/sha.c:195->benchmarks/sha/sha.c:216) with incoming values : ('add_ln66', benchmarks/sha/sha.c:66->benchmarks/sha/sha.c:195->benchmarks/sha/sha.c:216) [20]  (0 ns)
-	'add' operation ('sum_i', benchmarks/sha/sha.c:66->benchmarks/sha/sha.c:195->benchmarks/sha/sha.c:216) [22]  (0.84 ns)
-	'getelementptr' operation ('sha_info_data_addr', benchmarks/sha/sha.c:66->benchmarks/sha/sha.c:195->benchmarks/sha/sha.c:216) [24]  (0 ns)
-	'store' operation ('store_ln66', benchmarks/sha/sha.c:66->benchmarks/sha/sha.c:195->benchmarks/sha/sha.c:216) of constant 0 on array 'sha_info_data' [31]  (0.73 ns)
+	'phi' operation ('p_1_rec_i', benchmarks/sha/sha.c:66->benchmarks/sha/sha.c:195->benchmarks/sha/sha.c:216) with incoming values : ('add_ln66', benchmarks/sha/sha.c:66->benchmarks/sha/sha.c:195->benchmarks/sha/sha.c:216) [22]  (0 ns)
+	'add' operation ('sum_i', benchmarks/sha/sha.c:66->benchmarks/sha/sha.c:195->benchmarks/sha/sha.c:216) [24]  (0.84 ns)
+	'getelementptr' operation ('sha_info_data_addr', benchmarks/sha/sha.c:66->benchmarks/sha/sha.c:195->benchmarks/sha/sha.c:216) [26]  (0 ns)
+	'store' operation ('store_ln66', benchmarks/sha/sha.c:66->benchmarks/sha/sha.c:195->benchmarks/sha/sha.c:216) of constant 0 on array 'sha_info_data' [33]  (0.73 ns)
 
  <State 6>: 0ns
 The critical path consists of the following:

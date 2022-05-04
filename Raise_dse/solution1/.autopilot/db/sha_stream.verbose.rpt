@@ -3,9 +3,9 @@
 ================================================================
 == Vivado HLS Report for 'sha_stream'
 ================================================================
-* Date:           Sat Apr 23 16:59:24 2022
+* Date:           Mon May  2 16:40:33 2022
 
-* Version:        2019.1 (Build 2552052 on Fri May 24 15:28:33 MDT 2019)
+* Version:        2020.1 (Build 2897737 on Wed May 27 20:21:37 MDT 2020)
 * Project:        Raise_dse
 * Solution:       solution1
 * Product family: virtexuplus
@@ -15,40 +15,40 @@
 ================================================================
 == Performance Estimates
 ================================================================
-+ Timing (ns): 
++ Timing: 
     * Summary: 
-    +--------+-------+----------+------------+
-    |  Clock | Target| Estimated| Uncertainty|
-    +--------+-------+----------+------------+
-    |ap_clk  |   8.00|     6.985|        1.00|
-    +--------+-------+----------+------------+
+    +--------+---------+----------+------------+
+    |  Clock |  Target | Estimated| Uncertainty|
+    +--------+---------+----------+------------+
+    |ap_clk  | 8.00 ns | 2.883 ns |   1.00 ns  |
+    +--------+---------+----------+------------+
 
-+ Latency (clock cycles): 
++ Latency: 
     * Summary: 
-    +-----+-----+-----+-----+---------+
-    |  Latency  |  Interval | Pipeline|
-    | min | max | min | max |   Type  |
-    +-----+-----+-----+-----+---------+
-    |   65|   65|   65|   65|   none  |
-    +-----+-----+-----+-----+---------+
+    +---------+---------+----------+----------+-----+-----+---------+
+    |  Latency (cycles) |  Latency (absolute) |  Interval | Pipeline|
+    |   min   |   max   |    min   |    max   | min | max |   Type  |
+    +---------+---------+----------+----------+-----+-----+---------+
+    |      416|      416| 3.328 us | 3.328 us |  416|  416|   none  |
+    +---------+---------+----------+----------+-----+-----+---------+
 
     + Detail: 
         * Instance: 
-        +--------------------------+---------------+-----+-----+-----+-----+---------+
-        |                          |               |  Latency  |  Interval | Pipeline|
-        |         Instance         |     Module    | min | max | min | max |   Type  |
-        +--------------------------+---------------+-----+-----+-----+-----+---------+
-        |grp_sha_transform_fu_124  |sha_transform  |   44|   44|   44|   44|   none  |
-        +--------------------------+---------------+-----+-----+-----+-----+---------+
+        +--------------------------+---------------+---------+---------+----------+----------+-----+-----+---------+
+        |                          |               |  Latency (cycles) |  Latency (absolute) |  Interval | Pipeline|
+        |         Instance         |     Module    |   min   |   max   |    min   |    max   | min | max |   Type  |
+        +--------------------------+---------------+---------+---------+----------+----------+-----+-----+---------+
+        |grp_sha_transform_fu_124  |sha_transform  |      395|      395| 3.160 us | 3.160 us |  395|  395|   none  |
+        +--------------------------+---------------+---------+---------+----------+----------+-----+-----+---------+
 
         * Loop: 
-        +----------+-----+-----+----------+-----------+-----------+------+----------+
-        |          |  Latency  | Iteration|  Initiation Interval  | Trip |          |
-        | Loop Name| min | max |  Latency |  achieved |   target  | Count| Pipelined|
-        +----------+-----+-----+----------+-----------+-----------+------+----------+
-        |- Loop 1  |    2|    2|         1|          -|          -|     3|    no    |
-        |- Loop 2  |   13|   13|         1|          -|          -|    13|    no    |
-        +----------+-----+-----+----------+-----------+-----------+------+----------+
+        +----------+---------+---------+----------+-----------+-----------+------+----------+
+        |          |  Latency (cycles) | Iteration|  Initiation Interval  | Trip |          |
+        | Loop Name|   min   |   max   |  Latency |  achieved |   target  | Count| Pipelined|
+        +----------+---------+---------+----------+-----------+-----------+------+----------+
+        |- Loop 1  |        2|        2|         1|          -|          -|     3|    no    |
+        |- Loop 2  |       13|       13|         1|          -|          -|    13|    no    |
+        +----------+---------+---------+----------+-----------+-----------+------+----------+
 
 
 
@@ -62,31 +62,31 @@
 |DSP                  |        -|      -|        -|        -|    -|
 |Expression           |        -|      -|        0|      124|    -|
 |FIFO                 |        -|      -|        -|        -|    -|
-|Instance             |        2|      -|     6253|    25378|    0|
+|Instance             |        2|      -|     1113|     1890|    0|
 |Memory               |        4|      -|        0|        0|    0|
-|Multiplexer          |        -|      -|        -|      302|    -|
+|Multiplexer          |        -|      -|        -|      272|    -|
 |Register             |        -|      -|       74|        -|    -|
 +---------------------+---------+-------+---------+---------+-----+
-|Total                |        6|      0|     6327|    25804|    0|
+|Total                |        6|      0|     1187|     2286|    0|
 +---------------------+---------+-------+---------+---------+-----+
 |Available SLR        |     1440|   2280|   788160|   394080|  320|
 +---------------------+---------+-------+---------+---------+-----+
-|Utilization SLR (%)  |    ~0   |      0|    ~0   |        6|    0|
+|Utilization SLR (%)  |    ~0   |      0|    ~0   |    ~0   |    0|
 +---------------------+---------+-------+---------+---------+-----+
 |Available            |     4320|   6840|  2364480|  1182240|  960|
 +---------------------+---------+-------+---------+---------+-----+
-|Utilization (%)      |    ~0   |      0|    ~0   |        2|    0|
+|Utilization (%)      |    ~0   |      0|    ~0   |    ~0   |    0|
 +---------------------+---------+-------+---------+---------+-----+
 
 + Detail: 
     * Instance: 
-    +--------------------------+---------------+---------+-------+------+-------+-----+
-    |         Instance         |     Module    | BRAM_18K| DSP48E|  FF  |  LUT  | URAM|
-    +--------------------------+---------------+---------+-------+------+-------+-----+
-    |grp_sha_transform_fu_124  |sha_transform  |        2|      0|  6253|  25378|    0|
-    +--------------------------+---------------+---------+-------+------+-------+-----+
-    |Total                     |               |        2|      0|  6253|  25378|    0|
-    +--------------------------+---------------+---------+-------+------+-------+-----+
+    +--------------------------+---------------+---------+-------+------+------+-----+
+    |         Instance         |     Module    | BRAM_18K| DSP48E|  FF  |  LUT | URAM|
+    +--------------------------+---------------+---------+-------+------+------+-----+
+    |grp_sha_transform_fu_124  |sha_transform  |        2|      0|  1113|  1890|    0|
+    +--------------------------+---------------+---------+-------+------+------+-----+
+    |Total                     |               |        2|      0|  1113|  1890|    0|
+    +--------------------------+---------------+---------+-------+------+------+-----+
 
     * DSP48E: 
     N/A
@@ -125,9 +125,7 @@
     |j_0_reg_102               |   9|          2|    2|          4|
     |p_1_rec_i_reg_113         |   9|          2|   64|        128|
     |sha_info_data_address0    |  27|          5|    4|         20|
-    |sha_info_data_address1    |  15|          3|    4|         12|
     |sha_info_data_ce0         |  15|          3|    1|          3|
-    |sha_info_data_ce1         |  15|          3|    1|          3|
     |sha_info_data_d0          |  15|          3|   32|         96|
     |sha_info_digest_address0  |  27|          5|    3|         15|
     |sha_info_digest_address1  |  21|          4|    3|         12|
@@ -138,7 +136,7 @@
     |sha_info_digest_we0       |  15|          3|    1|          3|
     |sha_info_digest_we1       |  15|          3|    1|          3|
     +--------------------------+----+-----------+-----+-----------+
-    |Total                     | 302|         59|  183|        601|
+    |Total                     | 272|         53|  178|        586|
     +--------------------------+----+-----------+-----+-----------+
 
     * Register: 
@@ -235,13 +233,13 @@ ST_4 : Operation 21 [1/1] (0.73ns)   --->   "br label %.preheader.i"   --->   Op
 
 State 5 <SV = 4> <Delay = 1.57>
 ST_5 : Operation 22 [1/1] (0.00ns)   --->   "%p_1_rec_i = phi i64 [ %add_ln66, %1 ], [ 0, %sha_final.exit ]" [benchmarks/sha/sha.c:66->benchmarks/sha/sha.c:195->benchmarks/sha/sha.c:216]   --->   Operation 22 'phi' 'p_1_rec_i' <Predicate = true> <Delay = 0.00>
-ST_5 : Operation 23 [1/1] (0.00ns)   --->   "%empty_5 = trunc i64 %p_1_rec_i to i6" [benchmarks/sha/sha.c:66->benchmarks/sha/sha.c:195->benchmarks/sha/sha.c:216]   --->   Operation 23 'trunc' 'empty_5' <Predicate = true> <Delay = 0.00>
-ST_5 : Operation 24 [1/1] (0.84ns)   --->   "%sum_i = add i6 1, %empty_5" [benchmarks/sha/sha.c:66->benchmarks/sha/sha.c:195->benchmarks/sha/sha.c:216]   --->   Operation 24 'add' 'sum_i' <Predicate = true> <Delay = 0.84> <Core = "AddSub">   --->   Core 14 'AddSub' <Latency = 0> <II = 1> <Delay = 0.84> <FuncUnit> <Opcode : 'add' 'sub'> <InPorts = 2> <OutPorts = 1>
+ST_5 : Operation 23 [1/1] (0.00ns)   --->   "%empty_10 = trunc i64 %p_1_rec_i to i6" [benchmarks/sha/sha.c:66->benchmarks/sha/sha.c:195->benchmarks/sha/sha.c:216]   --->   Operation 23 'trunc' 'empty_10' <Predicate = true> <Delay = 0.00>
+ST_5 : Operation 24 [1/1] (0.84ns)   --->   "%sum_i = add i6 1, %empty_10" [benchmarks/sha/sha.c:66->benchmarks/sha/sha.c:195->benchmarks/sha/sha.c:216]   --->   Operation 24 'add' 'sum_i' <Predicate = true> <Delay = 0.84> <Core = "AddSub">   --->   Core 14 'AddSub' <Latency = 0> <II = 1> <Delay = 0.84> <FuncUnit> <Opcode : 'add' 'sub'> <InPorts = 2> <OutPorts = 1>
 ST_5 : Operation 25 [1/1] (0.00ns)   --->   "%sum_i_cast = zext i6 %sum_i to i64" [benchmarks/sha/sha.c:66->benchmarks/sha/sha.c:195->benchmarks/sha/sha.c:216]   --->   Operation 25 'zext' 'sum_i_cast' <Predicate = true> <Delay = 0.00>
 ST_5 : Operation 26 [1/1] (0.00ns)   --->   "%sha_info_data_addr = getelementptr [16 x i32]* @sha_info_data, i64 0, i64 %sum_i_cast" [benchmarks/sha/sha.c:66->benchmarks/sha/sha.c:195->benchmarks/sha/sha.c:216]   --->   Operation 26 'getelementptr' 'sha_info_data_addr' <Predicate = true> <Delay = 0.00>
 ST_5 : Operation 27 [1/1] (0.00ns)   --->   "%trunc_ln64 = trunc i64 %p_1_rec_i to i32" [benchmarks/sha/sha.c:64->benchmarks/sha/sha.c:195->benchmarks/sha/sha.c:216]   --->   Operation 27 'trunc' 'trunc_ln64' <Predicate = true> <Delay = 0.00>
 ST_5 : Operation 28 [1/1] (0.80ns)   --->   "%icmp_ln64 = icmp eq i32 %trunc_ln64, 13" [benchmarks/sha/sha.c:64->benchmarks/sha/sha.c:195->benchmarks/sha/sha.c:216]   --->   Operation 28 'icmp' 'icmp_ln64' <Predicate = true> <Delay = 0.80> <Core = "Cmp">   --->   Core 25 'Cmp' <Latency = 0> <II = 1> <Delay = 0.80> <FuncUnit> <Opcode : 'icmp'> <InPorts = 2> <OutPorts = 1>
-ST_5 : Operation 29 [1/1] (0.00ns)   --->   "%empty_6 = call i32 (...)* @_ssdm_op_SpecLoopTripCount(i64 13, i64 13, i64 13) nounwind"   --->   Operation 29 'speclooptripcount' 'empty_6' <Predicate = true> <Delay = 0.00>
+ST_5 : Operation 29 [1/1] (0.00ns)   --->   "%empty_11 = call i32 (...)* @_ssdm_op_SpecLoopTripCount(i64 13, i64 13, i64 13) nounwind"   --->   Operation 29 'speclooptripcount' 'empty_11' <Predicate = true> <Delay = 0.00>
 ST_5 : Operation 30 [1/1] (1.36ns)   --->   "%add_ln66 = add i64 1, %p_1_rec_i" [benchmarks/sha/sha.c:66->benchmarks/sha/sha.c:195->benchmarks/sha/sha.c:216]   --->   Operation 30 'add' 'add_ln66' <Predicate = true> <Delay = 1.36> <Core = "AddSub">   --->   Core 14 'AddSub' <Latency = 0> <II = 1> <Delay = 0.84> <FuncUnit> <Opcode : 'add' 'sub'> <InPorts = 2> <OutPorts = 1>
 ST_5 : Operation 31 [1/1] (0.00ns)   --->   "br i1 %icmp_ln64, label %local_memset.exit, label %1" [benchmarks/sha/sha.c:64->benchmarks/sha/sha.c:195->benchmarks/sha/sha.c:216]   --->   Operation 31 'br' <Predicate = true> <Delay = 0.00>
 ST_5 : Operation 32 [1/1] (0.73ns)   --->   "store i32 0, i32* %sha_info_data_addr, align 4" [benchmarks/sha/sha.c:66->benchmarks/sha/sha.c:195->benchmarks/sha/sha.c:216]   --->   Operation 32 'store' <Predicate = (!icmp_ln64)> <Delay = 0.73> <Core = "RAM">   --->   Core 37 'RAM' <Latency = 1> <II = 1> <Delay = 0.73> <Storage> <Opcode : 'load' 'store'> <Ports = 2> <Width = 32> <Depth = 5> <RAM>
@@ -268,7 +266,7 @@ STG Binding:
 - Is pipelined: 0
 - Is top level: 1
 Port [ Return ] is wired: 1; IO mode=ap_ctrl_hs:ce=0
-Port [ sha_info_data]:  wired=0; compound=1; hidden=1; nouse=0; global=1; static=0; extern=0; dir=2; type=1; pingpong=0; private_global=1; linkage=15; visibility=0; MemPort=[22]; IO mode=ap_memory:ce=0
+Port [ sha_info_data]:  wired=0; compound=1; hidden=1; nouse=0; global=1; static=0; extern=0; dir=2; type=1; pingpong=0; private_global=1; linkage=15; visibility=0; MemPort=[20]; IO mode=ap_memory:ce=0
 Port [ sha_info_digest]:  wired=0; compound=1; hidden=1; nouse=0; global=1; static=1; extern=0; dir=2; type=1; pingpong=0; private_global=1; linkage=7; visibility=0; MemPort=[22]; IO mode=ap_memory:ce=0
 ---------------- STG Properties END ------------------
 
@@ -291,13 +289,13 @@ br_ln210           (br               ) [ 00011000]
 store_ln186        (store            ) [ 00000000]
 br_ln0             (br               ) [ 00001100]
 p_1_rec_i          (phi              ) [ 00000100]
-empty_5            (trunc            ) [ 00000000]
+empty_10           (trunc            ) [ 00000000]
 sum_i              (add              ) [ 00000000]
 sum_i_cast         (zext             ) [ 00000000]
 sha_info_data_addr (getelementptr    ) [ 00000000]
 trunc_ln64         (trunc            ) [ 00000000]
 icmp_ln64          (icmp             ) [ 00000100]
-empty_6            (speclooptripcount) [ 00000000]
+empty_11           (speclooptripcount) [ 00000000]
 add_ln66           (add              ) [ 00001100]
 br_ln64            (br               ) [ 00000000]
 store_ln66         (store            ) [ 00000000]
@@ -316,7 +314,7 @@ ret_ln217          (ret              ) [ 00000000]
 <pin id="1" dir="1" index="0" bw="1" slack="0"/>
 </pin_list>
 <bind>
-<StgValue><ssdm name="sha_info_data"/><MemPortTyVec>2 2 </MemPortTyVec>
+<StgValue><ssdm name="sha_info_data"/><MemPortTyVec>2 0 </MemPortTyVec>
 </StgValue>
 </bind>
 </comp>
@@ -715,14 +713,14 @@ ret_ln217          (ret              ) [ 00000000]
 </bind>
 </comp>
 
-<comp id="144" class="1004" name="empty_5_fu_144">
+<comp id="144" class="1004" name="empty_10_fu_144">
 <pin_list>
 <pin id="145" dir="0" index="0" bw="64" slack="0"/>
 <pin id="146" dir="1" index="1" bw="6" slack="0"/>
 </pin_list>
 <bind>
 <opcode="trunc(33) " fcode="trunc"/>
-<opset="empty_5/5 "/>
+<opset="empty_10/5 "/>
 </bind>
 </comp>
 
@@ -916,7 +914,7 @@ ret_ln217          (ret              ) [ 00000000]
 		j : 1
 		br_ln210 : 2
 	State 5
-		empty_5 : 1
+		empty_10 : 1
 		sum_i : 2
 		sum_i_cast : 3
 		sha_info_data_addr : 4
@@ -937,7 +935,7 @@ ret_ln217          (ret              ) [ 00000000]
 |----------|--------------------------|---------|---------|---------|---------|---------|
 | Operation|      Functional Unit     |   BRAM  |  Delay  |    FF   |   LUT   |   URAM  |
 |----------|--------------------------|---------|---------|---------|---------|---------|
-|   call   | grp_sha_transform_fu_124 |    2    | 12.0717 |   6250  |  25055  |    0    |
+|   call   | grp_sha_transform_fu_124 |    2    |  6.6852 |   1444  |   1551  |    0    |
 |----------|--------------------------|---------|---------|---------|---------|---------|
 |          |         j_fu_138         |    0    |    0    |    0    |    9    |    0    |
 |    add   |       sum_i_fu_148       |    0    |    0    |    0    |    15   |    0    |
@@ -946,12 +944,12 @@ ret_ln217          (ret              ) [ 00000000]
 |   icmp   |     icmp_ln210_fu_132    |    0    |    0    |    0    |    8    |    0    |
 |          |     icmp_ln64_fu_163     |    0    |    0    |    0    |    20   |    0    |
 |----------|--------------------------|---------|---------|---------|---------|---------|
-|   trunc  |      empty_5_fu_144      |    0    |    0    |    0    |    0    |    0    |
+|   trunc  |      empty_10_fu_144     |    0    |    0    |    0    |    0    |    0    |
 |          |     trunc_ln64_fu_159    |    0    |    0    |    0    |    0    |    0    |
 |----------|--------------------------|---------|---------|---------|---------|---------|
 |   zext   |     sum_i_cast_fu_154    |    0    |    0    |    0    |    0    |    0    |
 |----------|--------------------------|---------|---------|---------|---------|---------|
-|   Total  |                          |    2    | 12.0717 |   6250  |  25178  |    0    |
+|   Total  |                          |    2    |  6.6852 |   1444  |   1674  |    0    |
 |----------|--------------------------|---------|---------|---------|---------|---------|
 
 Memories:
@@ -996,10 +994,10 @@ Memories:
 +-----------+--------+--------+--------+--------+--------+
 |           |  BRAM  |  Delay |   FF   |   LUT  |  URAM  |
 +-----------+--------+--------+--------+--------+--------+
-|  Function |    2   |   12   |  6250  |  25178 |    0   |
+|  Function |    2   |    6   |  1444  |  1674  |    0   |
 |   Memory  |    4   |    -   |    0   |    0   |    0   |
 |Multiplexer|    -   |    4   |    -   |    9   |    -   |
 |  Register |    -   |    -   |   132  |    -   |    -   |
 +-----------+--------+--------+--------+--------+--------+
-|   Total   |    6   |   16   |  6382  |  25187 |    0   |
+|   Total   |    6   |   11   |  1576  |  1683  |    0   |
 +-----------+--------+--------+--------+--------+--------+

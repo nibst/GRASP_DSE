@@ -42,7 +42,7 @@ set SCTraceOption all
 set TargetInfo xcvu9p:-flgb2104:-1-e
 set SourceFiles {sc {} c ../../benchmarks/sha/sha.c}
 set SourceFlags {sc {} c {{}}}
-set DirectiveFile C:/Users/guilh/OneDrive/Documentos/GitHub/raise_dse/Raise_dse/solution1/solution1.directive
+set DirectiveFile C:/Users/guilh/raise/raise_dse/Raise_dse/solution1/solution1.directive
 set TBFiles {bc {} c {} sc {} cas {} vhdl {} verilog {}}
 set SpecLanguage C
 set TVInFiles {bc {} c {} sc {} cas {} vhdl {} verilog {}}
