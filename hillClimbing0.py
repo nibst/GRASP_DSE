@@ -46,7 +46,7 @@ class HillClimbing(Heuristic):
         
         for diretiva in dictDir:  
             
-            bestLUT = 9999999
+            bestLUTxLatency = float('inf') #infinito
             ##print(dictDir[diretiva])
             for option in dictDir[diretiva]:     
                 
@@ -63,15 +63,15 @@ class HillClimbing(Heuristic):
                         directivesFile.write(value + '\n')
                     print(value)
                 directivesFile.close()                
-                
-                if solution.resultados['LUT']<bestLUT:          #mantendo aquelas onde o nro de LUTs é estritamente
-                    bestLUT = solution.resultados['LUT']        #menor que o da anterior.
+                lutXLatency = solution.resultados['LUT'] * solution.resultados['latency']
+                if lutXLatency<bestLUTxLatency:          #mantendo aquelas onde o nro de LUTs é estritamente
+                    bestLUTxLatency = lutXLatency        #menor que o da anterior.
                     
                     deep = copy.deepcopy(solution)   
                     solutionsDict[solutionIndex] = deep
                     solutionIndex+=1
                                         
-                if solution.resultados['LUT']>bestLUT:
+                if lutXLatency>bestLUTxLatency:
                     break
 
                                     # Retorna o dicionário de soluções para o 'main'
