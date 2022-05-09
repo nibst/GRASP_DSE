@@ -35,8 +35,8 @@ if __name__ == "__main__":
 
     
     #heuristic = HillClimbing(filesDict,'directives.tcl')
-    #heuristic = Greedy(filesDict,'directives.tcl')
-    heuristic = ExhaustiveSearch(filesDict,'directives.tcl')
+    heuristic = Greedy(filesDict,'directives.tcl')
+    #heuristic = ExhaustiveSearch(filesDict,'directives.tcl')
     #heuristic.writeSolutionsDict()
 
     
@@ -61,7 +61,7 @@ if __name__ == "__main__":
     
     fig, ax = plt.subplots(1)
     plt.plot(listLUT,listLat,'s',)
-    plt.title('SHA')
+    plt.title('Spam-Filter')
     plt.xlabel(x_name)
     plt.ylabel(y_name)
     plt.xlim(left=0)

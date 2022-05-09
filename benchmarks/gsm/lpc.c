@@ -176,26 +176,26 @@ Reflection_coefficients (longword * L_ACF /* 0...8        IN      */ ,
 
   if (L_ACF[0] == 0)
     {
-      for (i = 8; i > 0; i--)
+      Reflection_coefficients_label0:for (i = 8; i > 0; i--)
 	*r++ = 0;
       return;
     }
 
   temp = gsm_norm (L_ACF[0]);
-  for (i = 0; i <= 8; i++)
+  Reflection_coefficients_label1:for (i = 0; i <= 8; i++)
     ACF[i] = SASR (L_ACF[i] << temp, 16);
 
   /*   Initialize array P[..] and K[..] for the recursion.
    */
 
-  for (i = 1; i <= 7; i++)
+  Reflection_coefficients_label2:for (i = 1; i <= 7; i++)
     K[i] = ACF[i];
-  for (i = 0; i <= 8; i++)
+  Reflection_coefficients_label3:for (i = 0; i <= 8; i++)
     P[i] = ACF[i];
 
   /*   Compute reflection coefficients
    */
-  for (n = 1; n <= 8; n++, r++)
+  Reflection_coefficients_label4:for (n = 1; n <= 8; n++, r++)
     {
     #pragma HLS LOOP_TRIPCOUNT min=1 max=8
 
@@ -203,7 +203,7 @@ Reflection_coefficients (longword * L_ACF /* 0...8        IN      */ ,
       temp = GSM_ABS (temp);
       if (P[0] < temp)
 	{
-	  for (i = n; i <= 8; i++)
+	  Reflection_coefficients_label6:for (i = n; i <= 8; i++)
     #pragma HLS LOOP_TRIPCOUNT min=1 max=8
 	    *r++ = 0;
 	  return;
@@ -221,7 +221,7 @@ Reflection_coefficients (longword * L_ACF /* 0...8        IN      */ ,
       temp = GSM_MULT_R (P[1], *r);
       P[0] = GSM_ADD (P[0], temp);
 
-      for (m = 1; m <= 8 - n; m++)
+      Reflection_coefficients_label5:for (m = 1; m <= 8 - n; m++)
 	{
     #pragma HLS LOOP_TRIPCOUNT min=1 max=7
 	  temp = GSM_MULT_R (K[m], *r);
@@ -313,14 +313,42 @@ Quantization_and_coding (register word * LAR /* [0..7]       IN/OUT  */ )
 
 #	undef	STEP
 }
+#define N 160
+#define M 8
 
+word inData[N] =
+  { 81, 10854, 1893, -10291, 7614, 29718, 20475, -29215, -18949, -29806,
+  -32017, 1596, 15744, -3088, -17413, -22123, 6798, -13276, 3819, -16273,
+    -1573, -12523, -27103,
+  -193, -25588, 4698, -30436, 15264, -1393, 11418, 11370, 4986, 7869, -1903,
+    9123, -31726,
+  -25237, -14155, 17982, 32427, -12439, -15931, -21622, 7896, 1689, 28113,
+    3615, 22131, -5572,
+  -20110, 12387, 9177, -24544, 12480, 21546, -17842, -13645, 20277, 9987,
+    17652, -11464, -17326,
+  -10552, -27100, 207, 27612, 2517, 7167, -29734, -22441, 30039, -2368, 12813,
+    300, -25555, 9087,
+  29022, -6559, -20311, -14347, -7555, -21709, -3676, -30082, -3190, -30979,
+    8580, 27126, 3414,
+  -4603, -22303, -17143, 13788, -1096, -14617, 22071, -13552, 32646, 16689,
+    -8473, -12733, 10503,
+  20745, 6696, -26842, -31015, 3792, -19864, -20431, -30307, 32421, -13237,
+    9006, 18249, 2403,
+  -7996, -14827, -5860, 7122, 29817, -31894, 17955, 28836, -31297, 31821,
+    -27502, 12276, -5587,
+  -22105, 9192, -22549, 15675, -12265, 7212, -23749, -12856, -5857, 7521,
+    17349, 13773, -3091,
+  -17812, -9655, 26667, 7902, 2487, 3177, 29412, -20224, -2776, 24084, -7963,
+    -10438, -11938,
+  -14833, -6658, 32058, 4020, 10461, 15159
+};
+word LARc[M];
 void
-Gsm_LPC_Analysis (word * s /* 0..159 signals       IN/OUT  */ ,
-		  word * LARc /* 0..7   LARc's        OUT     */ )
+Gsm_LPC_Analysis ()
 {
   longword L_ACF[9];
 
-  Autocorrelation (s, L_ACF);
+  Autocorrelation (inData, L_ACF);
   Reflection_coefficients (L_ACF, LARc);
   Transformation_to_Log_Area_Ratios (LARc);
   Quantization_and_coding (LARc);

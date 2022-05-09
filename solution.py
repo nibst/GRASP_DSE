@@ -5,11 +5,19 @@ import shutil
 import time
 import subprocess
 class Solution:
-
+    _DIRECTIVES_FILENAME = 'directives.tcl'
     def __init__(self,diretivas, cFile, prjFile):
         self.diretivas = diretivas
         self.cFile = cFile
         self.prjFile = prjFile
+        
+    def __writeDirectivesIntoFile(self):
+        directivesFile = open(self._DIRECTIVES_FILENAME, "w")
+        for value in self.diretivas.values():
+            if value is not None:
+                directivesFile.write(value + '\n')
+            print(value)
+        directivesFile.close()  
 
     def runSynthesisTeste(self):
         resultados = {}
@@ -28,13 +36,14 @@ class Solution:
         mydir='./Raise_dse'
         if os.path.exists(xml):
             shutil.rmtree(mydir)
-
+        self.__writeDirectivesIntoFile()
         print('Running Synthesis...')
         #vivado call using subprocess
         subprocess.call([r'scriptBath.bat'])
         #testing if the synthesis ended
         while not os.path.exists(xml):
             time.sleep(1)
+        #TODO raise exception when passing a certain time constraint maybe
         #read xml file
         tree = ET.parse(xml)
         root = tree.getroot()

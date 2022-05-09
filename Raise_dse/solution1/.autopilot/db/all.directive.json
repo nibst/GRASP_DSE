@@ -1,14 +1,14 @@
 {"sourceFile": [{
       "name": "",
       "directive": [{
-          "functionName": "sha_update",
-          "label": "sha_update_label4",
+          "functionName": "SgdLR_sw",
+          "label": "TRAINING_INST",
           "functionLabel": "",
           "pragma": {
             "name": "UNROLL",
             "option": [{
                 "name": "factor",
-                "value": "32"
+                "value": "2048"
               }]
           }
         }]

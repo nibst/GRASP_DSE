@@ -36,11 +36,6 @@ class HillClimbing(Heuristic):
                                                 #mantendo apenas os títulos das diretivas - seu valores são
                                                 #trocados por None
         
-        fileName = 'directives.tcl'
-
-        #deleta o interior de directives.tcl
-        directivesFile = open(fileName, "w")
-        directivesFile.close()    
         solutionIndex=0
         generateScript(self.cFiles, self.prjFile)
         
@@ -56,13 +51,7 @@ class HillClimbing(Heuristic):
                 final[diretiva] = option                             #Progressivamente popula o dicionário 'final' e cria
                 solution = Solution(final,self.cFiles,self.prjFile)         #Solutions a partir deste
                 solution.runSynthesis()
-                print(solution.resultados)
-                directivesFile = open(fileName, "w")
-                for value in solution.diretivas.values():
-                    if value is not None:
-                        directivesFile.write(value + '\n')
-                    print(value)
-                directivesFile.close()                
+                print(solution.resultados)              
                 lutXLatency = solution.resultados['LUT'] * solution.resultados['latency']
                 if lutXLatency<bestLUTxLatency:          #mantendo aquelas onde o nro de LUTs é estritamente
                     bestLUTxLatency = lutXLatency        #menor que o da anterior.

@@ -1,3 +1,4 @@
 {
-    "cmake.sourceDirectory": "${workspaceFolder}/benchmarks/firewall"
+    "cmake.sourceDirectory": "${workspaceFolder}/benchmarks/firewall",
+    "cmake.configureOnOpen": true
 }

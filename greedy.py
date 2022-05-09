@@ -26,8 +26,6 @@ class Greedy(Heuristic):
         final = dict.fromkeys(dictDir,None) #Cria um dicionário 'final' a partir do 'dictDir' mas 
                                                 #mantendo apenas os títulos das diretivas - seu valores são
                                                 #trocados por None
-        fileName = 'directives.tcl'                                 
-            
         solutionIndex=1
         generateScript(self.cFiles, self.prjFile)
         
@@ -36,7 +34,7 @@ class Greedy(Heuristic):
             
             
             
-            bestLUT = 9999999
+            bestLUTxLatency = float('inf') #infinito
             
             for option in dictDir[diretiva]:   
                 
@@ -49,17 +47,10 @@ class Greedy(Heuristic):
                 final[diretiva] = option                             #Progressivamente popula o dicionário 'final' e cria
                 solution = Solution(final,self.cFiles,self.prjFile)         #Solutions a partir deste
                 solution.runSynthesis()
-                print(solution.resultados)
-                directivesFile = open(fileName, "w")
-                for value in solution.diretivas.values():
-                    if value is not None:
-                        directivesFile.write(value + '\n')
-                    print(value)
-                directivesFile.close()                
-                
-                
-                if solution.resultados['LUT']<bestLUT:          #mantendo aquelas onde o nro de LUTs é estritamente
-                    bestLUT = solution.resultados['LUT']
+                print(solution.resultados)             
+                lutXLatency = solution.resultados['LUT'] * solution.resultados['latency']
+                if lutXLatency<bestLUTxLatency:          #mantendo aquelas onde o nro de LUTs é estritamente
+                    bestLUTxLatency = solution.resultados['LUT']
                     currentBest = option        #menor que o da anterior.
                     
                 deep = copy.deepcopy(solution)   

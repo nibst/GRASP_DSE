@@ -58,7 +58,7 @@ set_directive_unroll -factor 2048 "SgdLR_sw/TRAINING_INST"
 set_directive_unroll "SgdLR_sw/TRAINING_INST"
 *
 array_partition SgdLR_sw
-set_directive_array_partition -type block -factor 8 -dim 1 "SgdLR_sw" gradient
+set_directive_array_partition -type block -factor 8 -dim 1 cgradient
 set_directive_array_partition -type block -factor 16 -dim 1 "SgdLR_sw" gradient
 set_directive_array_partition -type block -factor 32 -dim 1 "SgdLR_sw" gradient
 set_directive_array_partition -type block -factor 64 -dim 1 "SgdLR_sw" gradient

@@ -16,7 +16,7 @@
         <clock name="default" period="8" default="false"/>
     </clockList>
     <config>
-        <schedule model="sha_stream"/>
+        <schedule model="updateParameter"/>
     </config>
 </AutoPilot:solution>
 
