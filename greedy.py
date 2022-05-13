@@ -50,7 +50,7 @@ class Greedy(Heuristic):
                 print(solution.resultados)             
                 lutXLatency = solution.resultados['LUT'] * solution.resultados['latency']
                 if lutXLatency<bestLUTxLatency:          #mantendo aquelas onde o nro de LUTs é estritamente
-                    bestLUTxLatency = solution.resultados['LUT']
+                    bestLUTxLatency = lutXLatency
                     currentBest = option        #menor que o da anterior.
                     
                 deep = copy.deepcopy(solution)   
