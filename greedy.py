@@ -28,12 +28,9 @@ class Greedy(Heuristic):
                                                 #trocados por None
         solutionIndex=1
         generateScript(self.cFiles, self.prjFile)
-        
+        currentBest = None
         for diretiva in dictDir: 
 
-            
-            
-            
             bestLUTxLatency = float('inf') #infinito
             
             for option in dictDir[diretiva]:   
@@ -41,21 +38,26 @@ class Greedy(Heuristic):
                 
                 if option == '':
                     option = None
-                 
-                
-                       
+
                 final[diretiva] = option                             #Progressivamente popula o dicionário 'final' e cria
-                solution = Solution(final,self.cFiles,self.prjFile)         #Solutions a partir deste
-                solution.runSynthesis()
-                print(solution.resultados)             
-                lutXLatency = solution.resultados['LUT'] * solution.resultados['latency']
-                if lutXLatency<bestLUTxLatency:          #mantendo aquelas onde o nro de LUTs é estritamente
-                    bestLUTxLatency = solution.resultados['LUT']
-                    currentBest = option        #menor que o da anterior.
-                    
-                deep = copy.deepcopy(solution)   
-                solutionsDict[solutionIndex] = deep               
-                solutionIndex+=1
+                solution = Solution(final,self.cFiles,self.prjFile)         #Solutions a partir deste     
+                try:
+                    solution.runSynthesis()
+                except Exception as e:
+                    final[diretiva] = None #retira a diretiva usada
+                    print(e)
+                #executa else qnd try roda sem erros    
+                else:
+                    print(solution.resultados)             
+                    lutXLatency = solution.resultados['LUT'] * solution.resultados['latency']
+                    if lutXLatency<bestLUTxLatency:          #mantendo aquelas onde o nro de LUTs é estritamente
+                        bestLUTxLatency = lutXLatency
+                        currentBest = option        #menor que o da anterior.
+                        
+                    deep = copy.deepcopy(solution)   
+                    solutionsDict[solutionIndex] = deep               
+                    solutionIndex+=1
+
             final[diretiva] = currentBest
                                         
             # Retorna o dicionário de soluções para o 'main'
