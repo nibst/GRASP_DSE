@@ -40,7 +40,6 @@ class Greedy(Heuristic):
                     option = None
 
                 final[diretiva] = option                             #Progressivamente popula o dicionário 'final' e cria
-<<<<<<< HEAD
                 solution = Solution(final,self.cFiles,self.prjFile)         #Solutions a partir deste     
                 try:
                     solution.runSynthesis()
@@ -59,19 +58,6 @@ class Greedy(Heuristic):
                     solutionsDict[solutionIndex] = deep               
                     solutionIndex+=1
 
-=======
-                solution = Solution(final,self.cFiles,self.prjFile)         #Solutions a partir deste
-                solution.runSynthesis()
-                print(solution.resultados)             
-                lutXLatency = solution.resultados['LUT'] * solution.resultados['latency']
-                if lutXLatency<bestLUTxLatency:          #mantendo aquelas onde o nro de LUTs é estritamente
-                    bestLUTxLatency = lutXLatency
-                    currentBest = option        #menor que o da anterior.
-                    
-                deep = copy.deepcopy(solution)   
-                solutionsDict[solutionIndex] = deep               
-                solutionIndex+=1
->>>>>>> dbc361f5f880b26122713ec319bd7394c6f0178f
             final[diretiva] = currentBest
                                         
             # Retorna o dicionário de soluções para o 'main'
