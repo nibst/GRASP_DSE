@@ -2,15 +2,6 @@
 pipeline main_label0
 set_directive_pipeline "main/main_label0"
 *
-array_partition main
-set_directive_array_partition -type block -factor 10 -dim 0 "main" indata
-set_directive_array_partition -type block -factor 100 -dim 0 "main" indata
-set_directive_array_partition -type block -factor 1000 -dim 0 "main" indata
-set_directive_array_partition -type cyclic -factor 10 -dim 0 "main" indata
-set_directive_array_partition -type cyclic -factor 100 -dim 0 "main" indata
-set_directive_array_partition -type cyclic -factor 1000 -dim 0 "main" indata
-set_directive_array_partition -type complete -dim 0 "main" indata
-*
 pipeline local_memcpy_label3
 set_directive_pipeline "local_memcpy/local_memcpy_label3"
 *
@@ -26,3 +17,78 @@ set_directive_unroll -factor 16 "sha_update/sha_update_label4"
 set_directive_unroll -factor 32 "sha_update/sha_update_label4"
 set_directive_unroll "sha_update/sha_update_label4"
 *
+pipeline sha_transform_label1
+set_directive_pipeline "sha_transform_label1"
+*
+unroll sha_transform_label1
+set_directive_unroll -factor 2 "sha_transform_label1"
+set_directive_unroll -factor 4 "sha_transform_label1"
+set_directive_unroll -factor 8 "sha_transform_label1"
+set_directive_unroll "sha_transform_label1"
+*
+pipeline sha_transform_label2
+set_directive_pipeline "sha_transform_label2"
+*
+unroll sha_transform_label2
+set_directive_unroll -factor 4 "sha_transform_label2"
+set_directive_unroll -factor 8 "sha_transform_label2"
+set_directive_unroll -factor 16 "sha_transform_label2"
+set_directive_unroll -factor 32 "sha_transform_label2"
+set_directive_unroll "sha_transform_label2"
+*
+pipeline sha_transform_label3
+set_directive_pipeline "sha_transform_label3"
+*
+unroll sha_transform_label3
+set_directive_unroll -factor 4 "sha_transform_label3"
+set_directive_unroll -factor 8 "sha_transform_label3"
+set_directive_unroll -factor 16 "sha_transform_label3"
+set_directive_unroll "sha_transform_label3"
+*
+pipeline sha_transform_label4
+set_directive_pipeline sha_transform_label4
+*
+unroll sha_transform_label4
+set_directive_unroll -factor 4 "sha_transform_label4"
+set_directive_unroll -factor 8 "sha_transform_label4"
+set_directive_unroll -factor 16 "sha_transform_label4"
+set_directive_unroll "sha_transform_label4"
+*
+pipeline sha_transform_label5
+set_directive_pipeline sha_transform_label5
+*
+unroll sha_transform_label5
+set_directive_unroll -factor 4 "sha_transform_label5"
+set_directive_unroll -factor 8 "sha_transform_label5"
+set_directive_unroll -factor 16 "sha_transform_label5"
+set_directive_unroll "sha_transform_label5"
+*
+pipeline sha_transform_label6
+set_directive_pipeline sha_transform_label6
+*
+unroll sha_transform_label6
+set_directive_unroll -factor 4 "sha_transform_label6"
+set_directive_unroll -factor 8 "sha_transform_label6"
+set_directive_unroll -factor 16 "sha_transform_label6"
+set_directive_unroll "sha_transform_label6"
+*
+array_partition sha_transform
+set_directive_array_partition -type block -factor 8 -dim 1 "sha_transform" W
+set_directive_array_partition -type block -factor 16 -dim 1 "sha_transform" W
+set_directive_array_partition -type block -factor 32 -dim 1 "sha_transform" W
+set_directive_array_partition -type block -factor 64 -dim 1 "sha_transform" W
+set_directive_array_partition -type cyclic -factor 8 -dim 1 "sha_transform" W
+set_directive_array_partition -type cyclic -factor 16 -dim 1 "sha_transform" W
+set_directive_array_partition -type cyclic -factor 32 -dim 1 "sha_transform" W
+set_directive_array_partition -type cyclic -factor 64 -dim 1 "sha_transform" W
+set_directive_array_partition -type complete -dim 1 "sha_transform" W
+*
+inline sha_stream
+set_directive_inline -region "sha_stream"
+*
+
+
+
+
+
+
