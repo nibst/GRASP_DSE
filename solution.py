@@ -4,8 +4,12 @@ import os.path
 import shutil
 import time
 import subprocess
+import psutil
+
 class Solution:
+    _MAX_RAM_USAGE = 25 #in percentage
     _DIRECTIVES_FILENAME = 'directives.tcl'
+    _VIVADO_PROCESSNAME = 'vivado_hls.exe'
     def __init__(self,diretivas, cFile, prjFile):
         self.diretivas = diretivas
         self.cFile = cFile
@@ -14,7 +18,7 @@ class Solution:
     def __writeDirectivesIntoFile(self):
         directivesFile = open(self._DIRECTIVES_FILENAME, "w")
         for value in self.diretivas.values():
-            if value is not None:
+            if value is not '' and value is not None:
                 directivesFile.write(value + '\n')
             print(value)
         directivesFile.close()  
@@ -39,10 +43,23 @@ class Solution:
         self.__writeDirectivesIntoFile()
         print('Running Synthesis...')
         #vivado call using subprocess
-        subprocess.call([r'scriptBath.bat'])
+        subprocess.Popen([r'scriptBath.bat'])
+        
         #testing if the synthesis ended
-        while not os.path.exists(xml):
+        vivadoIsRunning = True
+        while vivadoIsRunning:
             time.sleep(1)
+            vivadoIsRunning = False
+            for proc in psutil.process_iter(['name']):
+                if proc.name() == self._VIVADO_PROCESSNAME:
+                    vivadoIsRunning = True
+                    break
+            memoryUse = proc.memory_percent()
+            if memoryUse > self._MAX_RAM_USAGE:
+                proc.terminate()
+                raise Exception("****Vivado_HLS has exceed max RAM usage****")
+            
+        print("Synthesis ended")
         #TODO raise exception when passing a certain time constraint maybe
         #read xml file
         tree = ET.parse(xml)
@@ -60,7 +77,5 @@ class Solution:
         try:
             resultados['latency'] = int(x.find('Average-caseLatency').text)
         except ValueError:
-            print("WARNING: UNDETERMINED LATENCY")
-            resultados['latency'] = -1
-
+            raise ValueError("****UNDETERMINED LATENCY****")
         self.resultados = resultados        
