@@ -6,7 +6,7 @@ import copy
 import itertools
 import time
 class ExhaustiveSearch(Heuristic):
-
+    _SECONDS = 48800
     def __init__(self,filesDict,outPath):
         self.directivesTxt = Path(filesDict['dFile']).read_text()
         self.cFiles = filesDict['cFiles']
@@ -46,7 +46,7 @@ class ExhaustiveSearch(Heuristic):
                 solutionIndex+=1
             end = time.time()
             totalTime += (end-start)
-            if totalTime >= 64800: #magic number for 18hours
+            if totalTime >= self._SECONDS: #time that this will run for
                 return solutionsDict
         return solutionsDict
         
