@@ -4,7 +4,7 @@ from solution import Solution
 from Script_tcl import generateScript
 import copy
 import itertools
-
+import time
 class ExhaustiveSearch(Heuristic):
 
     def __init__(self,filesDict,outPath):
@@ -22,35 +22,35 @@ class ExhaustiveSearch(Heuristic):
         
         dictDir=self.parsedTxt() 
         solutionsDict = {}
-        
-        
-        fileName = 'directives.tcl'                                 
-            
+                    
         
         solutionIndex=1
         generateScript(self.cFiles, self.prjFile)
         
         keys,values = zip(*dictDir.items())
-        permutations_dicts = [dict(zip(keys, v)) for v in itertools.product(*values)]
-        
-        for element in permutations_dicts:
-                #Progressivamente popula o dicionário 'final' e cria
-            solution = Solution(element,self.cFiles,self.prjFile)         #Solutions a partir deste
-            solution.runSynthesis()
-            directivesFile = open(fileName, "w")
-            for value in solution.diretivas.values():
-                if value is not None:
-                    directivesFile.write(value + '\n')
-                print(value)
-            directivesFile.close()
-       
+        totalTime = 0
+        for permutation in itertools.product(*values):
+            start = time.time()
+            perumtationDict = dict(zip(keys,permutation)) # one permutation
             
-            deep = copy.deepcopy(solution)   
-            solutionsDict[solutionIndex] = deep
-            print (solutionIndex)               
-            solutionIndex+=1
-
+            solution = Solution(perumtationDict,self.cFiles,self.prjFile)         #Solutions a partir deste
+            try:
+                solution.runSynthesis()
+            except Exception as e:
+                print(e)
+            else:
+                print(solution.resultados)             
+                deep = copy.deepcopy(solution)   
+                solutionsDict[solutionIndex] = deep
+                print (solutionIndex)               
+                solutionIndex+=1
+            end = time.time()
+            totalTime += (end-start)
+            if totalTime >= 64800: #magic number for 18hours
+                return solutionsDict
         return solutionsDict
+        
+       
  
 
 
