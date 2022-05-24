@@ -7,7 +7,7 @@ import subprocess
 import psutil
 
 class Solution:
-    _MAX_RAM_USAGE = 25 #in percentage
+    _MAX_RAM_USAGE = 30 #in percentage
     _DIRECTIVES_FILENAME = 'directives.tcl'
     _VIVADO_PROCESSNAME = 'vivado_hls.exe'
     def __init__(self,diretivas, cFile, prjFile):
@@ -18,7 +18,7 @@ class Solution:
     def __writeDirectivesIntoFile(self):
         directivesFile = open(self._DIRECTIVES_FILENAME, "w")
         for value in self.diretivas.values():
-            if value is not '' and value is not None:
+            if value != '' and value is not None:
                 directivesFile.write(value + '\n')
             print(value)
         directivesFile.close()  
@@ -34,6 +34,7 @@ class Solution:
         self.resultados = resultados
    
     def runSynthesis(self):
+        #TODO antes de chamar a sintese verificar se ja tem um processo do vivado rodando e fazer esse processo n ser confundido com o que vamos rodar
         #path to synthesis data
         xml='./Raise_dse/solution1/syn/report/csynth.xml'
         
@@ -53,11 +54,12 @@ class Solution:
             for proc in psutil.process_iter(['name']):
                 if proc.name() == self._VIVADO_PROCESSNAME:
                     vivadoIsRunning = True
+                    memoryUse = proc.memory_percent()
+                    if memoryUse > self._MAX_RAM_USAGE:
+                        proc.terminate()
+                        raise Exception("****Vivado_HLS has exceed max RAM usage****")
                     break
-            memoryUse = proc.memory_percent()
-            if memoryUse > self._MAX_RAM_USAGE:
-                proc.terminate()
-                raise Exception("****Vivado_HLS has exceed max RAM usage****")
+            
             
         print("Synthesis ended")
         #TODO raise exception when passing a certain time constraint maybe
