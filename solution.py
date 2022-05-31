@@ -10,11 +10,15 @@ class Solution:
     _MAX_RAM_USAGE = 30 #in percentage
     _DIRECTIVES_FILENAME = 'directives.tcl'
     _VIVADO_PROCESSNAME = 'vivado_hls.exe'
+    _FF_VALUE = 1; _LUT_VALUE = 2; _DSP_VALUE = 345.68; _BRAM_VALUE = 547.33
+
+    
     def __init__(self,diretivas, cFile, prjFile):
         self.diretivas = diretivas
         self.cFile = cFile
         self.prjFile = prjFile
-        
+    
+    
     def __writeDirectivesIntoFile(self):
         directivesFile = open(self._DIRECTIVES_FILENAME, "w")
         for value in self.diretivas.values():
@@ -48,6 +52,8 @@ class Solution:
         
         #testing if the synthesis ended
         vivadoIsRunning = True
+        
+        time.sleep(2) #para dar tempo de iniciar vivado
         while vivadoIsRunning:
             time.sleep(1)
             vivadoIsRunning = False
@@ -74,6 +80,7 @@ class Solution:
         resultados['DSP'] = int(x.find('DSP48E').text)
         resultados['LUT'] = int(x.find('LUT').text)
         resultados['BRAM'] = int(x.find('BRAM_18K').text)
+        resultados['resources'] =  resultados['FF'] * self._FF_VALUE + resultados['LUT'] * self._LUT_VALUE + resultados['DSP'] * self._DSP_VALUE + resultados['BRAM'] * self._BRAM_VALUE    
         x = root.find('PerformanceEstimates')
         x = x.find('SummaryOfOverallLatency')
         try:
