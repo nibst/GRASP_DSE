@@ -5,8 +5,7 @@ from pathlib import Path
 import os,glob
 
 class Heuristic(ABC):
-
-
+    
     def parsedTxt(self):
         return readDirectivesFile.fileParser(self.directivesTxt)
     #Passa para o arquivo readDirectivesFile.py o texto lido do arquivo

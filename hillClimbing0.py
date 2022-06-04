@@ -7,7 +7,6 @@ from solution import Solution
 from solutionTimeXLUT import SolutionTimeXLUT
 from Script_tcl import generateScript
 
-import time
 from datetime import timedelta
 
 import copy
@@ -50,18 +49,24 @@ class HillClimbing(Heuristic):
                        
                 final[diretiva] = option                             #Progressivamente popula o dicionário 'final' e cria
                 solution = Solution(final,self.cFiles,self.prjFile)         #Solutions a partir deste
-                solution.runSynthesis()
-                print(solution.resultados)              
-                lutXLatency = solution.resultados['LUT'] * solution.resultados['latency']
-                if lutXLatency<bestLUTxLatency:          #mantendo aquelas onde o nro de LUTs é estritamente
-                    bestLUTxLatency = lutXLatency        #menor que o da anterior.
-                    
-                    deep = copy.deepcopy(solution)   
-                    solutionsDict[solutionIndex] = deep
-                    solutionIndex+=1
-                                        
-                if lutXLatency>bestLUTxLatency:
-                    break
+                try:
+                    solution.runSynthesis()
+                except Exception as e:
+                    final[diretiva] = None #retira a diretiva usada
+                    print(e)
+                #executa else qnd try roda sem erros
+                else:   
+                    print(solution.resultados)              
+                    lutXLatency = solution.resultados['LUT'] * solution.resultados['latency']
+                    if lutXLatency<bestLUTxLatency:          #mantendo aquelas onde o nro de LUTs é estritamente
+                        bestLUTxLatency = lutXLatency        #menor que o da anterior.
+                        
+                        deep = copy.deepcopy(solution)   
+                        solutionsDict[solutionIndex] = deep
+                        solutionIndex+=1
+                                            
+                    if lutXLatency>bestLUTxLatency:
+                        break
 
                                     # Retorna o dicionário de soluções para o 'main'
     

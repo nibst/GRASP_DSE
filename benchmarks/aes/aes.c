@@ -76,7 +76,7 @@ aes_main (void)
 {
 /*
 +--------------------------------------------------------------------------+
-| * Test Vectors (added for CHStone)                                       |
+| * Test Vectors (added for CHStone)                                        |
 |     statemt, key : input data                                            |
 +--------------------------------------------------------------------------+
 */

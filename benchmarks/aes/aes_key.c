@@ -132,13 +132,13 @@ KeySchedule (int type, int key[32])
       return -1;
     }
 
-  for (j = 0; j < nk; ++j)
-    for (i = 0; i < 4; ++i)
+  KeySchedule_label4:for (j = 0; j < nk; ++j)
+    KeySchedule_label5:for (i = 0; i < 4; ++i)
 /* 0 word */
       word[i][j] = key[i + j * 4];
 
 /* expanded key is generated */
-   for (j = nk; j < nb * (round_val + 1); ++j)
+   KeySchedule_label6:for (j = nk; j < nb * (round_val + 1); ++j)
     {KeySchedule_label7: 
 
 /* RotByte */

@@ -316,7 +316,12 @@ Quantization_and_coding (register word * LAR /* [0..7]       IN/OUT  */ )
 #define N 160
 #define M 8
 
-word inData[N] =
+
+
+void
+Gsm_LPC_Analysis ()
+{
+  word inData[N] =
   { 81, 10854, 1893, -10291, 7614, 29718, 20475, -29215, -18949, -29806,
   -32017, 1596, 15744, -3088, -17413, -22123, 6798, -13276, 3819, -16273,
     -1573, -12523, -27103,
@@ -342,10 +347,7 @@ word inData[N] =
     -10438, -11938,
   -14833, -6658, 32058, 4020, 10461, 15159
 };
-word LARc[M];
-void
-Gsm_LPC_Analysis ()
-{
+  word LARc[M];
   longword L_ACF[9];
 
   Autocorrelation (inData, L_ACF);

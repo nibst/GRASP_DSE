@@ -372,7 +372,7 @@ MixColumn_AddRoundKey (int statemt[32], int nb, int n)
   int ret[8 * 4], j;
   register int x;
 
-  for (j = 0; j < nb; ++j)
+  MixColumn_AddRoundKey_label0:for (j = 0; j < nb; ++j)
     {
 #pragma HLS LOOP_TRIPCOUNT min=4 max=8 avg=6
       ret[j * 4] = (statemt[j * 4] << 1);
@@ -423,7 +423,7 @@ MixColumn_AddRoundKey (int statemt[32], int nb, int n)
       ret[3 + j * 4] ^=
 	statemt[1 + j * 4] ^ statemt[2 + j * 4] ^ word[3][j + nb * n];
     }
-  for (j = 0; j < nb; ++j)
+  MixColumn_AddRoundKey_label1:for (j = 0; j < nb; ++j)
     {
 #pragma HLS LOOP_TRIPCOUNT min=4 max=8 avg=6
       statemt[j * 4] = ret[j * 4];
@@ -441,7 +441,7 @@ AddRoundKey_InversMixColumn (int statemt[32], int nb, int n)
   int ret[8 * 4], i, j;
   register int x;
 
-  for (j = 0; j < nb; ++j)
+  AddRoundKey_InversMixColumn_label2:for (j = 0; j < nb; ++j)
     {
 #pragma HLS LOOP_TRIPCOUNT min=4 max=8 avg=6
       statemt[j * 4] ^= word[0][j + nb * n];
@@ -452,7 +452,7 @@ AddRoundKey_InversMixColumn (int statemt[32], int nb, int n)
   AddRoundKey_InversMixColumn_label0: for (j = 0; j < nb; ++j)
 
 #pragma HLS LOOP_TRIPCOUNT min=4 max=8 avg=6
-for (i = 0; i < 4; ++i)
+AddRoundKey_InversMixColumn_label1:for (i = 0; i < 4; ++i)
       {
 	x = (statemt[i + j * 4] << 1);
 	if ((x >> 8) == 1)
@@ -505,7 +505,7 @@ for (i = 0; i < 4; ++i)
 	x ^= statemt[(i + 3) % 4 + j * 4];
 	ret[i + j * 4] ^= x;
       }
-  for (i = 0; i < nb; ++i)
+  AddRoundKey_InversMixColumn_label3:for (i = 0; i < nb; ++i)
     {
 #pragma HLS LOOP_TRIPCOUNT min=4 max=8 avg=6
       statemt[i * 4] = ret[i * 4];
@@ -540,7 +540,7 @@ AddRoundKey (int statemt[32], int type, int n)
       nb = 8;
       break;
     }
-  for (j = 0; j < nb; ++j)
+  AddRoundKey_label0:for (j = 0; j < nb; ++j)
     {
       statemt[j * 4] ^= word[0][j + nb * n];
       statemt[1 + j * 4] ^= word[1][j + nb * n];
