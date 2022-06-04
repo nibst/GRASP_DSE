@@ -2,10 +2,12 @@ from ast import arguments
 from pickle import TRUE
 from re import A
 from setuptools import Require
+from RandomSearch import RandomSearch
 from greedy import Greedy
 from heuristic import Heuristic
 from hillClimbing0 import HillClimbing
 from exhaustiveSearch import ExhaustiveSearch
+from resourceGreedy import ResourceGreedy
 import argparse
 import matplotlib.pyplot as plt
 from matplotlib.widgets import Cursor
@@ -13,8 +15,7 @@ import pandas as pd
 
 if __name__ == "__main__":
     
-
- 
+    
     #Initialize parser
     parser = argparse.ArgumentParser()
  
@@ -35,23 +36,25 @@ if __name__ == "__main__":
 
     
     #heuristic = HillClimbing(filesDict,'directives.tcl')
-    heuristic = Greedy(filesDict,'directives.tcl')
+    #heuristic = Greedy(filesDict,'directives.tcl')
     #heuristic = ExhaustiveSearch(filesDict,'directives.tcl')
+    heuristic = RandomSearch(filesDict,'directives.tcl')
+    #heuristic = ResourceGreedy(filesDict,'directives.tcl')
     #heuristic.writeSolutionsDict()
 
-    
+    RESOURCE_TO_COMPARE = 'resources'
     ######################### GRAPH
     listLUT = []
     listLat = []
-
+    
     for element in heuristic.solutions:
-        lut = heuristic.solutions[element].resultados['LUT']
+        resources = heuristic.solutions[element].resultados[RESOURCE_TO_COMPARE]#heuristic.solutions[element].resultados['resources']
         lat = heuristic.solutions[element].resultados['latency']
-        listLUT.append(lut)
+        listLUT.append(resources)
         listLat.append(lat)
     
 
-    x_name = 'LUT'
+    x_name = RESOURCE_TO_COMPARE
     y_name = 'Latency'
     df = pd.DataFrame(list(zip(listLUT, listLat)),
                columns =[x_name, y_name])
