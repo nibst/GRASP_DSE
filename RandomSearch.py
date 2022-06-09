@@ -21,7 +21,7 @@ from random import seed
 from random import randint
 
 class RandomSearch(Heuristic):
-    _SECONDS = 60 #48h
+    _SECONDS = 259.200 #3 dias
     def __init__(self,filesDict,outPath):
         self.directivesTxt = Path(filesDict['dFile']).read_text()
         self.cFiles = filesDict['cFiles']
