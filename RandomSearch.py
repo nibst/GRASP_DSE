@@ -21,7 +21,7 @@ from random import seed
 from random import randint
 
 class RandomSearch(Heuristic):
-    _SECONDS = 48800
+    _SECONDS = 60 #48h
     def __init__(self,filesDict,outPath):
         self.directivesTxt = Path(filesDict['dFile']).read_text()
         self.cFiles = filesDict['cFiles']
@@ -65,24 +65,25 @@ class RandomSearch(Heuristic):
             onePermutation = self.__generateRandomPermutation(dictDir,controlTree)
             if onePermutation:    #se tiver uma permutacao na variavel
                 solution = Solution(onePermutation,self.cFiles,self.prjFile)         #Solutions a partir deste
-            try:
-                solution.runSynthesis()
-            except Exception as e:
-                print(e)
-            #executa else qnd try roda sem erros
-            else:   
-                print(solution.resultados)                  
-                deep = copy.deepcopy(solution)   
-                solutionsDict[solutionIndex] = deep
-                print (solutionIndex)      
-                solutionIndex+=1
+                try:
+                    solution.runSynthesis()
+                except Exception as e:
+                    print(e)
+                #executa else qnd try roda sem erros
+                else:   
+                    print(solution.resultados)                  
+                    deep = copy.deepcopy(solution)   
+                    solutionsDict[solutionIndex] = deep
+                    print (solutionIndex)      
+                    solutionIndex+=1
+
             end = time.time()
             totalTime += (end-start)
             if totalTime >= self._SECONDS: 
                 return solutionsDict                            
-                
+                    
 
-                                    # Retorna o dicionário de soluções para o 'main'
+                                        # Retorna o dicionário de soluções para o 'main'
     
         return solutionsDict
 
