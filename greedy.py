@@ -7,7 +7,6 @@ import copy
 class Greedy(Heuristic):
     
     
-    
     def __init__(self,filesDict,outPath):
         self.directivesTxt = Path(filesDict['dFile']).read_text()
         self.cFiles = filesDict['cFiles']
