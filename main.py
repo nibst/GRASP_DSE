@@ -42,10 +42,6 @@ if __name__ == "__main__":
     #heuristic = ResourceGreedy(filesDict,'directives.tcl')
     #heuristic.writeSolutionsDict()
     
-    with open('./Plot/solutionsFile', 'wb') as solutionsFile:
-        pickle.dump(heuristic, solutionsFile)
-    solutionsFile.close()
-    
     RESOURCE_TO_COMPARE = 'resources'
     ######################### GRAPH
     listLUT = []
@@ -84,5 +80,9 @@ if __name__ == "__main__":
 
 
     plt.savefig('./Plot/plot.jpg')
+    #file para plotar o resultado do computador remoto, caso queira interagir com o plot ao invés de ser só um jpg
+    with open('./Plot/solutionsFile', 'wb') as solutionsFile:
+        pickle.dump(heuristic, solutionsFile)
+    solutionsFile.close()
     plt.show() 
    
