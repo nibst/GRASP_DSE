@@ -1,4 +1,4 @@
-from ast import arguments
+from ast import arguments, dump
 from pickle import TRUE
 from re import A
 from setuptools import Require
@@ -12,7 +12,7 @@ import argparse
 import matplotlib.pyplot as plt
 from matplotlib.widgets import Cursor
 import pandas as pd
-
+import pickle
 if __name__ == "__main__":
     
     
@@ -41,7 +41,11 @@ if __name__ == "__main__":
     heuristic = RandomSearch(filesDict,'directives.tcl')
     #heuristic = ResourceGreedy(filesDict,'directives.tcl')
     #heuristic.writeSolutionsDict()
-
+    
+    with open('./Plot/solutionsFile', 'wb') as solutionsFile:
+        pickle.dump(heuristic, solutionsFile)
+    solutionsFile.close()
+    
     RESOURCE_TO_COMPARE = 'resources'
     ######################### GRAPH
     listLUT = []
@@ -79,8 +83,6 @@ if __name__ == "__main__":
     #     hText -= 0.15  
 
 
-    
+    plt.savefig('./Plot/plot.jpg')
     plt.show() 
-    #shaHill0.teste()
-
    
