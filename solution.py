@@ -7,7 +7,7 @@ import subprocess
 import psutil
 
 class Solution:
-    _MAX_RAM_USAGE = 60 #in percentage
+    _MAX_RAM_USAGE =30 #in percentage
     _DIRECTIVES_FILENAME = 'directives.tcl'
     _VIVADO_PROCESSNAME = 'vivado_hls.exe'
     _FF_VALUE = 1; _LUT_VALUE = 2; _DSP_VALUE = 345.68; _BRAM_VALUE = 547.33
@@ -55,6 +55,7 @@ class Solution:
         
         time.sleep(2) #para dar tempo de iniciar vivado
         while vivadoIsRunning:
+            #tempo entre duas checagens de se o vivado continua rodando
             time.sleep(1)
             vivadoIsRunning = False
             for proc in psutil.process_iter(['name']):
@@ -66,25 +67,27 @@ class Solution:
                         raise Exception("****Vivado_HLS has exceed max RAM usage****")
                     break
             
-            
-        print("Synthesis ended")
-        #TODO raise exception when passing a certain time constraint maybe
-        #read xml file
-        tree = ET.parse(xml)
-        root = tree.getroot()
+        if os.path.exists(xml):  
+            print("Synthesis ended")
+            #TODO raise exception when passing a certain time constraint maybe
+            #read xml file
+            tree = ET.parse(xml)
+            root = tree.getroot()
 
-        resultados = {}
-        x = root.find('AreaEstimates')
-        x = x.find('Resources')
-        resultados['FF'] =int(x.find('FF').text)
-        resultados['DSP'] = int(x.find('DSP48E').text)
-        resultados['LUT'] = int(x.find('LUT').text)
-        resultados['BRAM'] = int(x.find('BRAM_18K').text)
-        resultados['resources'] =  resultados['FF'] * self._FF_VALUE + resultados['LUT'] * self._LUT_VALUE + resultados['DSP'] * self._DSP_VALUE + resultados['BRAM'] * self._BRAM_VALUE    
-        x = root.find('PerformanceEstimates')
-        x = x.find('SummaryOfOverallLatency')
-        try:
-            resultados['latency'] = int(x.find('Average-caseLatency').text)
-        except ValueError:
-            raise ValueError("****UNDETERMINED LATENCY****")
-        self.resultados = resultados        
+            resultados = {}
+            x = root.find('AreaEstimates')
+            x = x.find('Resources')
+            resultados['FF'] =int(x.find('FF').text)
+            resultados['DSP'] = int(x.find('DSP48E').text)
+            resultados['LUT'] = int(x.find('LUT').text)
+            resultados['BRAM'] = int(x.find('BRAM_18K').text)
+            resultados['resources'] =  resultados['FF'] * self._FF_VALUE + resultados['LUT'] * self._LUT_VALUE + resultados['DSP'] * self._DSP_VALUE + resultados['BRAM'] * self._BRAM_VALUE    
+            x = root.find('PerformanceEstimates')
+            x = x.find('SummaryOfOverallLatency')
+            try:
+                resultados['latency'] = int(x.find('Average-caseLatency').text)
+            except ValueError:
+                raise ValueError("****UNDETERMINED LATENCY****")
+            self.resultados = resultados
+        else:
+             raise Exception("****Error in synthesis****")       
