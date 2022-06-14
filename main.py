@@ -35,10 +35,10 @@ if __name__ == "__main__":
     
 
     
-    #heuristic = HillClimbing(filesDict,'directives.tcl')
+    heuristic = HillClimbing(filesDict,'directives.tcl')
     #heuristic = Greedy(filesDict,'directives.tcl')
     #heuristic = ExhaustiveSearch(filesDict,'directives.tcl')
-    heuristic = RandomSearch(filesDict,'directives.tcl')
+    #heuristic = RandomSearch(filesDict,'directives.tcl')
     #heuristic = ResourceGreedy(filesDict,'directives.tcl')
     #heuristic.writeSolutionsDict()
     

@@ -2,49 +2,115 @@
       "name": "",
       "directive": [
         {
-          "functionName": "computeGradient",
-          "label": "GRAD",
-          "functionLabel": "",
-          "pragma": {
-            "name": "UNROLL",
-            "option": [{
-                "name": "factor",
-                "value": "256"
-              }]
-          }
-        },
-        {
-          "functionName": "updateParameter",
-          "label": "UPDATE",
-          "functionLabel": "",
-          "pragma": {
-            "name": "UNROLL",
-            "option": [{
-                "name": "factor",
-                "value": "256"
-              }]
-          }
-        },
-        {
-          "functionName": "SgdLR_sw",
-          "label": "TRAINING_INST",
+          "functionName": "main",
+          "label": "main_label0",
           "functionLabel": "",
           "pragma": {"name": "PIPELINE"}
         },
         {
-          "functionName": "SgdLR_sw",
-          "label": "TRAINING_INST",
+          "functionName": "local_memcpy",
+          "label": "local_memcpy_label3",
+          "functionLabel": "",
+          "pragma": {"name": "PIPELINE"}
+        },
+        {
+          "functionName": "sha_transform",
+          "label": "",
+          "functionLabel": "",
+          "pragma": {"name": "LOOP_MERGE"}
+        },
+        {
+          "functionName": "sha_update",
+          "label": "sha_update_label4",
+          "functionLabel": "",
+          "pragma": {"name": "PIPELINE"}
+        },
+        {
+          "functionName": "sha_update",
+          "label": "sha_update_label4",
           "functionLabel": "",
           "pragma": {
             "name": "UNROLL",
             "option": [{
                 "name": "factor",
-                "value": "512"
+                "value": "8"
               }]
           }
         },
         {
-          "functionName": "SgdLR_sw",
+          "functionName": "sha_transform_label1",
+          "label": "",
+          "functionLabel": "",
+          "pragma": {"name": "PIPELINE"}
+        },
+        {
+          "functionName": "sha_transform_label1",
+          "label": "",
+          "functionLabel": "",
+          "pragma": {"name": "UNROLL"}
+        },
+        {
+          "functionName": "sha_transform_label2",
+          "label": "",
+          "functionLabel": "",
+          "pragma": {"name": "PIPELINE"}
+        },
+        {
+          "functionName": "sha_transform_label2",
+          "label": "",
+          "functionLabel": "",
+          "pragma": {"name": "UNROLL"}
+        },
+        {
+          "functionName": "sha_transform_label3",
+          "label": "",
+          "functionLabel": "",
+          "pragma": {"name": "PIPELINE"}
+        },
+        {
+          "functionName": "sha_transform_label3",
+          "label": "",
+          "functionLabel": "",
+          "pragma": {"name": "UNROLL"}
+        },
+        {
+          "functionName": "sha_transform_label4",
+          "label": "",
+          "functionLabel": "",
+          "pragma": {"name": "PIPELINE"}
+        },
+        {
+          "functionName": "sha_transform_label4",
+          "label": "",
+          "functionLabel": "",
+          "pragma": {"name": "UNROLL"}
+        },
+        {
+          "functionName": "sha_transform_label5",
+          "label": "",
+          "functionLabel": "",
+          "pragma": {"name": "PIPELINE"}
+        },
+        {
+          "functionName": "sha_transform_label5",
+          "label": "",
+          "functionLabel": "",
+          "pragma": {"name": "UNROLL"}
+        },
+        {
+          "functionName": "sha_transform_label6",
+          "label": "",
+          "functionLabel": "",
+          "pragma": {"name": "PIPELINE"}
+        },
+        {
+          "functionName": "sha_transform_label6",
+          "label": "",
+          "functionLabel": "",
+          "pragma": {"name": "UNROLL"}
+        },
+        {
+          "functionName": "sha_transform",
           "label": "",
           "functionLabel": "",
           "pragma": {
@@ -52,7 +118,7 @@
             "option": [
               {
                 "name": "variable",
-                "value": "gradient",
+                "value": "W",
                 "positionalBoolean": "4"
               },
               {
@@ -62,13 +128,26 @@
               },
               {
                 "name": "factor",
-                "value": "512"
+                "value": "32"
               },
               {
                 "name": "dim",
                 "value": "1"
               }
             ]
+          }
+        },
+        {
+          "functionName": "sha_stream",
+          "label": "",
+          "functionLabel": "",
+          "pragma": {
+            "name": "INLINE",
+            "option": [{
+                "name": "region",
+                "value": "",
+                "positionalBoolean": "1"
+              }]
           }
         }
       ]

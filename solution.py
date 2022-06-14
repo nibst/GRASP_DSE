@@ -43,13 +43,12 @@ class Solution:
         xml='./Raise_dse/solution1/syn/report/csynth.xml'
         
         mydir='./Raise_dse'
-        if os.path.exists(xml):
+        if os.path.exists(mydir):
             shutil.rmtree(mydir)
         self.__writeDirectivesIntoFile()
         print('Running Synthesis...')
         #vivado call using subprocess
         subprocess.Popen([r'./scriptBath.sh'])
-        
         #testing if the synthesis ended
         vivadoIsRunning = True
         
@@ -66,7 +65,7 @@ class Solution:
                         proc.terminate()
                         raise Exception("****Vivado_HLS has exceed max RAM usage****")
                     break
-            
+
         if os.path.exists(xml):  
             print("Synthesis ended")
             #TODO raise exception when passing a certain time constraint maybe
