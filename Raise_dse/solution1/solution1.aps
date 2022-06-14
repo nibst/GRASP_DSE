@@ -13,10 +13,7 @@
         <library value="xilinx/virtexuplus/virtexuplus_fpv7" name="DefaultPlatform"/>
     </libraryList>
     <clockList>
-        <clock name="default" period="8" default="false"/>
+        <clock default="false" name="default" period="8"/>
     </clockList>
-    <config>
-        <schedule model="sha_stream"/>
-    </config>
 </AutoPilot:solution>
 

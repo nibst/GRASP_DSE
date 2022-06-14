@@ -7,9 +7,9 @@ import subprocess
 import psutil
 
 class Solution:
-    _MAX_RAM_USAGE =30 #in percentage
-    _DIRECTIVES_FILENAME = 'directives.tcl'
-    _VIVADO_PROCESSNAME = 'vivado_hls.exe'
+    _MAX_RAM_USAGE =60 #in percentage
+    _DIRECTIVES_FILENAME = './directives.tcl'
+    _VIVADO_PROCESSNAME = 'vivado_hls'
     _FF_VALUE = 1; _LUT_VALUE = 2; _DSP_VALUE = 345.68; _BRAM_VALUE = 547.33
 
     
@@ -48,7 +48,7 @@ class Solution:
         self.__writeDirectivesIntoFile()
         print('Running Synthesis...')
         #vivado call using subprocess
-        subprocess.Popen([r'scriptBath.bat'])
+        subprocess.Popen([r'./scriptBath.sh'])
         
         #testing if the synthesis ended
         vivadoIsRunning = True
