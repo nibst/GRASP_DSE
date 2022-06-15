@@ -57,17 +57,16 @@ class Heuristic(ABC):
         #testa se a Solution1  domina a Solution2
         return ((Solution2.resultados[metric1]>Solution1.resultados[metric1]) and (Solution2.resultados[metric2] > Solution1.resultados[metric2]))
     def paretoSolutions(self,metric1,metric2 ):
-        """consegue as soluções que são dominadas por outras. Eliminas essas soluções, resultando só nas que são pareto"""
+        """consegue as soluções que são dominadas por outras. Eliminas essas soluções, retorando só nas que são pareto
+            Retorna um dicionário enumerado de paretos(soluções). Ex: paretos[0],paretos[1],etc. paretos[i] == algum objeto Solution"""
         toRemove = [] #armazena o indice da solução que deve ser eliminada
         paretoCandidates = [] #armazena indice das solucoes candidatas a pareto, é inicializada com todos indices
-        i = 0
         solutionsIndex = []
         #inicializa
-        for solution in self.solutions:
+        for i in range(len(self.solutions)):
             paretoCandidates.append(i)
             solutionsIndex.append(i)
-            #print(f'{i}: {solution.resultados} ')
-            i+=1
+            
         for currentSolutionIndex in solutionsIndex:
             if currentSolutionIndex in paretoCandidates:
                 for paretoSolutionIndex in paretoCandidates:
@@ -82,6 +81,8 @@ class Heuristic(ABC):
                 for discardedSolution in toRemove:
                     paretoCandidates.remove(discardedSolution)
                 toRemove = []
-        #depois talvez retornar os paretos, não sei. Por enquanto printa
-        for paretoSolutionIndex in paretoCandidates:
-            print(paretoSolutionIndex)
+        paretos = {} #mesma estrutura de self.solutions, só que só de paretos, para retornar
+        for count,paretoSolutionIndex in enumerate(paretoCandidates):
+            #não acho que precisa copiar, então vou só passar referencia(eles não deveriam ser modificados mesmo)
+            paretos[count] = self.solutions[paretoSolutionIndex]
+        return paretos
