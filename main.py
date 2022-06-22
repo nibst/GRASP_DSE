@@ -1,4 +1,5 @@
 from ast import arguments, dump
+from distutils.errors import PreprocessError
 from pickle import TRUE
 from re import X
 from setuptools import Require
@@ -14,7 +15,8 @@ from matplotlib.widgets import Cursor
 import pandas as pd
 import pickle
 from randomForest import RandomForestEstimator
-#from sklearn.model_selection import train_test_split
+from preProcessor import PreProcessor
+from sklearn.model_selection import train_test_split
 if __name__ == "__main__":
     
     
@@ -44,11 +46,13 @@ if __name__ == "__main__":
     #heuristic = ResourceGreedy(filesDict,'directives.tcl')
     #heuristic.writeSolutionsDict()
     #heuristic.solutions = heuristic.paretoSolutions('resources','latency')
-
-    #X_train, X_test = train_test_split(heuristic.solutions, test_size=0.3,random_state=0)
-    #rf = RandomForestEstimator(X_train)
-    #rf.trainModel()
-    #ls = rf.estimateSynthesis(X_test)
+    processor = PreProcessor()
+    processedFeatures = processor.process(heuristic.solutions)
+    X_train, X_test, Y_train, Y_test = train_test_split(processedFeatures,heuristic.solutions, test_size=0.3,random_state=0)
+    rf = RandomForestEstimator(heuristic.solutions)
+    rf.trainModel(X_train,Y_train)
+    ls = rf.estimateSynthesis(X_test)
+    score = rf.score(X_test,Y_test)
     
     RESOURCE_TO_COMPARE = 'resources'
     ######################### GRAPH

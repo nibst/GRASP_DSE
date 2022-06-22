@@ -10,19 +10,23 @@ class RandomForestEstimator(Estimator):
     def __init__(self,dataset):
         super().__init__(dataset)
         self.rfRegressor=ensemble.RandomForestRegressor(n_estimators=100)
-        self.processedFeatures  = self.processor.process(dataset)
+        #self.processedFeatures  = self.processor.process(dataset)
 
-    def trainModel(self):
-        self.rfRegressor.fit(self.processedFeatures,self.results) #train
-
+    def trainModel(self,processedData,results):
+        super().__init__(results)
+        self.rfRegressor.fit(processedData,self.results) #train
+        
     def trainModelPerMetric(self,metric):
         #TODO
         self.rfRegressor.fit(self.processedFeatures,self.results) #train
 
-    def estimateSynthesis(self, X):
-        processedFeatures =  self.processor.process(X)
+    def estimateSynthesis(self, processedFeatures):
+        #processedFeatures =  self.processor.process(X)
         return self.rfRegressor.predict(processedFeatures)
-        
+    
+    def score(self,processedData,results):
+        super().__init__(results)
+        return self.rfRegressor.score(processedData,self.results)
 
 
 
