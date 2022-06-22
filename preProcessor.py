@@ -28,7 +28,7 @@ class PreProcessor():
         for parameterType in parametersDict:
             key = directiveType + parameterType
             if key not in finalDict.keys():    
-                finalDict[key] = [0]*len(self.dataset)  
+                finalDict[key] = [-1]*len(self.dataset)  
             finalDict[key][count] = self.__decide(parameterType,parametersDict)
             
     def __getParametersDict(self,parametersList):
@@ -59,7 +59,7 @@ class PreProcessor():
             count = 0 #conta em qual diretiva está atualmente
             for directive in column:
                 if directive is None or directive == '':
-                    featureValue = 0
+                    featureValue = -1
                 else:
                     parametersList = (re.findall(regexForFlag,directive))
                     parametersDict = self.__getParametersDict(parametersList)

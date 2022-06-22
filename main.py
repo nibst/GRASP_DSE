@@ -46,13 +46,21 @@ if __name__ == "__main__":
     #heuristic = ResourceGreedy(filesDict,'directives.tcl')
     #heuristic.writeSolutionsDict()
     #heuristic.solutions = heuristic.paretoSolutions('resources','latency')
-    processor = PreProcessor()
-    processedFeatures = processor.process(heuristic.solutions)
-    X_train, X_test, Y_train, Y_test = train_test_split(processedFeatures,heuristic.solutions, test_size=0.3,random_state=0)
-    rf = RandomForestEstimator(heuristic.solutions)
-    rf.trainModel(X_train,Y_train)
-    ls = rf.estimateSynthesis(X_test)
-    score = rf.score(X_test,Y_test)
+    
+    """ 
+    Tenho que pre processar todo dataset antes de retirar apenas uma parte pro teste.
+    Isso porque o jeito que pre processo envolve em "aumentar" o numero de features.
+    Exemplo: uma diretiva que tem parametro -factor vai ser dividida em 2 features,
+    uma para o valor do factor e outra pra diretiva como um todo (1 ou 0, se ela está
+    aplicada ou não)
+    """
+    #processor = PreProcessor()
+    #processedFeatures = processor.process(heuristic.solutions)
+    #X_train, X_test, Y_train, Y_test = train_test_split(processedFeatures,heuristic.solutions, test_size=0.3,random_state=0)
+    #rf = RandomForestEstimator(heuristic.solutions)
+    #rf.trainModel(X_train,Y_train)
+    #ls = rf.estimateSynthesis(X_test)
+    #score = rf.score(X_test,Y_test)
     
     RESOURCE_TO_COMPARE = 'resources'
     ######################### GRAPH
