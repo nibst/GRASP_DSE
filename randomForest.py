@@ -7,26 +7,44 @@ from solution import Solution
 
 class RandomForestEstimator(Estimator):
     processor = PreProcessor()
-    def __init__(self,dataset):
-        super().__init__(dataset)
+    def __init__(self):
         self.rfRegressor=ensemble.RandomForestRegressor(n_estimators=100)
-        #self.processedFeatures  = self.processor.process(dataset)
+        self.features = None
+        self.results = None
 
-    def trainModel(self,processedData,results):
-        super().__init__(results)
-        self.rfRegressor.fit(processedData,self.results) #train
+    def trainModel(self,dataset):
+        """
+        Build a forest of trees from the dataset.
+
+        Parameters
+        ----------
+        dataset: List of Solution objects
+        """
+        self.features, self.results = self.processor.process(dataset)
+        self.rfRegressor.fit(self.features,self.results) #train
         
     def trainModelPerMetric(self,metric):
         #TODO
-        self.rfRegressor.fit(self.processedFeatures,self.results) #train
+        self.rfRegressor.fit(self.features,self.results) #train
 
     def estimateSynthesis(self, processedFeatures):
+        """
+        Estimate the output of synthesis from the dataset.
+
+        Parameters
+        ----------
+        dataset: List of Solution objects
+
+        Returns
+        -------
+        List : List of the output([FF,DSP,LUT,BRAM,resources,latency],[...],...)
+                estimated for these features
+        """
         #processedFeatures =  self.processor.process(X)
         return self.rfRegressor.predict(processedFeatures)
     
-    def score(self,processedData,results):
-        super().__init__(results)
-        return self.rfRegressor.score(processedData,self.results)
+    def score(self,dataset):
+        return self.rfRegressor.score(xTeste,yTeste)
 
 
 

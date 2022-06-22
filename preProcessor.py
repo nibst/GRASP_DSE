@@ -2,12 +2,14 @@ import re
 
 
 class PreProcessor():
-    dataset = {} #será o dicionario de instrucoes
+    dataset = {} #será o dicionario de solucoes
     
     def process(self,dataset):
         self.dataset = dataset
-        featuresByColumn = self._takeColumns()
-        return self.__directivesToNumbers(featuresByColumn)
+        featuresByColumn = self.__takeColumns()
+        processedResults = self.__extractResults()
+        processedFeatures = self.__directivesToNumbers(featuresByColumn)
+        return processedFeatures, processedResults
     
     def __decide(self,parameterType,parametersDict):
         if parameterType == 'factor':
@@ -73,7 +75,7 @@ class PreProcessor():
         featuresVector = self.__toFeaturesVector(finalDict)
         return featuresVector
 
-    def _takeColumns(self):
+    def __takeColumns(self):
         columnsDict = {}
         featuresTypes = self.dataset[0].diretivas
 
@@ -83,3 +85,13 @@ class PreProcessor():
                 featuresColumn.append(self.dataset[solutionIndex].diretivas[directiveType])
             columnsDict[directiveType] = featuresColumn
         return columnsDict
+
+    def __extractResults(self):
+        results = []
+        for solutionIndex in range(len(self.dataset)):
+            solutionResults = []
+            for metric in self.dataset[solutionIndex].resultados:
+                solutionResults.append(self.dataset[solutionIndex].resultados[metric])
+            results.append(solutionResults)
+        #print(results)
+        return results

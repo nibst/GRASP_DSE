@@ -55,7 +55,7 @@ if __name__ == "__main__":
     aplicada ou não)
     """
     #processor = PreProcessor()
-    #processedFeatures = processor.process(heuristic.solutions)
+    #processedFeatures, processedResults = processor.process(heuristic.solutions)
     #X_train, X_test, Y_train, Y_test = train_test_split(processedFeatures,heuristic.solutions, test_size=0.3,random_state=0)
     #rf = RandomForestEstimator(heuristic.solutions)
     #rf.trainModel(X_train,Y_train)
