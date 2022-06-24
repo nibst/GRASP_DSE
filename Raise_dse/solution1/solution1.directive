@@ -1,8 +1,52 @@
 <AutoPilot:ProjectResources xmlns:AutoPilot="com.autoesl.autopilot.ui.directiveView">
     <sourceFile name="">
-        <directive functionName="SgdLR_sw" label="TRAINING_INST" functionLabel="">
+        <directive functionName="local_memcpy" label="local_memcpy_label3" functionLabel="">
+            <pragma name="PIPELINE"/>
+        </directive>
+        <directive functionName="sha_update" label="sha_update_label4" functionLabel="">
+            <pragma name="PIPELINE"/>
+        </directive>
+        <directive functionName="sha_update" label="sha_update_label4" functionLabel="">
             <pragma name="UNROLL">
-                <option name="factor" value="2048"/>
+                <option name="factor" value="32"/>
+            </pragma>
+        </directive>
+        <directive functionName="sha_transform_label1" label="" functionLabel="">
+            <pragma name="UNROLL">
+                <option name="factor" value="4"/>
+            </pragma>
+        </directive>
+        <directive functionName="sha_transform_label2" label="" functionLabel="">
+            <pragma name="PIPELINE"/>
+        </directive>
+        <directive functionName="sha_transform_label3" label="" functionLabel="">
+            <pragma name="PIPELINE"/>
+        </directive>
+        <directive functionName="sha_transform_label3" label="" functionLabel="">
+            <pragma name="UNROLL"/>
+        </directive>
+        <directive functionName="sha_transform_label4" label="" functionLabel="">
+            <pragma name="UNROLL">
+                <option name="factor" value="4"/>
+            </pragma>
+        </directive>
+        <directive functionName="sha_transform_label5" label="" functionLabel="">
+            <pragma name="PIPELINE"/>
+        </directive>
+        <directive functionName="sha_transform_label5" label="" functionLabel="">
+            <pragma name="UNROLL">
+                <option name="factor" value="8"/>
+            </pragma>
+        </directive>
+        <directive functionName="sha_transform_label6" label="" functionLabel="">
+            <pragma name="PIPELINE"/>
+        </directive>
+        <directive functionName="sha_transform" label="" functionLabel="">
+            <pragma name="ARRAY_PARTITION">
+                <option name="variable" value="W" positionalBoolean="4"/>
+                <option name="cyclic" value="" positionalBoolean="type"/>
+                <option name="factor" value="32"/>
+                <option name="dim" value="1"/>
             </pragma>
         </directive>
     </sourceFile>

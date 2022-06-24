@@ -1,9 +1,13 @@
 import re
-
+import readDirectivesFile
+from pathlib import Path
 
 class PreProcessor():
     dataset = {} #será o dicionario de solucoes
-    
+    def __init__(self,directivesFile) -> None:
+        directivesTxt = Path(directivesFile).read_text()
+        self.possibleDirectives : dict = readDirectivesFile.fileParser(directivesTxt)
+
     def process(self,dataset):
         self.dataset = dataset
         featuresByColumn = self.__takeColumns()
@@ -11,6 +15,12 @@ class PreProcessor():
         processedFeatures = self.__directivesToNumbers(featuresByColumn)
         return processedFeatures, processedResults
     
+    def buildColumns(self):
+        """
+        for each directive: build one or more columns
+        
+        """
+
     def __decide(self,parameterType,parametersDict):
         if parameterType == 'factor':
             return int(parametersDict[parameterType])

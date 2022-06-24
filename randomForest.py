@@ -4,13 +4,16 @@ from estimator import Estimator
 import re
 from preProcessor import PreProcessor
 from solution import Solution
+from pathlib import Path
+import readDirectivesFile
 
 class RandomForestEstimator(Estimator):
-    processor = PreProcessor()
-    def __init__(self):
+    
+    def __init__(self,directivesFile):
         self.rfRegressor=ensemble.RandomForestRegressor(n_estimators=100)
         self.features = None
         self.results = None
+        self.processor = PreProcessor(directivesFile)
 
     def trainModel(self,dataset):
         """
@@ -18,7 +21,7 @@ class RandomForestEstimator(Estimator):
 
         Parameters
         ----------
-        dataset: List of Solution objects
+        dataset : List of Solution objects
         """
         self.features, self.results = self.processor.process(dataset)
         self.rfRegressor.fit(self.features,self.results) #train
