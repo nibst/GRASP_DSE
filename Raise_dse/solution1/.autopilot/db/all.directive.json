@@ -2,24 +2,30 @@
       "name": "",
       "directive": [
         {
+<<<<<<< HEAD
           "functionName": "main",
           "label": "main_label0",
           "functionLabel": "",
           "pragma": {"name": "PIPELINE"}
         },
         {
+=======
+>>>>>>> 537b03e70aeeb54d67ed2ca3d80dcea970bcec14
           "functionName": "local_memcpy",
           "label": "local_memcpy_label3",
           "functionLabel": "",
           "pragma": {"name": "PIPELINE"}
         },
         {
+<<<<<<< HEAD
           "functionName": "sha_transform",
           "label": "",
           "functionLabel": "",
           "pragma": {"name": "LOOP_MERGE"}
         },
         {
+=======
+>>>>>>> 537b03e70aeeb54d67ed2ca3d80dcea970bcec14
           "functionName": "sha_update",
           "label": "sha_update_label4",
           "functionLabel": "",
@@ -33,7 +39,11 @@
             "name": "UNROLL",
             "option": [{
                 "name": "factor",
+<<<<<<< HEAD
                 "value": "8"
+=======
+                "value": "32"
+>>>>>>> 537b03e70aeeb54d67ed2ca3d80dcea970bcec14
               }]
           }
         },
@@ -41,6 +51,7 @@
           "functionName": "sha_transform_label1",
           "label": "",
           "functionLabel": "",
+<<<<<<< HEAD
           "pragma": {"name": "PIPELINE"}
         },
         {
@@ -48,6 +59,15 @@
           "label": "",
           "functionLabel": "",
           "pragma": {"name": "UNROLL"}
+=======
+          "pragma": {
+            "name": "UNROLL",
+            "option": [{
+                "name": "factor",
+                "value": "4"
+              }]
+          }
+>>>>>>> 537b03e70aeeb54d67ed2ca3d80dcea970bcec14
         },
         {
           "functionName": "sha_transform_label2",
@@ -56,12 +76,15 @@
           "pragma": {"name": "PIPELINE"}
         },
         {
+<<<<<<< HEAD
           "functionName": "sha_transform_label2",
           "label": "",
           "functionLabel": "",
           "pragma": {"name": "UNROLL"}
         },
         {
+=======
+>>>>>>> 537b03e70aeeb54d67ed2ca3d80dcea970bcec14
           "functionName": "sha_transform_label3",
           "label": "",
           "functionLabel": "",
@@ -77,6 +100,7 @@
           "functionName": "sha_transform_label4",
           "label": "",
           "functionLabel": "",
+<<<<<<< HEAD
           "pragma": {"name": "PIPELINE"}
         },
         {
@@ -84,6 +108,15 @@
           "label": "",
           "functionLabel": "",
           "pragma": {"name": "UNROLL"}
+=======
+          "pragma": {
+            "name": "UNROLL",
+            "option": [{
+                "name": "factor",
+                "value": "4"
+              }]
+          }
+>>>>>>> 537b03e70aeeb54d67ed2ca3d80dcea970bcec14
         },
         {
           "functionName": "sha_transform_label5",
@@ -95,7 +128,17 @@
           "functionName": "sha_transform_label5",
           "label": "",
           "functionLabel": "",
+<<<<<<< HEAD
           "pragma": {"name": "UNROLL"}
+=======
+          "pragma": {
+            "name": "UNROLL",
+            "option": [{
+                "name": "factor",
+                "value": "8"
+              }]
+          }
+>>>>>>> 537b03e70aeeb54d67ed2ca3d80dcea970bcec14
         },
         {
           "functionName": "sha_transform_label6",
@@ -104,12 +147,15 @@
           "pragma": {"name": "PIPELINE"}
         },
         {
+<<<<<<< HEAD
           "functionName": "sha_transform_label6",
           "label": "",
           "functionLabel": "",
           "pragma": {"name": "UNROLL"}
         },
         {
+=======
+>>>>>>> 537b03e70aeeb54d67ed2ca3d80dcea970bcec14
           "functionName": "sha_transform",
           "label": "",
           "functionLabel": "",
@@ -122,7 +168,11 @@
                 "positionalBoolean": "4"
               },
               {
+<<<<<<< HEAD
                 "name": "block",
+=======
+                "name": "cyclic",
+>>>>>>> 537b03e70aeeb54d67ed2ca3d80dcea970bcec14
                 "value": "",
                 "positionalBoolean": "type"
               },
@@ -136,6 +186,7 @@
               }
             ]
           }
+<<<<<<< HEAD
         },
         {
           "functionName": "sha_stream",
@@ -149,6 +200,8 @@
                 "positionalBoolean": "1"
               }]
           }
+=======
+>>>>>>> 537b03e70aeeb54d67ed2ca3d80dcea970bcec14
         }
       ]
     }]}

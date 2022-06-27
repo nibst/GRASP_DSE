@@ -1,6 +1,7 @@
 from ast import arguments, dump
+from distutils.errors import PreprocessError
 from pickle import TRUE
-from re import A
+from re import X
 from setuptools import Require
 from RandomSearch import RandomSearch
 from greedy import Greedy
@@ -13,6 +14,9 @@ import matplotlib.pyplot as plt
 from matplotlib.widgets import Cursor
 import pandas as pd
 import pickle
+from randomForest import RandomForestEstimator
+from preProcessor import PreProcessor
+from sklearn.model_selection import train_test_split
 if __name__ == "__main__":
     
     
@@ -41,7 +45,24 @@ if __name__ == "__main__":
     #heuristic = RandomSearch(filesDict,'directives.tcl')
     #heuristic = ResourceGreedy(filesDict,'directives.tcl')
     #heuristic.writeSolutionsDict()
+    #heuristic.solutions = heuristic.paretoSolutions('resources','latency')
     
+    """ 
+    Tenho que pre processar todo dataset antes de retirar apenas uma parte pro teste.
+    Isso porque o jeito que pre processo envolve em "aumentar" o numero de features.
+    Exemplo: uma diretiva que tem parametro -factor vai ser dividida em 2 features,
+    uma para o valor do factor e outra pra diretiva como um todo (1 ou 0, se ela está
+    aplicada ou não)
+    """
+    processor = PreProcessor(filesDict['dFile'])
+    train, test = train_test_split(heuristic.solutions, test_size=0.3,random_state=0)
+    processedFeatures, processedResults = processor.process(train)
+    
+    rf = RandomForestEstimator(filesDict['dFile'])
+    rf.trainModel(train)
+    ls = rf.estimateSynthesis(test)
+    score = rf.score(test)
+    print(score)
     RESOURCE_TO_COMPARE = 'resources'
     ######################### GRAPH
     listLUT = []

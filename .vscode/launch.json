@@ -12,7 +12,11 @@
             "program": "${file}",
             "console": "integratedTerminal",
             "justMyCode": true,
+<<<<<<< HEAD
             "args": ["-c", "./benchmarks/sha/sha.c", "./benchmarks/sha/sha_driver.c", "-d", "arq_input_sha.txt", "-p", "sha_stream"],
+=======
+            "args": ["-c", "./benchmarks/sha/sha.c", "-d", "arq_input_sha.txt", "-p", "sha_stream"],
+>>>>>>> 537b03e70aeeb54d67ed2ca3d80dcea970bcec14
             "python": "${command:python.interpreterPath}",
             
             //"python.pythonPath": "C:\\Users\\nikol\\AppData\\Local\\Programs\\Python\\Python310\\python.exe",
