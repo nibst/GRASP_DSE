@@ -1,3 +1,4 @@
+from concurrent.futures import process
 from sklearn import ensemble
 from sklearn.preprocessing import Normalizer
 from estimator import Estimator
@@ -30,7 +31,7 @@ class RandomForestEstimator(Estimator):
         #TODO
         self.rfRegressor.fit(self.features,self.results) #train
 
-    def estimateSynthesis(self, processedFeatures):
+    def estimateSynthesis(self, dataset):
         """
         Estimate the output of synthesis from the dataset.
 
@@ -43,11 +44,12 @@ class RandomForestEstimator(Estimator):
         List : List of the output([FF,DSP,LUT,BRAM,resources,latency],[...],...)
                 estimated for these features
         """
-        #processedFeatures =  self.processor.process(X)
+        processedFeatures, processedResults =  self.processor.process(dataset)
         return self.rfRegressor.predict(processedFeatures)
     
     def score(self,dataset):
-        return self.rfRegressor.score(xTeste,yTeste)
+        processedFeatures, processedResults =  self.processor.process(dataset)
+        return self.rfRegressor.score(processedFeatures,processedResults)
 
 
 

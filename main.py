@@ -55,13 +55,14 @@ if __name__ == "__main__":
     aplicada ou não)
     """
     processor = PreProcessor(filesDict['dFile'])
-    processedFeatures, processedResults = processor.process(heuristic.solutions)
-    X_train, X_test, Y_train, Y_test = train_test_split(processedFeatures,heuristic.solutions, test_size=0.3,random_state=0)
-    rf = RandomForestEstimator(heuristic.solutions)
-    rf.trainModel(X_train,Y_train)
-    ls = rf.estimateSynthesis(X_test)
-    score = rf.score(X_test,Y_test)
+    train, test = train_test_split(heuristic.solutions, test_size=0.3,random_state=0)
+    processedFeatures, processedResults = processor.process(train)
     
+    rf = RandomForestEstimator(filesDict['dFile'])
+    rf.trainModel(train)
+    ls = rf.estimateSynthesis(test)
+    score = rf.score(test)
+    print(score)
     RESOURCE_TO_COMPARE = 'resources'
     ######################### GRAPH
     listLUT = []
