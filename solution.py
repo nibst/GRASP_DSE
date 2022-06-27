@@ -9,7 +9,7 @@ import psutil
 class Solution:
     _MAX_RAM_USAGE =30 #in percentage
     _DIRECTIVES_FILENAME = 'directives.tcl'
-    _VIVADO_PROCESSNAME = 'vivado_hls.exe'
+    _VIVADO_PROCESSNAME = 'vivado_hls'
     _FF_VALUE = 1; _LUT_VALUE = 2; _DSP_VALUE = 345.68; _BRAM_VALUE = 547.33
 
     
