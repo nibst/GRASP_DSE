@@ -17,8 +17,20 @@ class Solution:
         self.diretivas = diretivas
         self.cFile = cFile
         self.prjFile = prjFile
-    
-    
+        resultados = {}
+        resultados['FF'] = None
+        resultados['DSP'] = None
+        resultados['LUT'] = None
+        resultados['BRAM'] = None
+        resultados['resources'] = None
+        resultados['latency'] = None
+        self.resultados = resultados
+
+    def setResultados(self,resultados:list):
+        for resultado in resultados:
+            for key in self.resultados:
+                self.resultados[key] = resultado
+                
     def __writeDirectivesIntoFile(self):
         directivesFile = open(self._DIRECTIVES_FILENAME, "w")
         for value in self.diretivas.values():

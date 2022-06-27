@@ -12,19 +12,21 @@ class RandomForestEstimator(Estimator):
     
     def __init__(self,directivesFile):
         self.rfRegressor=ensemble.RandomForestRegressor(n_estimators=100)
-        self.features = None
-        self.results = None
+        self.features = []
+        self.results = []
         self.processor = PreProcessor(directivesFile)
 
     def trainModel(self,dataset):
         """
         Build a forest of trees from the dataset.
-
+        Can be retrained with with new data
         Parameters
         ----------
         dataset : List of Solution objects
         """
-        self.features, self.results = self.processor.process(dataset)
+        features, results = self.processor.process(dataset)
+        self.features.append(features)
+        self.results.append(results)
         self.rfRegressor.fit(self.features,self.results) #train
         
     def trainModelPerMetric(self,metric):

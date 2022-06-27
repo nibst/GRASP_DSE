@@ -66,7 +66,7 @@ class RandomSearch(Heuristic):
             if onePermutation:    #se tiver uma permutacao na variavel
                 solution = Solution(onePermutation,self.cFiles,self.prjFile)         #Solutions a partir deste
                 try:
-                    solution.runSynthesis()
+                    solution.runSynthesisTeste()
                 except Exception as e:
                     print(e)
                 #executa else qnd try roda sem erros

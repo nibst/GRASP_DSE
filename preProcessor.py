@@ -1,7 +1,7 @@
 import re
 import readDirectivesFile
 from pathlib import Path
-
+from solution import Solution
 class PreProcessor():
     dataset = {} #será o dicionario de solucoes
     def __init__(self,directivesFile) -> None:
@@ -9,6 +9,11 @@ class PreProcessor():
         self.possibleDirectives : dict = readDirectivesFile.fileParser(directivesTxt)
 
     def process(self,dataset):
+
+        if isinstance(dataset, Solution):
+            solutionToLst = []
+            solutionToLst.append(dataset)
+            dataset = solutionToLst
         self.dataset = dataset
         featuresByColumn = self.__takeColumns()
         processedResults = self.__extractResults()
