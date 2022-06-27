@@ -55,7 +55,7 @@ class GreedyWithEstimator(Heuristic):
                 solution = Solution(final,self.cFiles,self.prjFile)         #Solutions a partir deste     
                 estimatedResults = self.rf.estimateSynthesis(solution)
                 try:
-                    solution.runSynthesisTeste()
+                    solution.runSynthesis()
                 except Exception as e:
                     final[diretiva] = None #retira a diretiva usada
                     print(e)
