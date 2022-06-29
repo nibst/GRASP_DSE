@@ -16,15 +16,17 @@ class GreedyWithEstimator(Heuristic):
         self.cFiles = filesDict['cFiles']
         self.prjFile = filesDict['prjFile']
         self.outPath = outPath
+        
         sample = RandomSearch(filesDict, outPath)
         processor = PreProcessor(filesDict['dFile'])
         train, test = train_test_split(sample.solutions, test_size=0.3,random_state=0)
         processedFeatures, processedResults = processor.process(train)
         self.rf = RandomForestEstimator(filesDict['dFile'])
         self.rf.trainModel(train)
-        ls = rf.estimateSynthesis(test)
-        score = rf.score(test)
+        ls = self.rf.estimateSynthesis(test)
+        score = self.rf.score(test)
         print(score)
+        
         self.solutions = self.createSolutionsDict()
     #Atributos dos caminhos dos arquivos de entrada e saída.
     #Gera soluções conforme métodos abaixo e as salva numa lista em solutions
@@ -38,11 +40,11 @@ class GreedyWithEstimator(Heuristic):
         final = dict.fromkeys(dictDir,None) #Cria um dicionário 'final' a partir do 'dictDir' mas 
                                                 #mantendo apenas os títulos das diretivas - seu valores são
                                                 #trocados por None
-        solutionIndex=1
+        solutionIndex=0
         generateScript(self.cFiles, self.prjFile)
-        currentBest = None
+        
         for diretiva in dictDir: 
-
+            currentBest = None
             bestLUTxLatency = float('inf') #infinito
             
             for option in dictDir[diretiva]:   
@@ -52,27 +54,29 @@ class GreedyWithEstimator(Heuristic):
                     option = None
 
                 final[diretiva] = option                             #Progressivamente popula o dicionário 'final' e cria
-                solution = Solution(final,self.cFiles,self.prjFile)         #Solutions a partir deste     
-                estimatedResults = self.rf.estimateSynthesis(solution)
-                try:
-                    solution.runSynthesis()
-                except Exception as e:
-                    final[diretiva] = None #retira a diretiva usada
-                    print(e)
-                #executa else qnd try roda sem erros    
-                else:
-                    print(solution.resultados)             
-                    lutXLatency = solution.resultados['LUT'] * solution.resultados['latency']
-                    if lutXLatency<bestLUTxLatency:          #mantendo aquelas onde o nro de LUTs é estritamente
-                        bestLUTxLatency = lutXLatency
-                        currentBest = option        #menor que o da anterior.
-                        
-                    deep = copy.deepcopy(solution)   
-                    solutionsDict[solutionIndex] = deep               
-                    solutionIndex+=1
-
+                estimatedSolution = Solution(final,self.cFiles,self.prjFile)         #Solutions a partir deste     
+                estimatedResults = self.rf.estimateSynthesis(estimatedSolution)
+                estimatedSolution.setResultados(estimatedResults[0])
+                
+                print(f'score: {estimatedSolution.resultados}')             
+                lutXLatency = estimatedSolution.resultados['LUT'] * estimatedSolution.resultados['latency']
+                if lutXLatency<bestLUTxLatency:          #mantendo aquelas onde o nro de LUTs é estritamente
+                    bestLUTxLatency = lutXLatency
+                    currentBest = option        #menor que o da anterior.
+            
             final[diretiva] = currentBest
-                                        
+            solution = Solution(final,self.cFiles,self.prjFile)   
+            try:
+                solution.runSynthesis()
+            except Exception as e:
+                final[diretiva] = None #retira a diretiva usada
+                print(e)
+            #executa else qnd try roda sem erros    
+            else:
+                deep = copy.deepcopy(solution)   
+                solutionsDict[solutionIndex] = deep               
+                solutionIndex+=1     
+                           
             # Retorna o dicionário de soluções para o 'main'
         
         return solutionsDict

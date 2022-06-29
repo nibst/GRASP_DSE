@@ -7,7 +7,7 @@ import subprocess
 import psutil
 
 class Solution:
-    _MAX_RAM_USAGE =30 #in percentage
+    _MAX_RAM_USAGE =50 #in percentage
     _DIRECTIVES_FILENAME = 'directives.tcl'
     _VIVADO_PROCESSNAME = 'vivado_hls'
     _FF_VALUE = 1; _LUT_VALUE = 2; _DSP_VALUE = 345.68; _BRAM_VALUE = 547.33
@@ -27,9 +27,8 @@ class Solution:
         self.resultados = resultados
 
     def setResultados(self,resultados:list):
-        for resultado in resultados:
-            for key in self.resultados:
-                self.resultados[key] = resultado
+        for index,key in enumerate(self.resultados):
+            self.resultados[key] = resultados[index]
                 
     def __writeDirectivesIntoFile(self):
         directivesFile = open(self._DIRECTIVES_FILENAME, "w")
@@ -41,10 +40,11 @@ class Solution:
 
     def runSynthesisTeste(self):
         resultados = {}
-        resultados['LUT'] = randrange(100)
         resultados['FF'] = randrange(100)
         resultados['DSP'] = randrange(100)
+        resultados['LUT'] = randrange(100)
         resultados['BRAM'] = randrange(100)
+        resultados['resources'] = randrange(100)
         resultados['latency'] = randrange(100)
 
         self.resultados = resultados
