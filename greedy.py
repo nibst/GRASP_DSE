@@ -8,11 +8,12 @@ class Greedy(Heuristic):
     
     
     
-    def __init__(self,filesDict,outPath):
+    def __init__(self,filesDict,outPath,metricName):
         self.directivesTxt = Path(filesDict['dFile']).read_text()
         self.cFiles = filesDict['cFiles']
         self.prjFile = filesDict['prjFile']
         self.outPath = outPath
+        self.metric = metricName
         self.solutions = self.createSolutionsDict()
     #Atributos dos caminhos dos arquivos de entrada e saída.
     #Gera soluções conforme métodos abaixo e as salva numa lista em solutions
@@ -28,10 +29,10 @@ class Greedy(Heuristic):
                                                 #trocados por None
         solutionIndex=1
         generateScript(self.cFiles, self.prjFile)
-        currentBest = None
-        for diretiva in dictDir: 
 
-            bestLUTxLatency = float('inf') #infinito
+        for diretiva in dictDir: 
+            currentBest = None
+            bestMetricxLatency = float('inf') #infinito
             
             for option in dictDir[diretiva]:   
                 
@@ -49,11 +50,11 @@ class Greedy(Heuristic):
                 #executa else qnd try roda sem erros    
                 else:
                     print(solution.resultados)             
-                    lutXLatency = solution.resultados['LUT'] * solution.resultados['latency']
-                    if lutXLatency<bestLUTxLatency:          #mantendo aquelas onde o nro de LUTs é estritamente
-                        bestLUTxLatency = lutXLatency
+                    metricXLatency = solution.resultados[self.metric] * solution.resultados['latency']
+                    if metricXLatency<bestMetricxLatency:          #mantendo aquelas onde o nro de LUTs é estritamente
+                        bestMetricxLatency = metricXLatency
                         currentBest = option        #menor que o da anterior.
-                        
+                    
                     deep = copy.deepcopy(solution)   
                     solutionsDict[solutionIndex] = deep               
                     solutionIndex+=1
