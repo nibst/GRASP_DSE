@@ -58,7 +58,7 @@ class GreedyWithEstimator(Heuristic):
                 estimatedResults = self.rf.estimateSynthesis(estimatedSolution)
                 estimatedSolution.setResultados(estimatedResults[0])
                 
-                print(f'score: {estimatedSolution.resultados}')             
+                print(estimatedSolution.resultados)             
                 lutXLatency = estimatedSolution.resultados['LUT'] * estimatedSolution.resultados['latency']
                 if lutXLatency<bestLUTxLatency:          #mantendo aquelas onde o nro de LUTs é estritamente
                     bestLUTxLatency = lutXLatency
@@ -73,6 +73,8 @@ class GreedyWithEstimator(Heuristic):
                 print(e)
             #executa else qnd try roda sem erros    
             else:
+                print(solution.results)
+                print(f'score: {self.rf.score(solution)}')
                 deep = copy.deepcopy(solution)   
                 solutionsDict[solutionIndex] = deep               
                 solutionIndex+=1     
