@@ -6,7 +6,7 @@
 ############################################################
 open_project Raise_dse
 set_top sha_stream
-add_files {./benchmarks/sha/sha.c } 
+add_files {./benchmarks/sha/sha.c }
 open_solution "solution1"
 set_part {xcvu9p-flgb2104-1-e}
 create_clock -period 8 -name default

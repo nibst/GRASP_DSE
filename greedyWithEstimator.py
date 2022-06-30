@@ -73,12 +73,11 @@ class GreedyWithEstimator(Heuristic):
                 print(e)
             #executa else qnd try roda sem erros    
             else:
-                print(solution.results)
-                print(f'score: {self.rf.score(solution)}')
+                print(solution.resultados)
                 deep = copy.deepcopy(solution)   
                 solutionsDict[solutionIndex] = deep               
                 solutionIndex+=1     
                            
             # Retorna o dicionário de soluções para o 'main'
-        
+        print(f'score: {self.rf.score(solution)}')
         return solutionsDict
