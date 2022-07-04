@@ -80,14 +80,7 @@ class PreProcessor():
             featuresVector.append(solutionVector)       
         return featuresVector
              
-    def foo(self,possibleColumns):
-        #TODO refazer a __directivesToNumbers()
-        regexForParameter = '\-[a-zA-Z]+\s[a-zA-Z0-9]*[^\s]' #pega as flags/parametros tipo: -factor 10, -dim 0, -type cyclic,etc
-        finalDict = {} #terá as diretivas em forma de numero para poder aplicar random forest
-        for solutionIndex in range(len(self.dataset)):
-            directivesDict = self.dataset[solutionIndex].diretivas
-            for directiveType in directivesDict:
-                pass
+    
 
     def __directivesToNumbers(self,featuresByColumn,possibleColumns):
         regexForParameter = '\-[a-zA-Z]+\s[a-zA-Z0-9]*[^\s]' #pega as flags/parametros tipo: -factor 10, -dim 0, -type cyclic,etc

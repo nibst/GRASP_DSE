@@ -5,18 +5,22 @@ import shutil
 import time
 import subprocess
 import psutil
-
+from sys import platform
 class Solution:
     _MAX_RAM_USAGE =50 #in percentage
     _DIRECTIVES_FILENAME = 'directives.tcl'
     _VIVADO_PROCESSNAME = 'vivado_hls'
+    _SCRIPT_PATH = './scriptBath.sh'
     _FF_VALUE = 1; _LUT_VALUE = 2; _DSP_VALUE = 345.68; _BRAM_VALUE = 547.33
-
+    
     
     def __init__(self,diretivas, cFile, prjFile):
         self.diretivas = diretivas
         self.cFile = cFile
         self.prjFile = prjFile
+        if sys.platform == 'win32':
+            self._VIVADO_PROCESSNAME = 'vivado_hls.exe'
+            self._SCRIPT_PATH = 'scriptBath.bat'
         resultados = {}
         resultados['FF'] = None
         resultados['DSP'] = None

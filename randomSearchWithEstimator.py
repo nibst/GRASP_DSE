@@ -1,16 +1,3 @@
-
-#---------------------------------------------------------------------------------------------------------------------------------------
-#Cada tipo de diretiva sera chamado de uma "variavel".
-#Pra fazer o random, para cada variavel será randomizado um valor de seu dominio. 
-#Exemplo: Variavel de "unroll main", pode ter como dominio: None, set_directive_unroll -factor 4, set_directive_unroll -factor 8.
-#         Portanto nesse caso diremos que essa variavel pode assumir os valores 0,1,2 . 0 sempre será a opção de None (sem aquela diretiva)
-
-#arvore de controle para checar se permutacao ja foi vista
-#EXEMPLO: primeiro tipo de diretiva:       [0 | 1 ]
-#                                         / | \    \  
-#         segundo tipo de diretiva:     [0 |1 |2]  [1]
-#E vai indo, os numeros representam qual diretiva foi usada das possiveis diretivas daquele tipo. "0" representa None (sem aquela diretiva)
-#---------------------------------------------------------------------------------------------------------------------------------------
 import time
 from heuristic import Heuristic
 from pathlib import Path
@@ -19,14 +6,23 @@ from Script_tcl import generateScript
 import copy
 from random import seed
 from random import randint
+from RandomSearch import RandomSearch
+from greedy import Greedy
+from randomForest import RandomForestEstimator
 
-class RandomSearch(Heuristic):
-    _SECONDS = 100 #5 dias
+
+class RandomSearchWithEstimator(Heuristic):
+    _SECONDS = 1600 
     def __init__(self,filesDict,outPath):
         self.directivesTxt = Path(filesDict['dFile']).read_text()
         self.cFiles = filesDict['cFiles']
         self.prjFile = filesDict['prjFile']
         self.outPath = outPath
+        sample = RandomSearch(filesDict, outPath)
+        #sample2 = Greedy(filesDict,outPath,'resources')
+        self.rf = RandomForestEstimator(filesDict['dFile'])
+        self.rf.trainModel(sample.solutions)
+        #self.rf.trainModel(sample2.solutions)
         self.solutions = self.createSolutionsDict()
         
     def __generateRandomPermutation(self,dictDir:dict,controlTree:dict):
@@ -46,7 +42,31 @@ class RandomSearch(Heuristic):
         if isNewPermutation:
             return newPermutation
         else:
-            return None
+            return self.__generateRandomPermutation(dictDir,controlTree)
+
+    def __estimateTopSolutions(self,dictDir,controlTree):
+        estimatedSolutions = []
+        topSolutions = [] #top 10 solutions
+        for i in range(1000):
+            onePermutation = self.__generateRandomPermutation(dictDir,controlTree)
+            if onePermutation:
+                estimatedSolution = Solution(onePermutation,self.cFiles,self.prjFile)         #Solutions a partir deste     
+                estimatedResults = self.rf.estimateSynthesis(estimatedSolution)
+                estimatedSolution.setResultados(estimatedResults[0])
+                estimatedSolutions.append(estimatedSolution)
+                print(f'estimated solution: {estimatedSolution.resultados}')
+                if i >= 10:
+                    self.__removeWorstSolution(topSolutions)
+                topSolutions.append(estimatedSolution)
+        return topSolutions
+                    
+    def __removeWorstSolution(self,topSolutions):
+        worst = float('-inf')
+        for solution in topSolutions:
+            if solution.resultados['resources'] >= worst:
+                worst = solution.resultados['resources']
+                worstSolution = solution
+        topSolutions.remove(worstSolution)
 
     def createSolutionsDict(self):
         dictDir=self.parsedTxt() 
@@ -61,10 +81,10 @@ class RandomSearch(Heuristic):
         totalTime = 0
         while inTime:
             start = time.time()
-            
-            onePermutation = self.__generateRandomPermutation(dictDir,controlTree)
-            if onePermutation:    #se tiver uma permutacao na variavel
-                solution = Solution(onePermutation,self.cFiles,self.prjFile)         #Solutions a partir deste
+            topEstimatedSolutions = self.__estimateTopSolutions(dictDir,controlTree)
+            topSynthesized = [] #synthesis of the top estimated solutions
+            for estimatedSolution in topEstimatedSolutions:    
+                solution = Solution(topEstimatedSolutions,self.cFiles,self.prjFile)         #Solutions a partir deste
                 try:
                     solution.runSynthesis()
                 except Exception as e:
@@ -74,9 +94,11 @@ class RandomSearch(Heuristic):
                     print(solution.resultados)                  
                     deep = copy.deepcopy(solution)   
                     solutionsDict[solutionIndex] = deep
+                    topSynthesized.append(deep)
                     print (solutionIndex)      
                     solutionIndex+=1
-
+            #retrain
+            self.rf.trainModel(topSynthesized)
             end = time.time()
             totalTime += (end-start)
             if totalTime >= self._SECONDS: 
@@ -84,10 +106,5 @@ class RandomSearch(Heuristic):
                     
 
                                         # Retorna o dicionário de soluções para o 'main'
-    
+        print(f'score: {self.rf.score(solutionsDict)}')
         return solutionsDict
-
-
-    
-
-    
