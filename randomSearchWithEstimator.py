@@ -12,17 +12,17 @@ from randomForest import RandomForestEstimator
 
 
 class RandomSearchWithEstimator(Heuristic):
-    _SECONDS = 1600 
+    _SECONDS = 160
     def __init__(self,filesDict,outPath):
         self.directivesTxt = Path(filesDict['dFile']).read_text()
         self.cFiles = filesDict['cFiles']
         self.prjFile = filesDict['prjFile']
         self.outPath = outPath
         sample = RandomSearch(filesDict, outPath)
-        #sample2 = Greedy(filesDict,outPath,'resources')
+        sample2 = Greedy(filesDict,outPath,'resources')
         self.rf = RandomForestEstimator(filesDict['dFile'])
         self.rf.trainModel(sample.solutions)
-        #self.rf.trainModel(sample2.solutions)
+        self.rf.trainModel(sample2.solutions)
         self.solutions = self.createSolutionsDict()
         
     def __generateRandomPermutation(self,dictDir:dict,controlTree:dict):

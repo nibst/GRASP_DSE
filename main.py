@@ -8,7 +8,6 @@ from greedy import Greedy
 from heuristic import Heuristic
 from hillClimbing0 import HillClimbing
 from exhaustiveSearch import ExhaustiveSearch
-from resourceGreedy import ResourceGreedy
 from greedyWithEstimator import GreedyWithEstimator
 from randomSearchWithEstimator import RandomSearchWithEstimator
 import argparse
@@ -39,17 +38,16 @@ if __name__ == "__main__":
     filesDict['dFile'] = args.dFile
     filesDict['prjFile'] = args.prjFile
     
-
+    RESOURCE_TO_COMPARE = 'resources'
     
     #heuristic = HillClimbing(filesDict,'directives.tcl')
-    #heuristic = Greedy(filesDict,'directives.tcl')
+    #heuristic = Greedy(filesDict,'directives.tcl', RESOURCE_TO_COMPARE)
     #heuristic = ExhaustiveSearch(filesDict,'directives.tcl')
     #heuristic = RandomSearch(filesDict,'directives.tcl')
-    #heuristic = ResourceGreedy(filesDict,'directives.tcl')
     #heuristic = GreedyWithEstimator(filesDict,'directives.tcl')
     heuristic = RandomSearchWithEstimator(filesDict, 'directives.tcl')
     #heuristic.writeSolutionsDict()
-    #heuristic.solutions = heuristic.paretoSolutions('resources','latency')
+    #heuristic.solutions = heuristic.paretoSolutions(RESOURCE_TO_COMPARE,'latency')
     
     """ 
     Tenho que pre processar todo dataset antes de retirar apenas uma parte pro teste.
@@ -67,7 +65,7 @@ if __name__ == "__main__":
     ls = rf.estimateSynthesis(test)
     score = rf.score(test)
     print(score)
-    RESOURCE_TO_COMPARE = 'resources'
+    
     ######################### GRAPH
     listLUT = []
     listLat = []
