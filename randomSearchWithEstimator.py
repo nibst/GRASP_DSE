@@ -82,9 +82,10 @@ class RandomSearchWithEstimator(Heuristic):
         while inTime:
             start = time.time()
             topEstimatedSolutions = self.__estimateTopSolutions(dictDir,controlTree)
+            print(topEstimatedSolutions)
             topSynthesized = [] #synthesis of the top estimated solutions
             for estimatedSolution in topEstimatedSolutions:    
-                solution = Solution(topEstimatedSolutions,self.cFiles,self.prjFile)         #Solutions a partir deste
+                solution = Solution(estimatedSolution.diretivas,self.cFiles,self.prjFile)         #Solutions a partir deste
                 try:
                     solution.runSynthesis()
                 except Exception as e:

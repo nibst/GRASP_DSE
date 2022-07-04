@@ -5,7 +5,7 @@ import shutil
 import time
 import subprocess
 import psutil
-from sys import platform
+import sys
 class Solution:
     _MAX_RAM_USAGE =50 #in percentage
     _DIRECTIVES_FILENAME = 'directives.tcl'
