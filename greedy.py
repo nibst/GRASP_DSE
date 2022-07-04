@@ -27,7 +27,7 @@ class Greedy(Heuristic):
         final = dict.fromkeys(dictDir,None) #Cria um dicionário 'final' a partir do 'dictDir' mas 
                                                 #mantendo apenas os títulos das diretivas - seu valores são
                                                 #trocados por None
-        solutionIndex=1
+        solutionIndex=0
         generateScript(self.cFiles, self.prjFile)
 
         for diretiva in dictDir: 

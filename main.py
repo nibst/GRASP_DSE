@@ -9,6 +9,8 @@ from heuristic import Heuristic
 from hillClimbing0 import HillClimbing
 from exhaustiveSearch import ExhaustiveSearch
 from resourceGreedy import ResourceGreedy
+from greedyWithEstimator import GreedyWithEstimator
+from randomSearchWithEstimator import RandomSearchWithEstimator
 import argparse
 import matplotlib.pyplot as plt
 from matplotlib.widgets import Cursor
@@ -42,8 +44,10 @@ if __name__ == "__main__":
     #heuristic = HillClimbing(filesDict,'directives.tcl')
     #heuristic = Greedy(filesDict,'directives.tcl')
     #heuristic = ExhaustiveSearch(filesDict,'directives.tcl')
-    heuristic = RandomSearch(filesDict,'directives.tcl')
+    #heuristic = RandomSearch(filesDict,'directives.tcl')
     #heuristic = ResourceGreedy(filesDict,'directives.tcl')
+    #heuristic = GreedyWithEstimator(filesDict,'directives.tcl')
+    heuristic = RandomSearchWithEstimator(filesDict, 'directives.tcl')
     #heuristic.writeSolutionsDict()
     #heuristic.solutions = heuristic.paretoSolutions('resources','latency')
     

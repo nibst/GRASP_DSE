@@ -12,19 +12,21 @@ class RandomForestEstimator(Estimator):
     
     def __init__(self,directivesFile):
         self.rfRegressor=ensemble.RandomForestRegressor(n_estimators=100)
-        self.features = None
-        self.results = None
+        self.features = []
+        self.results = []
         self.processor = PreProcessor(directivesFile)
 
     def trainModel(self,dataset):
         """
         Build a forest of trees from the dataset.
-
+        Can be retrained with with new data
         Parameters
         ----------
         dataset : List of Solution objects
         """
-        self.features, self.results = self.processor.process(dataset)
+        features, results = self.processor.process(dataset)
+        self.features.extend(features)
+        self.results.extend(results)
         self.rfRegressor.fit(self.features,self.results) #train
         
     def trainModelPerMetric(self,metric):
@@ -32,6 +34,7 @@ class RandomForestEstimator(Estimator):
         self.rfRegressor.fit(self.features,self.results) #train
 
     def estimateSynthesis(self, dataset):
+        #TODO talvez futuramente retornar lista de solutions
         """
         Estimate the output of synthesis from the dataset.
 
@@ -46,6 +49,7 @@ class RandomForestEstimator(Estimator):
         """
         processedFeatures, processedResults =  self.processor.process(dataset)
         return self.rfRegressor.predict(processedFeatures)
+
     
     def score(self,dataset):
         processedFeatures, processedResults =  self.processor.process(dataset)
@@ -55,7 +59,6 @@ class RandomForestEstimator(Estimator):
 
 #usar scikit learn pra decisions tree
 #testar treino com multi-outputs (prever todas metricas) e testar com varios modelos (um pra cada metrica)
-#USAR 80% para treino e 20% para teste
 #Titulos dos features de cada coluna vao ser sobre o label e o tipo de diretiva. Ex: 
 #             unroll sha_update_label4                         |               pipeline sha_update_label4             |                   array_partition main                                   | Saída(em LUTS por exemplo)
 # set_directive_unroll -factor 8 "sha_update/sha_update_label4"| set_directive_pipeline "sha_update/sha_update_label4"|set_directive_array_partition -type block -factor 100 -dim 0 "main" indata|         45
@@ -67,4 +70,4 @@ class RandomForestEstimator(Estimator):
 #          1               |            1               |          2            |            45
 
 #O problema disso é que são categorical variables, portanto devo ajeitar isso com one hot encoding
-
+#Normalizar

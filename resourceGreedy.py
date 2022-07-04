@@ -28,8 +28,8 @@ class ResourceGreedy(Heuristic):
                                                 #trocados por None
         solutionIndex=1
         generateScript(self.cFiles, self.prjFile)
-        currentBest = None
         for diretiva in dictDir: 
+            currentBest = None
 
             bestResourceXLatency = float('inf') #infinito
             

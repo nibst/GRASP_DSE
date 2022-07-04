@@ -5,20 +5,35 @@ import shutil
 import time
 import subprocess
 import psutil
-
+import sys
 class Solution:
-    _MAX_RAM_USAGE =30 #in percentage
+    _MAX_RAM_USAGE =50 #in percentage
     _DIRECTIVES_FILENAME = 'directives.tcl'
-    _VIVADO_PROCESSNAME = 'vivado_hls.exe'
+    _VIVADO_PROCESSNAME = 'vivado_hls'
+    _SCRIPT_PATH = './scriptBath.sh'
     _FF_VALUE = 1; _LUT_VALUE = 2; _DSP_VALUE = 345.68; _BRAM_VALUE = 547.33
-
+    
     
     def __init__(self,diretivas, cFile, prjFile):
         self.diretivas = diretivas
         self.cFile = cFile
         self.prjFile = prjFile
-    
-    
+        if sys.platform == 'win32':
+            self._VIVADO_PROCESSNAME = 'vivado_hls.exe'
+            self._SCRIPT_PATH = 'scriptBath.bat'
+        resultados = {}
+        resultados['FF'] = None
+        resultados['DSP'] = None
+        resultados['LUT'] = None
+        resultados['BRAM'] = None
+        resultados['resources'] = None
+        resultados['latency'] = None
+        self.resultados = resultados
+
+    def setResultados(self,resultados:list):
+        for index,key in enumerate(self.resultados):
+            self.resultados[key] = resultados[index]
+                
     def __writeDirectivesIntoFile(self):
         directivesFile = open(self._DIRECTIVES_FILENAME, "w")
         for value in self.diretivas.values():
@@ -29,10 +44,11 @@ class Solution:
 
     def runSynthesisTeste(self):
         resultados = {}
-        resultados['LUT'] = randrange(100)
         resultados['FF'] = randrange(100)
         resultados['DSP'] = randrange(100)
+        resultados['LUT'] = randrange(100)
         resultados['BRAM'] = randrange(100)
+        resultados['resources'] = randrange(100)
         resultados['latency'] = randrange(100)
 
         self.resultados = resultados
@@ -48,8 +64,7 @@ class Solution:
         self.__writeDirectivesIntoFile()
         print('Running Synthesis...')
         #vivado call using subprocess
-        subprocess.Popen([r'scriptBath.bat'])
-        
+        subprocess.Popen([r'./scriptBath.sh'])
         #testing if the synthesis ended
         vivadoIsRunning = True
                     
