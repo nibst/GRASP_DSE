@@ -19,6 +19,7 @@ class Solution:
         self.cFile = cFile
         self.prjFile = prjFile
         if sys.platform == 'win32':
+            print('WIN32')
             self._VIVADO_PROCESSNAME = 'vivado_hls.exe'
             self._SCRIPT_PATH = 'callVivado.bat'
         resultados = {}
@@ -64,7 +65,7 @@ class Solution:
         self.__writeDirectivesIntoFile()
         print('Running Synthesis...')
         #vivado call using subprocess
-        subprocess.Popen([r'./scriptBath.sh'])
+        subprocess.Popen([self._SCRIPT_PATH])
         #testing if the synthesis ended
         vivadoIsRunning = True
                     
