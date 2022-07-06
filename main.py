@@ -13,6 +13,7 @@ from randomSearchWithEstimator import RandomSearchWithEstimator
 import argparse
 import matplotlib.pyplot as plt
 from matplotlib.widgets import Cursor
+from plotMaker import PlotMaker
 import pandas as pd
 import pickle
 from randomForest import RandomForestEstimator
@@ -43,55 +44,25 @@ if __name__ == "__main__":
     #heuristic = HillClimbing(filesDict,'directives.tcl')
     #heuristic = Greedy(filesDict,'directives.tcl', RESOURCE_TO_COMPARE)
     #heuristic = ExhaustiveSearch(filesDict,'directives.tcl')
-    #heuristic = RandomSearch(filesDict,'directives.tcl')
+    heuristic = RandomSearch(filesDict,'directives.tcl')
     #heuristic = GreedyWithEstimator(filesDict,'directives.tcl')
-    heuristic = RandomSearchWithEstimator(filesDict, 'directives.tcl')
+    #heuristic = RandomSearchWithEstimator(filesDict, 'directives.tcl')
     #heuristic.writeSolutionsDict()
     #heuristic.solutions = heuristic.paretoSolutions(RESOURCE_TO_COMPARE,'latency')
     
-    """ 
-    Tenho que pre processar todo dataset antes de retirar apenas uma parte pro teste.
-    Isso porque o jeito que pre processo envolve em "aumentar" o numero de features.
-    Exemplo: uma diretiva que tem parametro -factor vai ser dividida em 2 features,
-    uma para o valor do factor e outra pra diretiva como um todo (1 ou 0, se ela está
-    aplicada ou não)
-    """
-    processor = PreProcessor(filesDict['dFile'])
-    train, test = train_test_split(heuristic.solutions, test_size=0.3,random_state=0)
-    processedFeatures, processedResults = processor.process(train)
     
-    rf = RandomForestEstimator(filesDict['dFile'])
-    rf.trainModel(train)
-    ls = rf.estimateSynthesis(test)
-    score = rf.score(test)
-    print(score)
+    #file para plotar o resultado do computador remoto, caso queira interagir com o plot ao invés de ser só um jpg
+    with open('./Plot/solutionsFile', 'wb') as solutionsFile:
+        pickle.dump(heuristic, solutionsFile)
+    solutionsFile.close()
+
+    plt = PlotMaker("sha", RESOURCE_TO_COMPARE, 'latency', heuristic.solutions)
+    plt.savePlotAsJPG()
+    plt.showPlot()
+    
     
     ######################### GRAPH
-    listLUT = []
-    listLat = []
     
-    for element in heuristic.solutions:
-        resources = heuristic.solutions[element].resultados[RESOURCE_TO_COMPARE]#heuristic.solutions[element].resultados['resources']
-        lat = heuristic.solutions[element].resultados['latency']
-        listLUT.append(resources)
-        listLat.append(lat)
-    
-
-    x_name = RESOURCE_TO_COMPARE
-    y_name = 'Latency'
-    df = pd.DataFrame(list(zip(listLUT, listLat)),
-               columns =[x_name, y_name])
-    x = df[x_name]
-    y = df[y_name]
-    
-    
-    fig, ax = plt.subplots(1)
-    plt.plot(listLUT,listLat,'s',)
-    plt.title('Spam-Filter')
-    plt.xlabel(x_name)
-    plt.ylabel(y_name)
-    plt.xlim(left=0)
-    plt.ylim(bottom=0)
     # hText = 0.8
     # for solution in heuristic.solutions:
     #     plt.figtext(0.05, hText,solution, fontsize=9)
@@ -102,10 +73,5 @@ if __name__ == "__main__":
     #     hText -= 0.15  
 
 
-    plt.savefig('./Plot/plot.jpg')
-    #file para plotar o resultado do computador remoto, caso queira interagir com o plot ao invés de ser só um jpg
-    with open('./Plot/solutionsFile', 'wb') as solutionsFile:
-        pickle.dump(heuristic, solutionsFile)
-    solutionsFile.close()
-    plt.show() 
+    
    
