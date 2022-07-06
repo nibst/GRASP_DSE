@@ -12,8 +12,32 @@ from randomForest import RandomForestEstimator
 
 
 class RandomSearchWithEstimator(Heuristic):
+    
+    """
+    Random search with estimator:
+
+    Use an estimator to get the top "_NUM_OF_TOP" designs
+    out of the "_NUM_OF_ESTIMATED" random estimated designs. The top desings get synthesized 
+    and are added to the dict that will be returned.
+    The top designs are used to retrain the model (after them beign synthesized)
+    
+    Attributes
+    ----------
+    _SECONDS : int
+        number of seconds that the function ``createSolutionsDict`` runs for
+    
+    _NUM_OF_TOP : int
+        number of estimated designs that will be select to be on the top designs list
+        that will be synthesized 
+    _NUM_OF_ESTIMATED : int
+        number of designs that will explored by estimating in that iteration
+    """
+
     _SECONDS = 160
-    def __init__(self,filesDict,outPath):
+    _NUM_OF_TOP = 10
+    _NUM_OF_ESTIMATED = 1000
+    def __init__(self,filesDict,outPath):#TODO receber como parametro de modelo preditivo
+        
         self.directivesTxt = Path(filesDict['dFile']).read_text()
         self.cFiles = filesDict['cFiles']
         self.prjFile = filesDict['prjFile']
@@ -47,7 +71,7 @@ class RandomSearchWithEstimator(Heuristic):
     def __estimateTopSolutions(self,dictDir,controlTree):
         estimatedSolutions = []
         topSolutions = [] #top 10 solutions
-        for i in range(1000):
+        for i in range(self._NUM_OF_ESTIMATED):
             onePermutation = self.__generateRandomPermutation(dictDir,controlTree)
             if onePermutation:
                 estimatedSolution = Solution(onePermutation,self.cFiles,self.prjFile)         #Solutions a partir deste     
@@ -55,7 +79,7 @@ class RandomSearchWithEstimator(Heuristic):
                 estimatedSolution.setResultados(estimatedResults[0])
                 estimatedSolutions.append(estimatedSolution)
                 print(f'estimated solution: {estimatedSolution.resultados}')
-                if i >= 10:
+                if i >= self._NUM_OF_TOP:
                     self.__removeWorstSolution(topSolutions)
                 topSolutions.append(estimatedSolution)
         return topSolutions
