@@ -33,21 +33,27 @@ class RandomSearchWithEstimator(Heuristic):
         number of designs that will explored by estimating in that iteration
     """
 
-    _SECONDS = 160
+    _SECONDS = 0.1
     _NUM_OF_TOP = 10
     _NUM_OF_ESTIMATED = 1000
-    def __init__(self,filesDict,outPath):#TODO receber como parametro de modelo preditivo
+    def __init__(self,filesDict,outPath):#TODO receber como parametro um modelo preditivo
         
         self.directivesTxt = Path(filesDict['dFile']).read_text()
         self.cFiles = filesDict['cFiles']
         self.prjFile = filesDict['prjFile']
         self.outPath = outPath
         sample = RandomSearch(filesDict, outPath)
-        sample2 = Greedy(filesDict,outPath,'resources')
+        #sample2 = Greedy(filesDict,outPath,'resources')
         self.rf = RandomForestEstimator(filesDict['dFile'])
         self.rf.trainModel(sample.solutions)
-        self.rf.trainModel(sample2.solutions)
+        #self.rf.trainModel(sample2.solutions)
         self.solutions = self.createSolutionsDict()
+        for solutionIndex in self.solutions.keys():
+            pass
+        for solution in sample.solutions.values():
+            solutionIndex+=1
+            self.solutions[solutionIndex] = solution
+            
         
     def __generateRandomPermutation(self,dictDir:dict,controlTree:dict):
         node = controlTree
@@ -78,7 +84,7 @@ class RandomSearchWithEstimator(Heuristic):
                 estimatedResults = self.rf.estimateSynthesis(estimatedSolution)
                 estimatedSolution.setResultados(estimatedResults[0])
                 estimatedSolutions.append(estimatedSolution)
-                print(f'estimated solution: {estimatedSolution.resultados}')
+                #print(f'estimated solution: {estimatedSolution.resultados}')
                 if i >= self._NUM_OF_TOP:
                     self.__removeWorstSolution(topSolutions)
                 topSolutions.append(estimatedSolution)
@@ -126,7 +132,8 @@ class RandomSearchWithEstimator(Heuristic):
             self.rf.trainModel(topSynthesized)
             end = time.time()
             totalTime += (end-start)
-            if totalTime >= self._SECONDS: 
+            if totalTime >= self._SECONDS:
+                print(f'score: {self.rf.score(solutionsDict)}') 
                 return solutionsDict                            
                     
 
