@@ -57,12 +57,12 @@ local_memset (INT32 * s, int c, int n, int e)
   m = n / 4;
   uc = c;
   p = (INT32 *) s;
-  while (e-- > 0)
+  local_memset_label0:while (e-- > 0)
     {
 #pragma HLS LOOP_TRIPCOUNT max=63
       p++;
     }
-  while (m-- > 0)
+  local_memset_label1:while (m-- > 0)
     {
 #pragma HLS LOOP_TRIPCOUNT max=16
       *p++ = uc;
@@ -82,7 +82,7 @@ local_memcpy (INT32 * s1, const BYTE * s2, int n)
 
   local_memcpy_label3: while (m-- > 0)
     {
-#pragma HLS LOOP_TRIPCOUNT max=16
+#pragma HLS LOOP_TRIPCOUNT min=16 max=16
       tmp = 0;
       tmp |= 0xFF & *p2++;
       tmp |= (0xFF & *p2++) << 8;
@@ -101,19 +101,19 @@ sha_transform ()
   int i;
   INT32 temp, A, B, C, D, E, W[80];
 
-  sha_transform_label1:for (i = 0; i < 16; ++i)
+  for (i = 0; i < 20; ++i)
     {
-      W[i] = sha_info_data[i];
+      FUNC (1, i);
     }
-  sha_transform_label2:for (i = 16; i < 80; ++i)
+  for (i = 20; i < 40; ++i)
+      FUNC (2, i);
+    }
+  for (i = 40; i < 60; ++i)
     {
-      W[i] = W[i - 3] ^ W[i - 8] ^ W[i - 14] ^ W[i - 16];
+      FUNC (3, i);
     }
-  A = sha_info_digest[0];
-  B = sha_info_digest[1];
-  C = sha_info_digest[2];
-  D = sha_info_digest[3];
-  E = sha_info_digest[4];
+  for (i = 60; i < 80; ++i)
+=======
   sha_transform_label3:for (i = 0; i < 20; ++i)
     {
       FUNC (1, i);
@@ -122,21 +122,6 @@ sha_transform ()
     {
       FUNC (2, i);
     }
-  sha_transform_label5:for (i = 40; i < 60; ++i)
-    {
-      FUNC (3, i);
-    }
-  sha_transform_label6:for (i = 60; i < 80; ++i)
-    {
-      FUNC (4, i);
-    }
-
-  sha_info_digest[0] += A;
-  sha_info_digest[1] += B;
-  sha_info_digest[2] += C;
-  sha_info_digest[3] += D;
-  sha_info_digest[4] += E;
-}
 
 /* initialize the SHA digest */
 
@@ -150,7 +135,6 @@ sha_init ()
   sha_info_digest[4] = 0xc3d2e1f0L;
   sha_info_count_lo = 0L;
   sha_info_count_hi = 0L;
-}
 
 /* update the SHA digest */
 

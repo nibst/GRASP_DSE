@@ -30,12 +30,13 @@ set_directive_dataflow "firewall_top"
 *
 stream firewall_step dup_metadata_to_invalid
 set_directive_stream -depth 8 -dim 1 "firewall_step" dup_metadata_to_invalid
-set_directive_stream -depth 8 -dim 0 "firewall_step" dup_metadata_to_invalid
 set_directive_stream -depth 16 -dim 1 "firewall_step" dup_metadata_to_invalid
-set_directive_stream -depth 16 -dim 0 "firewall_step" dup_metadata_to_invalid
 *
 inline firewall_step
 set_directive_inline "firewall_step"
+*
+dataflow firewall_step
+set_directive_dataflow "firewall_step"
 *
 pipeline merge_hash_results
 set_directive_pipeline -II 1 "merge_hash_results"
