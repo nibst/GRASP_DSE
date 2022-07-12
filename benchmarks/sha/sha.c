@@ -57,12 +57,12 @@ local_memset (INT32 * s, int c, int n, int e)
   m = n / 4;
   uc = c;
   p = (INT32 *) s;
-  while (e-- > 0)
+  local_memset_label0:while (e-- > 0)
     {
 #pragma HLS LOOP_TRIPCOUNT max=63
       p++;
     }
-  while (m-- > 0)
+  local_memset_label1:while (m-- > 0)
     {
 #pragma HLS LOOP_TRIPCOUNT max=16
       *p++ = uc;
