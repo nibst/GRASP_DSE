@@ -11,7 +11,7 @@ from exhaustiveSearch import ExhaustiveSearch
 from greedyWithEstimator import GreedyWithEstimator
 from randomSearchWithEstimator import RandomSearchWithEstimator
 import argparse
-import matplotlib.pyplot as plt
+#import matplotlib.pyplot as plt
 from matplotlib.widgets import Cursor
 from plotMaker import PlotMaker
 import pandas as pd
@@ -42,21 +42,27 @@ if __name__ == "__main__":
     RESOURCE_TO_COMPARE = 'resources'
     
     #heuristic = HillClimbing(filesDict,'directives.tcl')
-    #heuristic = Greedy(filesDict,'directives.tcl', RESOURCE_TO_COMPARE)
+    #heuristic = Greedy(filesDict,'directives.tcl')
     #heuristic = ExhaustiveSearch(filesDict,'directives.tcl')
-    heuristic = RandomSearch(filesDict,'directives.tcl')
+    #heuristic = RandomSearch(filesDict,'directives.tcl')
     #heuristic = GreedyWithEstimator(filesDict,'directives.tcl')
-    #heuristic = RandomSearchWithEstimator(filesDict, 'directives.tcl')
-    #heuristic.writeSolutionsDict()
-    #heuristic.solutions = heuristic.paretoSolutions(RESOURCE_TO_COMPARE,'latency')
+    heuristic = RandomSearchWithEstimator(filesDict, 'directives.tcl')
     
+    #heuristic.writeSolutionsDict()
+    paretos = heuristic.paretoSolutions('resources','latency')
+    RESOURCE_TO_COMPARE = 'resources'
+    ######################### GRAPH
     
     #file para plotar o resultado do computador remoto, caso queira interagir com o plot ao invés de ser só um jpg
     with open('./Plot/solutionsFile', 'wb') as solutionsFile:
         pickle.dump(heuristic, solutionsFile)
     solutionsFile.close()
 
-    plt = PlotMaker("sha", RESOURCE_TO_COMPARE, 'latency', heuristic.solutions)
+    plt = PlotMaker("gsm", RESOURCE_TO_COMPARE, 'latency', )
+    plt.createPlot(heuristic.solutions) #blue
+    #plt.createPlot(heuristic.sample.solutions) #orange
+    
+    #plt.createPlot(heuristic.sample2.solutions) #green
     plt.savePlotAsJPG()
     plt.showPlot()
     

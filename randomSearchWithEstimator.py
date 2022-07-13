@@ -33,28 +33,41 @@ class RandomSearchWithEstimator(Heuristic):
         number of designs that will explored by estimating in that iteration
     """
 
-    _SECONDS = 0.1
+    _SECONDS = 3600
     _NUM_OF_TOP = 10
     _NUM_OF_ESTIMATED = 1000
-    def __init__(self,filesDict,outPath):#TODO receber como parametro um modelo preditivo
+    def __init__(self,filesDict,outPath):#TODO receber como parametro de modelo preditivo
         
         self.directivesTxt = Path(filesDict['dFile']).read_text()
         self.cFiles = filesDict['cFiles']
         self.prjFile = filesDict['prjFile']
         self.outPath = outPath
         sample = RandomSearch(filesDict, outPath)
-        #sample2 = Greedy(filesDict,outPath,'resources')
+        sample2 = Greedy(filesDict,outPath,'resources')
+        self.sample = sample
+        self.sample2 = sample2
         self.rf = RandomForestEstimator(filesDict['dFile'])
         self.rf.trainModel(sample.solutions)
-        #self.rf.trainModel(sample2.solutions)
+        self.rf.trainModel(sample2.solutions)
         self.solutions = self.createSolutionsDict()
-        for solutionIndex in self.solutions.keys():
-            pass
-        for solution in sample.solutions.values():
-            solutionIndex+=1
-            self.solutions[solutionIndex] = solution
-            
+        #for solutionIndex in self.solutions.keys():
+        #    pass
+        #for solution in sample.solutions.values():
+        #    solutionIndex+=1
+        #    self.solutions[solutionIndex] = solution
+
+    def __initializeControlTree(self,controlTree:dict):
+        #colocar as sinteses do sample aqui pra n rodar novamente
         
+        for solution in self.sample.solutions.values():
+            node = controlTree
+            for diretiva in solution.diretivas.values():
+                if diretiva in node:
+                    node = node[diretiva]
+                else:
+                    node[diretiva] = {} #cria nodo
+                    node = node[diretiva]
+
     def __generateRandomPermutation(self,dictDir:dict,controlTree:dict):
         node = controlTree
         newPermutation = {}
@@ -72,7 +85,8 @@ class RandomSearchWithEstimator(Heuristic):
         if isNewPermutation:
             return newPermutation
         else:
-            return self.__generateRandomPermutation(dictDir,controlTree)
+            #TODO isso tem risco de loop infinito caso seja visto todo espaço
+            return None
 
     def __estimateTopSolutions(self,dictDir,controlTree):
         estimatedSolutions = []
@@ -101,18 +115,17 @@ class RandomSearchWithEstimator(Heuristic):
     def createSolutionsDict(self):
         dictDir=self.parsedTxt() 
         solutionsDict = {}
-        onePermutation = {}
         controlTree = {}
-        
+        self.__initializeControlTree(controlTree)
         solutionIndex=0
         generateScript(self.cFiles, self.prjFile)
         inTime = True
-        seed(1)
+        seed(2)
         totalTime = 0
+        start = time.time()
         while inTime:
-            start = time.time()
             topEstimatedSolutions = self.__estimateTopSolutions(dictDir,controlTree)
-            print(topEstimatedSolutions)
+            print(topEstimatedSolutions) 
             topSynthesized = [] #synthesis of the top estimated solutions
             for estimatedSolution in topEstimatedSolutions:    
                 solution = Solution(estimatedSolution.diretivas,self.cFiles,self.prjFile)         #Solutions a partir deste
@@ -128,15 +141,15 @@ class RandomSearchWithEstimator(Heuristic):
                     topSynthesized.append(deep)
                     print (solutionIndex)      
                     solutionIndex+=1
+                end = time.time()
+                totalTime = (end-start)
+                if totalTime >= self._SECONDS:
+                    return solutionsDict 
+                
             #retrain
+            print(f'score: {self.rf.score(topSynthesized)}')
             self.rf.trainModel(topSynthesized)
-            end = time.time()
-            totalTime += (end-start)
-            if totalTime >= self._SECONDS:
-                print(f'score: {self.rf.score(solutionsDict)}') 
-                return solutionsDict                            
-                    
-
+                                      
+        
                                         # Retorna o dicionário de soluções para o 'main'
-        print(f'score: {self.rf.score(solutionsDict)}')
         return solutionsDict
