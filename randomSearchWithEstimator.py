@@ -43,12 +43,12 @@ class RandomSearchWithEstimator(Heuristic):
         self.prjFile = filesDict['prjFile']
         self.outPath = outPath
         sample = RandomSearch(filesDict, outPath)
-        sample2 = Greedy(filesDict,outPath,'resources')
+        #sample2 = Greedy(filesDict,outPath,'resources')
         self.sample = sample
-        self.sample2 = sample2
+        #self.sample2 = sample2
         self.rf = RandomForestEstimator(filesDict['dFile'])
         self.rf.trainModel(sample.solutions)
-        self.rf.trainModel(sample2.solutions)
+        #self.rf.trainModel(sample2.solutions)
         self.solutions = self.createSolutionsDict()
         #for solutionIndex in self.solutions.keys():
         #    pass
@@ -56,17 +56,20 @@ class RandomSearchWithEstimator(Heuristic):
         #    solutionIndex+=1
         #    self.solutions[solutionIndex] = solution
 
-    def __initializeControlTree(self,controlTree:dict):
+    def __initializeControlTree(self,dictDir:dict,controlTree:dict):
         #colocar as sinteses do sample aqui pra n rodar novamente
         
         for solution in self.sample.solutions.values():
             node = controlTree
-            for diretiva in solution.diretivas.values():
-                if diretiva in node:
-                    node = node[diretiva]
+            for directiveType in solution.diretivas.keys():
+                directive=solution.diretivas[directiveType]
+                #a control tree representa cada diretiva como numero, na ordem do dictDir
+                directiveIndex = dictDir[directiveType].index(solution.diretivas[directiveType]) 
+                if directiveIndex in node:
+                    node = node[directiveIndex]
                 else:
-                    node[diretiva] = {} #cria nodo
-                    node = node[diretiva]
+                    node[directiveIndex] = {} #cria nodo
+                    node = node[directiveIndex]
 
     def __generateRandomPermutation(self,dictDir:dict,controlTree:dict):
         node = controlTree
@@ -85,12 +88,12 @@ class RandomSearchWithEstimator(Heuristic):
         if isNewPermutation:
             return newPermutation
         else:
-            #TODO isso tem risco de loop infinito caso seja visto todo espaço
             return None
 
     def __estimateTopSolutions(self,dictDir,controlTree):
         estimatedSolutions = []
         topSolutions = [] #top 10 solutions
+        count = 0
         for i in range(self._NUM_OF_ESTIMATED):
             onePermutation = self.__generateRandomPermutation(dictDir,controlTree)
             if onePermutation:
@@ -102,6 +105,7 @@ class RandomSearchWithEstimator(Heuristic):
                 if i >= self._NUM_OF_TOP:
                     self.__removeWorstSolution(topSolutions)
                 topSolutions.append(estimatedSolution)
+            else: count+=1
         return topSolutions
                     
     def __removeWorstSolution(self,topSolutions):
@@ -116,7 +120,7 @@ class RandomSearchWithEstimator(Heuristic):
         dictDir=self.parsedTxt() 
         solutionsDict = {}
         controlTree = {}
-        self.__initializeControlTree(controlTree)
+        self.__initializeControlTree(dictDir,controlTree)
         solutionIndex=0
         generateScript(self.cFiles, self.prjFile)
         inTime = True
