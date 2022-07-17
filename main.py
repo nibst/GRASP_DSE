@@ -58,9 +58,9 @@ if __name__ == "__main__":
         pickle.dump(heuristic, solutionsFile)
     solutionsFile.close()
 
-    plt = PlotMaker("gsm", RESOURCE_TO_COMPARE, 'latency', )
+    plt = PlotMaker("digital", RESOURCE_TO_COMPARE, 'latency', )
     plt.createPlot(heuristic.solutions) #blue
-    #plt.createPlot(heuristic.sample.solutions) #orange
+    plt.createPlot(heuristic.sample.solutions) #orange
     
     #plt.createPlot(heuristic.sample2.solutions) #green
     plt.savePlotAsJPG()

@@ -43,19 +43,25 @@ class RandomSearchWithEstimator(Heuristic):
         self.prjFile = filesDict['prjFile']
         self.outPath = outPath
         sample = RandomSearch(filesDict, outPath)
-        #sample2 = Greedy(filesDict,outPath,'resources')
+        sample2 = Greedy(filesDict,outPath,'resources')
+        for solutionIndex in sample.solutions.keys():
+            pass
+        for solution in sample2.solutions.values():
+            solutionIndex+=1
+            sample.solutions[solutionIndex] = solution
         self.sample = sample
-        #self.sample2 = sample2
+        
         self.rf = RandomForestEstimator(filesDict['dFile'])
         self.rf.trainModel(sample.solutions)
-        #self.rf.trainModel(sample2.solutions)
         self.solutions = self.createSolutionsDict()
-        #for solutionIndex in self.solutions.keys():
-        #    pass
-        #for solution in sample.solutions.values():
-        #    solutionIndex+=1
-        #    self.solutions[solutionIndex] = solution
-
+        """
+        for solutionIndex in self.solutions.keys():
+            pass
+        for solution in sample.solutions.values():
+            solutionIndex+=1
+            self.solutions[solutionIndex] = solution
+        """
+        
     def __initializeControlTree(self,dictDir:dict,controlTree:dict):
         #colocar as sinteses do sample aqui pra n rodar novamente
         
@@ -63,8 +69,10 @@ class RandomSearchWithEstimator(Heuristic):
             node = controlTree
             for directiveType in solution.diretivas.keys():
                 directive=solution.diretivas[directiveType]
-                #a control tree representa cada diretiva como numero, na ordem do dictDir
-                directiveIndex = dictDir[directiveType].index(solution.diretivas[directiveType]) 
+                if directive == None:
+                    directive = ''
+                #a control tree representa cada diretiva como numero, na ordem do dictDir, ent pegar o numero
+                directiveIndex = dictDir[directiveType].index(directive) 
                 if directiveIndex in node:
                     node = node[directiveIndex]
                 else:

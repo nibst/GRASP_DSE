@@ -49,6 +49,8 @@ class PreProcessor():
                 return 2
             elif parametersDict[parameterType] == 'complete':
                 return 3
+            else: 
+                return 1
         elif parameterType == 'dim':
             return int(parametersDict[parameterType]) + 1
         else:
@@ -103,6 +105,8 @@ class PreProcessor():
                         featureValue = 0
                     else:
                         featureValue = 1
+                if featureValue == None:
+                    print('a')
                 newColumn.append(featureValue)
                 count+=1
             finalDict[directiveType] = newColumn

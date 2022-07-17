@@ -89,9 +89,6 @@ set_directive_array_partition -type complete -dim 1 "sha_transform" W
 inline sha_stream
 set_directive_inline -region "sha_stream"
 *
-dataflow sha_transform
-set_directive_dataflow "sha_transform"
-*
 inline local_memset
 set_directive_inline "local_memset"
 *
