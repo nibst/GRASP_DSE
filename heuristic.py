@@ -5,7 +5,6 @@ import copy
 import readDirectivesFile
 from pathlib import Path
 import os,glob
-import logging
 
 
 class Heuristic(ABC):
@@ -104,15 +103,11 @@ class Heuristic(ABC):
         """
         Calls synthesis and, if its successful, it updates solutionsDict.
         """
-        logger = logging.getLogger(__name__)
-
         try:
-            solution.runSynthesis()
+            solution.runSynthesisTeste()
         except Exception as e:
-            logger.error(e)
             raise
         else:
             deep = copy.deepcopy(solution)   
             solutionsDict[self.solutionIndex] = deep               
             self.solutionIndex+=1
-        return solutionsDict
