@@ -9,10 +9,7 @@ class Greedy(Heuristic):
     
     
     def __init__(self,filesDict,outPath,metricName):
-        self.directivesTxt = Path(filesDict['dFile']).read_text()
-        self.cFiles = filesDict['cFiles']
-        self.prjFile = filesDict['prjFile']
-        self.outPath = outPath
+        super().__init__(filesDict, outPath)
         self.metric = metricName
         self.solutions = self.createSolutionsDict()
     #Atributos dos caminhos dos arquivos de entrada e saída.
@@ -43,7 +40,7 @@ class Greedy(Heuristic):
                 final[diretiva] = option                             #Progressivamente popula o dicionário 'final' e cria
                 solution = Solution(final,self.cFiles,self.prjFile)         #Solutions a partir deste     
                 try:
-                    solution.runSynthesis()
+                    self.synthesisWrapper(solution,solutionsDict)
                 except Exception as e:
                     final[diretiva] = None #retira a diretiva usada
                     print(e)
@@ -53,14 +50,8 @@ class Greedy(Heuristic):
                     metricXLatency = solution.resultados[self.metric] * solution.resultados['latency']
                     if metricXLatency<bestMetricxLatency:          #mantendo aquelas onde o nro de LUTs é estritamente
                         bestMetricxLatency = metricXLatency
-                        currentBest = option        #menor que o da anterior.
-                    
-                    deep = copy.deepcopy(solution)   
-                    solutionsDict[solutionIndex] = deep               
-                    solutionIndex+=1
-
+                        currentBest = option        #menor que o da anterior.              
             final[diretiva] = currentBest
                                         
             # Retorna o dicionário de soluções para o 'main'
-        
         return solutionsDict

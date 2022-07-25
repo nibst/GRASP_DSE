@@ -1,12 +1,24 @@
 from abc import ABC, abstractmethod
 from importlib.resources import path
+from solution import Solution
+import copy
 import readDirectivesFile
 from pathlib import Path
 import os,glob
+import logging
+
 
 class Heuristic(ABC):
-    
-    
+
+    #TODO colocar super().__init__(bla bla) em todas nossas heuristicas
+    def __init__(self,filesDict,outPath):
+        self.directivesTxt = Path(filesDict['dFile']).read_text()
+        self.cFiles = filesDict['cFiles']
+        self.prjFile = filesDict['prjFile']
+        self.outPath = outPath
+        self.solutionIndex = 0
+        self.solutions = None
+
     def parsedTxt(self):
         return readDirectivesFile.fileParser(self.directivesTxt)
     #Passa para o arquivo readDirectivesFile.py o texto lido do arquivo
@@ -85,8 +97,22 @@ class Heuristic(ABC):
                 for discardedSolution in toRemove:
                     paretoCandidates.remove(discardedSolution)
                 toRemove = []
-        paretos = {} #mesma estrutura de self.solutions, só que só de paretos, para retornar
-        for count,paretoSolutionIndex in enumerate(paretoCandidates):
-            #não acho que precisa copiar, então vou só passar referencia(eles não deveriam ser modificados mesmo)
-            paretos[count] = solutions[paretoSolutionIndex]
-        return paretos
+        paretos =filesDict
+
+    
+    def synthesisWrapper(self,solution,solutionsDict):
+        """
+        Calls synthesis and, if its successful, it updates solutionsDict.
+        """
+        logger = logging.getLogger(__name__)
+
+        try:
+            solution.runSynthesis()
+        except Exception as e:
+            logger.error(e)
+            raise
+        else:
+            deep = copy.deepcopy(solution)   
+            solutionsDict[self.solutionIndex] = deep               
+            self.solutionIndex+=1
+        return solutionsDict

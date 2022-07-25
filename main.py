@@ -3,6 +3,7 @@ from distutils.errors import PreprocessError
 from pickle import TRUE
 from re import X
 from setuptools import Require
+from GRASP import GRASP
 from RandomSearch import RandomSearch
 from greedy import Greedy
 from heuristic import Heuristic
@@ -40,13 +41,13 @@ if __name__ == "__main__":
     filesDict['prjFile'] = args.prjFile
     
     RESOURCE_TO_COMPARE = 'resources'
-    
+    #heuristic = GRASP(filesDict,'directives.tcl')
     #heuristic = HillClimbing(filesDict,'directives.tcl')
-    #heuristic = Greedy(filesDict,'directives.tcl')
+    heuristic = Greedy(filesDict,'directives.tcl','resources')
     #heuristic = ExhaustiveSearch(filesDict,'directives.tcl')
     #heuristic = RandomSearch(filesDict,'directives.tcl')
     #heuristic = GreedyWithEstimator(filesDict,'directives.tcl')
-    heuristic = RandomSearchWithEstimator(filesDict, 'directives.tcl')
+    #heuristic = RandomSearchWithEstimator(filesDict, 'directives.tcl')
     
     #heuristic.writeSolutionsDict()
     paretos = heuristic.paretoSolutions('resources','latency')
@@ -58,9 +59,10 @@ if __name__ == "__main__":
         pickle.dump(heuristic, solutionsFile)
     solutionsFile.close()
 
-    plt = PlotMaker("digital", RESOURCE_TO_COMPARE, 'latency', )
+    plt = PlotMaker("sha", RESOURCE_TO_COMPARE, 'latency')
     plt.createPlot(heuristic.solutions) #blue
-    plt.createPlot(heuristic.sample.solutions) #orange
+    paretoPlt = PlotMaker("sha", RESOURCE_TO_COMPARE, 'latency')
+    paretoPlt.createPlot(paretos) #orange
     
     #plt.createPlot(heuristic.sample2.solutions) #green
     plt.savePlotAsJPG()
