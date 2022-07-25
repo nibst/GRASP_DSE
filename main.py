@@ -43,7 +43,7 @@ if __name__ == "__main__":
     RESOURCE_TO_COMPARE = 'resources'
     #heuristic = GRASP(filesDict,'directives.tcl')
     #heuristic = HillClimbing(filesDict,'directives.tcl')
-    heuristic = Greedy(filesDict,'directives.tcl','resources')
+    heuristic = Greedy(filesDict,'directives.tcl',RESOURCE_TO_COMPARE)
     #heuristic = ExhaustiveSearch(filesDict,'directives.tcl')
     #heuristic = RandomSearch(filesDict,'directives.tcl')
     #heuristic = GreedyWithEstimator(filesDict,'directives.tcl')

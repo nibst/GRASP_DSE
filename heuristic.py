@@ -15,8 +15,8 @@ class Heuristic(ABC):
         self.cFiles = filesDict['cFiles']
         self.prjFile = filesDict['prjFile']
         self.outPath = outPath
-        self.solutionIndex = 0
-        self.solutions = None
+        self._solutionIndex = 0
+        self.solutions = {}
 
     def parsedTxt(self):
         return readDirectivesFile.fileParser(self.directivesTxt)
@@ -96,18 +96,26 @@ class Heuristic(ABC):
                 for discardedSolution in toRemove:
                     paretoCandidates.remove(discardedSolution)
                 toRemove = []
-        paretos =filesDict
+        paretos = {} #mesma estrutura de self.solutions, só que só de paretos, para retornar
+        for count,paretoSolutionIndex in enumerate(paretoCandidates):
+            #não acho que precisa copiar, então vou só passar referencia(eles não deveriam ser modificados mesmo)
+            paretos[count] = solutions[paretoSolutionIndex]
+        return paretos
+        
+    def saveSolution(self,solution):
+        deep = copy.deepcopy(solution)   
+        self.solutions[self._solutionIndex] = deep               
+        self._solutionIndex+=1
 
-    
-    def synthesisWrapper(self,solution,solutionsDict):
+    def synthesisWrapper(self,solution):
         """
-        Calls synthesis and, if its successful, it updates solutionsDict.
+        Calls synthesis and, if its successful, it saves solution in self.solutions.
         """
         try:
             solution.runSynthesisTeste()
         except Exception as e:
             raise
         else:
-            deep = copy.deepcopy(solution)   
-            solutionsDict[self.solutionIndex] = deep               
-            self.solutionIndex+=1
+            self.saveSolution(solution)
+            
+    
