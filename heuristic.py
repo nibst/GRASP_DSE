@@ -56,7 +56,7 @@ class Heuristic(ABC):
 
     def __compareSolutions(self,Solution1,Solution2,metric1,metric2):
         #testa se a Solution1  domina a Solution2
-        return ((Solution2.resultados[metric1]>Solution1.resultados[metric1]) and (Solution2.resultados[metric2] > Solution1.resultados[metric2]))
+        return ((Solution2.resultados[metric1]>=Solution1.resultados[metric1]) and (Solution2.resultados[metric2] >= Solution1.resultados[metric2]))
     def paretoSolutions(self,metric1,metric2,solutions=None ):
 
         if solutions == None:
