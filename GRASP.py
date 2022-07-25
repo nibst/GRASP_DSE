@@ -12,11 +12,8 @@ class GRASP(Heuristic):
     
     
     def __init__(self,filesDict,outPath):
-        self.directivesTxt = Path(filesDict['dFile']).read_text()
-        self.cFiles = filesDict['cFiles']
-        self.prjFile = filesDict['prjFile']
-        self.outPath = outPath
-        self.solutions = self.createSolutionsDict()
+        super().__init__(filesDict, outPath)
+        self.createSolutionsDict()
        
     
     def createSolutionsDict(self):
@@ -25,34 +22,22 @@ class GRASP(Heuristic):
         diretivas = dict.fromkeys(dictDir,'') #Cria um dicionário 'diretivas' a partir do 'dictDir' mas 
                                                 #mantendo apenas os títulos das diretivas - seu valores são
                                             #trocados por None
-        solutionIndex=0
-        solutionsDict = {}
         generateScript(self.cFiles, self.prjFile)
 
         num_iter = 3
         i = 1
         while i <= num_iter:
             P = Solution(diretivas,self.cFiles,self.prjFile)            ##### Design 0        
-            P.runSynthesisTeste()
+            self.synthesisWrapper(P)
             
             vizinhosP = self.vizinhosP(P,dictDir,diretivas)             #
+            
             RCL = self.paretoSolutions('LUT','latency',vizinhosP)      # Construção do RCL filtrando vizinhos
             P = self.biased(RCL)                                        # Biased Random
-            
-            deep = copy.deepcopy(P)   
-            solutionsDict[solutionIndex] = deep               
-            solutionIndex+=1    
-
             vizinhosP = self.vizinhosP(P,dictDir,diretivas)
             melhor = self.melhor(vizinhosP)
-
-            deep = copy.deepcopy(P)   
-            solutionsDict[solutionIndex] = deep               
-            solutionIndex+=1
             print(i)
             i+=1
-
-        return solutionsDict
 
     def vizinhosP(self,P,dictDir,diretivas):
         vizinhos = {}
@@ -65,7 +50,7 @@ class GRASP(Heuristic):
                     newVizinho = deep
                     newVizinho[dir] = newDir
                     vizinho = Solution(newVizinho,self.cFiles,self.prjFile)
-                    vizinho.runSynthesisTeste()
+                    self.synthesisWrapper(vizinho)
                     deep = copy.deepcopy(vizinho)   
                     vizinhos[solutionIndex] = deep               
                     solutionIndex+=1
