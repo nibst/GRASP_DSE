@@ -77,7 +77,11 @@ class Solution:
             for proc in psutil.process_iter(['name']):
                 if proc.name() == self._VIVADO_PROCESSNAME:
                     vivadoIsRunning = True
-                    memoryUse = proc.memory_percent()
+                    try:
+                        memoryUse = proc.memory_percent()
+                    except Exception as e:
+                        print(e)
+                        break
                     if memoryUse > self._MAX_RAM_USAGE:
                         proc.terminate()
                         raise Exception("****Vivado_HLS has exceed max RAM usage****")
