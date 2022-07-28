@@ -1,3 +1,4 @@
+import time
 from heuristic import Heuristic
 from pathlib import Path
 from solution import Solution
@@ -10,7 +11,7 @@ import random
 class GRASP(Heuristic):
     
     
-    
+    _SECONDS = 7200
     def __init__(self,filesDict,outPath):
         super().__init__(filesDict, outPath)
         self.createSolutionsDict()
@@ -24,20 +25,29 @@ class GRASP(Heuristic):
                                             #trocados por None
         generateScript(self.cFiles, self.prjFile)
 
-        num_iter = 3
+        num_iter = 99
         i = 1
+        totalTime = 0
+        start = time.time()
+        P = Solution(diretivas,self.cFiles,self.prjFile)            ##### Design 0        
         while i <= num_iter:
-            P = Solution(diretivas,self.cFiles,self.prjFile)            ##### Design 0        
-            self.synthesisWrapper(P)
-            
+            try:
+                self.synthesisWrapper(P)
+            except Exception as e:
+                print(e)
+
             vizinhosP = self.vizinhosP(P,dictDir,diretivas)             #
             
-            RCL = self.paretoSolutions('LUT','latency',vizinhosP)      # Construção do RCL filtrando vizinhos
+            RCL = self.paretoSolutions('resources','latency',vizinhosP)      # Construção do RCL filtrando vizinhos
             P = self.biased(RCL)                                        # Biased Random
             vizinhosP = self.vizinhosP(P,dictDir,diretivas)
             melhor = self.melhor(vizinhosP)
             print(i)
             i+=1
+            end = time.time()
+            totalTime = (end-start)
+            if totalTime >= self._SECONDS:
+                break 
 
     def vizinhosP(self,P,dictDir,diretivas):
         vizinhos = {}
@@ -50,10 +60,14 @@ class GRASP(Heuristic):
                     newVizinho = deep
                     newVizinho[dir] = newDir
                     vizinho = Solution(newVizinho,self.cFiles,self.prjFile)
-                    self.synthesisWrapper(vizinho)
-                    deep = copy.deepcopy(vizinho)   
-                    vizinhos[solutionIndex] = deep               
-                    solutionIndex+=1
+                    try:
+                        self.synthesisWrapper(vizinho)
+                    except Exception as e:
+                        print(e)
+                    else:
+                        deep = copy.deepcopy(vizinho)   
+                        vizinhos[solutionIndex] = deep               
+                        solutionIndex+=1
         return vizinhos
 
     def biased(self,RCL):
@@ -61,7 +75,7 @@ class GRASP(Heuristic):
         listLxL = []                    #### Está escolhendo o de maior LutXLat, preciso ainda ver como
         listaParetos = []               #### distribuir os pesos para escolher o de menor
         for element in RCL:
-            lut = RCL[element].resultados['LUT']
+            lut = RCL[element].resultados['resources']
             lat = RCL[element].resultados['latency']
             
             lutXlat = lut*lat
@@ -80,7 +94,7 @@ class GRASP(Heuristic):
         menorlxl = 99999999999
         melhor = 0
         for element in vizinhosP:
-            metrica = vizinhosP[element].resultados['LUT'] * vizinhosP[element].resultados['latency'] 
+            metrica = vizinhosP[element].resultados['resources'] * vizinhosP[element].resultados['latency'] 
             if metrica < menorlxl:
                 menorlxl = metrica
                 melhor = element

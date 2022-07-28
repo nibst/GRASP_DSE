@@ -135,6 +135,7 @@ class RandomSearchWithEstimator(Heuristic):
         seed(2)
         totalTime = 0
         start = time.time()
+        medianScore = 0
         while inTime:
             topEstimatedSolutions = self.__estimateTopSolutions(dictDir,controlTree)
             print(topEstimatedSolutions) 
@@ -160,8 +161,10 @@ class RandomSearchWithEstimator(Heuristic):
                 
             #retrain
             print(f'score: {self.rf.score(topSynthesized)}')
+            medianScore += self.rf.score(topSynthesized)
+
             self.rf.trainModel(topSynthesized)
-                                      
+        medianScore = medianScore/solutionIndex                          
         
                                         # Retorna o dicionário de soluções para o 'main'
         return solutionsDict
