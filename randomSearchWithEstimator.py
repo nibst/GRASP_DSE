@@ -119,8 +119,8 @@ class RandomSearchWithEstimator(Heuristic):
     def __removeWorstSolution(self,topSolutions):
         worst = float('-inf')
         for solution in topSolutions:
-            if solution.resultados['resources'] >= worst:
-                worst = solution.resultados['resources']
+            if solution.resultados['resources'] * solution.resultados['latency'] >= worst:
+                worst = solution.resultados['resources'] * solution.resultados['latency']
                 worstSolution = solution
         topSolutions.remove(worstSolution)
 
