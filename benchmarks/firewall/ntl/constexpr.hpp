@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2016-2019 Haggai Eran, Gabi Malka, Lior Zeno, Maroun Tork
+// Copyright (c) 2016-2018 Haggai Eran, Gabi Malka, Lior Zeno, Maroun Tork
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without modification,
@@ -25,14 +25,14 @@
 
 #pragma once
 
-namespace ntl_legacy {
-
-    template <typename InputStream, typename OutputStream>
-    void link(InputStream& in, OutputStream& out)
+namespace ntl {
+    constexpr size_t log2(size_t n)
     {
-        if (in.empty() || out.full())
-            return;
+        return (n < 2) ? 0 : 1 + log2((n + 1) / 2);
+    }
 
-        out.write(in.read());
+    template<typename T> constexpr
+    T const& max(T const& a, T const& b) {
+        return a > b ? a : b;
     }
 }

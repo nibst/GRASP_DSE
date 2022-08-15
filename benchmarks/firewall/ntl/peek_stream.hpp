@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2016-2019 Haggai Eran, Gabi Malka, Lior Zeno, Maroun Tork
+// Copyright (c) 2019 Haggai Eran
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without modification,
@@ -25,14 +25,51 @@
 
 #pragma once
 
-namespace ntl_legacy {
+#include <ntl/maybe.hpp>
 
-    template <typename InputStream, typename OutputStream>
-    void link(InputStream& in, OutputStream& out)
+#include <cassert>
+
+namespace ntl {
+    template <typename T>
+    class peek_stream
     {
-        if (in.empty() || out.full())
-            return;
+    public:
+        peek_stream() {}
 
-        out.write(in.read());
-    }
+        template <typename InputStream>
+        void link(InputStream& in)
+        {
+#pragma HLS inline
+            if (!in.empty() && !_current.valid())
+                _current = in.read();
+        }
+
+        bool empty()
+        {
+#pragma HLS inline
+            return !_current.valid();
+        }
+
+        T peek()
+        {
+#pragma HLS inline
+            assert(_current.valid());
+
+            return _current.value();
+        }
+
+        T read()
+        {
+#pragma HLS inline
+            assert(_current.valid());
+
+            auto ret = _current.value();
+            _current.reset();
+            return ret;
+        }
+
+    private:
+        maybe<T> _current;
+    };
+
 }

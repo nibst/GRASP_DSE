@@ -25,14 +25,29 @@
 
 #pragma once
 
-namespace ntl_legacy {
+namespace ntl {
 
-    template <typename InputStream, typename OutputStream>
-    void link(InputStream& in, OutputStream& out)
+    class consume_stream
     {
-        if (in.empty() || out.full())
-            return;
+    public:
+        template <typename Stream>
+        void step(Stream& in, bool enabled = true)
+        {
+#pragma HLS pipeline enable_flush
+            if (!enabled)
+                return;
 
-        out.write(in.read());
+            if (in.empty())
+                return;
+                
+            in.read();
+        }
+    };
+
+    template <typename Stream>
+    void consume(Stream& in, bool enabled = true)
+    {
+#pragma HLS inline region
+        consume_stream().step(in, enabled);
     }
 }

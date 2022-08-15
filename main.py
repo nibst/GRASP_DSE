@@ -12,6 +12,7 @@ from hillClimbing0 import HillClimbing
 from exhaustiveSearch import ExhaustiveSearch
 from greedyWithEstimator import GreedyWithEstimator
 from randomSearchWithEstimator import RandomSearchWithEstimator
+from genetic import GA
 import argparse
 #import matplotlib.pyplot as plt
 from matplotlib.widgets import Cursor
@@ -46,10 +47,10 @@ if __name__ == "__main__":
     #heuristic = HillClimbing(filesDict,'directives.tcl')
     #heuristic = Greedy(filesDict,'directives.tcl',RESOURCE_TO_COMPARE)
     #heuristic = ExhaustiveSearch(filesDict,'directives.tcl')
-    #heuristic = RandomSearch(filesDict,'directives.tcl')
+    heuristic = RandomSearch(filesDict,'directives.tcl')
     #heuristic = GreedyWithEstimator(filesDict,'directives.tcl')
-    heuristic = RandomSearchWithEstimator(filesDict, 'directives.tcl')
-    
+    #heuristic = RandomSearchWithEstimator(filesDict, 'directives.tcl')
+    #heuristic = GA(filesDict,'directives.tcl')
     #heuristic.writeSolutionsDict()
     paretos = heuristic.paretoSolutions('resources','latency')
     RESOURCE_TO_COMPARE = 'resources'
@@ -60,12 +61,12 @@ if __name__ == "__main__":
         pickle.dump(heuristic, solutionsFile)
     solutionsFile.close()
 
-    plt = PlotMaker("sha", RESOURCE_TO_COMPARE, 'latency')
+    plt = PlotMaker("firewall", RESOURCE_TO_COMPARE, 'latency')
     plt.createPlot(heuristic.solutions) #blue
-    paretoPlt = PlotMaker("sha", RESOURCE_TO_COMPARE, 'latency')
-    paretoPlt.createPlot(paretos) #orange
-    samplePLt = PlotMaker("sha", RESOURCE_TO_COMPARE, 'latency')
-    samplePLt.createPlot(heuristic.sample.solutions)
+    plt.createPlot(paretos)
+    paretoPlt = PlotMaker("paretos firewall", RESOURCE_TO_COMPARE, 'latency')
+    #samplePLt = PlotMaker("sha", RESOURCE_TO_COMPARE, 'latency')
+    #samplePLt.createPlot(heuristic.sample.solutions)
     #plt.createPlot(heuristic.sample2.solutions) #green
     plt.savePlotAsJPG()
     plt.showPlot()

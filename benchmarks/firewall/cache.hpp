@@ -73,7 +73,6 @@ void hash_table(tag_stream& lookups, lookup_result_stream& results,
 {
     static hash_table_t _table;
 
-#pragma HLS pipeline enable_flush ii=3
     /* Gateway access are highest priority as they are more rare and lower
      * throughput */
     gateway_command cmd;
@@ -134,7 +133,6 @@ int gateway_execute_command(const gateway_command& cmd, gateway_response& resp,
     hls::stream<gateway_response>& gateway_responses)
 
 {
-#pragma HLS inline
     static bool gateway_command_sent = false;
 
     if (!gateway_command_sent) {
@@ -158,7 +156,6 @@ int gateway_add_entry(const value_type& value, int *result,
     hls::stream<gateway_command>& gateway_commands,
     hls::stream<gateway_response>& gateway_responses)
 {
-#pragma HLS inline
     gateway_command cmd = {
         HASH_INSERT,
         0,
@@ -180,7 +177,6 @@ int gateway_delete_entry(const typename hash_table_t::tag_type& tag, int *result
     hls::stream<gateway_command>& gateway_commands,
     hls::stream<gateway_response>& gateway_responses)
 {
-#pragma HLS inline
     gateway_command cmd = {
         HASH_ERASE,
         0,

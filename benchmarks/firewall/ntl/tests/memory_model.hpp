@@ -25,14 +25,31 @@
 
 #pragma once
 
-namespace ntl_legacy {
+#include <ntl/memory.hpp>
 
-    template <typename InputStream, typename OutputStream>
-    void link(InputStream& in, OutputStream& out)
-    {
-        if (in.empty() || out.full())
-            return;
+namespace ntl {
+    namespace tests {
+        template <size_t _interface_width>
+        struct memory_model {
+            enum {
+                array_size = 1ull << (_interface_width - 6),
+            };
+            ap_uint<512> _array[array_size];
 
-        out.write(in.read());
+            template <typename Kind>
+            void mem(memory<_interface_width, Kind>& m)
+            {
+                if (!m.aw.empty() && !m.w.empty()) {
+                    // TODO bursts
+                    _array[m.aw.read()] = m.w.read();
+                    m.b.write(true);
+                }
+
+                if (!m.ar.empty()) {
+                    // TODO bursts
+                    m.r.write(_array[m.ar.read()]);
+                }
+            }
+        };
     }
 }

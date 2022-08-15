@@ -74,7 +74,7 @@ void map_metadata_to_hash_lookup(metadata_stream& in,
     out.write_nb(hash_tag(m.ip_source, m.ip_dest, m.udp_source, m.udp_dest));
 }
 
-void merge_hash_results(lookup_result_stream& results,
+volatile void merge_hash_results(lookup_result_stream& results,
                         metadata_stream& metadata_in, bool_stream &classify_out)
 {
     if (results.empty() || metadata_in.empty() || classify_out.full())
@@ -91,12 +91,20 @@ void merge_hash_results(lookup_result_stream& results,
 void firewall_step(axi_data_stream& in, axi_data_stream& data_out, bool_stream& classify_out, gateway_registers& g)
 {
     static axi_data_stream dup_to_parse;
+#pragma HLS STREAM variable=dup_to_parse depth=12 dim=1
     static metadata_stream parse_to_dup, dup_metadata_to_hash, dup_metadata_to_invalid;
+#pragma HLS STREAM variable=dup_metadata_to_hash depth=12 dim=1
+#pragma HLS STREAM variable=parse_to_dup depth=12 dim=1
+#pragma HLS stream variable=dup_metadata_to_invalid depth=12
 
     static hls::stream<gateway_command> gateway_commands;
+#pragma HLS STREAM variable=gateway_commands depth=12 dim=1
     static hls::stream<gateway_response> gateway_responses;
+#pragma HLS STREAM variable=gateway_responses depth=12 dim=1
     static tag_stream lookups;
+#pragma HLS STREAM variable=lookups depth=12 dim=1
     static lookup_result_stream results;
+#pragma HLS STREAM variable=results depth=12 dim=1
 
     gateway(g, gateway_commands, gateway_responses);
 
@@ -115,9 +123,36 @@ void firewall_top(hls::stream<ntl_legacy::raw_axi_data>& in,
                   hls::stream<ntl_legacy::raw_axi_data>& data_out,
                   bool_stream& classify_out_stream, gateway_registers& g)
 {
-#pragma HLS dataflow
     static axi_data_stream in_fifo, out_fifo;
+#pragma HLS STREAM variable=in_fifo depth=12 dim=1
+#pragma HLS stream variable=out_fifo depth=12
+
     ntl_legacy::link(in, in_fifo);
     ntl_legacy::link(out_fifo, data_out);
     firewall_step(in_fifo, out_fifo, classify_out_stream, g);
+    
 }
+
+void firewall_outer_top(hls::stream<ntl_legacy::raw_axi_data> in[NUM],
+                  hls::stream<ntl_legacy::raw_axi_data> data_out[NUM],
+                  bool_stream classify_out_stream[NUM], gateway_registers g[NUM]){
+/*
+#pragma HLS interface ap_ctrl_none port=return
+#pragma HLS interface axis port=in
+#pragma HLS interface axis port=data_out
+
+#pragma HLS interface s_axilite port=g->cmd offset=0x100
+#pragma HLS interface s_axilite port=g->data offset=0x118
+#pragma HLS interface s_axilite port=g->done offset=0xfc
+*/
+    outer_top_loop:for (int i = 0; i < NUM; ++i){
+//#pragma HLS UNROLL factor=2
+//#pragma HLS UNROLL factor=3
+//#pragma HLS UNROLL factor=4
+//#pragma HLS UNROLL factor=6
+//#pragma HLS UNROLL
+//#pragma HLS PIPELINE rewind
+    	firewall_top(in[i], data_out[i], classify_out_stream[i], g[i]);
+    }
+}
+

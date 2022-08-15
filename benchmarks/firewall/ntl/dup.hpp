@@ -25,14 +25,33 @@
 
 #pragma once
 
-namespace ntl_legacy {
+#include <array>
+#include <algorithm>
 
-    template <typename InputStream, typename OutputStream>
-    void link(InputStream& in, OutputStream& out)
+namespace ntl {
+
+    template <typename T, unsigned n>
+    class dup
     {
-        if (in.empty() || out.full())
-            return;
+    public:
+        std::array<stream<T>, n> _streams;
 
-        out.write(in.read());
-    }
+        template <typename InputStream>
+        void step(InputStream& in)
+        {
+#pragma HLS pipeline enable_flush
+            if (in.empty())
+                return;
+
+            for (auto& out : _streams) {
+                if (out.full())
+                    return;
+            }
+
+            auto flit = in.read();
+            for (auto& out : _streams) {
+                out.write(flit);
+            }
+        }
+    };
 }

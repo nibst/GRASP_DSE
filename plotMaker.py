@@ -3,6 +3,7 @@ from matplotlib.widgets import Cursor
 import pandas as pd
 
 class PlotMaker:
+    #TODO change to scatter plot
     _PLOT_PATH = './Plot/plot.jpg'
     def __init__(self,plotName,xAxis,yAxis):
         self.plotName = plotName
@@ -10,7 +11,8 @@ class PlotMaker:
         self.yAxis = yAxis
         
         self.plt = plt
-    
+        fig, ax = self.plt.subplots(1)
+        
     def createPlot(self,solutions):
         listLUT = []
         listLat = []
@@ -30,7 +32,7 @@ class PlotMaker:
         y = df[y_name]
         
         
-        #fig, ax = self.plt.subplots(1)
+        
         self.plt.plot(listLUT,listLat,'s',)
         self.plt.title(self.plotName)
         self.plt.xlabel(x_name)

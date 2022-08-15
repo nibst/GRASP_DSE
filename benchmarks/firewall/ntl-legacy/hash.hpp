@@ -41,7 +41,7 @@ namespace ntl_legacy {
 #pragma HLS resource core=RAM_2P variable=tags
 #pragma HLS resource core=RAM_2P variable=values
 #pragma HLS resource core=RAM_2P variable=valid
-            for (int i = 0; i < Size; ++i) {
+            hash_label2:for (int i = 0; i < Size; ++i) {
                 valid[i] = false;
                 tags[i] = Tag();
                 values[i] = Value();
@@ -80,7 +80,7 @@ namespace ntl_legacy {
             index_t hash = index.value();
             bool found = false;
 
-            for (int i = 1; i < max_hops; ++i) {
+erase_label3:            for (int i = 1; i < max_hops; ++i) {
                 if (found) continue;
 
                 index_t cur = (hash + i) % Size;
@@ -101,7 +101,6 @@ namespace ntl_legacy {
 
         maybe<Value> find(const Tag& k, index_t& out_index) const
         {
-#pragma HLS inline
             maybe<index_t> index = lookup(h(k), k);
 
             if (!index.valid() || !valid[index.value()] || tags[index.value()] != k) {
@@ -115,7 +114,6 @@ namespace ntl_legacy {
 
         maybe<Value> find(const Tag& k) const
         {
-#pragma HLS inline
             index_t index;
 
             return find(k, index);
@@ -142,7 +140,7 @@ namespace ntl_legacy {
         index_t h(const Tag& tag) const { return boost::hash<Tag>()(tag) % Size; }
 
         maybe<index_t> lookup(index_t hash, const Tag& tag) const {
-            for (int i = 0; i < max_hops; ++i) {
+            lookup_label4:for (int i = 0; i < max_hops; ++i) {
                 hash = (hash + 1) % Size;
                 if (!valid[hash] || tags[hash] == tag)
                     return maybe<index_t>(hash);

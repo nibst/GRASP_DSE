@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2016-2019 Haggai Eran, Gabi Malka, Lior Zeno, Maroun Tork
+// Copyright (c) 2016-2018 Haggai Eran, Gabi Malka, Lior Zeno, Maroun Tork
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without modification,
@@ -25,14 +25,51 @@
 
 #pragma once
 
-namespace ntl_legacy {
+#include "pack.hpp"
 
-    template <typename InputStream, typename OutputStream>
-    void link(InputStream& in, OutputStream& out)
+namespace ntl {
+
+    template <typename Value>
+    class maybe {
+    public:
+        maybe(bool valid, const Value& v) : _valid(valid), _value(v) {}
+        maybe(const Value& v) : _valid(true), _value(v) {}
+        maybe() : _valid(false) {}
+
+        bool valid() const { return _valid; }
+        const Value& value() const { return _value; }
+
+        operator bool() const { return valid(); }
+
+        void reset() { _valid = false; }
+    private:
+        bool _valid;
+        Value _value;
+    };
+
+    template <typename Value>
+    maybe<Value> make_maybe(bool valid, const Value& v)
     {
-        if (in.empty() || out.full())
-            return;
-
-        out.write(in.read());
+        return maybe<Value>(valid, v);
     }
+
+    template <typename Value>
+    maybe<Value> make_maybe(const Value& v)
+    {
+        return maybe<Value>(true, v);
+    }
+
+    template <typename T>
+    struct pack<maybe<T> > {
+        static const int width = 1 + pack<T>::width;
+        static ap_uint<width> to_int(const maybe<T>& e) {
+            return (ap_uint<1>(e.valid()), pack<T>::to_int(e.value()));
+        }
+
+        static maybe<T> from_int(const ap_uint<width>& d) {
+            bool valid = d(width - 1, width - 1);
+            T value = pack<T>::from_int(d(width - 2, 0));
+            return make_maybe(valid, value);
+        }
+    };
 }

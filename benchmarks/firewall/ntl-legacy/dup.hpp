@@ -30,7 +30,6 @@
 template <typename T>
 void dup(hls::stream<T>& in, hls::stream<T>& out1, hls::stream<T>& out2)
 {
-#pragma HLS pipeline
     if (in.empty())
         return;
 

@@ -27,6 +27,8 @@
 
 #include <boost/functional/hash.hpp>
 
+#define NUM 12
+
 enum {
     FIREWALL_ADD = 1,
     FIREWALL_DEL = 2,
@@ -90,3 +92,7 @@ typedef hls::stream<ap_uint<1> > bool_stream;
 void firewall_top(hls::stream<ntl_legacy::raw_axi_data>& in,
                   hls::stream<ntl_legacy::raw_axi_data>& data_out,
                   bool_stream& classify_out, gateway_registers& g);
+
+void firewall_outer_top(hls::stream<ntl_legacy::raw_axi_data> in[NUM],
+                  hls::stream<ntl_legacy::raw_axi_data> data_out[NUM],
+                  bool_stream classify_out_stream[NUM], gateway_registers g[NUM]);

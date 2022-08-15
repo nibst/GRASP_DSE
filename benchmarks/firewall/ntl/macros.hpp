@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2016-2019 Haggai Eran, Gabi Malka, Lior Zeno, Maroun Tork
+// Copyright (c) 2016-2018 Haggai Eran, Gabi Malka, Lior Zeno, Maroun Tork
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without modification,
@@ -25,14 +25,24 @@
 
 #pragma once
 
-namespace ntl_legacy {
+#define PRAGMA_SUB(x) _Pragma(#x)
+/* Use DO_PRAGMA to be able to have C preprocessor expansion in a pragma */
+#define DO_PRAGMA(x) PRAGMA_SUB(x)
 
-    template <typename InputStream, typename OutputStream>
-    void link(InputStream& in, OutputStream& out)
-    {
-        if (in.empty() || out.full())
-            return;
+/* RTL/C co-simulation doesn't work well with certain definitions, so make them
+ * conditional */
+#ifdef SIMULATION_BUILD
+#  define _PragmaSyn(x)
+#  define DO_PRAGMA_SYN(x)
+#  define _PragmaSim(x) _Pragma(x)
+#  define DO_PRAGMA_SIM(x) DO_PRAGMA(x)
+#else
+#  define _PragmaSyn(x) _Pragma(x)
+#  define DO_PRAGMA_SYN(x) DO_PRAGMA(x)
+#  define _PragmaSim(x)
+#  define DO_PRAGMA_SIM(x)
+#endif
 
-        out.write(in.read());
-    }
-}
+#define ALIGN(x,a)              __ALIGN_MASK(x,(a)-1)
+#define __ALIGN_MASK(x,mask)    (((x)+(mask))&~(mask))
+

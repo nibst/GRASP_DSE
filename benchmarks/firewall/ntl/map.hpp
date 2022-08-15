@@ -25,14 +25,15 @@
 
 #pragma once
 
-namespace ntl_legacy {
+namespace ntl {
 
-    template <typename InputStream, typename OutputStream>
-    void link(InputStream& in, OutputStream& out)
+    template <typename InputStream, typename OutputStream, typename Func>
+    void map(InputStream& in, OutputStream& out, Func&& f)
     {
+#pragma HLS pipeline enable_flush
         if (in.empty() || out.full())
             return;
 
-        out.write(in.read());
+        out.write(f(in.read()));
     }
 }
