@@ -9,7 +9,7 @@ from random import randint
 from RandomSearch import RandomSearch
 from greedy import Greedy
 from randomForest import RandomForestEstimator
-
+from m5pEstimator import M5PrimeEstimator
 
 class RandomSearchWithEstimator(Heuristic):
     
@@ -33,15 +33,12 @@ class RandomSearchWithEstimator(Heuristic):
         number of designs that will explored by estimating in that iteration
     """
 
-    _SECONDS = 3600
+    _SECONDS = 100
     _NUM_OF_TOP = 10
     _NUM_OF_ESTIMATED = 1000
     def __init__(self,filesDict,outPath):#TODO receber como parametro de modelo preditivo
         
-        self.directivesTxt = Path(filesDict['dFile']).read_text()
-        self.cFiles = filesDict['cFiles']
-        self.prjFile = filesDict['prjFile']
-        self.outPath = outPath
+        super().__init__(filesDict, outPath)       
         sample = RandomSearch(filesDict, outPath)
         sample2 = Greedy(filesDict,outPath,'resources')
         for solutionIndex in sample.solutions.keys():
@@ -51,8 +48,10 @@ class RandomSearchWithEstimator(Heuristic):
             sample.solutions[solutionIndex] = solution
         self.sample = sample
         
-        self.rf = RandomForestEstimator(filesDict['dFile'])
-        self.rf.trainModel(sample.solutions)
+        self.rf = M5PrimeEstimator(filesDict['dFile'])
+        self.rf.trainModelPerMetric(sample.solutions,'latency')
+        self.rf1 = M5PrimeEstimator(filesDict['dFile'])
+        self.rf1.trainModelPerMetric(sample.solutions,'resources')
         self.solutions = self.createSolutionsDict()
         """
         for solutionIndex in self.solutions.keys():
@@ -107,7 +106,9 @@ class RandomSearchWithEstimator(Heuristic):
             if onePermutation:
                 estimatedSolution = Solution(onePermutation,self.cFiles,self.prjFile)         #Solutions a partir deste     
                 estimatedResults = self.rf.estimateSynthesis(estimatedSolution)
-                estimatedSolution.setResultados(estimatedResults[0])
+                estimatedSolution.setOneResult('latency',estimatedResults[0])
+                estimatedResults1   = self.rf1.estimateSynthesis(estimatedSolution)
+                estimatedSolution.setOneResult('resources',estimatedResults1[0])
                 estimatedSolutions.append(estimatedSolution)
                 #print(f'estimated solution: {estimatedSolution.resultados}')
                 if i >= self._NUM_OF_TOP:
@@ -143,17 +144,12 @@ class RandomSearchWithEstimator(Heuristic):
             for estimatedSolution in topEstimatedSolutions:    
                 solution = Solution(estimatedSolution.diretivas,self.cFiles,self.prjFile)         #Solutions a partir deste
                 try:
-                    solution.runSynthesis()
+                    self.synthesisWrapper(solution)
                 except Exception as e:
                     print(e)
                 #executa else qnd try roda sem erros
                 else:   
-                    print(solution.resultados)                  
-                    deep = copy.deepcopy(solution)   
-                    solutionsDict[solutionIndex] = deep
-                    topSynthesized.append(deep)
-                    print (solutionIndex)      
-                    solutionIndex+=1
+                    topSynthesized.append(solution)
                 end = time.time()
                 totalTime = (end-start)
                 if totalTime >= self._SECONDS:
@@ -163,7 +159,8 @@ class RandomSearchWithEstimator(Heuristic):
             print(f'score: {self.rf.score(topSynthesized)}')
             medianScore += self.rf.score(topSynthesized)
 
-            self.rf.trainModel(topSynthesized)
+            self.rf.trainModelPerMetric(topSynthesized,'latency')
+            self.rf1.trainModelPerMetric(topSynthesized,'resources')
         medianScore = medianScore/solutionIndex                          
         
                                         # Retorna o dicionário de soluções para o 'main'

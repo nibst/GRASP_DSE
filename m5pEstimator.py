@@ -1,4 +1,4 @@
-from sklearn import base 
+from sklearn.base import RegressorMixin 
 from estimator import Estimator
 import re
 from preProcessor import PreProcessor
@@ -26,15 +26,24 @@ class M5PrimeEstimator(Estimator):
         features, results = self.processor.process(dataset)
         self.features.extend(features)
         self.results.extend(results)
-        features = np.asarray(self.features) 
-        #features = np.transpose(features)
-        results = np.asarray(self.results)
+        features = np.array(self.features) 
+        results = np.array(self.results)
+        try:
+            self.m5prime.fit(features,results) #train
+        except Exception as e:
+            print("ERROR: M5P doesnt work predicting for multiple outputs")
+            raise e
+    def trainModelPerMetric(self,dataset:dict,metric):
+        features, results = self.processor.process(dataset)
+        results = []
+        for solution in dataset.values():
+            results.append(solution.resultados[metric])
+        self.features.extend(features)
+        self.results.extend(results)
+        features = np.array(self.features) 
+        results = np.array(self.results)
         
         self.m5prime.fit(features,results) #train
-        
-    def trainModelPerMetric(self,metric):
-        #TODO
-        self.m5prime.fit(self.features,self.results) #train
 
     def estimateSynthesis(self, dataset):
         #TODO talvez futuramente retornar lista de solutions
@@ -56,5 +65,5 @@ class M5PrimeEstimator(Estimator):
     
     def score(self,dataset):
         processedFeatures, processedResults =  self.processor.process(dataset)
-        return RegressorMixin.score(self.m5prime,processedFeatures,processedResults)
+        return self.m5prime.score(self.m5prime,processedFeatures,processedResults)
 
