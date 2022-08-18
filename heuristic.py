@@ -10,6 +10,7 @@ import os,glob
 class Heuristic(ABC):
 
     #TODO colocar super().__init__(bla bla) em todas nossas heuristicas
+    #TODO make solutions be a list of solutions instead of a dict
     def __init__(self,filesDict,outPath):
         self.directivesTxt = Path(filesDict['dFile']).read_text()
         self.cFiles = filesDict['cFiles']
@@ -112,7 +113,7 @@ class Heuristic(ABC):
         Calls synthesis and, if its successful, it saves solution in self.solutions.
         """
         try:
-            solution.runSynthesis()
+            solution.runSynthesisTeste()
         except Exception as e:
             raise
         else:

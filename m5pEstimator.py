@@ -1,3 +1,4 @@
+import time
 from sklearn.base import RegressorMixin 
 from estimator import Estimator
 import re
@@ -10,7 +11,13 @@ import numpy as np
 class M5PrimeEstimator(Estimator):
     
     def __init__(self,directivesFile):
-        self.m5prime = M5Prime()
+        #como o m5prime não aceita modelo preditivo para múltiplos outputs precisa de um modelo para cada output
+        self.latencyModel = M5Prime()
+        self.LUTModel = M5Prime()
+        self.BRAMModel = M5Prime()
+        self.DSPModel = M5Prime()
+        self.FFModel = M5Prime()
+        self.resourcesModel= M5Prime()
         self.features = []
         self.results = []
         self.processor = PreProcessor(directivesFile)
@@ -23,27 +30,29 @@ class M5PrimeEstimator(Estimator):
         ----------
         dataset : List of Solution objects
         """
-        features, results = self.processor.process(dataset)
-        self.features.extend(features)
-        self.results.extend(results)
-        features = np.array(self.features) 
-        results = np.array(self.results)
         try:
-            self.m5prime.fit(features,results) #train
+            start = time.time()
+            self.__trainModelPerMetric(dataset,"latency",self.latencyModel)
+            self.__trainModelPerMetric(dataset,"LUT",self.LUTModel)
+            self.__trainModelPerMetric(dataset,"BRAM",self.BRAMModel)
+            self.__trainModelPerMetric(dataset,"DSP",self.DSPModel)
+            self.__trainModelPerMetric(dataset,"FF",self.FFModel)
+            self.__trainModelPerMetric(dataset,"resources",self.resourcesModel)
+            print(time.time() - start)
         except Exception as e:
             print("ERROR: M5P doesnt work predicting for multiple outputs")
             raise e
-    def trainModelPerMetric(self,dataset:dict,metric):
+    def __trainModelPerMetric(self,dataset:dict,metric,model:M5Prime):
         features, results = self.processor.process(dataset)
         results = []
-        for solution in dataset.values():
-            results.append(solution.resultados[metric])
+        for i in range(len(dataset)): # works for both dict and list of solutions that are serial keys
+            results.append(dataset[i].resultados[metric])
         self.features.extend(features)
         self.results.extend(results)
         features = np.array(self.features) 
         results = np.array(self.results)
-        
-        self.m5prime.fit(features,results) #train
+
+        model.fit(features,results) #train
 
     def estimateSynthesis(self, dataset):
         #TODO talvez futuramente retornar lista de solutions
@@ -60,10 +69,32 @@ class M5PrimeEstimator(Estimator):
                 estimated for these features
         """
         processedFeatures, processedResults =  self.processor.process(dataset)
-        return self.m5prime.predict(processedFeatures)
+        latency = self.latencyModel.predict(processedFeatures)
+        LUT = self.LUTModel.predict(processedFeatures)
+        BRAM = self.BRAMModel.predict(processedFeatures)
+        DSP = self.DSPModel.predict(processedFeatures)
+        FF = self.FFModel.predict(processedFeatures)
+        resources = self.resourcesModel.predict(processedFeatures)
+        results=np.array([FF,DSP,LUT,BRAM,resources,latency])
+        results = np.transpose(results)
+        return results
 
-    
+    def __scorePerMetric(self,dataset,metric,model:M5Prime):
+        features, results =  self.processor.process(dataset)
+        results = []
+        for i in range(len(dataset)): # works for both dict and list of solutions that are serial keys
+            results.append(dataset[i].resultados[metric])
+        return model.score(features,results)
+     
     def score(self,dataset):
-        processedFeatures, processedResults =  self.processor.process(dataset)
-        return self.m5prime.score(self.m5prime,processedFeatures,processedResults)
+        """
+        median score of all the models 
+        """
+        latencyScore = self.__scorePerMetric(dataset,"latency",self.latencyModel)
+        LUTScore = self.__scorePerMetric(dataset,"LUT",self.LUTModel)
+        BRAMScore =self. __scorePerMetric(dataset,"BRAM",self.BRAMModel)
+        DSPScore = self.__scorePerMetric(dataset,"DSP",self.DSPModel)
+        FFScore = self.__scorePerMetric(dataset,"FF",self.FFModel)
+        resourcesScore = self.__scorePerMetric(dataset,"resources",self.resourcesModel)
+        return (latencyScore+LUTScore+BRAMScore+DSPScore+FFScore+resourcesScore)/6
 

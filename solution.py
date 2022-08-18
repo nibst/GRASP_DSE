@@ -19,7 +19,6 @@ class Solution:
         self.cFile = cFile
         self.prjFile = prjFile
         if sys.platform == 'win32':
-            print('WIN32')
             self._VIVADO_PROCESSNAME = 'vivado_hls.exe'
             self._SCRIPT_PATH = 'callVivado.bat'
         resultados = {}
@@ -31,9 +30,16 @@ class Solution:
         resultados['latency'] = None
         self.resultados = resultados
 
-    def setResultados(self,resultados:list):
-        for index,key in enumerate(self.resultados):
-            self.resultados[key] = resultados[index]
+    def setOneResult(self,key,value):
+        for resultKey in self.resultados:
+            if resultKey == key:
+                self.resultados[key] = value
+                break
+
+    def setResultados(self,results:list):
+        for result in results:
+            for index,key in enumerate(self.resultados):
+                self.resultados[key] = result[index]
                 
     def __writeDirectivesIntoFile(self):
         directivesFile = open(self._DIRECTIVES_FILENAME, "w")

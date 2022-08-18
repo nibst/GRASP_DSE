@@ -4,7 +4,7 @@ from pathlib import Path
 from solution import Solution
 from Script_tcl import generateScript
 import copy
-from random import randint,seed,sample
+from random import randint,seed
 
 
 class GA(Heuristic):
@@ -55,7 +55,7 @@ class GA(Heuristic):
         for i in range(self.numOfGenerations):
             new_population = []
             while len(new_population) < self.numOfIndividuals:
-                parent1,parent2 = self.tournamentSelector(population,10)
+                parent1,parent2 = self.selector(population)
                 offspring1,offspring2 = self.crossover(parent1,parent2)
                 offspring1 = self.mutation(offspring1)
                 offspring2 = self.mutation(offspring2)
@@ -63,28 +63,26 @@ class GA(Heuristic):
         population = new_population
         return self.top(2,population)
 
-    def crossover(parent1,parent2):
-        """
-        random multi point crossover
-        """
 
-        probCrossover = 70
-        if randint(0, 100) < prob_crossover:
-            offspring1,offspring2 = self.geneticTrade(pai1,pai2)
-        else:
-            offspring1 =  copy.deepcopy(parent1)
-            offspring2 =  copy.deepcopy(parent2)
-        return offspring1,offspring2
-
-    def tournamentSelector(self,population,numOfIndividuals):
+    def selector(self,population,numOfIndividuals):
         #tournament
-        
-        part = sample(population,numOfIndividuals)
+        part = self.__uniformRandom(population,numOfIndividuals)
         return self.top(2,part)
 
-    def geneticTrade(parent1,parent2):
-        offspring1 
-        offspring2   
+    def __uniformRandom(self,population,numOfIndividuals):
+        domainLenght = len(population)
+        indexes = [] # indexes of the individuals that got selected
+        i = 0
+        while i < numOfIndividuals:
+            individualIndex = randint(0,domainLenght-1)
+            if individualIndex not in indexes:
+                indexes.append()
+                i+=1
+        part = [] #list of the population that gonna be returned
+        for index in indexes:
+            part.append(population[index])
+        return part
+            
     def randomSample(self,randomState = 1):
         controlTree = {}
         sample = []
@@ -113,7 +111,7 @@ class GA(Heuristic):
                 topSolutions.append(individual) 
         return topSolutions
 
-    def mutation(self,offspring):
+    def mutation():
         pass
 
     def __generateRandomPermutation(self,controlTree:dict):

@@ -1,4 +1,5 @@
 import time
+from estimator import Estimator
 from heuristic import Heuristic
 from pathlib import Path
 from solution import Solution
@@ -8,8 +9,7 @@ from random import seed
 from random import randint
 from RandomSearch import RandomSearch
 from greedy import Greedy
-from randomForest import RandomForestEstimator
-from m5pEstimator import M5PrimeEstimator
+
 
 class RandomSearchWithEstimator(Heuristic):
     
@@ -36,7 +36,7 @@ class RandomSearchWithEstimator(Heuristic):
     _SECONDS = 100
     _NUM_OF_TOP = 10
     _NUM_OF_ESTIMATED = 1000
-    def __init__(self,filesDict,outPath):#TODO receber como parametro de modelo preditivo
+    def __init__(self,filesDict,outPath,model:Estimator):#TODO receber como parametro de modelo preditivo
         
         super().__init__(filesDict, outPath)       
         sample = RandomSearch(filesDict, outPath)
@@ -48,10 +48,8 @@ class RandomSearchWithEstimator(Heuristic):
             sample.solutions[solutionIndex] = solution
         self.sample = sample
         
-        self.rf = M5PrimeEstimator(filesDict['dFile'])
-        self.rf.trainModelPerMetric(sample.solutions,'latency')
-        self.rf1 = M5PrimeEstimator(filesDict['dFile'])
-        self.rf1.trainModelPerMetric(sample.solutions,'resources')
+        self.estimator = model
+        self.estimator.trainModel(sample.solutions)
         self.solutions = self.createSolutionsDict()
         """
         for solutionIndex in self.solutions.keys():
@@ -105,10 +103,8 @@ class RandomSearchWithEstimator(Heuristic):
             onePermutation = self.__generateRandomPermutation(dictDir,controlTree)
             if onePermutation:
                 estimatedSolution = Solution(onePermutation,self.cFiles,self.prjFile)         #Solutions a partir deste     
-                estimatedResults = self.rf.estimateSynthesis(estimatedSolution)
-                estimatedSolution.setOneResult('latency',estimatedResults[0])
-                estimatedResults1   = self.rf1.estimateSynthesis(estimatedSolution)
-                estimatedSolution.setOneResult('resources',estimatedResults1[0])
+                estimatedResults = self.estimator.estimateSynthesis(estimatedSolution)
+                estimatedSolution.setResultados(estimatedResults)
                 estimatedSolutions.append(estimatedSolution)
                 #print(f'estimated solution: {estimatedSolution.resultados}')
                 if i >= self._NUM_OF_TOP:
@@ -139,7 +135,7 @@ class RandomSearchWithEstimator(Heuristic):
         medianScore = 0
         while inTime:
             topEstimatedSolutions = self.__estimateTopSolutions(dictDir,controlTree)
-            print(topEstimatedSolutions) 
+            #print(topEstimatedSolutions) 
             topSynthesized = [] #synthesis of the top estimated solutions
             for estimatedSolution in topEstimatedSolutions:    
                 solution = Solution(estimatedSolution.diretivas,self.cFiles,self.prjFile)         #Solutions a partir deste
@@ -156,11 +152,11 @@ class RandomSearchWithEstimator(Heuristic):
                     return solutionsDict 
                 
             #retrain
-            print(f'score: {self.rf.score(topSynthesized)}')
-            medianScore += self.rf.score(topSynthesized)
+            print(f'score: {self.estimator.score(topSynthesized)}')
+            medianScore += self.estimator.score(topSynthesized)
 
-            self.rf.trainModelPerMetric(topSynthesized,'latency')
-            self.rf1.trainModelPerMetric(topSynthesized,'resources')
+            self.estimator.trainModel(topSynthesized)
+
         medianScore = medianScore/solutionIndex                          
         
                                         # Retorna o dicionário de soluções para o 'main'

@@ -22,6 +22,7 @@ import pickle
 from randomForest import RandomForestEstimator
 from preProcessor import PreProcessor
 from sklearn.model_selection import train_test_split
+from m5pEstimator import M5PrimeEstimator
 if __name__ == "__main__":
     
     
@@ -43,13 +44,14 @@ if __name__ == "__main__":
     filesDict['prjFile'] = args.prjFile
     
     RESOURCE_TO_COMPARE = 'resources'
+    model = RandomForestEstimator(filesDict['dFile'] )
     #heuristic = GRASP(filesDict,'directives.tcl')
     #heuristic = HillClimbing(filesDict,'directives.tcl')
     #heuristic = Greedy(filesDict,'directives.tcl',RESOURCE_TO_COMPARE)
     #heuristic = ExhaustiveSearch(filesDict,'directives.tcl')
-    heuristic = RandomSearch(filesDict,'directives.tcl')
+    #heuristic = RandomSearch(filesDict,'directives.tcl')
     #heuristic = GreedyWithEstimator(filesDict,'directives.tcl')
-    #heuristic = RandomSearchWithEstimator(filesDict, 'directives.tcl')
+    heuristic = RandomSearchWithEstimator(filesDict, 'directives.tcl', model)
     #heuristic = GA(filesDict,'directives.tcl')
     #heuristic.writeSolutionsDict()
     paretos = heuristic.paretoSolutions('resources','latency')
@@ -64,7 +66,7 @@ if __name__ == "__main__":
     plt = PlotMaker("firewall", RESOURCE_TO_COMPARE, 'latency')
     plt.createPlot(heuristic.solutions) #blue
     plt.createPlot(paretos)
-    paretoPlt = PlotMaker("paretos firewall", RESOURCE_TO_COMPARE, 'latency')
+    #paretoPlt = PlotMaker("paretos firewall", RESOURCE_TO_COMPARE, 'latency')
     #samplePLt = PlotMaker("sha", RESOURCE_TO_COMPARE, 'latency')
     #samplePLt.createPlot(heuristic.sample.solutions)
     #plt.createPlot(heuristic.sample2.solutions) #green
