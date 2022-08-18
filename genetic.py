@@ -4,15 +4,17 @@ from pathlib import Path
 from solution import Solution
 from Script_tcl import generateScript
 import copy
-from random import randint,seed
-
+from random import randint,seed,choice
+from typing import List
 
 class GA(Heuristic):
     def __init__(self,filesDict,outPath,numOfGenerations = 10):
         super().__init__(filesDict, outPath)
         self.dictDir =self.parsedTxt()
-        self.numOfIndividuals = len(self.dictDir.keys()) 
+        self.numOfIndividuals = 30 #any number
+        self.numOfGenes = len(self.dictDir.keys())
         self.numOfGenerations = numOfGenerations
+        self.listOfKeys = list(self.dictDir.keys()) #to use numbers (indexes of list) instead of strings in the algorithm logic
         self.createSolutionsDict()
         
     def createSolutionsDict(self):
@@ -26,11 +28,11 @@ class GA(Heuristic):
         repetir g vezes:
             P' <-  Vazio
             enquanto tam(P')<n:
-            pai1,pai2 <- selecao(P)
-            o1,o2 <- crossover(pai1,pai2)
-            o1 <- mutation(o1)
-            o2 <- mutation(o2)
-            P' <- P'  U {o1,o2}
+                pai1,pai2 <- selecao(P)
+                o1,o2 <- crossover(pai1,pai2)
+                o1 <- mutation(o1)
+                o2 <- mutation(o2)
+                P' <- P'  U {o1,o2}
         P <- P'
         retornar top(x,P,f) #top x individuos de P
         
@@ -50,14 +52,14 @@ class GA(Heuristic):
 
         mutation com mutacao aleatorio do domninio
         """
-        listOfKeys = list(self.dictDir.keys()) #to use numbers (indexes of list) instead of strings in the algorithm logic
+        
         population = self.randomSample() #list of random Solutions (without their HLS results yet)
         for i in range(self.numOfGenerations):
             new_population = []
             while len(new_population) < self.numOfIndividuals:
-                parent1,parent2 = self.selector(population)
+                parent1,parent2 = self.selector(population,5)
                 offspring1,offspring2 = self.crossover(parent1,parent2)
-                offspring1 = self.mutation(offspring1)
+                offspring1 = self.mutation(parent1)
                 offspring2 = self.mutation(offspring2)
                 new_population.extend([offspring1,offspring2])
         population = new_population
@@ -70,13 +72,14 @@ class GA(Heuristic):
         return self.top(2,part)
 
     def __uniformRandom(self,population,numOfIndividuals):
+        #TODO use a lib wtf
         domainLenght = len(population)
         indexes = [] # indexes of the individuals that got selected
         i = 0
         while i < numOfIndividuals:
             individualIndex = randint(0,domainLenght-1)
             if individualIndex not in indexes:
-                indexes.append()
+                indexes.append(individualIndex)
                 i+=1
         part = [] #list of the population that gonna be returned
         for index in indexes:
@@ -97,7 +100,7 @@ class GA(Heuristic):
                 i+=1
         return sample
 
-    def top(self,numOfTops, population:list[Solution]):
+    def top(self,numOfTops, population:List[Solution]):
 
         topSolutions = [] #top "numOfTops" solutions
         for count,individual in enumerate(population):
@@ -111,9 +114,34 @@ class GA(Heuristic):
                 topSolutions.append(individual) 
         return topSolutions
 
-    def mutation():
-        pass
-
+    def mutation(self,individual:Solution):
+        geneToMutate = randint(0,self.numOfGenes-1)
+        gene = copy.deepcopy(self.dictDir[self.listOfKeys[geneToMutate]])#copy cause we gonna modify
+        gene.remove(individual.diretivas[self.listOfKeys[geneToMutate]]) #remove current gene value from the choices
+        mutation = choice(gene)
+        individual.diretivas[self.listOfKeys[geneToMutate]] = mutation
+        return individual
+    
+    def crossover(self,parent1,parent2):
+        #TODO probably can do both offsprings in one loop
+        cutPoint = choice(self.listOfKeys)
+        offspringDirectives = {}
+        parent = parent1
+        for key in self.listOfKeys:
+            if key == cutPoint:
+                parent = parent2 #swap from which parent take genes
+            offspringDirectives[key] = parent.diretivas[key]
+        offspring = Solution(offspringDirectives, self.cFiles, self.prjFile)
+        
+        return offspring
+    def overwriteParent():
+        """.
+        Replace one of the parents if it dominates it in all the
+        objectives (area and latency). If the offspring only dominates one of the objectives, it is randomly decided if it
+        substitutes one of the parents or not.
+        """    
+        
+        
     def __generateRandomPermutation(self,controlTree:dict):
         node = controlTree
         newPermutation = {}

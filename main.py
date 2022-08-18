@@ -51,8 +51,8 @@ if __name__ == "__main__":
     #heuristic = ExhaustiveSearch(filesDict,'directives.tcl')
     #heuristic = RandomSearch(filesDict,'directives.tcl')
     #heuristic = GreedyWithEstimator(filesDict,'directives.tcl')
-    heuristic = RandomSearchWithEstimator(filesDict, 'directives.tcl', model)
-    #heuristic = GA(filesDict,'directives.tcl')
+    #heuristic = RandomSearchWithEstimator(filesDict, 'directives.tcl', model)
+    heuristic = GA(filesDict,'directives.tcl')
     #heuristic.writeSolutionsDict()
     paretos = heuristic.paretoSolutions('resources','latency')
     RESOURCE_TO_COMPARE = 'resources'
