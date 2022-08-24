@@ -21,7 +21,7 @@ from random import seed
 from random import randint
 
 class RandomSearch(Heuristic):
-    _SECONDS = 3600 #5 dias
+    _SECONDS = 3000 #5 dias
     def __init__(self,filesDict,outPath):
         super().__init__(filesDict, outPath)
         self.controlTree:dict = {}

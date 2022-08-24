@@ -44,7 +44,7 @@ if __name__ == "__main__":
     filesDict['prjFile'] = args.prjFile
     
     RESOURCE_TO_COMPARE = 'resources'
-    model = RandomForestEstimator(filesDict['dFile'] )
+    model = M5PrimeEstimator(filesDict['dFile'])
     #heuristic = GRASP(filesDict,'directives.tcl')
     #heuristic = HillClimbing(filesDict,'directives.tcl')
     #heuristic = Greedy(filesDict,'directives.tcl',RESOURCE_TO_COMPARE)

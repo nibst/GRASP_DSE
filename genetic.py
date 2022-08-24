@@ -5,10 +5,11 @@ from heuristic import Heuristic
 from solution import Solution
 import copy
 import random
+from sklearn.model_selection import train_test_split
 from typing import List
 
 class GA(Heuristic):
-    _SECONDS = 7200 #2 hour
+    _SECONDS = 50000 #2 hour
     def __init__(self,filesDict,outPath,model:Estimator,numOfGenerations = 10):
         super().__init__(filesDict, outPath)
         self.dictDir =self.parsedTxt()
@@ -23,6 +24,7 @@ class GA(Heuristic):
         self.estimator = model
         self.estimator.trainModel(sample.solutions)
         self.new_model_interval = 20
+        self.threshold = -1
         self.createSolutionsDict()
         
         
@@ -105,9 +107,19 @@ class GA(Heuristic):
             population = new_population
             
     def __new_predictive_model(self):
+        score = -2
         sample = RandomSearch(self.filesDict, self.outPath)
-        self.estimator.trainModel(sample.solutions)
-        for solution in sample.solutions:
+        while score < self.threshold:
+            train, test = train_test_split(sample.solutions, test_size=0.2, random_state=0)
+            self.estimator.trainModel(train)
+            score = self.estimator.score(test)
+            print(f'score: {score} ')
+            #full train
+            self.estimator.trainModel(sample.solutions)
+            if score < self.threshold:    
+                #create more samples
+                sample.createSolutionsDict()
+        for solution in sample.solutions.values():
             self.saveSolution(solution)
 
     def selector(self,population,numOfIndividuals):

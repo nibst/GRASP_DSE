@@ -37,7 +37,7 @@ class M5PrimeEstimator(Estimator):
             self.__trainModelPerMetric(dataset,"DSP",self.DSPModel)
             self.__trainModelPerMetric(dataset,"FF",self.FFModel)
             self.__trainModelPerMetric(dataset,"resources",self.resourcesModel)
-            print(time.time() - start)
+            #print(time.time() - start)
         except Exception as e:
             print("ERROR: M5P doesnt work predicting for multiple outputs")
             raise e
@@ -95,4 +95,6 @@ class M5PrimeEstimator(Estimator):
         FFScore = self.__scorePerMetric(dataset,"FF",self.FFModel)
         resourcesScore = self.__scorePerMetric(dataset,"resources",self.resourcesModel)
         return (latencyScore+LUTScore+BRAMScore+DSPScore+FFScore+resourcesScore)/6
-
+    #TODO
+    def cross_validation_score(self,dataset):
+        pass    
