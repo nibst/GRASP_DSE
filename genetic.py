@@ -1,24 +1,28 @@
 import time
+from RandomSearch import RandomSearch
+from estimator import Estimator
 from heuristic import Heuristic
-from pathlib import Path
 from solution import Solution
-from Script_tcl import generateScript
 import copy
 import random
 from typing import List
 
 class GA(Heuristic):
-    _SECONDS = 43200 #12 hour
-    def __init__(self,filesDict,outPath,numOfGenerations = 10):
+    _SECONDS = 7200 #2 hour
+    def __init__(self,filesDict,outPath,model:Estimator,numOfGenerations = 10):
         super().__init__(filesDict, outPath)
         self.dictDir =self.parsedTxt()
-        self.numOfIndividuals = 30 #any number
+        self.numOfIndividuals = 40 #any number
         self.numOfGenes = len(self.dictDir.keys())
         self.numOfGenerations = numOfGenerations
         self.listOfKeys = list(self.dictDir.keys()) #to use numbers (indexes of list) instead of strings in the algorithm logic
         self.crossoverRate = 0.8 #any number between 0 and 1
         self.mutationRate = 0.1 #any number between 0 and 1
         self.chaceToOverwrite = 0.5 #probability of overwritting parent with offspring if offspring dominates in one of the objectives
+        sample = RandomSearch(filesDict, outPath)
+        self.estimator = model
+        self.estimator.trainModel(sample.solutions)
+        self.new_model_interval = 20
         self.createSolutionsDict()
         
         
@@ -78,23 +82,33 @@ class GA(Heuristic):
         population = self.randomSample() #list of random Solutions (without their HLS results yet)
         for i in range(self.numOfGenerations):
             new_population = []
+            interval = 0
             while len(new_population) < self.numOfIndividuals:
                 parent1,parent2 = self.selector(population,5)
                 offspring = self.crossover(parent1,parent2)
                 offspring = self.mutation(offspring)
                 try:
-                    self.synthesisWrapper(offspring)
+                    estimatedResults = self.estimator.estimateSynthesis(offspring)
+                    offspring.setResultados(estimatedResults)
                 except Exception as e:
                     print(e)
                 else:
                     parent1,parent2 = self.overwriteParent(parent1,parent2,offspring)
                     new_population.extend([offspring])
+                if interval >= self.new_model_interval:
+                    self.model=self.__new_predictive_model()
                 end = time.time()
                 totalTime = (end-start)
                 if totalTime >= self._SECONDS:
                     return
+                interval+=1
             population = new_population
-
+            
+    def __new_predictive_model(self):
+        sample = RandomSearch(self.filesDict, self.outPath)
+        self.estimator.trainModel(sample.solutions)
+        for solution in sample.solutions:
+            self.saveSolution(solution)
 
     def selector(self,population,numOfIndividuals):
         #tournament
@@ -103,7 +117,8 @@ class GA(Heuristic):
             #just synthesize solutions that have not been synthesized yet
             if None in individual.resultados.values():
                 try:
-                    self.synthesisWrapper(individual)
+                    estimatedResults = self.estimator.estimateSynthesis(individual)
+                    individual.setResultados(estimatedResults)
                 except Exception as e:
                     print(e)
                     

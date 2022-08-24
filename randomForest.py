@@ -33,6 +33,9 @@ class RandomForestEstimator(Estimator):
         #TODO
         self.rfRegressor.fit(self.features,self.results) #train
 
+    #TODO separate retraining capability from trainModel 
+    def retrain(self):
+        pass
     def estimateSynthesis(self, dataset):
         #TODO talvez futuramente retornar lista de solutions
         """

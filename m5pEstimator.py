@@ -24,8 +24,7 @@ class M5PrimeEstimator(Estimator):
 
     def trainModel(self,dataset):
         """
-        Build a forest of trees from the dataset.
-        Can be retrained with with new data
+        Build m5p from the dataset.
         Parameters
         ----------
         dataset : List of Solution objects
@@ -47,10 +46,9 @@ class M5PrimeEstimator(Estimator):
         results = []
         for i in range(len(dataset)): # works for both dict and list of solutions that are serial keys
             results.append(dataset[i].resultados[metric])
-        self.features.extend(features)
-        self.results.extend(results)
-        features = np.array(self.features) 
-        results = np.array(self.results)
+        
+        features = np.array(features) 
+        results = np.array(results)
 
         model.fit(features,results) #train
 

@@ -12,6 +12,7 @@ class Heuristic(ABC):
     #TODO colocar super().__init__(bla bla) em todas nossas heuristicas
     #TODO make solutions be a list of solutions instead of a dict
     def __init__(self,filesDict,outPath):
+        self.filesDict = filesDict
         self.directivesTxt = Path(filesDict['dFile']).read_text()
         self.cFiles = filesDict['cFiles']
         self.prjFile = filesDict['prjFile']
@@ -66,7 +67,7 @@ class Heuristic(ABC):
         # outPathGeneral='directivesGroupBySolution.tcl'
         # Path(outPathGeneral).write_text(outputGeral)
 
-    def compareSolutions(self,Solution1,Solution2,metric1,metric2):
+    def dominateInBothMetrics(self,Solution1,Solution2,metric1,metric2):
         #testa se a Solution1  domina a Solution2
         return ((Solution2.resultados[metric1]>=Solution1.resultados[metric1]) and (Solution2.resultados[metric2] >= Solution1.resultados[metric2]))
     def paretoSolutions(self,metric1,metric2,solutions=None ):
@@ -88,10 +89,10 @@ class Heuristic(ABC):
                 for paretoSolutionIndex in paretoCandidates:
                     if currentSolutionIndex != paretoSolutionIndex:
                         #se current solution dominar a solucao candidate a pareto
-                        if(self.compareSolutions(solutions[currentSolutionIndex],solutions[paretoSolutionIndex],metric1,metric2)):
+                        if(self.dominateInBothMetrics(solutions[currentSolutionIndex],solutions[paretoSolutionIndex],metric1,metric2)):
                             toRemove.append(paretoSolutionIndex)
                         #se a solucao candidata a pareto dominar a current solution
-                        elif(self.compareSolutions(solutions[paretoSolutionIndex],solutions[currentSolutionIndex],metric1,metric2)):
+                        elif(self.dominateInBothMetrics(solutions[paretoSolutionIndex],solutions[currentSolutionIndex],metric1,metric2)):
                             toRemove.append(currentSolutionIndex)
                             break
                 for discardedSolution in toRemove:
@@ -113,7 +114,7 @@ class Heuristic(ABC):
         Calls synthesis and, if its successful, it saves solution in self.solutions.
         """
         try:
-            solution.runSynthesisTeste()
+            solution.runSynthesis()
         except Exception as e:
             raise
         else:

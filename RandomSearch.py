@@ -21,13 +21,14 @@ from random import seed
 from random import randint
 
 class RandomSearch(Heuristic):
-    _SECONDS = 0.1 #5 dias
+    _SECONDS = 3600 #5 dias
     def __init__(self,filesDict,outPath):
         super().__init__(filesDict, outPath)
+        self.controlTree:dict = {}
         self.createSolutionsDict()
         
-    def __generateRandomPermutation(self,dictDir:dict,controlTree:dict):
-        node = controlTree
+    def __generateRandomPermutation(self,dictDir:dict):
+        node = self.controlTree
         newPermutation = {}
         isNewPermutation = False #flag para verificar se é permutacao/solucao/design repetida ou nao
         for directive in dictDir:              
@@ -49,17 +50,16 @@ class RandomSearch(Heuristic):
         dictDir=self.parsedTxt() 
         solutionsDict = {}
         onePermutation = {}
-        controlTree = {}
         
         solutionIndex=0
         generateScript(self.cFiles, self.prjFile)
         inTime = True
-        seed(1)
+        #seed(1)
         totalTime = 0
         while inTime:
             start = time.time()
             
-            onePermutation = self.__generateRandomPermutation(dictDir,controlTree)
+            onePermutation = self.__generateRandomPermutation(dictDir)
             if onePermutation:    #se tiver uma permutacao na variavel
                 solution = Solution(onePermutation,self.cFiles,self.prjFile)         #Solutions a partir deste
                 try:
