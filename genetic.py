@@ -24,7 +24,7 @@ class GA(Heuristic):
         self.estimator = model
         self.estimator.trainModel(sample.solutions)
         self.new_model_interval = 20
-        self.threshold = -1
+        self.threshold = -1.5
         self.createSolutionsDict()
         
         
@@ -85,17 +85,18 @@ class GA(Heuristic):
         for i in range(self.numOfGenerations):
             new_population = []
             interval = 0
+            parentPairs = self.selector(population)
             while len(new_population) < self.numOfIndividuals:
-                parent1,parent2 = self.selector(population,5)
+                parent1,parent2 = parentPairs[interval]
                 offspring = self.crossover(parent1,parent2)
                 offspring = self.mutation(offspring)
                 try:
                     estimatedResults = self.estimator.estimateSynthesis(offspring)
                     offspring.setResultados(estimatedResults)
+                    parent1,parent2 = self.overwriteParent(parent1,parent2,offspring)
                 except Exception as e:
                     print(e)
                 else:
-                    parent1,parent2 = self.overwriteParent(parent1,parent2,offspring)
                     new_population.extend([offspring])
                 if interval >= self.new_model_interval:
                     self.model=self.__new_predictive_model()
@@ -121,8 +122,23 @@ class GA(Heuristic):
                 sample.createSolutionsDict()
         for solution in sample.solutions.values():
             self.saveSolution(solution)
-
-    def selector(self,population,numOfIndividuals):
+    
+    def selector(self,population):
+        copy.deepcopy(population)
+        pairList = []
+        for parent1 in population:
+            try:
+                self.synthesisWrapper(parent1)
+            except Exception as e:
+                print(e)
+            parent2 =random.choice(population)
+            while parent1 == parent2:
+                parent2 =random.choice(population)
+            pairList.append(parent2)
+        return list(zip(population,pairList))
+                
+            
+    def selector_tournament(self,population,numOfIndividuals):
         #tournament
         part = self.__uniformRandom(population,numOfIndividuals)
         for individual in part:
