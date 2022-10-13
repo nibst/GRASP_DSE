@@ -47,10 +47,11 @@ class RandomSearchWithEstimator(Heuristic):
             solutionIndex+=1
             sample.solutions[solutionIndex] = solution
         self.sample = sample
-        
+        for solution in self.sample.solutions:
+            self.saveSolution(solution)
         self.estimator = model
         self.estimator.trainModel(sample.solutions)
-        self.solutions = self.createSolutionsDict()
+        self.createSolutionsDict()
         """
         for solutionIndex in self.solutions.keys():
             pass
@@ -107,9 +108,9 @@ class RandomSearchWithEstimator(Heuristic):
                 estimatedSolution.setResultados(estimatedResults)
                 estimatedSolutions.append(estimatedSolution)
                 #print(f'estimated solution: {estimatedSolution.resultados}')
+                topSolutions.append(estimatedSolution)
                 if i >= self._NUM_OF_TOP:
                     self.__removeWorstSolution(topSolutions)
-                topSolutions.append(estimatedSolution)
             else: count+=1
         return topSolutions
                     
@@ -123,7 +124,6 @@ class RandomSearchWithEstimator(Heuristic):
 
     def createSolutionsDict(self):
         dictDir=self.parsedTxt() 
-        solutionsDict = {}
         controlTree = {}
         self.__initializeControlTree(dictDir,controlTree)
         solutionIndex=0
@@ -149,7 +149,7 @@ class RandomSearchWithEstimator(Heuristic):
                 end = time.time()
                 totalTime = (end-start)
                 if totalTime >= self._SECONDS:
-                    return solutionsDict 
+                    return 
                 
             #retrain
             print(f'score: {self.estimator.score(topSynthesized)}')
@@ -159,5 +159,4 @@ class RandomSearchWithEstimator(Heuristic):
 
         medianScore = medianScore/solutionIndex                          
         
-                                        # Retorna o dicionário de soluções para o 'main'
-        return solutionsDict
+                                

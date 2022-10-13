@@ -103,21 +103,29 @@ class Heuristic(ABC):
             #não acho que precisa copiar, então vou só passar referencia(eles não deveriam ser modificados mesmo)
             paretos[count] = solutions[paretoSolutionIndex]
         return paretos
-        
+    def getCachedSoltuion(self,solution:Solution):
+        """
+        get especified solution from self.solutions if it exists.
+        check tree of solution directives to know if solution exists already in self.solutions
+        """
+        pass
     def saveSolution(self,solution):
         deep = copy.deepcopy(solution)   
+        #if get cached solution
+        #   use cached solution
+        #else add solution to tree and add solutin to self.solution
         self.solutions[self._solutionIndex] = deep               
         self._solutionIndex+=1
+
 
     def synthesisWrapper(self,solution):
         """
         Calls synthesis and, if its successful, it saves solution in self.solutions.
         """
         try:
-            solution.runSynthesis()
+            solution.runSynthesisTeste()
         except Exception as e:
             raise
         else:
             self.saveSolution(solution)
             
-    

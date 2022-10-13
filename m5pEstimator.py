@@ -39,7 +39,7 @@ class M5PrimeEstimator(Estimator):
             self.__trainModelPerMetric(dataset,"resources",self.resourcesModel)
             #print(time.time() - start)
         except Exception as e:
-            print("ERROR: M5P doesnt work predicting for multiple outputs")
+            print(e)
             raise e
     def __trainModelPerMetric(self,dataset:dict,metric,model:M5Prime):
         features, results = self.processor.process(dataset)

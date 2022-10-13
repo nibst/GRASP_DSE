@@ -1,5 +1,6 @@
 import time
 from RandomSearch import RandomSearch
+from Script_tcl import generateScript
 from estimator import Estimator
 from heuristic import Heuristic
 from solution import Solution
@@ -9,23 +10,27 @@ from sklearn.model_selection import train_test_split
 from typing import List
 
 class GA(Heuristic):
-    _SECONDS = 50000 #2 hour
-    def __init__(self,filesDict,outPath,model:Estimator,numOfGenerations = 10):
+    def __init__(self,filesDict,outPath,model:Estimator):
         super().__init__(filesDict, outPath)
         self.dictDir =self.parsedTxt()
-        self.numOfIndividuals = 40 #any number
-        self.numOfGenes = len(self.dictDir.keys())
-        self.numOfGenerations = numOfGenerations
-        self.listOfKeys = list(self.dictDir.keys()) #to use numbers (indexes of list) instead of strings in the algorithm logic
+        self.populationSize = 40 #any number
+        self.numOffspringsDiscarded = 40 # exit criteria -> num of chromosomes/offsprings/individuals generated which do not improve any parent 
+        self.estimator = model
         self.crossoverRate = 0.8 #any number between 0 and 1
         self.mutationRate = 0.1 #any number between 0 and 1
+
+        self.numOfGenes = len(self.dictDir.keys())
+        self.listOfKeys = list(self.dictDir.keys()) #to use numbers (indexes of list) instead of strings in the algorithm logic
         self.chaceToOverwrite = 0.5 #probability of overwritting parent with offspring if offspring dominates in one of the objectives
-        sample = RandomSearch(filesDict, outPath)
-        self.estimator = model
-        self.estimator.trainModel(sample.solutions)
-        self.new_model_interval = 20
-        self.threshold = -1.5
-        self.createSolutionsDict()
+        self.new_model_interval = 40
+        start = time.time()
+        self.__new_predictive_model()
+        self.finalPopulation = self.createSolutionsDict()
+        #synthesize final pareto population 
+        for i in range(len(self.finalPopulation)):
+            self.finalPopulation[i].runSynthesis()
+        end = time.time()
+        print(f"TEMPO: {end-start} segundos")
         
         
     def createSolutionsDict(self):
@@ -79,100 +84,94 @@ class GA(Heuristic):
             new_population.extend([offspring])
 
         """
+        generateScript(self.cFiles, self.prjFile)
         random.seed(1)
-        start = time.time()
         population = self.randomSample() #list of random Solutions (without their HLS results yet)
-        for i in range(self.numOfGenerations):
-            new_population = []
-            interval = 0
-            parentPairs = self.selector(population)
-            while len(new_population) < self.numOfIndividuals:
-                parent1,parent2 = parentPairs[interval]
-                offspring = self.crossover(parent1,parent2)
-                offspring = self.mutation(offspring)
-                try:
-                    estimatedResults = self.estimator.estimateSynthesis(offspring)
-                    offspring.setResultados(estimatedResults)
-                    parent1,parent2 = self.overwriteParent(parent1,parent2,offspring)
-                except Exception as e:
-                    print(e)
-                else:
-                    new_population.extend([offspring])
-                if interval >= self.new_model_interval:
-                    self.model=self.__new_predictive_model()
-                end = time.time()
-                totalTime = (end-start)
-                if totalTime >= self._SECONDS:
-                    return
-                interval+=1
-            population = new_population
+        interval = 0
+         
+        discardedOffsprings = []
+        new_population = []
+        parentPairs = self.selector(population)
+        pairIndex = 0
+        while len(discardedOffsprings) < self.numOffspringsDiscarded:
+            try:
+                parent1,parent2 = parentPairs[pairIndex]
+            except:
+                population = self.randomSample() #list of random Solutions (without their HLS results yet)
+                parentPairs = self.selector(population)
+                pairIndex = 0
+                parent1,parent2 = parentPairs[pairIndex]
+                
+   
+            offspring = self.crossover(parent1,parent2)
+            offspring = self.mutation(offspring)
+
+            estimatedResults = self.estimator.estimateSynthesis(offspring)
+            offspring.setResultados(estimatedResults)
+            newParent1,newParent2 = self.overwriteParent(parent1,parent2,offspring)
+
+            #if offspring dont overwrite neither of the parents
+            if newParent1.diretivas == parent1.diretivas and newParent2.diretivas == parent2.diretivas:
+                discardedOffsprings.append(offspring)
+            
+            new_population.extend([newParent1,newParent2])
+            
+            pairIndex+=1
+            interval+=1
+            if interval % self.new_model_interval == 0:
+                self.model=self.__new_predictive_model()
+
+        population = new_population
+        return population
             
     def __new_predictive_model(self):
-        score = -2
+        #TODO arrumar, o score esta considerando so o treino do ultimo laço
+        #maybe create new model, as deep copy of self.estimator
+        score = -1
+        threshold = 0.70
         sample = RandomSearch(self.filesDict, self.outPath)
-        while score < self.threshold:
-            train, test = train_test_split(sample.solutions, test_size=0.2, random_state=0)
-            self.estimator.trainModel(train)
-            score = self.estimator.score(test)
+        while score < threshold:
+            try:    
+                train, test = train_test_split(sample.solutions, test_size=0.2, random_state=0)
+                self.estimator.trainModel(train)
+                
+                score = self.estimator.score(test)
+            except Exception as e:
+                #do nothing, just train more
+                score = -1 
+                print(e)            
             print(f'score: {score} ')
             #full train
+            print(f'sample solutions lenght: {len(sample.solutions.keys())}') 
             self.estimator.trainModel(sample.solutions)
-            if score < self.threshold:    
+            if score < threshold:    
                 #create more samples
                 sample.createSolutionsDict()
         for solution in sample.solutions.values():
             self.saveSolution(solution)
     
     def selector(self,population):
-        copy.deepcopy(population)
-        pairList = []
+        parentsList = []
         for parent1 in population:
+            #This will estimate all parents in population and pair each parent to a diferent parent
             try:
-                self.synthesisWrapper(parent1)
+                estimatedResults = self.estimator.estimateSynthesis(parent1)
+                parent1.setResultados(estimatedResults)
             except Exception as e:
                 print(e)
             parent2 =random.choice(population)
             while parent1 == parent2:
                 parent2 =random.choice(population)
-            pairList.append(parent2)
-        return list(zip(population,pairList))
+            parentsList.append(parent2)
+        return list(zip(population,parentsList))
                 
-            
-    def selector_tournament(self,population,numOfIndividuals):
-        #tournament
-        part = self.__uniformRandom(population,numOfIndividuals)
-        for individual in part:
-            #just synthesize solutions that have not been synthesized yet
-            if None in individual.resultados.values():
-                try:
-                    estimatedResults = self.estimator.estimateSynthesis(individual)
-                    individual.setResultados(estimatedResults)
-                except Exception as e:
-                    print(e)
-                    
-        return self.top(2,part)
-
-    def __uniformRandom(self,population,numOfIndividuals):
-        #TODO use a lib wtf
-        domainLenght = len(population)
-        indexes = [] # indexes of the individuals that got selected
-        i = 0
-        while i < numOfIndividuals:
-            individualIndex = random.randint(0,domainLenght-1)
-            if individualIndex not in indexes:
-                indexes.append(individualIndex)
-                i+=1
-        part = [] #list of the population that gonna be returned
-        for index in indexes:
-            part.append(population[index])
-        return part
-            
+      
     def randomSample(self):
         controlTree = {}
         sample = []
         onePermutation = None
         i=0
-        while i<(self.numOfIndividuals):
+        while i<(self.populationSize):
             onePermutation = self.__generateRandomPermutation(controlTree)
             if onePermutation:
                 solution = Solution(onePermutation,self.cFiles,self.prjFile)         #Solutions a partir deste
@@ -184,10 +183,18 @@ class GA(Heuristic):
 
         topSolutions = [] #top "numOfTops" solutions
         for count,individual in enumerate(population):
+            topSolutions.append(individual) 
             if count >= numOfTops:
                 self.__removeWorstSolution(topSolutions)
-            topSolutions.append(individual) 
         return topSolutions
+
+    def __removeWorstSolution(self,topSolutions):
+        worst = float('-inf')
+        for solution in topSolutions:
+            if solution.resultados['resources'] * solution.resultados['latency'] >= worst:
+                worst = solution.resultados['resources'] * solution.resultados['latency']
+                worstSolution = solution
+        topSolutions.remove(worstSolution)
 
     def mutation(self,individual:Solution):
         
@@ -288,10 +295,4 @@ class GA(Heuristic):
     def __exhaustedEverySolution(self,controlTree):
         return True
 
-    def __removeWorstSolution(self,topSolutions):
-        worst = float('-inf')
-        for solution in topSolutions:
-            if solution.resultados['resources'] * solution.resultados['latency'] >= worst:
-                worst = solution.resultados['resources'] * solution.resultados['latency']
-                worstSolution = solution
-        topSolutions.remove(worstSolution)
+    

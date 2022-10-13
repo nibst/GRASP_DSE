@@ -52,8 +52,12 @@ if __name__ == "__main__":
     #heuristic = RandomSearch(filesDict,'directives.tcl')
     #heuristic = GreedyWithEstimator(filesDict,'directives.tcl')
     #heuristic = RandomSearchWithEstimator(filesDict, 'directives.tcl', model)
-    heuristic = GA(filesDict,'directives.tcl',model,5)
+    heuristic = GA(filesDict,'directives.tcl',model)
     #heuristic.writeSolutionsDict()
+    
+    train, test = train_test_split(heuristic.solutions, test_size=0.2, random_state=0)
+    model.trainModel(train)
+    print(f"SCORE {model.score(test)}")
     paretos = heuristic.paretoSolutions('resources','latency')
     RESOURCE_TO_COMPARE = 'resources'
     ######################### GRAPH
@@ -66,6 +70,7 @@ if __name__ == "__main__":
     plt = PlotMaker("firewall", RESOURCE_TO_COMPARE, 'latency')
     plt.createPlot(heuristic.solutions) #blue
     plt.createPlot(paretos)
+    plt.createPlot(heuristic.finalPopulation)
     #paretoPlt = PlotMaker("paretos firewall", RESOURCE_TO_COMPARE, 'latency')
     #samplePLt = PlotMaker("sha", RESOURCE_TO_COMPARE, 'latency')
     #samplePLt.createPlot(heuristic.sample.solutions)

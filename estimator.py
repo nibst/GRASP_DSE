@@ -7,7 +7,12 @@ class Estimator(ABC):
         pass
 
     @abstractmethod
-    def trainModel(self):
+    def trainModel(self,dataset):
+        """
+        Parameters
+        ----------
+        dataset : List of Solution objects
+        """
         pass
 
 
