@@ -1,3 +1,4 @@
+import copy
 from random import randrange
 import xml.etree.ElementTree as ET
 import os.path
@@ -14,8 +15,8 @@ class Solution:
     _FF_VALUE = 1; _LUT_VALUE = 2; _DSP_VALUE = 345.68; _BRAM_VALUE = 547.33
     
     
-    def __init__(self,diretivas, cFile, prjFile):
-        self.diretivas = diretivas
+    def __init__(self,diretivas:dict, cFile, prjFile):
+        self.diretivas = copy.deepcopy(diretivas)
         self.cFile = cFile
         self.prjFile = prjFile
         if sys.platform == 'win32':
@@ -29,6 +30,12 @@ class Solution:
         resultados['resources'] = None
         resultados['latency'] = None
         self.resultados = resultados
+
+    def setDirectives(self,directives:dict):
+        """
+        set directives used in this solution
+        """
+        self.diretivas = copy.deepcopy(directives)
 
     def setOneResult(self,key,value):
         for resultKey in self.resultados:
@@ -116,4 +123,4 @@ class Solution:
                 raise ValueError("****UNDETERMINED LATENCY****")
             self.resultados = resultados
         else:
-             raise Exception("****Error in synthesis****")       
+             raise Exception("****Error in synthesis - NO Synthesis Results****")       
