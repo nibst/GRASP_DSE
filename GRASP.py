@@ -15,7 +15,7 @@ import random
 
 class GRASP(Heuristic):
     
-    TRAIN_TIME = 10800 #3h
+    TRAIN_TIME = 900 #3h
     def __init__(self,filesDict,outPath,model:Estimator,timeLimit=43200,seed=0):
         super().__init__(filesDict, outPath)
         self._SECONDS = timeLimit
@@ -27,7 +27,7 @@ class GRASP(Heuristic):
             self.saveSolution(solution)
         self.dictDir =self.parsedTxt()
         random.seed(seed)
-        self.start = time.time()
+        self.start = None
         self.createSolutionsDict()
        
     
@@ -47,6 +47,7 @@ class GRASP(Heuristic):
         end GRASP.
 
         """
+        self.start = time.time()
         generateScript(self.cFiles, self.prjFile)
         end = time.time()
         #for i in range(iterations):

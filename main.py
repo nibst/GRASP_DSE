@@ -52,22 +52,26 @@ if __name__ == "__main__":
     #heuristic = RandomSearch(filesDict,'directives.tcl')
     #heuristic = GreedyWithEstimator(filesDict,'directives.tcl')
     #heuristic = RandomSearchWithEstimator(filesDict, 'directives.tcl', model)
-    heuristic1 = GA(filesDict,'directives.tcl',model,20)
-    heuristic2 = GRASP(filesDict,'directives.tcl',model,10)
-    #heuristic.writeSolutionsDict()
-    
-
-    RESOURCE_TO_COMPARE = 'resources'
-    ######################### GRAPH
-    
-    #file para plotar o resultado do computador remoto, caso queira interagir com o plot ao invés de ser só um jpg
+    heuristic1 = GA(filesDict,'directives.tcl',model,3600)
     with open('./Plot/solutionsFile', 'wb') as solutionsFile:
         pickle.dump(heuristic1, solutionsFile)
     solutionsFile.close()
+
+    model = RandomForestEstimator(filesDict['dFile'])
+    heuristic2 = GRASP(filesDict,'directives.tcl',model,3600)
+    #heuristic.writeSolutionsDict()
+    
+
+
+    
+    #file para plotar o resultado do computador remoto, caso queira interagir com o plot ao invés de ser só um jpg
+
     with open('./Plot/solutionsFile2', 'wb') as solutionsFile:
         pickle.dump(heuristic2, solutionsFile)
     solutionsFile.close()
 
+    RESOURCE_TO_COMPARE = 'resources'
+    ######################### GRAPH
     plt = PlotMaker("sha", RESOURCE_TO_COMPARE, 'latency')
     plt.createPlot(heuristic1.solutions) #blue
     plt.createPlot(heuristic2.solutions) 

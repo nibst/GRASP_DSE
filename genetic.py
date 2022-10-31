@@ -10,6 +10,7 @@ from sklearn.model_selection import train_test_split
 from typing import List
 
 class GA(Heuristic):
+    TRAIN_TIME = 1000
     def __init__(self,filesDict,outPath,model:Estimator,timeLimit=43200):
         super().__init__(filesDict, outPath)
         self.dictDir =self.parsedTxt()
@@ -25,7 +26,7 @@ class GA(Heuristic):
         self.numOfGenes = len(self.dictDir.keys())
         self.listOfKeys = list(self.dictDir.keys()) #to use numbers (indexes of list) instead of strings in the algorithm logic
         self.chaceToOverwrite = 0.5 #probability of overwritting parent with offspring if offspring dominates in one of the objectives
-        self.new_model_interval = 40
+        self.new_model_interval = 100
         self.start = time.time()
         self.__new_predictive_model()
         self.finalPopulation = self.createSolutionsDict()
@@ -142,8 +143,8 @@ class GA(Heuristic):
         #TODO arrumar, o score esta considerando so o treino do ultimo laço
         #maybe create new model, as deep copy of self.estimator
         score = -1
-        threshold = 0.8
-        sample = RandomSearch(self.filesDict, self.outPath,3600)
+        threshold = 0.7
+        sample = RandomSearch(self.filesDict, self.outPath,self.TRAIN_TIME)
         while score < threshold:
             try:    
                 train, test = train_test_split(sample.solutions, test_size=0.2, random_state=0)

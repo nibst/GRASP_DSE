@@ -76,6 +76,12 @@ class Solution:
         #path to synthesis data
         xml='./Raise_dse/solution1/syn/report/csynth.xml'
 
+        #if not especified, there is infinite time to run synthesis
+        if timeLimit is None:
+            timeLimit = float('inf')
+        if timeLimit<=0:
+            raise Exception("****Vivado_HLS has exceed max time usage****")
+            
         mydir='./Raise_dse'
         if os.path.exists(mydir):
             try:
@@ -95,9 +101,7 @@ class Solution:
                     
         time.sleep(2) #para dar tempo de iniciar vivado
         start = time.time()
-        #if not especified, there is infinite time to run synthesis
-        if timeLimit is None:
-            timeLimit = float('inf')
+        
 
         while vivadoIsRunning:
             #tempo entre duas checagens de se o vivado continua rodando

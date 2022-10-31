@@ -1,5 +1,4 @@
 from abc import ABC, abstractmethod
-from importlib.resources import path
 from solution import Solution
 import copy
 import readDirectivesFile
@@ -123,7 +122,7 @@ class Heuristic(ABC):
         Calls synthesis and, if its successful, it saves solution in self.solutions.
         """
         try:
-            solution.runSynthesisTeste(timeLimit)
+            solution.runSynthesis(timeLimit)
         except Exception as e:
             raise
         else:
