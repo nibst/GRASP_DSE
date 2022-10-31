@@ -15,17 +15,19 @@ import random
 
 class GRASP(Heuristic):
     
-    
-    #_SECONDS = 7200
-    def __init__(self,filesDict,outPath,model:Estimator,seed=0):
+    TRAIN_TIME = 10800 #3h
+    def __init__(self,filesDict,outPath,model:Estimator,timeLimit=43200,seed=0):
         super().__init__(filesDict, outPath)
+        self._SECONDS = timeLimit
         self.alpha = 0.7
-        sample = RandomSearch(filesDict, outPath)
+        sample = RandomSearch(filesDict, outPath,self.TRAIN_TIME)
         self.estimator = model
         self.estimator.trainModel(sample.solutions)
-        
+        for solution in sample.solutions.values():
+            self.saveSolution(solution)
         self.dictDir =self.parsedTxt()
         random.seed(seed)
+        self.start = time.time()
         self.createSolutionsDict()
        
     
@@ -45,12 +47,14 @@ class GRASP(Heuristic):
         end GRASP.
 
         """
-        for i in range(iterations):
+        generateScript(self.cFiles, self.prjFile)
+        end = time.time()
+        #for i in range(iterations):
+        while end-self.start <= self._SECONDS:
             solution = self.constructGreedyRandomizedSolution()
             #repair solution?
             solution = self.localSearch(solution)
-
-        generateScript(self.cFiles, self.prjFile)
+            end = time.time()
 
     def makeRCL(self,directiveGroup:str,solutionToBuild:dict):
         """
@@ -109,7 +113,8 @@ class GRASP(Heuristic):
             solutionToBuild[directiveGroup] = s
         constructedSolution = Solution(solutionToBuild,self.cFiles,self.prjFile)
         try:
-            self.synthesisWrapper(constructedSolution)
+            synthesisTimeLimit = self._SECONDS - (time.time() - self.start) 
+            self.synthesisWrapper(constructedSolution,synthesisTimeLimit)
         except Exception as error:
             print(error)
         else:
@@ -140,16 +145,21 @@ class GRASP(Heuristic):
         topSynthesis = []
         while i < len(neighborsSorted):
             try:
-                self.synthesisWrapper(neighborsSorted[i])
+                synthesisTimeLimit = self._SECONDS - (time.time() - self.start)#totalTimeAvailable - timePassed
+                self.synthesisWrapper(neighborsSorted[i],synthesisTimeLimit)
             except Exception as error:
                 print(error)
             else:
+                
                 synthesisCount+=1
                 topSynthesis.append(neighborsSorted[i])
                 if synthesisCount == n:
                     break
-        
-        topSolution = max(topSynthesis,key=lambda k: k.resultados['resources'] * k.resultados['latency'])    
+            i+=1
+        topSolution=None
+        if topSynthesis:
+            self.estimator.trainModel(topSynthesis)
+            topSolution = max(topSynthesis,key=lambda k: k.resultados['resources'] * k.resultados['latency'])    
         return topSolution
 
 

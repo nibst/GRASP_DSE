@@ -10,27 +10,25 @@ from sklearn.model_selection import train_test_split
 from typing import List
 
 class GA(Heuristic):
-    def __init__(self,filesDict,outPath,model:Estimator):
+    def __init__(self,filesDict,outPath,model:Estimator,timeLimit=43200):
         super().__init__(filesDict, outPath)
         self.dictDir =self.parsedTxt()
+        self._SECONDS = timeLimit
         self.populationSize = 40 #any number
         self.numOffspringsDiscarded = 40 # exit criteria -> num of chromosomes/offsprings/individuals generated which do not improve any parent 
         self.estimator = model
         self.crossoverRate = 0.8 #any number between 0 and 1
         self.mutationRate = 0.1 #any number between 0 and 1
+        
+        random.seed(1)
 
         self.numOfGenes = len(self.dictDir.keys())
         self.listOfKeys = list(self.dictDir.keys()) #to use numbers (indexes of list) instead of strings in the algorithm logic
         self.chaceToOverwrite = 0.5 #probability of overwritting parent with offspring if offspring dominates in one of the objectives
         self.new_model_interval = 40
-        start = time.time()
+        self.start = time.time()
         self.__new_predictive_model()
         self.finalPopulation = self.createSolutionsDict()
-        #synthesize final pareto population 
-        for i in range(len(self.finalPopulation)):
-            self.finalPopulation[i].runSynthesis()
-        end = time.time()
-        print(f"TEMPO: {end-start} segundos")
         
         
     def createSolutionsDict(self):
@@ -85,7 +83,6 @@ class GA(Heuristic):
 
         """
         generateScript(self.cFiles, self.prjFile)
-        random.seed(1)
         population = self.randomSample() #list of random Solutions (without their HLS results yet)
         interval = 0
          
@@ -94,6 +91,7 @@ class GA(Heuristic):
         parentPairs = self.selector(population)
         pairIndex = 0
         while len(discardedOffsprings) < self.numOffspringsDiscarded:
+
             try:
                 parent1,parent2 = parentPairs[pairIndex]
             except:
@@ -113,9 +111,25 @@ class GA(Heuristic):
             #if offspring dont overwrite neither of the parents
             if newParent1.diretivas == parent1.diretivas and newParent2.diretivas == parent2.diretivas:
                 discardedOffsprings.append(offspring)
-            
+
             new_population.extend([newParent1,newParent2])
             
+            #synthesize parents that went to final pareto population 
+
+            synthesisTimeLimit = self._SECONDS - (time.time() - self.start) 
+            try:
+                self.synthesisWrapper(newParent1,synthesisTimeLimit)
+            except Exception as e:
+                print(e)
+
+            synthesisTimeLimit = self._SECONDS - (time.time() - self.start)  
+            try:
+                self.synthesisWrapper(newParent2,synthesisTimeLimit)
+            except Exception as e:
+                print(e) 
+
+            if (time.time() - self.start) >= self._SECONDS:
+                break
             pairIndex+=1
             interval+=1
             if interval % self.new_model_interval == 0:
@@ -128,8 +142,8 @@ class GA(Heuristic):
         #TODO arrumar, o score esta considerando so o treino do ultimo laço
         #maybe create new model, as deep copy of self.estimator
         score = -1
-        threshold = 0.70
-        sample = RandomSearch(self.filesDict, self.outPath)
+        threshold = 0.8
+        sample = RandomSearch(self.filesDict, self.outPath,3600)
         while score < threshold:
             try:    
                 train, test = train_test_split(sample.solutions, test_size=0.2, random_state=0)

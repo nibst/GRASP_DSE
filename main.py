@@ -1,5 +1,4 @@
 from ast import arguments, dump
-from distutils.errors import PreprocessError
 from pickle import TRUE
 from random import sample
 from re import X
@@ -11,6 +10,7 @@ from heuristic import Heuristic
 from hillClimbing0 import HillClimbing
 from exhaustiveSearch import ExhaustiveSearch
 from greedyWithEstimator import GreedyWithEstimator
+from paretoComparer import ParetoComparer
 from randomSearchWithEstimator import RandomSearchWithEstimator
 from genetic import GA
 import argparse
@@ -44,33 +44,37 @@ if __name__ == "__main__":
     filesDict['prjFile'] = args.prjFile
     
     RESOURCE_TO_COMPARE = 'resources'
-    model = M5PrimeEstimator(filesDict['dFile'])
-    #heuristic = GRASP(filesDict,'directives.tcl')
+    model = RandomForestEstimator(filesDict['dFile'])
+    
     #heuristic = HillClimbing(filesDict,'directives.tcl')
     #heuristic = Greedy(filesDict,'directives.tcl',RESOURCE_TO_COMPARE)
     #heuristic = ExhaustiveSearch(filesDict,'directives.tcl')
     #heuristic = RandomSearch(filesDict,'directives.tcl')
     #heuristic = GreedyWithEstimator(filesDict,'directives.tcl')
     #heuristic = RandomSearchWithEstimator(filesDict, 'directives.tcl', model)
-    heuristic = GA(filesDict,'directives.tcl',model)
+    heuristic1 = GA(filesDict,'directives.tcl',model,20)
+    heuristic2 = GRASP(filesDict,'directives.tcl',model,10)
     #heuristic.writeSolutionsDict()
     
-    train, test = train_test_split(heuristic.solutions, test_size=0.2, random_state=0)
-    model.trainModel(train)
-    print(f"SCORE {model.score(test)}")
-    paretos = heuristic.paretoSolutions('resources','latency')
+
     RESOURCE_TO_COMPARE = 'resources'
     ######################### GRAPH
     
     #file para plotar o resultado do computador remoto, caso queira interagir com o plot ao invés de ser só um jpg
     with open('./Plot/solutionsFile', 'wb') as solutionsFile:
-        pickle.dump(heuristic, solutionsFile)
+        pickle.dump(heuristic1, solutionsFile)
+    solutionsFile.close()
+    with open('./Plot/solutionsFile2', 'wb') as solutionsFile:
+        pickle.dump(heuristic2, solutionsFile)
     solutionsFile.close()
 
-    plt = PlotMaker("firewall", RESOURCE_TO_COMPARE, 'latency')
-    plt.createPlot(heuristic.solutions) #blue
-    plt.createPlot(paretos)
-    plt.createPlot(heuristic.finalPopulation)
+    plt = PlotMaker("sha", RESOURCE_TO_COMPARE, 'latency')
+    plt.createPlot(heuristic1.solutions) #blue
+    plt.createPlot(heuristic2.solutions) 
+
+    comparer = ParetoComparer(RESOURCE_TO_COMPARE,'latency')
+    print(comparer.compare(heuristic1,heuristic2))
+    #   plt.createPlot(heuristic.finalPopulation)
     #paretoPlt = PlotMaker("paretos firewall", RESOURCE_TO_COMPARE, 'latency')
     #samplePLt = PlotMaker("sha", RESOURCE_TO_COMPARE, 'latency')
     #samplePLt.createPlot(heuristic.sample.solutions)

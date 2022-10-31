@@ -17,7 +17,7 @@ class Heuristic(ABC):
         self.cFiles = filesDict['cFiles']
         self.prjFile = filesDict['prjFile']
         self.outPath = outPath
-        self._solutionIndex = 0
+        self.solutionIndex = 0
         self.solutions = {}
 
     def parsedTxt(self):
@@ -114,16 +114,16 @@ class Heuristic(ABC):
         #if get cached solution
         #   use cached solution
         #else add solution to tree and add solutin to self.solution
-        self.solutions[self._solutionIndex] = deep               
-        self._solutionIndex+=1
+        self.solutions[self.solutionIndex] = deep               
+        self.solutionIndex+=1
 
 
-    def synthesisWrapper(self,solution):
+    def synthesisWrapper(self,solution:Solution,timeLimit=None):
         """
         Calls synthesis and, if its successful, it saves solution in self.solutions.
         """
         try:
-            solution.runSynthesisTeste()
+            solution.runSynthesisTeste(timeLimit)
         except Exception as e:
             raise
         else:

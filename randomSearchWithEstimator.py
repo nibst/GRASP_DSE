@@ -47,7 +47,7 @@ class RandomSearchWithEstimator(Heuristic):
             solutionIndex+=1
             sample.solutions[solutionIndex] = solution
         self.sample = sample
-        for solution in self.sample.solutions:
+        for solution in self.sample.solutions.values():
             self.saveSolution(solution)
         self.estimator = model
         self.estimator.trainModel(sample.solutions)

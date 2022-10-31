@@ -8,7 +8,7 @@ import subprocess
 import psutil
 import sys
 class Solution:
-    _MAX_RAM_USAGE =50 #in percentage
+    _MAX_RAM_USAGE =30 #in percentage
     _DIRECTIVES_FILENAME = 'directives.tcl'
     _VIVADO_PROCESSNAME = 'vivado_hls'
     _SCRIPT_PATH = './callVivado.sh'
@@ -56,7 +56,11 @@ class Solution:
             print(value)
         directivesFile.close()  
 
-    def runSynthesisTeste(self):
+    def runSynthesisTeste(self,timeLimit=None):
+        if timeLimit is None:
+            timeLimit = float('inf')
+        if timeLimit<=0:
+            raise Exception("****Vivado_HLS has exceed max time usage****")
         resultados = {}
         resultados['FF'] = randrange(100)
         resultados['DSP'] = randrange(100)
@@ -67,14 +71,21 @@ class Solution:
 
         self.resultados = resultados
    
-    def runSynthesis(self):
+    def runSynthesis(self,timeLimit = None):
         #TODO antes de chamar a sintese verificar se ja tem um processo do vivado rodando e fazer esse processo n ser confundido com o que vamos rodar
         #path to synthesis data
         xml='./Raise_dse/solution1/syn/report/csynth.xml'
 
         mydir='./Raise_dse'
         if os.path.exists(mydir):
-            shutil.rmtree(mydir)
+            try:
+                shutil.rmtree(mydir)
+            except Exception as error:
+                for proc in psutil.process_iter(['name']):
+                    if proc.name() == self._VIVADO_PROCESSNAME:
+                        proc.kill()
+                        break
+                shutil.rmtree(mydir)
         self.__writeDirectivesIntoFile()
         print('Running Synthesis...')
         #vivado call using subprocess
@@ -83,9 +94,14 @@ class Solution:
         vivadoIsRunning = True
                     
         time.sleep(2) #para dar tempo de iniciar vivado
+        start = time.time()
+        #if not especified, there is infinite time to run synthesis
+        if timeLimit is None:
+            timeLimit = float('inf')
+
         while vivadoIsRunning:
             #tempo entre duas checagens de se o vivado continua rodando
-            time.sleep(1)
+            time.sleep(3)
             vivadoIsRunning = False
             for proc in psutil.process_iter(['name']):
                 if proc.name() == self._VIVADO_PROCESSNAME:
@@ -93,11 +109,16 @@ class Solution:
                     try:
                         memoryUse = proc.memory_percent()
                     except Exception as e:
+                        #proc.terminate()
                         print(e)
                         break
                     if memoryUse > self._MAX_RAM_USAGE:
-                        proc.terminate()
+                        proc.kill()   
                         raise Exception("****Vivado_HLS has exceed max RAM usage****")
+                    
+                    if time.time()-start >= timeLimit:
+                        proc.kill()   
+                        raise Exception("****Vivado_HLS has exceed max time usage****")
                     break
             
         if os.path.exists(xml):  

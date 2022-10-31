@@ -21,12 +21,14 @@ from random import seed
 from random import randint
 
 class RandomSearch(Heuristic):
-    _SECONDS = 1 #5 dias
-    def __init__(self,filesDict,outPath):
+    
+    def __init__(self,filesDict,outPath,timeLimit=3600):
         super().__init__(filesDict, outPath)
+        self._SECONDS = timeLimit
         self.controlTree:dict = {}
         self.createSolutionsDict()
-        
+        seed(1)
+
     def __generateRandomPermutation(self,dictDir:dict):
         node = self.controlTree
         newPermutation = {}
@@ -54,7 +56,6 @@ class RandomSearch(Heuristic):
         solutionIndex=0
         generateScript(self.cFiles, self.prjFile)
         inTime = True
-        #seed(1)
         totalTime = 0
         while inTime:
             start = time.time()
@@ -63,14 +64,14 @@ class RandomSearch(Heuristic):
             if onePermutation:    #se tiver uma permutacao na variavel
                 solution = Solution(onePermutation,self.cFiles,self.prjFile)         #Solutions a partir deste
                 try:
-                    self.synthesisWrapper(solution)
+                    synthesisTimeLimit = self._SECONDS - (time.time() - start) 
+                    self.synthesisWrapper(solution,synthesisTimeLimit)
                 except Exception as e:
                     print(e)
                 #executa else qnd try roda sem erros
                 else:   
                     print(solution.resultados)                  
-                    print (solutionIndex)      
-                    solutionIndex+=1
+                    print (self.solutionIndex)      
 
             end = time.time()
             totalTime += (end-start)
