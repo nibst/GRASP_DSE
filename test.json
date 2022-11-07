@@ -1,0 +1,216 @@
+{
+    "directives":
+        {   
+            "pipeline main_label0": {
+                "possible_directives":["","set_directive_pipeline \"main/main_label0\""],
+                "function":"main",
+                "label": "main_label0",
+                "directive_type":"pipeline"
+            },
+            "pipeline local_memcpy_label3":{
+                "possible_directives":["","set_directive_pipeline \"local_memcpy/local_memcpy_label3\""],
+                "function":"local_memcpy",
+                "label": "local_memcpy_label3",
+                "directive_type":"pipeline"
+            }, 
+            "unroll local_memcpy_label3":{
+                "possible_directives":["","set_directive_unroll \"local_memcpy/local_memcpy_label3\""],
+                "function":"local_memcpy",
+                "label":"local_memcpy_label3",
+                "directive_type":"unroll"
+            },
+            "loop_merge sha_transform":{
+                "possible_directives":["","set_directive_loop_merge \"sha_transform\""],
+                "function":"sha_transform",
+                "label":"",
+                "directive_type":"loop_merge"
+            },
+            "pipeline sha_update_label4":{
+                "possible_directives":["","set_directive_pipeline \"sha_update/sha_update_label4\""],
+                "function":"sha_update",
+                "label":"sha_update_label4",
+                "directive_type":"pipeline"
+            },
+            "unroll sha_update_label4":{
+                "possible_directives":[
+                    "",
+                    "set_directive_unroll -factor 8 \"sha_update/sha_update_label4\"",
+                    "set_directive_unroll -factor 16 \"sha_update/sha_update_label4\"",
+                    "set_directive_unroll -factor 32 \"sha_update/sha_update_label4\"",
+                    "set_directive_unroll \"sha_update/sha_update_label4\""],
+                "function":"sha_update",
+                "label": "sha_update_label4",
+                "directive_type": "unroll"
+            },
+            "pipeline sha_transform_label1":{
+                "possible_directives":["","set_directive_pipeline \"sha_transform/sha_transform_label1\""],
+                "function":"sha_transform",
+                "label":"sha_transform_label1",
+                "directive_type":"pipeline"
+            },
+            "unroll sha_transform_label1":{
+                "possible_directives":[
+                    "",
+                    "set_directive_unroll -factor 2 \"sha_transform/sha_transform_label1\"",
+                    "set_directive_unroll -factor 4 \"sha_transform/sha_transform_label1\"",
+                    "set_directive_unroll -factor 8 \"sha_transform/sha_transform_label1\"",
+                    "set_directive_unroll \"sha_transform/sha_transform_label1\""],
+                "function":"sha_transform",
+                "label":"sha_transform_label1",
+                "directive_type":"unroll"
+            },
+            "pipeline sha_transform_label2":{
+                "possible_directives":["","set_directive_pipeline \"sha_transform/sha_transform_label2\""],
+                "function":"sha_transform",
+                "label":"sha_transform_label2",
+                "directive_type":"pipeline"
+            },
+            "unroll sha_transform_label2":{
+                "possible_directives":[
+                    "",
+                    "set_directive_unroll -factor 4 \"sha_transform/sha_transform_label2\"",
+                    "set_directive_unroll -factor 8 \"sha_transform/sha_transform_label2\"",
+                    "set_directive_unroll -factor 16 \"sha_transform/sha_transform_label2\"",
+                    "set_directive_unroll -factor 32 \"sha_transform/sha_transform_label2\"",
+                    "set_directive_unroll \"sha_transform/sha_transform_label2\""],
+                "function":"sha_transform",
+                "label":"sha_transform_label2",
+                "directive_type":"unroll"
+            },
+            "pipeline sha_transform_label3":{
+                "possible_directives":["","set_directive_pipeline \"sha_transform/sha_transform_label3\""],
+                "function":"sha_transform",
+                "label":"sha_transform_label3",
+                "directive_type":"pipeline"
+            },
+            "unroll sha_transform_label3":{
+                "possible_directives":[
+                    "",
+                    "set_directive_unroll -factor 4 \"sha_transform/sha_transform_label3\"",
+                    "set_directive_unroll -factor 8 \"sha_transform/sha_transform_label3\"",
+                    "set_directive_unroll -factor 16 \"sha_transform/sha_transform_label3\"",
+                    "set_directive_unroll \"sha_transform/sha_transform_label3\""],
+                "function":"sha_transform",
+                "label":"sha_transform_label3",
+                "directive_type":"unroll"
+            },
+            "pipeline sha_transform_label4":{
+                "possible_directives":["","set_directive_pipeline \"sha_transform/sha_transform_label4\""],
+                "function":"sha_transform",
+                "label":"sha_transform_label4",
+                "directive_type":"pipeline"
+            },
+            "unroll sha_transform_label4":{
+                "possible_directives":[
+                    "",
+                    "set_directive_unroll -factor 4 \"sha_transform/sha_transform_label4\"",
+                    "set_directive_unroll -factor 8 \"sha_transform/sha_transform_label4\"",
+                    "set_directive_unroll -factor 16 \"sha_transform/sha_transform_label4\"",
+                    "set_directive_unroll \"sha_transform/sha_transform_label4\""],
+                "function":"sha_transform",
+                "label":"sha_transform_label4",
+                "directive_type":"unroll"
+            },
+            "pipeline sha_transform_label5":{
+                "possible_directives":["","set_directive_pipeline \"sha_transform/sha_transform_label5\""],
+                "function":"sha_transform",
+                "label":"sha_transform_label5",
+                "directive_type":"pipeline"
+            },
+            "unroll sha_transform_label5":{
+                "possible_directives":[
+                    "",
+                    "set_directive_unroll -factor 4 \"sha_transform/sha_transform_label5\"",
+                    "set_directive_unroll -factor 8 \"sha_transform/sha_transform_label5\"",
+                    "set_directive_unroll -factor 16 \"sha_transform/sha_transform_label5\"",
+                    "set_directive_unroll \"sha_transform/sha_transform_label5\""],
+                "function":"sha_transform",
+                "label": "sha_transform_label5",
+                "directive_type": "unroll"
+            },
+            "pipeline sha_transform_label6":{
+                "possible_directives":["","set_directive_pipeline \"sha_transform/sha_transform_label6\""],
+                "function":"sha_transform",
+                "label":"sha_transform_label6",
+                "directive_type":"pipeline"
+            },
+            "unroll sha_transform_label6":{
+                "possible_directives":[
+                    "",
+                    "set_directive_unroll -factor 4 \"sha_transform/sha_transform_label6\"",
+                    "set_directive_unroll -factor 8 \"sha_transform/sha_transform_label6\"",
+                    "set_directive_unroll -factor 16 \"sha_transform/sha_transform_label6\"",
+                    "set_directive_unroll \"sha_transform/sha_transform_label6\""],
+                "function":"sha_transform",
+                "label": "sha_transform_label6",
+                "directive_type":"unroll"
+            },
+            "array_partition sha_transform W":{
+                "possible_directives":[
+                    "",
+                    "set_directive_array_partition -type block -factor 8 -dim 1 \"sha_transform\" W",
+                    "set_directive_array_partition -type block -factor 16 -dim 1 \"sha_transform\" W",
+                    "set_directive_array_partition -type block -factor 32 -dim 1 \"sha_transform\" W",
+                    "set_directive_array_partition -type block -factor 64 -dim 1 \"sha_transform\" W",
+                    "set_directive_array_partition -type cyclic -factor 8 -dim 1 \"sha_transform\" W",
+                    "set_directive_array_partition -type cyclic -factor 16 -dim 1 \"sha_transform\" W",
+                    "set_directive_array_partition -type cyclic -factor 32 -dim 1 \"sha_transform\" W",
+                    "set_directive_array_partition -type cyclic -factor 64 -dim 1 \"sha_transform\" W",
+                    "set_directive_array_partition -type complete -dim 1 \"sha_transform\" W"],
+                "function":"sha_transform",
+                "label":"",
+                "variable": "W",
+                "directive_type":"array_partition"
+            },
+            "inline sha_stream":{
+                "possible_directives":["","set_directive_inline -region \"sha_stream\""],
+                "function":"sha_stream",
+                "label":"",
+                "directive_type":"inline"
+            },
+            "inline local_memset":{
+                "possible_directives":["","set_directive_inline \"local_memset\""],
+                "function":"local_memset",
+                "label":"",
+                "directive_type":"inline"
+            },
+            "inline local_memcpy":{
+                "possible_directives":["","set_directive_inline \"local_memcpy\""],
+                "function":"local_memcpy",
+                "label":"",
+                "directive_type":"inline"
+            },
+            "inline sha_update_label4":{
+                "possible_directives":["","set_directive_inline -region \"sha_update/sha_update_label4\""],
+                "function":"sha_update",
+                "label":"sha_update_label4",
+                "directive_type":"inline"
+            },
+            "unroll local_memset_label0":{
+                "possible_directives":["","set_directive_unroll  \"local_memset/local_memset_label0\""],
+                "function":"local_memset",
+                "label":"local_memset_label0",
+                "directive_type":"unroll"
+            },
+            "array_partition sha_transform sha_info_digest":{
+                "possible_directives":[
+                    "",
+                    "set_directive_array_partition -type block -factor 2 -dim 1 \"sha_transform\" sha_info_digest",
+                    "set_directive_array_partition -type block -factor 4 -dim 1 \"sha_transform\" sha_info_digest",
+                    "set_directive_array_partition -type cyclic -factor 2 -dim 1 \"sha_transform\" sha_info_digest",
+                    "set_directive_array_partition -type cyclic -factor 4 -dim 1 \"sha_transform\" sha_info_digest",
+                    "set_directive_array_partition -type complete -dim 1 \"sha_transform\" sha_info_digest"],
+                "function":"sha_transform",
+                "label":"",
+                "variable":"sha_info_digest",
+                "directive_type":"array_partition"
+            }
+                
+        },
+    "nested loops":
+        {
+
+        }
+
+}    
+   
