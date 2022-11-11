@@ -13,7 +13,6 @@ class GA(Heuristic):
     TRAIN_TIME = 1000
     def __init__(self,filesDict,outPath,model:Estimator,timeLimit=43200):
         super().__init__(filesDict, outPath)
-        self.dictDir =self.parsedTxt()
         self._SECONDS = timeLimit
         self.populationSize = 40 #any number
         self.numOffspringsDiscarded = 40 # exit criteria -> num of chromosomes/offsprings/individuals generated which do not improve any parent 
@@ -110,7 +109,7 @@ class GA(Heuristic):
             newParent1,newParent2 = self.overwriteParent(parent1,parent2,offspring)
 
             #if offspring dont overwrite neither of the parents
-            if newParent1.diretivas == parent1.diretivas and newParent2.diretivas == parent2.diretivas:
+            if newParent1.directives == parent1.directives and newParent2.directives == parent2.directives:
                 discardedOffsprings.append(offspring)
 
             new_population.extend([newParent1,newParent2])
@@ -216,9 +215,9 @@ class GA(Heuristic):
         if random.random() < self.mutationRate:
             geneToMutate = random.randint(0,self.numOfGenes-1)
             gene = copy.deepcopy(self.dictDir[self.listOfKeys[geneToMutate]])#copy cause we gonna modify
-            gene.remove(individual.diretivas[self.listOfKeys[geneToMutate]]) #remove current gene value from the choices
+            gene.remove(individual.directives[self.listOfKeys[geneToMutate]]) #remove current gene value from the choices
             mutation = random.choice(gene)
-            individual.diretivas[self.listOfKeys[geneToMutate]] = mutation
+            individual.directives[self.listOfKeys[geneToMutate]] = mutation
         return individual
     
     def crossover(self,parent1,parent2):
@@ -231,7 +230,7 @@ class GA(Heuristic):
             for key in self.listOfKeys:
                 if key == cutPoint:
                     parent = parent2 #swap from which parent take genes
-                offspringDirectives[key] = parent.diretivas[key]
+                offspringDirectives[key] = parent.directives[key]
             offspring = Solution(offspringDirectives, self.cFiles, self.prjFile)
         else:
             offspring = copy.deepcopy(parent1)

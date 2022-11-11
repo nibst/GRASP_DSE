@@ -23,6 +23,7 @@ from randomForest import RandomForestEstimator
 from preProcessor import PreProcessor
 from sklearn.model_selection import train_test_split
 from m5pEstimator import M5PrimeEstimator
+import json
 if __name__ == "__main__":
     
     
@@ -45,31 +46,29 @@ if __name__ == "__main__":
     
     RESOURCE_TO_COMPARE = 'resources'
     model = RandomForestEstimator(filesDict['dFile'])
-    
     #heuristic = HillClimbing(filesDict,'directives.tcl')
     #heuristic = Greedy(filesDict,'directives.tcl',RESOURCE_TO_COMPARE)
     #heuristic = ExhaustiveSearch(filesDict,'directives.tcl')
     #heuristic = RandomSearch(filesDict,'directives.tcl')
     #heuristic = GreedyWithEstimator(filesDict,'directives.tcl')
     #heuristic = RandomSearchWithEstimator(filesDict, 'directives.tcl', model)
+
+
     heuristic1 = GA(filesDict,'directives.tcl',model,3600)
     with open('./Plot/solutionsFile', 'wb') as solutionsFile:
         pickle.dump(heuristic1, solutionsFile)
-    solutionsFile.close()
 
     model = RandomForestEstimator(filesDict['dFile'])
-    heuristic2 = GRASP(filesDict,'directives.tcl',model,3600)
-    #heuristic.writeSolutionsDict()
-    
 
-
-    
+    heuristic2 = GRASP(filesDict,'directives.tcl',model,3600)   
     #file para plotar o resultado do computador remoto, caso queira interagir com o plot ao invés de ser só um jpg
-
     with open('./Plot/solutionsFile2', 'wb') as solutionsFile:
         pickle.dump(heuristic2, solutionsFile)
-    solutionsFile.close()
 
+    #with open("./Plot/solutionsFile",'rb') as file:
+    #    heuristic1 = pickle.load(file)
+    #with open("./Plot/solutionsFile2",'rb') as file:
+    #    heuristic2 = pickle.load(file)
     RESOURCE_TO_COMPARE = 'resources'
     ######################### GRAPH
     plt = PlotMaker("sha", RESOURCE_TO_COMPARE, 'latency')
@@ -78,6 +77,7 @@ if __name__ == "__main__":
 
     comparer = ParetoComparer(RESOURCE_TO_COMPARE,'latency')
     print(comparer.compare(heuristic1,heuristic2))
+    print(comparer.compare(heuristic2,heuristic1))
     #   plt.createPlot(heuristic.finalPopulation)
     #paretoPlt = PlotMaker("paretos firewall", RESOURCE_TO_COMPARE, 'latency')
     #samplePLt = PlotMaker("sha", RESOURCE_TO_COMPARE, 'latency')
@@ -86,18 +86,6 @@ if __name__ == "__main__":
     plt.savePlotAsJPG()
     plt.showPlot()
     
-    
-    ######################### GRAPH
-    
-    # hText = 0.8
-    # for solution in heuristic.solutions:
-    #     plt.figtext(0.05, hText,solution, fontsize=9)
-    #     plt.figtext(0.05 , hText-0.05, 'Latency:', fontsize=8)
-    #     plt.figtext(0.15 , hText-0.05, listLat[solution-1], fontsize=8)
-    #     plt.figtext(0.05 , hText-0.1, '#LUT:', fontsize=8)
-    #     plt.figtext(0.15 , hText-0.1, listLUT[solution-1], fontsize=8)
-    #     hText -= 0.15  
-
 
     
    

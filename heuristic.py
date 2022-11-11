@@ -1,9 +1,11 @@
 from abc import ABC, abstractmethod
+import re
 from solution import Solution
 import copy
 import readDirectivesFile
 from pathlib import Path
 import os,glob
+import json
 
 
 class Heuristic(ABC):
@@ -16,6 +18,12 @@ class Heuristic(ABC):
         self.cFiles = filesDict['cFiles']
         self.prjFile = filesDict['prjFile']
         self.outPath = outPath
+        with open(filesDict['dFile']) as jsonFile:
+            self.DSEconfig:dict =  json.load(jsonFile)
+        directivesDict = copy.deepcopy(self.DSEconfig['directives'])
+        self.dictDir = {}
+        for key in directivesDict:
+            self.dictDir[key] = directivesDict[key]['possible_directives']
         self.solutionIndex = 0
         self.solutions = {}
 
@@ -28,43 +36,6 @@ class Heuristic(ABC):
     @abstractmethod                         # Método abstrato a sere herdados e implementado
     def createSolutionsDict(self):           # pelas classes filhas
         pass
-
-    # def writeDirectivesFile(self,directive,path):
-    #     output = ""
-    #     for element in directive:
-    #         output += element
-    #         output+= '\n'
-    #         output+=directive[element]
-    #         output+= '\n'
-    #     Path(path).write_text(output)
-
-    def writeSolutionsDict(self):
-        outputGeral = ""    
-                             
-        data = self.solutions               
-                
-        for solutionNmbr in data:
-            outputSolution = ""
-        #     outputGeral+="########## \n#Solucao de indice " + str(element) + "\n##########\n"
-            outputSolution+="########## \n#Solucao de indice " + str(solutionNmbr) + "\n##########\n"
-            #print(solutionNmbr)
-            #print(data[solutionNmbr].diretivas)
-            for diretiva in data[solutionNmbr].diretivas:
-                #print(diretiva)
-                #print(data[solutionNmbr].diretivas[diretiva])
-        #         outputGeral+= diretiva + ':' + data[element][diretiva] +'\n'
-                outputSolution+= diretiva + ' : ' + str(data[solutionNmbr].diretivas[diretiva]) +'\n'
-            print (outputSolution)
-            
-        #     pathFolder = 'directivesBySolution'
-            
-        #     solDirPath =pathFolder+'/' + str(element) + '.tcl'
-            
-        #     try: os.mkdir(pathFolder)
-        #     except:pass
-        #     Path(solDirPath).write_text(outputSolution)
-        # outPathGeneral='directivesGroupBySolution.tcl'
-        # Path(outPathGeneral).write_text(outputGeral)
 
     def dominateInBothMetrics(self,Solution1,Solution2,metric1,metric2):
         #testa se a Solution1  domina a Solution2
@@ -102,12 +73,88 @@ class Heuristic(ABC):
             #não acho que precisa copiar, então vou só passar referencia(eles não deveriam ser modificados mesmo)
             paretos[count] = solutions[paretoSolutionIndex]
         return paretos
+
+    def __buildLabelDict(self,solution:Solution):
+        """
+        returns a dictionary that the keys are the spots of application of directives
+        (the function where the label is + '/' + the name of label) and the values are
+        all directives applied in that 
+        """
+        newDict:dict = {}
+        directivesInformation = self.DSEconfig['directives']
+        for directiveGroup in solution.directives:
+            label = directivesInformation[directiveGroup]['label']
+            function = directivesInformation[directiveGroup]['function']
+            key = function + '/' + label
+            directiveType = directivesInformation[directiveGroup]['directive_type']
+            if key not in newDict:
+                newDict[key] = {}
+            newDict[key][directiveType] =solution.directives[directiveGroup]
+        return newDict
+    def bypass(self,solution:Solution):
+        """
+        bypass a certain design based on some redundancies effects of the applied directives
+        
+        If pipeline is active for a certain loop level, all its subloops are automatically unrolled. 
+        Thus all design points that apply unroll pragmas to automatically unrolled loops are considered redundant and excluded.
+        Moreover, all subloops with pipeline pragmas are discarded because of the effect described below:
+        
+        When a loop level l is fully unrolled, its logic is replicated for every iteration 
+        and the loop structure itself ceases to exist. Therefore, we discard the points
+        where pipeline is active for a fully unrolled level,
+        since there will be no actual loop to implement pipeline in this case
+        """
+        directivesByLabel:dict = self.__buildLabelDict(solution)
+        loopsInformation = self.DSEconfig['nested_loops']
+        #check if a pipeline is applied to a fully unrolled loop 
+        factorRegex = '\s-factor\s'
+        for item in directivesByLabel.values():
+            if 'pipeline' not in item or 'unroll' not in item:
+                pass
+            elif item['pipeline'] == '' or item['unroll'] == '':
+                pass
+            #if there isnt a factor argument on directive, then its fully unrolled    
+            elif re.search(factorRegex,item['unroll']) is None:
+                return True
+
+        for loop in loopsInformation:
+            #go to the most inner loop
+            innerLoop = loop
+            function = loop['function']
+            pipelineLoop=None
+            #get the loop that has pipeline active, if any
+            while innerLoop['nest']:
+                label = innerLoop['label']
+                key = function + '/' + label
+                item = directivesByLabel[key]
+                #if loop has pipeline
+                if 'pipeline' in item and item['pipeline'] != '':
+                    pipelineLoop = innerLoop
+                    break
+                innerLoop = innerLoop['nest']
+
+            #check if any of the subloops,of pipelined loop, has unroll or pipeline
+            if pipelineLoop is not None:
+                innerLoop = pipelineLoop
+                while innerLoop['nest']:
+                    innerLoop = innerLoop['nest']
+                    label = innerLoop['label']
+                    key = function + '/' + label
+                    item = directivesByLabel[key]
+                    #if inner loop has pipeline or unroll, return true
+                    if 'pipeline'in item or 'unroll' in item:
+                        if item['pipeline'] != '' or item['unroll'] != '':
+                            return True
+        return False 
+
+
     def getCachedSoltuion(self,solution:Solution):
         """
         get especified solution from self.solutions if it exists.
         check tree of solution directives to know if solution exists already in self.solutions
         """
         pass
+
     def saveSolution(self,solution):
         deep = copy.deepcopy(solution)   
         #if get cached solution
@@ -121,6 +168,8 @@ class Heuristic(ABC):
         """
         Calls synthesis and, if its successful, it saves solution in self.solutions.
         """
+        if self.bypass(solution):
+            raise Exception("Design has redundant directives") 
         try:
             solution.runSynthesis(timeLimit)
         except Exception as e:

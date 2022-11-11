@@ -11,6 +11,7 @@
 #         segundo tipo de diretiva:     [0 |1 |2]  [1]
 #E vai indo, os numeros representam qual diretiva foi usada das possiveis diretivas daquele tipo. "0" representa None (sem aquela diretiva)
 #---------------------------------------------------------------------------------------------------------------------------------------
+import json
 import time
 from heuristic import Heuristic
 from pathlib import Path
@@ -19,6 +20,7 @@ from Script_tcl import generateScript
 import copy
 from random import seed
 from random import randint
+
 
 class RandomSearch(Heuristic):
     
@@ -49,18 +51,14 @@ class RandomSearch(Heuristic):
             return None
 
     def createSolutionsDict(self):
-        dictDir=self.parsedTxt() 
-        solutionsDict = {}
         onePermutation = {}
-        
-        solutionIndex=0
         generateScript(self.cFiles, self.prjFile)
         inTime = True
         totalTime = 0
         while inTime:
             start = time.time()
             
-            onePermutation = self.__generateRandomPermutation(dictDir)
+            onePermutation = self.__generateRandomPermutation(self.dictDir)
             if onePermutation:    #se tiver uma permutacao na variavel
                 solution = Solution(onePermutation,self.cFiles,self.prjFile)         #Solutions a partir deste
                 try:

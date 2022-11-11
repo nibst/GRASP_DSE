@@ -1,12 +1,6 @@
-from importlib.metadata import PathDistribution, files
-from re import S
-from xml.dom.minidom import Element
 from heuristic import Heuristic
-from pathlib import Path
 from solution import Solution
 from Script_tcl import generateScript
-
-from datetime import timedelta
 
 import copy
 
@@ -22,21 +16,21 @@ class HillClimbing(Heuristic):
         super().__init__(filesDict, outPath)    
         self.createSolutionsDict()
     def createSolutionsDict(self):
-        dictDir=self.parsedTxt() 
+        
         solutionsDict = {}
         txlDict = {}
-        final = dict.fromkeys(dictDir,None) #Cria um dicionário 'final' a partir do 'dictDir' mas 
+        final = dict.fromkeys(self.dictDir,None) #Cria um dicionário 'final' a partir do 'dictDir' mas 
                                                 #mantendo apenas os títulos das diretivas - seu valores são
                                                 #trocados por None
         
         solutionIndex=0
         generateScript(self.cFiles, self.prjFile)
         
-        for diretiva in dictDir:  
+        for diretiva in self.dictDir:  
             
             bestResourcesxLatency = float('inf') #infinito
             ##print(dictDir[diretiva])
-            for option in dictDir[diretiva]:     
+            for option in self.dictDir[diretiva]:     
                 
                 if option == '':
                     option = None

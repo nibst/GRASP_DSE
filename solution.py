@@ -15,8 +15,8 @@ class Solution:
     _FF_VALUE = 1; _LUT_VALUE = 2; _DSP_VALUE = 345.68; _BRAM_VALUE = 547.33
     
     
-    def __init__(self,diretivas:dict, cFile, prjFile):
-        self.diretivas = copy.deepcopy(diretivas)
+    def __init__(self,directives:dict, cFile, prjFile):
+        self.directives = copy.deepcopy(directives)
         self.cFile = cFile
         self.prjFile = prjFile
         if sys.platform == 'win32':
@@ -35,7 +35,7 @@ class Solution:
         """
         set directives used in this solution
         """
-        self.diretivas = copy.deepcopy(directives)
+        self.directives = copy.deepcopy(directives)
 
     def setOneResult(self,key,value):
         for resultKey in self.resultados:
@@ -50,7 +50,7 @@ class Solution:
                 
     def __writeDirectivesIntoFile(self):
         directivesFile = open(self._DIRECTIVES_FILENAME, "w")
-        for value in self.diretivas.values():
+        for value in self.directives.values():
             if value != '' and value is not None:
                 directivesFile.write(value + '\n')
             print(value)

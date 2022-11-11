@@ -1,10 +1,8 @@
 import argparse
 import time
-from tkinter import EXCEPTION
 from RandomSearch import RandomSearch
 from estimator import Estimator
 from heuristic import Heuristic
-from pathlib import Path
 from randomForest import RandomForestEstimator
 from solution import Solution
 from Script_tcl import generateScript
@@ -25,7 +23,7 @@ class GRASP(Heuristic):
         self.estimator.trainModel(sample.solutions)
         for solution in sample.solutions.values():
             self.saveSolution(solution)
-        self.dictDir =self.parsedTxt()
+        
         random.seed(seed)
         self.start = None
         self.createSolutionsDict()
@@ -83,7 +81,7 @@ class GRASP(Heuristic):
             resourcesXlatency=  candidate.resultados['resources'] * candidate.resultados['latency']
             if  resourcesXlatency < (1+self.alpha)*bestResourcesXLatency:
                 #append only the directive string
-                RCL.append(candidate.diretivas[directiveGroup])
+                RCL.append(candidate.directives[directiveGroup])
         return RCL
 
 
@@ -129,9 +127,9 @@ class GRASP(Heuristic):
         neighbors = [] #in resources x latency
         
         for directiveGroup in self.dictDir.keys():
-            neighborDirectives = copy.deepcopy(solution.diretivas)
+            neighborDirectives = copy.deepcopy(solution.directives)
             for directive in self.dictDir[directiveGroup]:
-                if solution.diretivas[directiveGroup] != directive:
+                if solution.directives[directiveGroup] != directive:
                     neighborDirectives[directiveGroup] = directive
                     neighborSolution = Solution(neighborDirectives,self.cFiles,self.prjFile)
                     estimatedResults = self.estimator.estimateSynthesis(neighborSolution)
