@@ -14,7 +14,7 @@ import random
 class GRASP(Heuristic):
     
     TRAIN_TIME = 900 #3h
-    def __init__(self,filesDict,outPath,model:Estimator,timeLimit=43200,seed=0):
+    def __init__(self,filesDict,outPath,model:Estimator,timeLimit=43200,saveInterval = 900,seed=0):
         super().__init__(filesDict, outPath)
         self._SECONDS = timeLimit
         self.alpha = 0.7
@@ -26,6 +26,7 @@ class GRASP(Heuristic):
         
         random.seed(seed)
         self.start = None
+        self.saveInterval = saveInterval#every 'saveInterval' time, save solutions in a file
         self.createSolutionsDict()
        
     
@@ -46,11 +47,16 @@ class GRASP(Heuristic):
 
         """
         self.start = time.time()
+        numSaves = 0 # number of times that all solutions were saved
         generateScript(self.cFiles, self.prjFile)
         end = time.time()
         #for i in range(iterations):
         while end-self.start <= self._SECONDS:
             solution = self.constructGreedyRandomizedSolution()
+            #save all current solutions 
+            if (time.time() - self.start)/self.saveInterval >= numSaves + 1:
+                self.writeToFile(f'timeStamp{numSaves}')
+                numSaves+=1
             #repair solution?
             solution = self.localSearch(solution)
             end = time.time()
@@ -104,12 +110,25 @@ class GRASP(Heuristic):
         solutionToBuild = dict.fromkeys(self.dictDir,'') #Cria um dicionário 'diretivas' a partir do 'dictDir' mas 
                                                         #mantendo apenas os títulos das diretivas - seu valores são
                                                         #trocados por None
-        directiveGroups = list(self.dictDir.keys())                                                
+        directiveGroups = list(self.dictDir.keys()) 
+                                                       
         random.shuffle(directiveGroups)
         for directiveGroup in directiveGroups:
             RCL = self.makeRCL(directiveGroup,solutionToBuild)
             s = random.choice(RCL)
             solutionToBuild[directiveGroup] = s
+
+            #while design is redundant, chose another option for solution
+            i = 0
+            random.shuffle(RCL)
+            while(self.isRedundantDesign(solutionToBuild) and i<len(RCL)):
+                solutionToBuild[directiveGroup] = RCL[i]
+                i+=1
+            #if all RCL options are redundant, choose empty option ''(no directive)
+            if self.isRedundantDesign(solutionToBuild) and  i == len(RCL):
+                solutionToBuild[directiveGroup] = ''
+
+
         constructedSolution = Solution(solutionToBuild,self.cFiles,self.prjFile)
         try:
             synthesisTimeLimit = self._SECONDS - (time.time() - self.start) 
@@ -160,25 +179,3 @@ class GRASP(Heuristic):
             self.estimator.trainModel(topSynthesis)
             topSolution = max(topSynthesis,key=lambda k: k.resultados['resources'] * k.resultados['latency'])    
         return topSolution
-
-
-if __name__ == '__main__':
-        
-    #Initialize parser
-    parser = argparse.ArgumentParser()
-
-    # Adding argument
-    parser.add_argument("-c", "--cFiles", help = "C input files list", required=True, nargs='+')
-    parser.add_argument("-d", "--dFile", help = "Directives input file",required=True)
-    parser.add_argument("-p", "--prjFile", help = "Prj. top file",required=True)
-
- 
-    # Read arguments from command line
-    args = parser.parse_args()
-    
-    filesDict = {}
-    filesDict['cFiles'] = args.cFiles
-    filesDict['dFile'] = args.dFile
-    filesDict['prjFile'] = args.prjFile
-    model = RandomForestEstimator(filesDict['dFile'])
-    grasp = GRASP(filesDict,'directives.tcl',model)

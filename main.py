@@ -1,4 +1,5 @@
 from ast import arguments, dump
+from pathlib import Path
 from pickle import TRUE
 from random import sample
 from re import X
@@ -24,7 +25,9 @@ from preProcessor import PreProcessor
 from sklearn.model_selection import train_test_split
 from m5pEstimator import M5PrimeEstimator
 import json
+import readDirectivesFile
 if __name__ == "__main__":
+    
     
     
     #Initialize parser
@@ -32,8 +35,9 @@ if __name__ == "__main__":
  
     # Adding argument
     parser.add_argument("-c", "--cFiles", help = "C input files list", required=TRUE, nargs='+')
-    parser.add_argument("-d", "--dFile", help = "Directives input file",required=TRUE)
+    parser.add_argument("-d", "--dFile", help = "Directives input file",required=TRUE,nargs='+')
     parser.add_argument("-p", "--prjFile", help = "Prj. top file",required=TRUE)
+    
 
  
     # Read arguments from command line
@@ -43,7 +47,15 @@ if __name__ == "__main__":
     filesDict['cFiles'] = args.cFiles
     filesDict['dFile'] = args.dFile
     filesDict['prjFile'] = args.prjFile
-    
+
+    for file in filesDict['dFile']:
+        directivesTxt = Path(file).read_text()
+        dictDir = readDirectivesFile.fileParser(directivesTxt)
+        total = 1
+        print(file)
+        for listOFDirectives in dictDir.values():
+            total*=len(listOFDirectives)
+        print(total)
     RESOURCE_TO_COMPARE = 'resources'
     model = RandomForestEstimator(filesDict['dFile'])
     #heuristic = HillClimbing(filesDict,'directives.tcl')

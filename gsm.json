@@ -1,0 +1,95 @@
+{
+    "directives":
+        {   
+            "unroll gsm_div_label0": {
+                "possible_directives":["","set_directive_unroll \"gsm_div/gsm_div_label0\""],
+                "function":"gsm_div",
+                "label": "gsm_div_label0",
+                "directive_type":"unroll"
+            },
+            "array_partition gsm_norm":{
+                "possible_directives":[
+                    "",
+                    "set_directive_array_partition -type complete -dim 1 \"gsm_norm\" bitoff",
+                    "set_directive_array_partition -type block -factor 2 -dim 1 \"gsm_norm\" bitoff",
+                    "set_directive_array_partition -type block -factor 4 -dim 1 \"gsm_norm\" bitoff",
+                    "set_directive_array_partition -type block -factor 8 -dim 1 \"gsm_norm\" bitoff",
+                    "set_directive_array_partition -type block -factor 16 -dim 1 \"gsm_norm\" bitoff",
+                    "set_directive_array_partition -type cyclic -factor 2 -dim 1 \"gsm_norm\" bitoff",
+                    "set_directive_array_partition -type cyclic -factor 4 -dim 1 \"gsm_norm\" bitoff",
+                    "set_directive_array_partition -type cyclic -factor 8 -dim 1 \"gsm_norm\" bitoff",
+                    "set_directive_array_partition -type cyclic -factor 16 -dim 1 \"gsm_norm\" bitoff"],
+                "function":"gsm_norm",
+                "label":"",
+                "variable": "bitoff",
+                "directive_type":"array_partition"
+            },
+            "array_partition main inData":{
+                "possible_directives":[
+                    "",
+                    "set_directive_array_partition -type complete -dim 1 \"main\" inData",
+                    "set_directive_array_partition -type block -factor 2 -dim 1 \"main\" inData",
+                    "set_directive_array_partition -type block -factor 4 -dim 1 \"main\" inData",
+                    "set_directive_array_partition -type block -factor 8 -dim 1 \"main\" inData",
+                    "set_directive_array_partition -type block -factor 16 -dim 1 \"main\" inData",
+                    "set_directive_array_partition -type cyclic -factor 2 -dim 1 \"main\" inData",
+                    "set_directive_array_partition -type cyclic -factor 4 -dim 1 \"main\" inData",
+                    "set_directive_array_partition -type cyclic -factor 8 -dim 1 \"main\" inData",
+                    "set_directive_array_partition -type cyclic -factor 16 -dim 1 \"main\" inData"],
+                "function":"main",
+                "label":"",
+                "variable": "inData",
+                "directive_type":"array_partition"
+            },
+            "unroll gsm_div_label0": {
+                "possible_directives":["","set_directive_pipeline \"main/main_label0\""],
+                "function":"main",
+                "label": "main_label0",
+                "directive_type":"pipeline"
+            },
+            "unroll gsm_div_label0": {
+                "possible_directives":["","set_directive_pipeline \"main/main_label0\""],
+                "function":"main",
+                "label": "main_label0",
+                "directive_type":"pipeline"
+            },
+            "unroll gsm_div_label0": {
+                "possible_directives":["","set_directive_pipeline \"main/main_label0\""],
+                "function":"main",
+                "label": "main_label0",
+                "directive_type":"pipeline"
+            },
+            "unroll gsm_div_label0": {
+                "possible_directives":["","set_directive_pipeline \"main/main_label0\""],
+                "function":"main",
+                "label": "main_label0",
+                "directive_type":"pipeline"
+            },
+            
+        }
+}
+
+
+
+*
+array_partition main inData
+
+*
+array_partition main outData
+set_directive_array_partition -type complete -dim 1 "main" outData
+set_directive_array_partition -type block -factor 2 -dim 1 "main" outData
+set_directive_array_partition -type block -factor 4 -dim 1 "main" outData
+set_directive_array_partition -type block -factor 8 -dim 1 "main" outData
+set_directive_array_partition -type block -factor 16 -dim 1 "main" outData
+set_directive_array_partition -type cyclic -factor 2 -dim 1 "main" outData
+set_directive_array_partition -type cyclic -factor 4 -dim 1 "main" outData
+set_directive_array_partition -type cyclic -factor 8 -dim 1 "main" outData
+set_directive_array_partition -type cyclic -factor 16 -dim 1 "main" outData
+*
+unroll Autocorrelation_label0
+set_directive_unroll "Autocorrelation/Autocorrelation_label0"
+set_directive_unroll -factor 3 "Autocorrelation/Autocorrelation_label0"
+set_directive_unroll -factor 10 "Autocorrelation/Autocorrelation_label0"
+set_directive_unroll -factor 30 "Autocorrelation/Autocorrelation_label0"
+set_directive_unroll -factor 60 "Autocorrelation/Autocorrelation_label0"
+*

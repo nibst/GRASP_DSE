@@ -99,10 +99,13 @@ class GA(Heuristic):
                 parentPairs = self.selector(population)
                 pairIndex = 0
                 parent1,parent2 = parentPairs[pairIndex]
-                
-   
             offspring = self.crossover(parent1,parent2)
-            offspring = self.mutation(offspring)
+            offspring = self.mutation(offspring)    
+            i = 0
+            while(self.isRedundantDesign(offspring.directives) and i < len(self.dictDir) + 5): #i < any number, just to dont get a infinite loop
+                offspring = self.crossover(parent1,parent2)
+                offspring = self.mutation(offspring)
+                i+=1
 
             estimatedResults = self.estimator.estimateSynthesis(offspring)
             offspring.setResultados(estimatedResults)

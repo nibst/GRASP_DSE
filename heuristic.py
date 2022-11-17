@@ -6,6 +6,7 @@ import readDirectivesFile
 from pathlib import Path
 import os,glob
 import json
+import pickle
 
 
 class Heuristic(ABC):
@@ -36,6 +37,10 @@ class Heuristic(ABC):
     @abstractmethod                         # Método abstrato a sere herdados e implementado
     def createSolutionsDict(self):           # pelas classes filhas
         pass
+
+    def writeToFile(self,filename):
+        with open(filename, 'wb') as solutionsFile:
+            pickle.dump(self, solutionsFile)
 
     def dominateInBothMetrics(self,Solution1,Solution2,metric1,metric2):
         #testa se a Solution1  domina a Solution2
@@ -74,7 +79,7 @@ class Heuristic(ABC):
             paretos[count] = solutions[paretoSolutionIndex]
         return paretos
 
-    def __buildLabelDict(self,solution:Solution):
+    def __buildLabelDict(self,directives:dict):
         """
         returns a dictionary that the keys are the spots of application of directives
         (the function where the label is + '/' + the name of label) and the values are
@@ -82,18 +87,20 @@ class Heuristic(ABC):
         """
         newDict:dict = {}
         directivesInformation = self.DSEconfig['directives']
-        for directiveGroup in solution.directives:
+        for directiveGroup in directives:
             label = directivesInformation[directiveGroup]['label']
             function = directivesInformation[directiveGroup]['function']
             key = function + '/' + label
             directiveType = directivesInformation[directiveGroup]['directive_type']
             if key not in newDict:
                 newDict[key] = {}
-            newDict[key][directiveType] =solution.directives[directiveGroup]
+            newDict[key][directiveType] =directives[directiveGroup]
         return newDict
-    def bypass(self,solution:Solution):
+
+    #TODO maybe is a function of class Solution
+    def isRedundantDesign(self,directives:dict):
         """
-        bypass a certain design based on some redundancies effects of the applied directives
+        verifies if a certain design have some redundancies with the applied directives
         
         If pipeline is active for a certain loop level, all its subloops are automatically unrolled. 
         Thus all design points that apply unroll pragmas to automatically unrolled loops are considered redundant and excluded.
@@ -104,7 +111,7 @@ class Heuristic(ABC):
         where pipeline is active for a fully unrolled level,
         since there will be no actual loop to implement pipeline in this case
         """
-        directivesByLabel:dict = self.__buildLabelDict(solution)
+        directivesByLabel:dict = self.__buildLabelDict(directives)
         loopsInformation = self.DSEconfig['nested_loops']
         #check if a pipeline is applied to a fully unrolled loop 
         factorRegex = '\s-factor\s'
@@ -168,8 +175,6 @@ class Heuristic(ABC):
         """
         Calls synthesis and, if its successful, it saves solution in self.solutions.
         """
-        if self.bypass(solution):
-            raise Exception("Design has redundant directives") 
         try:
             solution.runSynthesis(timeLimit)
         except Exception as e:
