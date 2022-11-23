@@ -13,7 +13,7 @@ import random
 
 class GRASP(Heuristic):
     
-    TRAIN_TIME = 900 #3h
+    TRAIN_TIME = 1 #3h
     def __init__(self,filesDict,outPath,model:Estimator,timeLimit=43200,saveInterval = 900,seed=0):
         super().__init__(filesDict, outPath)
         self._SECONDS = timeLimit
@@ -61,7 +61,7 @@ class GRASP(Heuristic):
             solution = self.localSearch(solution)
             end = time.time()
 
-    def makeRCL(self,directiveGroup:str,solutionToBuild:dict):
+    def makeRCL(self,directiveGroup:str,solutionToBuild:dict,dictDir:dict):
         """
         Enters in RCL if candidate resource X latency is below
         (1+alpha)*min(resourceXlatency of all canidates)
@@ -70,7 +70,7 @@ class GRASP(Heuristic):
         candidates = [] 
         bestResourcesXLatency = float('inf')
         #take all candidates
-        for directive in self.dictDir[directiveGroup]:
+        for directive in dictDir[directiveGroup]:
             solutionToBuild[directiveGroup] = directive
             candidate = Solution(solutionToBuild,self.cFiles,self.prjFile)
             estimatedResults = self.estimator.estimateSynthesis(candidate)
@@ -90,7 +90,7 @@ class GRASP(Heuristic):
                 RCL.append(candidate.directives[directiveGroup])
         return RCL
 
-
+    
     def constructGreedyRandomizedSolution(self):
         """
         procedure Greedy Randomized Construction(Seed)
@@ -111,23 +111,13 @@ class GRASP(Heuristic):
                                                         #mantendo apenas os títulos das diretivas - seu valores são
                                                         #trocados por None
         directiveGroups = list(self.dictDir.keys()) 
-                                                       
+        dictDirCopy = copy.deepcopy(self.dictDir)
         random.shuffle(directiveGroups)
         for directiveGroup in directiveGroups:
-            RCL = self.makeRCL(directiveGroup,solutionToBuild)
+            RCL = self.makeRCL(directiveGroup,solutionToBuild,dictDirCopy)
             s = random.choice(RCL)
             solutionToBuild[directiveGroup] = s
-
-            #while design is redundant, chose another option for solution
-            i = 0
-            random.shuffle(RCL)
-            while(self.isRedundantDesign(solutionToBuild) and i<len(RCL)):
-                solutionToBuild[directiveGroup] = RCL[i]
-                i+=1
-            #if all RCL options are redundant, choose empty option ''(no directive)
-            if self.isRedundantDesign(solutionToBuild) and  i == len(RCL):
-                solutionToBuild[directiveGroup] = ''
-
+            self.__removeRedundantDirectives(dictDirCopy,directiveGroup,s)
 
         constructedSolution = Solution(solutionToBuild,self.cFiles,self.prjFile)
         try:
@@ -140,7 +130,21 @@ class GRASP(Heuristic):
 
         return constructedSolution
 
-        
+    def __removeRedundantDirectives(self,dictDir:dict,directiveGroup,directive):
+        solution = dict.fromkeys(self.dictDir,'')
+        solution[directiveGroup] = directive
+        for group in dictDir.keys():
+            if group is not directiveGroup:
+                for dir in dictDir[group]:
+                    solution[group] = dir
+                    if self.isRedundantDesign(solution):
+                        print(f'removed: {dir}')
+                        print(f'current: {directiveGroup}:{directive}')
+                        dictDir[group].remove(dir)
+                    solution[group] = ''
+ 
+        return dictDir
+
 
     def localSearch(self,solution:Solution):
         neighbors = [] #in resources x latency
@@ -179,3 +183,24 @@ class GRASP(Heuristic):
             self.estimator.trainModel(topSynthesis)
             topSolution = max(topSynthesis,key=lambda k: k.resultados['resources'] * k.resultados['latency'])    
         return topSolution
+
+if __name__ == '__main__':
+        
+    #Initialize parser
+    parser = argparse.ArgumentParser()
+
+    # Adding argument
+    parser.add_argument("-c", "--cFiles", help = "C input files list", required=True, nargs='+')
+    parser.add_argument("-d", "--dFile", help = "Directives input file",required=True)
+    parser.add_argument("-p", "--prjFile", help = "Prj. top file",required=True)
+
+ 
+    # Read arguments from command line
+    args = parser.parse_args()
+    
+    filesDict = {}
+    filesDict['cFiles'] = args.cFiles
+    filesDict['dFile'] = args.dFile
+    filesDict['prjFile'] = args.prjFile
+    model = RandomForestEstimator(filesDict['dFile'])
+    grasp = GRASP(filesDict,'directives.tcl',model,50)
