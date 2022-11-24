@@ -35,7 +35,7 @@ if __name__ == "__main__":
  
     # Adding argument
     parser.add_argument("-c", "--cFiles", help = "C input files list", required=TRUE, nargs='+')
-    parser.add_argument("-d", "--dFile", help = "Directives input file",required=TRUE,nargs='+')
+    parser.add_argument("-d", "--dFile", help = "Directives input file",required=TRUE)
     parser.add_argument("-p", "--prjFile", help = "Prj. top file",required=TRUE)
     
 
@@ -48,19 +48,12 @@ if __name__ == "__main__":
     filesDict['dFile'] = args.dFile
     filesDict['prjFile'] = args.prjFile
 
-    for file in filesDict['dFile']:
-        directivesTxt = Path(file).read_text()
-        dictDir = readDirectivesFile.fileParser(directivesTxt)
-        total = 1
-        print(file)
-        for listOFDirectives in dictDir.values():
-            total*=len(listOFDirectives)
-        print(total)
+    
     RESOURCE_TO_COMPARE = 'resources'
     model = RandomForestEstimator(filesDict['dFile'])
     #heuristic = HillClimbing(filesDict,'directives.tcl')
     #heuristic = Greedy(filesDict,'directives.tcl',RESOURCE_TO_COMPARE)
-    #heuristic = ExhaustiveSearch(filesDict,'directives.tcl')
+    heuristic = ExhaustiveSearch(filesDict,'directives.tcl')
     #heuristic = RandomSearch(filesDict,'directives.tcl')
     #heuristic = GreedyWithEstimator(filesDict,'directives.tcl')
     #heuristic = RandomSearchWithEstimator(filesDict, 'directives.tcl', model)
