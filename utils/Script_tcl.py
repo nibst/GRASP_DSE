@@ -10,12 +10,12 @@ def generateScript(cFile, prjFile):
      }
 
 
-     with open('script.tcl.txt', 'r') as f:
+     with open('./domain/script.tcl.txt', 'r') as f:
           src = Template(f.read())
      result = src.substitute(subtituicoes)
 
      # open text file
-     text_file = open('script.tcl' , 'w')
+     text_file = open('./domain/script.tcl' , 'w')
  
      # write string to file
      text_file.write(result)

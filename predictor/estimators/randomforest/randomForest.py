@@ -1,9 +1,8 @@
 from sklearn import ensemble
-from sklearn.preprocessing import Normalizer
 from predictor.estimators.estimator import Estimator
 from predictor.preprocessing.preProcessor import PreProcessor
 from domain.solution import Solution
-import utils.readDirectivesFile as readDirectivesFile
+
 
 class RandomForestEstimator(Estimator):
     

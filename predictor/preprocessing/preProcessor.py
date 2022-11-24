@@ -1,12 +1,15 @@
+import json
 import re
-import utils.readDirectivesFile as readDirectivesFile
-from pathlib import Path
 from domain.solution import Solution
 class PreProcessor():
     dataset = {} #será o dicionario de solucoes
     def __init__(self,directivesFile) -> None:
-        directivesTxt = Path(directivesFile).read_text()
-        self.possibleDirectives : dict = readDirectivesFile.fileParser(directivesTxt)
+        with open(directivesFile) as jsonFile:
+            self.DSEconfig:dict =  json.load(jsonFile)
+        directivesDict = self.DSEconfig['directives']
+        self.possibleDirectives: dict = {}
+        for key in directivesDict:
+            self.possibleDirectives[key] = directivesDict[key]['possible_directives']
 
     def process(self,dataset):
 
@@ -124,12 +127,12 @@ class PreProcessor():
 
     def __takeColumns(self):
         columnsDict = {}
-        featuresTypes = self.dataset[0].diretivas
+        featuresTypes = self.dataset[0].directives
 
         for directiveType in featuresTypes:
             featuresColumn = []
             for solutionIndex in range(len(self.dataset)):
-                featuresColumn.append(self.dataset[solutionIndex].diretivas[directiveType])
+                featuresColumn.append(self.dataset[solutionIndex].directives[directiveType])
             columnsDict[directiveType] = featuresColumn
         return columnsDict
 

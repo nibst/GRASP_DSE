@@ -3,8 +3,6 @@ from sklearn.base import RegressorMixin
 from predictor.estimators.estimator import Estimator
 from predictor.preprocessing.preProcessor import PreProcessor
 from domain.solution import Solution
-
-import utils.readDirectivesFile as readDirectivesFile
 from m5py import M5Prime
 import numpy as np
 class M5PrimeEstimator(Estimator):

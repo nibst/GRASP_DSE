@@ -1,9 +1,8 @@
 import argparse
 import time
-from RandomSearch import RandomSearch
+from heuristics.impl.RandomSearch import RandomSearch
 from predictor.estimators.estimator import Estimator
-from heuristic import Heuristic
-from pathlib import Path
+from heuristics.heuristic import Heuristic
 from predictor.estimators.randomforest.randomForest import RandomForestEstimator
 from domain.solution import Solution
 from utils.Script_tcl import generateScript
@@ -15,16 +14,21 @@ import random
 class GRASP(Heuristic):
     
     
-    #_SECONDS = 7200
-    def __init__(self,filesDict,outPath,model:Estimator,seed=0):
+    def __init__(self,filesDict,outPath,model:Estimator,timeLimit=43200,trainTime = 7200, saveInterval = None,seed=0):
         super().__init__(filesDict, outPath)
+        self.TRAIN_TIME = trainTime #3
+        self._SECONDS = timeLimit
         self.alpha = 0.7
-        sample = RandomSearch(filesDict, outPath)
+        sample = RandomSearch(filesDict, outPath,self.TRAIN_TIME,saveInterval=saveInterval)
         self.estimator = model
         self.estimator.trainModel(sample.solutions)
+        for solution in sample.solutions.values():
+            self.saveSolution(solution)
         
-        self.dictDir =self.parsedTxt()
         random.seed(seed)
+        self.start = None
+        
+        self.saveInterval = saveInterval#every 'saveInterval' time, save solutions in a file
         self.createSolutionsDict()
        
     
@@ -44,14 +48,23 @@ class GRASP(Heuristic):
         end GRASP.
 
         """
-        for i in range(iterations):
+        self.start = time.time()
+        numSaves = 0 # number of times that all solutions were saved
+        generateScript(self.cFiles, self.prjFile)
+        end = time.time()
+        #for i in range(iterations):
+        while end-self.start <= self._SECONDS:
             solution = self.constructGreedyRandomizedSolution()
+            #save all current solutions 
+            if self.saveInterval:
+                if (time.time() - self.start)/self.saveInterval >= numSaves + 1:
+                    self.writeToFile(f'./time_stamps/timeStampGRASP{numSaves}')
+                    numSaves+=1
             #repair solution?
             solution = self.localSearch(solution)
+            end = time.time()
 
-        generateScript(self.cFiles, self.prjFile)
-
-    def makeRCL(self,directiveGroup:str,solutionToBuild:dict):
+    def makeRCL(self,directiveGroup:str,solutionToBuild:dict,dictDir:dict):
         """
         Enters in RCL if candidate resource X latency is below
         (1+alpha)*min(resourceXlatency of all canidates)
@@ -60,7 +73,7 @@ class GRASP(Heuristic):
         candidates = [] 
         bestResourcesXLatency = float('inf')
         #take all candidates
-        for directive in self.dictDir[directiveGroup]:
+        for directive in dictDir[directiveGroup]:
             solutionToBuild[directiveGroup] = directive
             candidate = Solution(solutionToBuild,self.cFiles,self.prjFile)
             estimatedResults = self.estimator.estimateSynthesis(candidate)
@@ -77,10 +90,10 @@ class GRASP(Heuristic):
             resourcesXlatency=  candidate.resultados['resources'] * candidate.resultados['latency']
             if  resourcesXlatency < (1+self.alpha)*bestResourcesXLatency:
                 #append only the directive string
-                RCL.append(candidate.diretivas[directiveGroup])
+                RCL.append(candidate.directives[directiveGroup])
         return RCL
 
-
+    
     def constructGreedyRandomizedSolution(self):
         """
         procedure Greedy Randomized Construction(Seed)
@@ -100,15 +113,19 @@ class GRASP(Heuristic):
         solutionToBuild = dict.fromkeys(self.dictDir,'') #Cria um dicionário 'diretivas' a partir do 'dictDir' mas 
                                                         #mantendo apenas os títulos das diretivas - seu valores são
                                                         #trocados por None
-        directiveGroups = list(self.dictDir.keys())                                                
+        directiveGroups = list(self.dictDir.keys()) 
+        dictDirCopy = copy.deepcopy(self.dictDir)
         random.shuffle(directiveGroups)
         for directiveGroup in directiveGroups:
-            RCL = self.makeRCL(directiveGroup,solutionToBuild)
+            RCL = self.makeRCL(directiveGroup,solutionToBuild,dictDirCopy)
             s = random.choice(RCL)
             solutionToBuild[directiveGroup] = s
+            self.__removeRedundantDirectives(dictDirCopy,directiveGroup,s)
+
         constructedSolution = Solution(solutionToBuild,self.cFiles,self.prjFile)
         try:
-            self.synthesisWrapper(constructedSolution)
+            synthesisTimeLimit = self._SECONDS - (time.time() - self.start) 
+            self.synthesisWrapper(constructedSolution,synthesisTimeLimit)
         except Exception as error:
             print(error)
         else:
@@ -116,15 +133,29 @@ class GRASP(Heuristic):
 
         return constructedSolution
 
-        
+    def __removeRedundantDirectives(self,dictDir:dict,directiveGroup,directive):
+        solution = dict.fromkeys(self.dictDir,'')
+        solution[directiveGroup] = directive
+        for group in dictDir.keys():
+            if group is not directiveGroup:
+                for dir in dictDir[group]:
+                    solution[group] = dir
+                    if self.isRedundantDesign(solution):
+                        print(f'removed: {dir}')
+                        print(f'current: {directiveGroup}:{directive}')
+                        dictDir[group].remove(dir)
+                    solution[group] = ''
+ 
+        return dictDir
+
 
     def localSearch(self,solution:Solution):
         neighbors = [] #in resources x latency
         
         for directiveGroup in self.dictDir.keys():
-            neighborDirectives = copy.deepcopy(solution.diretivas)
+            neighborDirectives = copy.deepcopy(solution.directives)
             for directive in self.dictDir[directiveGroup]:
-                if solution.diretivas[directiveGroup] != directive:
+                if solution.directives[directiveGroup] != directive:
                     neighborDirectives[directiveGroup] = directive
                     neighborSolution = Solution(neighborDirectives,self.cFiles,self.prjFile)
                     estimatedResults = self.estimator.estimateSynthesis(neighborSolution)
@@ -139,18 +170,22 @@ class GRASP(Heuristic):
         topSynthesis = []
         while i < len(neighborsSorted):
             try:
-                self.synthesisWrapper(neighborsSorted[i])
+                synthesisTimeLimit = self._SECONDS - (time.time() - self.start)#totalTimeAvailable - timePassed
+                self.synthesisWrapper(neighborsSorted[i],synthesisTimeLimit)
             except Exception as error:
                 print(error)
             else:
+                
                 synthesisCount+=1
                 topSynthesis.append(neighborsSorted[i])
                 if synthesisCount == n:
                     break
-        
-        topSolution = max(topSynthesis,key=lambda k: k.resultados['resources'] * k.resultados['latency'])    
+            i+=1
+        topSolution=None
+        if topSynthesis:
+            self.estimator.trainModel(topSynthesis)
+            topSolution = max(topSynthesis,key=lambda k: k.resultados['resources'] * k.resultados['latency'])    
         return topSolution
-
 
 if __name__ == '__main__':
         
@@ -171,4 +206,4 @@ if __name__ == '__main__':
     filesDict['dFile'] = args.dFile
     filesDict['prjFile'] = args.prjFile
     model = RandomForestEstimator(filesDict['dFile'])
-    grasp = GRASP(filesDict,'directives.tcl',model)
+    grasp = GRASP(filesDict,'directives.tcl',model,50)

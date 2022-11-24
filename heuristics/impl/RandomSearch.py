@@ -11,8 +11,9 @@
 #         segundo tipo de diretiva:     [0 |1 |2]  [1]
 #E vai indo, os numeros representam qual diretiva foi usada das possiveis diretivas daquele tipo. "0" representa None (sem aquela diretiva)
 #---------------------------------------------------------------------------------------------------------------------------------------
+import json
 import time
-from heuristic import Heuristic
+from heuristics.heuristic import Heuristic
 from pathlib import Path
 from domain.solution import Solution
 from utils.Script_tcl import generateScript
@@ -20,13 +21,17 @@ import copy
 from random import seed
 from random import randint
 
+
 class RandomSearch(Heuristic):
-    _SECONDS = 1 #5 dias
-    def __init__(self,filesDict,outPath):
+    
+    def __init__(self,filesDict,outPath,timeLimit=3600,saveInterval = None):
         super().__init__(filesDict, outPath)
+        self.saveInterval = saveInterval
+        self._SECONDS = timeLimit
         self.controlTree:dict = {}
         self.createSolutionsDict()
-        
+        seed(1)
+
     def __generateRandomPermutation(self,dictDir:dict):
         node = self.controlTree
         newPermutation = {}
@@ -47,34 +52,33 @@ class RandomSearch(Heuristic):
             return None
 
     def createSolutionsDict(self):
-        dictDir=self.parsedTxt() 
-        solutionsDict = {}
         onePermutation = {}
-        
-        solutionIndex=0
         generateScript(self.cFiles, self.prjFile)
         inTime = True
-        #seed(1)
         totalTime = 0
+        numSaves=0
+        start = time.time()
         while inTime:
-            start = time.time()
-            
-            onePermutation = self.__generateRandomPermutation(dictDir)
+
+            onePermutation = self.__generateRandomPermutation(self.dictDir)
             if onePermutation:    #se tiver uma permutacao na variavel
                 solution = Solution(onePermutation,self.cFiles,self.prjFile)         #Solutions a partir deste
                 try:
-                    self.synthesisWrapper(solution)
+                    synthesisTimeLimit = self._SECONDS - (time.time() - start) 
+                    self.synthesisWrapper(solution,synthesisTimeLimit)
                 except Exception as e:
                     print(e)
                 #executa else qnd try roda sem erros
                 else:   
                     print(solution.resultados)                  
-                    print (solutionIndex)      
-                    solutionIndex+=1
+                    print (self.solutionIndex)      
 
             end = time.time()
-            totalTime += (end-start)
-            if totalTime >= self._SECONDS: 
+            if self.saveInterval:
+                if (end - start)/self.saveInterval >= numSaves + 1:
+                    self.writeToFile(f'./time_stamps/timeStampRandomSearch{numSaves}')
+                    numSaves+=1
+            if end - start >= self._SECONDS: 
                 break                
                         
 

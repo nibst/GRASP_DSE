@@ -192,6 +192,7 @@
                 "function":"Reflection_coefficients",
                 "label": "Reflection_coefficients_label4",
                 "directive_type":"unroll"
+<<<<<<< HEAD
             },
             "pipeline Reflection_coefficients_label5": {
                 "possible_directives":["","set_directive_pipeline \"Reflection_coefficients_label5\""],
@@ -218,6 +219,8 @@
                 "function":"Reflection_coefficients",
                 "label": "Reflection_coefficients_label6",
                 "directive_type":"unroll"
+=======
+>>>>>>> 0b0a9cc (packages)
             }
            
         },

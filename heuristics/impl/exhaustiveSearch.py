@@ -1,4 +1,4 @@
-from heuristic import Heuristic
+from heuristics.heuristic import Heuristic
 from pathlib import Path
 from domain.solution import Solution
 from utils.Script_tcl import generateScript
@@ -20,14 +20,13 @@ class ExhaustiveSearch(Heuristic):
 
     def createSolutionsDict(self):
         
-        dictDir=self.parsedTxt() 
         solutionsDict = {}
                     
         
         solutionIndex=1
         generateScript(self.cFiles, self.prjFile)
         
-        keys,values = zip(*dictDir.items())
+        keys,values = zip(*self.dictDir.items())
         totalTime = 0
         for permutation in itertools.product(*values):
             start = time.time()

@@ -18,6 +18,7 @@
             "console": "integratedTerminal",
             "justMyCode": true,
 <<<<<<< HEAD
+<<<<<<< HEAD
             "args": ["-c", "./benchmarks/sha/sha.c", "./benchmarks/sha/sha_driver.c", "-d", "arq_input_aes.txt", "arq_input_digit_recognition.txt","arq_input_firewall.txt", "arq_input_span_filter.txt" , "arq_input_gsm.txt", "arq_input_sha.txt", "-p", "sha_stream"],
         
             
@@ -25,6 +26,9 @@
 =======
             "args": ["-c", "./benchmarks/sha/sha.c", "./benchmarks/sha/sha_driver.c", "-d", "arq_input_sha.txt", "-p", "sha_stream"],
 >>>>>>> 799798d (começando a organizar)
+=======
+            "args": ["-c", "./benchmarks/sha/sha.c", "./benchmarks/sha/sha_driver.c", "-d", "sha.json", "-p", "sha_stream"],
+>>>>>>> 0b0a9cc (packages)
         }
     ]
 }

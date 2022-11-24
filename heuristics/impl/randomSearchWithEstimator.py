@@ -47,7 +47,7 @@ class RandomSearchWithEstimator(Heuristic):
             solutionIndex+=1
             sample.solutions[solutionIndex] = solution
         self.sample = sample
-        for solution in self.sample.solutions:
+        for solution in self.sample.solutions.values():
             self.saveSolution(solution)
         self.estimator = model
         self.estimator.trainModel(sample.solutions)
@@ -60,31 +60,31 @@ class RandomSearchWithEstimator(Heuristic):
             self.solutions[solutionIndex] = solution
         """
         
-    def __initializeControlTree(self,dictDir:dict,controlTree:dict):
+    def __initializeControlTree(self,controlTree:dict):
         #colocar as sinteses do sample aqui pra n rodar novamente
         
         for solution in self.sample.solutions.values():
             node = controlTree
-            for directiveType in solution.diretivas.keys():
-                directive=solution.diretivas[directiveType]
+            for directiveType in solution.directives.keys():
+                directive=solution.directives[directiveType]
                 if directive == None:
                     directive = ''
                 #a control tree representa cada diretiva como numero, na ordem do dictDir, ent pegar o numero
-                directiveIndex = dictDir[directiveType].index(directive) 
+                directiveIndex = self.dictDir[directiveType].index(directive) 
                 if directiveIndex in node:
                     node = node[directiveIndex]
                 else:
                     node[directiveIndex] = {} #cria nodo
                     node = node[directiveIndex]
 
-    def __generateRandomPermutation(self,dictDir:dict,controlTree:dict):
+    def __generateRandomPermutation(self,controlTree:dict):
         node = controlTree
         newPermutation = {}
         isNewPermutation = False #flag para verificar se é permutacao/solucao/design repetida ou nao
-        for directive in dictDir:              
-            domainLenght = len(dictDir[directive])   
+        for directive in self.dictDir:              
+            domainLenght = len(self.dictDir[directive])   
             randomDirective = randint(0,domainLenght-1)
-            newPermutation[directive] = dictDir[directive][randomDirective] 
+            newPermutation[directive] = self.dictDir[directive][randomDirective] 
             if randomDirective in node:
                 node = node[randomDirective]
             else:
@@ -96,12 +96,12 @@ class RandomSearchWithEstimator(Heuristic):
         else:
             return None
 
-    def __estimateTopSolutions(self,dictDir,controlTree):
+    def __estimateTopSolutions(self,controlTree):
         estimatedSolutions = []
         topSolutions = [] #top 10 solutions
         count = 0
         for i in range(self._NUM_OF_ESTIMATED):
-            onePermutation = self.__generateRandomPermutation(dictDir,controlTree)
+            onePermutation = self.__generateRandomPermutation(controlTree)
             if onePermutation:
                 estimatedSolution = Solution(onePermutation,self.cFiles,self.prjFile)         #Solutions a partir deste     
                 estimatedResults = self.estimator.estimateSynthesis(estimatedSolution)
@@ -123,9 +123,8 @@ class RandomSearchWithEstimator(Heuristic):
         topSolutions.remove(worstSolution)
 
     def createSolutionsDict(self):
-        dictDir=self.parsedTxt() 
         controlTree = {}
-        self.__initializeControlTree(dictDir,controlTree)
+        self.__initializeControlTree(controlTree)
         solutionIndex=0
         generateScript(self.cFiles, self.prjFile)
         inTime = True
@@ -134,11 +133,11 @@ class RandomSearchWithEstimator(Heuristic):
         start = time.time()
         medianScore = 0
         while inTime:
-            topEstimatedSolutions = self.__estimateTopSolutions(dictDir,controlTree)
+            topEstimatedSolutions = self.__estimateTopSolutions(controlTree)
             #print(topEstimatedSolutions) 
             topSynthesized = [] #synthesis of the top estimated solutions
             for estimatedSolution in topEstimatedSolutions:    
-                solution = Solution(estimatedSolution.diretivas,self.cFiles,self.prjFile)         #Solutions a partir deste
+                solution = Solution(estimatedSolution.directives,self.cFiles,self.prjFile)         #Solutions a partir deste
                 try:
                     self.synthesisWrapper(solution)
                 except Exception as e:

@@ -1,8 +1,8 @@
 import time
-from RandomSearch import RandomSearch
+from heuristics.impl.RandomSearch import RandomSearch
 from utils.Script_tcl import generateScript
 from predictor.estimators.estimator import Estimator
-from heuristic import Heuristic
+from heuristics.heuristic import Heuristic
 from domain.solution import Solution
 import copy
 import random
@@ -10,27 +10,25 @@ from sklearn.model_selection import train_test_split
 from typing import List
 
 class GA(Heuristic):
-    def __init__(self,filesDict,outPath,model:Estimator):
+    TRAIN_TIME = 1000
+    def __init__(self,filesDict,outPath,model:Estimator,timeLimit=43200):
         super().__init__(filesDict, outPath)
-        self.dictDir =self.parsedTxt()
+        self._SECONDS = timeLimit
         self.populationSize = 40 #any number
         self.numOffspringsDiscarded = 40 # exit criteria -> num of chromosomes/offsprings/individuals generated which do not improve any parent 
         self.estimator = model
         self.crossoverRate = 0.8 #any number between 0 and 1
         self.mutationRate = 0.1 #any number between 0 and 1
+        
+        random.seed(1)
 
         self.numOfGenes = len(self.dictDir.keys())
         self.listOfKeys = list(self.dictDir.keys()) #to use numbers (indexes of list) instead of strings in the algorithm logic
         self.chaceToOverwrite = 0.5 #probability of overwritting parent with offspring if offspring dominates in one of the objectives
-        self.new_model_interval = 40
-        start = time.time()
+        self.new_model_interval = 100
+        self.start = time.time()
         self.__new_predictive_model()
         self.finalPopulation = self.createSolutionsDict()
-        #synthesize final pareto population 
-        for i in range(len(self.finalPopulation)):
-            self.finalPopulation[i].runSynthesis()
-        end = time.time()
-        print(f"TEMPO: {end-start} segundos")
         
         
     def createSolutionsDict(self):
@@ -85,7 +83,6 @@ class GA(Heuristic):
 
         """
         generateScript(self.cFiles, self.prjFile)
-        random.seed(1)
         population = self.randomSample() #list of random Solutions (without their HLS results yet)
         interval = 0
          
@@ -94,6 +91,7 @@ class GA(Heuristic):
         parentPairs = self.selector(population)
         pairIndex = 0
         while len(discardedOffsprings) < self.numOffspringsDiscarded:
+
             try:
                 parent1,parent2 = parentPairs[pairIndex]
             except:
@@ -101,21 +99,40 @@ class GA(Heuristic):
                 parentPairs = self.selector(population)
                 pairIndex = 0
                 parent1,parent2 = parentPairs[pairIndex]
-                
-   
             offspring = self.crossover(parent1,parent2)
-            offspring = self.mutation(offspring)
+            offspring = self.mutation(offspring)    
+            i = 0
+            while(self.isRedundantDesign(offspring.directives) and i < len(self.dictDir) + 5): #i < any number, just to dont get a infinite loop
+                offspring = self.crossover(parent1,parent2)
+                offspring = self.mutation(offspring)
+                i+=1
 
             estimatedResults = self.estimator.estimateSynthesis(offspring)
             offspring.setResultados(estimatedResults)
             newParent1,newParent2 = self.overwriteParent(parent1,parent2,offspring)
 
             #if offspring dont overwrite neither of the parents
-            if newParent1.diretivas == parent1.diretivas and newParent2.diretivas == parent2.diretivas:
+            if newParent1.directives == parent1.directives and newParent2.directives == parent2.directives:
                 discardedOffsprings.append(offspring)
-            
+
             new_population.extend([newParent1,newParent2])
             
+            #synthesize parents that went to final pareto population 
+
+            synthesisTimeLimit = self._SECONDS - (time.time() - self.start) 
+            try:
+                self.synthesisWrapper(newParent1,synthesisTimeLimit)
+            except Exception as e:
+                print(e)
+
+            synthesisTimeLimit = self._SECONDS - (time.time() - self.start)  
+            try:
+                self.synthesisWrapper(newParent2,synthesisTimeLimit)
+            except Exception as e:
+                print(e) 
+
+            if (time.time() - self.start) >= self._SECONDS:
+                break
             pairIndex+=1
             interval+=1
             if interval % self.new_model_interval == 0:
@@ -128,8 +145,8 @@ class GA(Heuristic):
         #TODO arrumar, o score esta considerando so o treino do ultimo laço
         #maybe create new model, as deep copy of self.estimator
         score = -1
-        threshold = 0.70
-        sample = RandomSearch(self.filesDict, self.outPath)
+        threshold = 0.7
+        sample = RandomSearch(self.filesDict, self.outPath,self.TRAIN_TIME)
         while score < threshold:
             try:    
                 train, test = train_test_split(sample.solutions, test_size=0.2, random_state=0)
@@ -201,9 +218,9 @@ class GA(Heuristic):
         if random.random() < self.mutationRate:
             geneToMutate = random.randint(0,self.numOfGenes-1)
             gene = copy.deepcopy(self.dictDir[self.listOfKeys[geneToMutate]])#copy cause we gonna modify
-            gene.remove(individual.diretivas[self.listOfKeys[geneToMutate]]) #remove current gene value from the choices
+            gene.remove(individual.directives[self.listOfKeys[geneToMutate]]) #remove current gene value from the choices
             mutation = random.choice(gene)
-            individual.diretivas[self.listOfKeys[geneToMutate]] = mutation
+            individual.directives[self.listOfKeys[geneToMutate]] = mutation
         return individual
     
     def crossover(self,parent1,parent2):
@@ -216,7 +233,7 @@ class GA(Heuristic):
             for key in self.listOfKeys:
                 if key == cutPoint:
                     parent = parent2 #swap from which parent take genes
-                offspringDirectives[key] = parent.diretivas[key]
+                offspringDirectives[key] = parent.directives[key]
             offspring = Solution(offspringDirectives, self.cFiles, self.prjFile)
         else:
             offspring = copy.deepcopy(parent1)

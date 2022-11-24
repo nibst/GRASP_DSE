@@ -1,9 +1,9 @@
-from heuristic import Heuristic
+from heuristics.heuristic import Heuristic
 from pathlib import Path
 from domain.solution import Solution
 from utils.Script_tcl import generateScript
 import copy
-from RandomSearch import RandomSearch
+from heuristics.impl.RandomSearch import RandomSearch
 from predictor.preprocessing.preProcessor import PreProcessor
 from sklearn.model_selection import train_test_split
 from predictor.estimators.randomforest.randomForest import RandomForestEstimator

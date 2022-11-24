@@ -1,4 +1,4 @@
-from heuristic import Heuristic
+from heuristics.heuristic import Heuristic
 from pathlib import Path
 from domain.solution import Solution
 from utils.Script_tcl import generateScript
@@ -17,18 +17,17 @@ class Greedy(Heuristic):
 
     def createSolutionsDict(self):
         
-        dictDir=self.parsedTxt() 
         
-        final = dict.fromkeys(dictDir,None) #Cria um dicionário 'final' a partir do 'dictDir' mas 
+        final = dict.fromkeys(self.dictDir,None) #Cria um dicionário 'final' a partir do 'dictDir' mas 
                                                 #mantendo apenas os títulos das diretivas - seu valores são
                                                 #trocados por None
         generateScript(self.cFiles, self.prjFile)
 
-        for diretiva in dictDir: 
+        for diretiva in self.dictDir: 
             currentBest = None
             bestMetricxLatency = float('inf') #infinito
             
-            for option in dictDir[diretiva]:   
+            for option in self.dictDir[diretiva]:   
                 
                 if option == '':
                     option = None
