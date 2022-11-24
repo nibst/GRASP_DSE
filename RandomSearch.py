@@ -24,8 +24,9 @@ from random import randint
 
 class RandomSearch(Heuristic):
     
-    def __init__(self,filesDict,outPath,timeLimit=3600):
+    def __init__(self,filesDict,outPath,timeLimit=3600,saveInterval = None):
         super().__init__(filesDict, outPath)
+        self.saveInterval = saveInterval
         self._SECONDS = timeLimit
         self.controlTree:dict = {}
         self.createSolutionsDict()
@@ -55,9 +56,10 @@ class RandomSearch(Heuristic):
         generateScript(self.cFiles, self.prjFile)
         inTime = True
         totalTime = 0
+        numSaves=0
+        start = time.time()
         while inTime:
-            start = time.time()
-            
+
             onePermutation = self.__generateRandomPermutation(self.dictDir)
             if onePermutation:    #se tiver uma permutacao na variavel
                 solution = Solution(onePermutation,self.cFiles,self.prjFile)         #Solutions a partir deste
@@ -72,8 +74,11 @@ class RandomSearch(Heuristic):
                     print (self.solutionIndex)      
 
             end = time.time()
-            totalTime += (end-start)
-            if totalTime >= self._SECONDS: 
+            if self.saveInterval:
+                if (end - start)/self.saveInterval >= numSaves + 1:
+                    self.writeToFile(f'./time_stamps/timeStampRandomSearch{numSaves}')
+                    numSaves+=1
+            if end - start >= self._SECONDS: 
                 break                
                         
 

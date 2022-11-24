@@ -13,12 +13,13 @@ import random
 
 class GRASP(Heuristic):
     
-    TRAIN_TIME = 1 #3h
-    def __init__(self,filesDict,outPath,model:Estimator,timeLimit=43200,saveInterval = 900,seed=0):
+    
+    def __init__(self,filesDict,outPath,model:Estimator,timeLimit=43200,trainTime = 7200, saveInterval = None,seed=0):
         super().__init__(filesDict, outPath)
+        self.TRAIN_TIME = 1 #3
         self._SECONDS = timeLimit
         self.alpha = 0.7
-        sample = RandomSearch(filesDict, outPath,self.TRAIN_TIME)
+        sample = RandomSearch(filesDict, outPath,self.TRAIN_TIME,saveInterval=saveInterval)
         self.estimator = model
         self.estimator.trainModel(sample.solutions)
         for solution in sample.solutions.values():
@@ -26,6 +27,7 @@ class GRASP(Heuristic):
         
         random.seed(seed)
         self.start = None
+        
         self.saveInterval = saveInterval#every 'saveInterval' time, save solutions in a file
         self.createSolutionsDict()
        
@@ -54,9 +56,10 @@ class GRASP(Heuristic):
         while end-self.start <= self._SECONDS:
             solution = self.constructGreedyRandomizedSolution()
             #save all current solutions 
-            if (time.time() - self.start)/self.saveInterval >= numSaves + 1:
-                self.writeToFile(f'timeStamp{numSaves}')
-                numSaves+=1
+            if self.saveInterval:
+                if (time.time() - self.start)/self.saveInterval >= numSaves + 1:
+                    self.writeToFile(f'./time_stamps/timeStampGRASP{numSaves}')
+                    numSaves+=1
             #repair solution?
             solution = self.localSearch(solution)
             end = time.time()

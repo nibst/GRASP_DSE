@@ -53,22 +53,20 @@ if __name__ == "__main__":
     model = RandomForestEstimator(filesDict['dFile'])
     #heuristic = HillClimbing(filesDict,'directives.tcl')
     #heuristic = Greedy(filesDict,'directives.tcl',RESOURCE_TO_COMPARE)
-    heuristic = ExhaustiveSearch(filesDict,'directives.tcl')
+    #heuristic = ExhaustiveSearch(filesDict,'directives.tcl')
     #heuristic = RandomSearch(filesDict,'directives.tcl')
     #heuristic = GreedyWithEstimator(filesDict,'directives.tcl')
     #heuristic = RandomSearchWithEstimator(filesDict, 'directives.tcl', model)
 
 
-    heuristic1 = GA(filesDict,'directives.tcl',model,3600)
-    with open('./Plot/solutionsFile', 'wb') as solutionsFile:
-        pickle.dump(heuristic1, solutionsFile)
+    #heuristic1 = GA(filesDict,'directives.tcl',model,3600)
+
 
     model = RandomForestEstimator(filesDict['dFile'])
 
-    heuristic2 = GRASP(filesDict,'directives.tcl',model,3600)   
+    heuristic2 = GRASP(filesDict,'directives.tcl',model,timeLimit=5,trainTime=2,saveInterval=0.3)   
     #file para plotar o resultado do computador remoto, caso queira interagir com o plot ao invés de ser só um jpg
-    with open('./Plot/solutionsFile2', 'wb') as solutionsFile:
-        pickle.dump(heuristic2, solutionsFile)
+    heuristic2.writeToFile('./Plot/solutionsFile3')
 
     #with open("./Plot/solutionsFile",'rb') as file:
     #    heuristic1 = pickle.load(file)
@@ -77,12 +75,14 @@ if __name__ == "__main__":
     RESOURCE_TO_COMPARE = 'resources'
     ######################### GRAPH
     plt = PlotMaker("sha", RESOURCE_TO_COMPARE, 'latency')
-    plt.createPlot(heuristic1.solutions) #blue
+    #plt.createPlot(heuristic1.solutions) #blue
     plt.createPlot(heuristic2.solutions) 
-
+    '''
     comparer = ParetoComparer(RESOURCE_TO_COMPARE,'latency')
     print(comparer.compare(heuristic1,heuristic2))
     print(comparer.compare(heuristic2,heuristic1))
+    '''
+
     #   plt.createPlot(heuristic.finalPopulation)
     #paretoPlt = PlotMaker("paretos firewall", RESOURCE_TO_COMPARE, 'latency')
     #samplePLt = PlotMaker("sha", RESOURCE_TO_COMPARE, 'latency')
