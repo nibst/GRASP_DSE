@@ -41,55 +41,183 @@
                 "variable": "inData",
                 "directive_type":"array_partition"
             },
-            "unroll gsm_div_label0": {
+            "array_partition main outData": {
+                "possible_directives":["","set_directive_array_partition -type complete -dim 1 \"main\" outData",
+                "set_directive_array_partition -type block -factor 2 -dim 1 \"main\" outData",
+                "set_directive_array_partition -type block -factor 4 -dim 1 \"main\" outData",
+                "set_directive_array_partition -type block -factor 8 -dim 1 \"main\" outData",
+                "set_directive_array_partition -type block -factor 16 -dim 1 \"main\" outData",
+                "set_directive_array_partition -type cyclic -factor 2 -dim 1 \"main\" outData",
+                "set_directive_array_partition -type cyclic -factor 4 -dim 1 \"main\" outData",
+                "set_directive_array_partition -type cyclic -factor 8 -dim 1 \"main\" outData",
+                "set_directive_array_partition -type cyclic -factor 16 -dim 1 \"main\" outData"],
+                "function":"main",
+                "label": "",
+                "variable": "outData",
+                "directive_type":"array_partition"
+            },
+            "unroll Autocorrelation_label0": {
+                "possible_directives":["","set_directive_unroll \"Autocorrelation/Autocorrelation_label0\"",
+                "set_directive_unroll -factor 3 \"Autocorrelation/Autocorrelation_label0\"",
+                "set_directive_unroll -factor 10 \"Autocorrelation/Autocorrelation_label0\"",
+                "set_directive_unroll -factor 30 \"Autocorrelation/Autocorrelation_label0\"",
+                "set_directive_unroll -factor 60 \"Autocorrelation/Autocorrelation_label0\""],
+                "function":"Autocorrelation",
+                "label": "Autocorrelation_label0",
+                "directive_type":"unroll"
+            },
+            "unroll main_label0": {
+                "possible_directives":["","set_directive_unroll \"main/main_label0\"",
+                "set_directive_unroll -factor 3 \"main/main_label0\"",
+                "set_directive_unroll -factor 10 \"main/main_label0\"",
+                "set_directive_unroll -factor 30 \"main/main_label0\"",
+                "set_directive_unroll -factor 60 \"main/main_label0\""],
+                "function":"main",
+                "label": "main_label0",
+                "directive_type":"unroll"
+            },
+            "unroll main_label1": {
+                "possible_directives":["","set_directive_unroll \"main/main_label1\"",
+                "set_directive_unroll -factor 3 \"main/main_label1\"",
+                "set_directive_unroll -factor 10 \"main/main_label1\"",
+                "set_directive_unroll -factor 30 \"main/main_label1\"",
+                "set_directive_unroll -factor 60 \"main/main_label1\""],
+                "function":"main",
+                "label": "main_label1",
+                "directive_type":"unroll"
+            },
+            "pipeline main_label2": {
+                "possible_directives":["","set_directive_pipeline \"main/main_label2\""],
+                "function":"main",
+                "label": "main_label2",
+                "directive_type":"pipeline"
+            },
+            "pipeline main_label0": {
                 "possible_directives":["","set_directive_pipeline \"main/main_label0\""],
                 "function":"main",
                 "label": "main_label0",
                 "directive_type":"pipeline"
             },
-            "unroll gsm_div_label0": {
-                "possible_directives":["","set_directive_pipeline \"main/main_label0\""],
+            "pipeline main_label1": {
+                "possible_directives":["","set_directive_pipeline \"main/main_label1\""],
                 "function":"main",
-                "label": "main_label0",
+                "label": "main_label1",
                 "directive_type":"pipeline"
             },
-            "unroll gsm_div_label0": {
-                "possible_directives":["","set_directive_pipeline \"main/main_label0\""],
-                "function":"main",
-                "label": "main_label0",
+            "loop_merge Reflection_coefficients": {
+                "possible_directives":["","set_directive_loop_merge \"Reflection_coefficients\""],
+                "function":"Reflection_coefficients",
+                "label": "",
+                "directive_type":"loop_merge"
+            },
+            "pipeline Reflection_coefficients_label0": {
+                "possible_directives":["","set_directive_pipeline \"Reflection_coefficients_label0\""],
+                "function":"Reflection_coefficients",
+                "label": "Reflection_coefficients_label0",
                 "directive_type":"pipeline"
             },
-            "unroll gsm_div_label0": {
-                "possible_directives":["","set_directive_pipeline \"main/main_label0\""],
-                "function":"main",
-                "label": "main_label0",
+            "pipeline Reflection_coefficients_label1": {
+                "possible_directives":["","set_directive_pipeline \"Reflection_coefficients_label1\""],
+                "function":"Reflection_coefficients",
+                "label": "Reflection_coefficients_label1",
                 "directive_type":"pipeline"
             },
+            "pipeline Reflection_coefficients_label2": {
+                "possible_directives":["","set_directive_pipeline \"Reflection_coefficients_label2\""],
+                "function":"Reflection_coefficients",
+                "label": "Reflection_coefficients_label2",
+                "directive_type":"pipeline"
+            },
+            "pipeline Reflection_coefficients_label3": {
+                "possible_directives":["","set_directive_pipeline \"Reflection_coefficients_label3\""],
+                "function":"Reflection_coefficients",
+                "label": "Reflection_coefficients_label3",
+                "directive_type":"pipeline"
+            },
+            "unroll Reflection_coefficients_label0": {
+                "possible_directives":["",
+                "set_directive_unroll -factor 2 \"Reflection_coefficients_label0\"",
+                "set_directive_unroll -factor 4 \"Reflection_coefficients_label0\"",
+                "set_directive_unroll \"Reflection_coefficients_label0\""],
+                "function":"Reflection_coefficients",
+                "label": "Reflection_coefficients_label0",
+                "directive_type":"unroll"
+            },
+            "unroll Reflection_coefficients_label1": {
+                "possible_directives":["",
+                "set_directive_unroll -factor 2 \"Reflection_coefficients_label1\"",
+                "set_directive_unroll -factor 4 \"Reflection_coefficients_label1\"",
+                "set_directive_unroll \"Reflection_coefficients_label1\""],
+                "function":"Reflection_coefficients",
+                "label": "Reflection_coefficients_label1",
+                "directive_type":"unroll"
+            },
+            "unroll Reflection_coefficients_label2": {
+                "possible_directives":["",
+                "set_directive_unroll -factor 2 \"Reflection_coefficients_label2\"",
+                "set_directive_unroll -factor 4 \"Reflection_coefficients_label2\"",
+                "set_directive_unroll \"Reflection_coefficients_label2\""],
+                "function":"Reflection_coefficients",
+                "label": "Reflection_coefficients_label2",
+                "directive_type":"unroll"
+            },
+            "unroll Reflection_coefficients_label3": {
+                "possible_directives":["",
+                "set_directive_unroll -factor 2 \"Reflection_coefficients_label3\"",
+                "set_directive_unroll -factor 4 \"Reflection_coefficients_label3\"",
+                "set_directive_unroll \"Reflection_coefficients_label3\""],
+                "function":"Reflection_coefficients",
+                "label": "Reflection_coefficients_label3",
+                "directive_type":"unroll"
+            },
+
+            "loop_merge Reflection_coefficients_label4": {
+                "possible_directives":["","set_directive_loop_merge \"Reflection_coefficients/Reflection_coefficients_label4\""],
+                "function":"Reflection_coefficients",
+                "label": "Reflection_coefficients_label4",
+                "directive_type":"loop_merge"
+            },
+            "pipeline Reflection_coefficients_label4": {
+                "possible_directives":["","set_directive_pipeline \"Reflection_coefficients_label4\""],
+                "function":"Reflection_coefficients",
+                "label": "Reflection_coefficients_label4",
+                "directive_type":"pipeline"
+            },
+
+            "unroll Reflection_coefficients_label4": {
+                "possible_directives":["",
+                "set_directive_unroll -factor 2 \"Reflection_coefficients_label4\"",
+                "set_directive_unroll -factor 4 \"Reflection_coefficients_label4\"",
+                "set_directive_unroll \"Reflection_coefficients_label4\""],
+                "function":"Reflection_coefficients",
+                "label": "Reflection_coefficients_label4",
+                "directive_type":"unroll"
+            }
+           
+        },
+        "nested_loops":
+        [
+            {
+                "function":"Reflection_coefficients",
+                "label":"Reflection_coefficients_label4",
+                "nest": {
+                    "function":"Reflection_coefficients",
+                    "label":"Reflection_coefficients_label6",
+                    "nest": {}
+                }
+
+            },
+            {
+                "function":"Reflection_coefficients",
+                "label":"Reflection_coefficients_label4",
+                "nest": {
+                    "function":"Reflection_coefficients",
+                    "label":"Reflection_coefficients_label5",
+                    "nest": {}
+                }
+                
+            }
             
-        }
+        ]     
+
 }
-
-
-
-*
-array_partition main inData
-
-*
-array_partition main outData
-set_directive_array_partition -type complete -dim 1 "main" outData
-set_directive_array_partition -type block -factor 2 -dim 1 "main" outData
-set_directive_array_partition -type block -factor 4 -dim 1 "main" outData
-set_directive_array_partition -type block -factor 8 -dim 1 "main" outData
-set_directive_array_partition -type block -factor 16 -dim 1 "main" outData
-set_directive_array_partition -type cyclic -factor 2 -dim 1 "main" outData
-set_directive_array_partition -type cyclic -factor 4 -dim 1 "main" outData
-set_directive_array_partition -type cyclic -factor 8 -dim 1 "main" outData
-set_directive_array_partition -type cyclic -factor 16 -dim 1 "main" outData
-*
-unroll Autocorrelation_label0
-set_directive_unroll "Autocorrelation/Autocorrelation_label0"
-set_directive_unroll -factor 3 "Autocorrelation/Autocorrelation_label0"
-set_directive_unroll -factor 10 "Autocorrelation/Autocorrelation_label0"
-set_directive_unroll -factor 30 "Autocorrelation/Autocorrelation_label0"
-set_directive_unroll -factor 60 "Autocorrelation/Autocorrelation_label0"
-*
