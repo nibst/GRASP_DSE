@@ -209,15 +209,7 @@
         },
     "nested_loops":
         [
-            {
-                "function":"",
-                "label":"",
-                "nest": {
-                    "function":"",
-                    "label":"",
-                    "nest": {}
-                }
-            }
+            
         ]     
 
 }    
