@@ -59,22 +59,22 @@ Autocorrelation_label0: for (k = 0; k <= 159; k++)
     {
       temp = GSM_ABS (s[k]);
       if (temp > smax)
-	smax = temp;
+	      smax = temp;
     }
 
-  /*  Computation of the scaling factor.
-   */
-  if (smax == 0)
-    scalauto = 0;
-  else
-    scalauto = 4 - gsm_norm ((longword) smax << 16);	/* sub(4,..) */
+    /*  Computation of the scaling factor.
+    */
+    if (smax == 0)
+      scalauto = 0;
+    else
+      scalauto = 4 - gsm_norm ((longword) smax << 16);	/* sub(4,..) */
 
-  if (scalauto > 0 && scalauto <= 4)
-    {
-      n = scalauto;
-      for (k = 0; k <= 159; k++)
-	s[k] = GSM_MULT_R (s[k], 16384 >> (n - 1));
-    }
+    if (scalauto > 0 && scalauto <= 4)
+      {
+        n = scalauto;
+        for (k = 0; k <= 159; k++)
+           s[k] = GSM_MULT_R (s[k], 16384 >> (n - 1));
+      }
 
   /*  Compute the L_ACF[..].
    */
@@ -177,7 +177,7 @@ Reflection_coefficients (longword * L_ACF /* 0...8        IN      */ ,
   if (L_ACF[0] == 0)
     {
       Reflection_coefficients_label0:for (i = 8; i > 0; i--)
-	*r++ = 0;
+	      *r++ = 0;
       return;
     }
 
@@ -202,19 +202,19 @@ Reflection_coefficients (longword * L_ACF /* 0...8        IN      */ ,
       temp = P[1];
       temp = GSM_ABS (temp);
       if (P[0] < temp)
-	{
-	  Reflection_coefficients_label6:for (i = n; i <= 8; i++)
-    #pragma HLS LOOP_TRIPCOUNT min=1 max=8
-	    *r++ = 0;
-	  return;
-	}
+        {
+          Reflection_coefficients_label6:for (i = n; i <= 8; i++)
+          #pragma HLS LOOP_TRIPCOUNT min=1 max=8
+            *r++ = 0;
+          return;
+        }
 
       *r = gsm_div (temp, P[0]);
 
       if (P[1] > 0)
-	*r = -*r;		/* r[n] = sub(0, r[n]) */
+	    *r = -*r;		/* r[n] = sub(0, r[n]) */
       if (n == 8)
-	return;
+	    return;
 
       /*  Schur recursion
        */
@@ -222,15 +222,15 @@ Reflection_coefficients (longword * L_ACF /* 0...8        IN      */ ,
       P[0] = GSM_ADD (P[0], temp);
 
       Reflection_coefficients_label5:for (m = 1; m <= 8 - n; m++)
-	{
-    #pragma HLS LOOP_TRIPCOUNT min=1 max=7
-	  temp = GSM_MULT_R (K[m], *r);
-	  P[m] = GSM_ADD (P[m + 1], temp);
+        {
+          #pragma HLS LOOP_TRIPCOUNT min=1 max=7
+          temp = GSM_MULT_R (K[m], *r);
+          P[m] = GSM_ADD (P[m + 1], temp);
 
-	  temp = GSM_MULT_R (P[m + 1], *r);
-	  K[m] = GSM_ADD (K[m], temp);
-	}
-    }
+          temp = GSM_MULT_R (P[m + 1], *r);
+          K[m] = GSM_ADD (K[m], temp);
+        }
+;    }
 }
 
 /* 4.2.6 */

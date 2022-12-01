@@ -19,6 +19,7 @@
             "justMyCode": true,
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
             "args": ["-c", "./benchmarks/sha/sha.c", "./benchmarks/sha/sha_driver.c", "-d", "arq_input_aes.txt", "arq_input_digit_recognition.txt","arq_input_firewall.txt", "arq_input_span_filter.txt" , "arq_input_gsm.txt", "arq_input_sha.txt", "-p", "sha_stream"],
         
             
@@ -29,6 +30,12 @@
 =======
             "args": ["-c", "./benchmarks/sha/sha.c", "./benchmarks/sha/sha_driver.c", "-d", "sha.json", "-p", "sha_stream"],
 >>>>>>> 0b0a9cc (packages)
+=======
+            "args": ["-c", "./benchmarks/sha/sha.c", "./benchmarks/sha/sha_driver.c", "-d","aes.json", "-p", "sha_stream"],
+        
+            
+            //"python.pythonPath": "C:\\Users\\nikol\\AppData\\Local\\Programs\\Python\\Python310\\python.exe",
+>>>>>>> b591f1d (novos jsons para benchmarks)
         }
     ]
 }

@@ -8,11 +8,10 @@ import time
 class ExhaustiveSearch(Heuristic):
     _SECONDS = 48800
     def __init__(self,filesDict,outPath):
-        self.directivesTxt = Path(filesDict['dFile']).read_text()
-        self.cFiles = filesDict['cFiles']
-        self.prjFile = filesDict['prjFile']
-        self.outPath = outPath
+        super().__init__(filesDict, outPath)
+
         self.solutions = self.createSolutionsDict()
+        
     #Atributos dos caminhos dos arquivos de entrada e saída.
     #Gera soluções conforme métodos abaixo e as salva numa lista em solutions
 
@@ -28,11 +27,23 @@ class ExhaustiveSearch(Heuristic):
         
         keys,values = zip(*self.dictDir.items())
         totalTime = 0
+        count =0
+        start = time.time()
+        invalid= 0
+        print(f'total:{self.countAllSpace()}')
+        print(f'with function: {self.countPrunnedSpace()}')
         for permutation in itertools.product(*values):
             start = time.time()
             perumtationDict = dict(zip(keys,permutation)) # one permutation
             
             solution = Solution(perumtationDict,self.cFiles,self.prjFile)         #Solutions a partir deste
+            if not self.isRedundantDesign(solution.directives):
+                count+=1
+            else:
+                invalid+=1
+        print(count)
+        print(invalid)
+        """
             try:
                 solution.runSynthesis()
             except Exception as e:
@@ -48,6 +59,7 @@ class ExhaustiveSearch(Heuristic):
             if totalTime >= self._SECONDS: #time that this will run for
                 return solutionsDict
         return solutionsDict
+        """
         
        
  

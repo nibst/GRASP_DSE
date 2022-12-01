@@ -164,21 +164,6 @@ set_directive_pipeline "KeySchedule/KeySchedule_label6"
 unroll KeySchedule_label6
 set_directive_unroll "KeySchedule/KeySchedule_label6"
 *
-pipeline KeySchedule_label8
-set_directive_pipeline "KeySchedule/KeySchedule_label8"
-*
-unroll KeySchedule_label8
-set_directive_unroll "KeySchedule/KeySchedule_label8"
-*
-loop_flatten KeySchedule_label8
-set_directive_loop_flatten "KeySchedule/KeySchedule_label8"
-*
-pipeline KeySchedule_label9
-set_directive_pipeline "KeySchedule/KeySchedule_label9"
-*
-unroll KeySchedule_label9
-set_directive_unroll "KeySchedule/KeySchedule_label9"
-*
 loop_flatten KeySchedule_label9
 set_directive_loop_flatten "KeySchedule/KeySchedule_label9"
 *

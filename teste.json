@@ -1,0 +1,149 @@
+
+{
+    "directives":
+        {   
+            "pipeline AddRoundKey_InversMixColumn_label0": {
+                "possible_directives":["","set_directive_pipeline \"AddRoundKey_InversMixColumn/AddRoundKey_InversMixColumn_label0\""],
+                "function":"AddRoundKey_InversMixColumn",
+                "label": "AddRoundKey_InversMixColumn_label0",
+                "directive_type":"pipeline"
+            },
+            "unroll AddRoundKey_InversMixColumn_label0": {
+                "possible_directives":["","set_directive_unroll \"AddRoundKey_InversMixColumn/AddRoundKey_InversMixColumn_label0\""],
+                "function":"AddRoundKey_InversMixColumn",
+                "label": "AddRoundKey_InversMixColumn_label0",
+                "directive_type":"unroll"
+            },
+
+            "pipeline AddRoundKey_InversMixColumn_label1": {
+                "possible_directives":["","set_directive_pipeline \"AddRoundKey_InversMixColumn/AddRoundKey_InversMixColumn_label1\""],
+                "function":"AddRoundKey_InversMixColumn",
+                "label": "AddRoundKey_InversMixColumn_label1",
+                "directive_type":"pipeline"
+            },
+            "unroll AddRoundKey_InversMixColumn_label1": {
+                "possible_directives":["","set_directive_unroll \"AddRoundKey_InversMixColumn/AddRoundKey_InversMixColumn_label1\""],
+                "function":"AddRoundKey_InversMixColumn",
+                "label": "AddRoundKey_InversMixColumn_label1",
+                "directive_type":"unroll"
+            },
+
+            "pipeline KeySchedule_label8": {
+                "possible_directives":["","set_directive_pipeline \"KeySchedule/KeySchedule_label8\""],
+                "function":"KeySchedule",
+                "label": "KeySchedule_label8",
+                "directive_type":"pipeline"
+            },
+
+            "unroll KeySchedule_label8": {
+                "possible_directives":["",
+                "set_directive_unroll -factor 2 \"KeySchedule/KeySchedule_label8\"",
+                "set_directive_unroll \"KeySchedule/KeySchedule_label8\""],
+                "function":"KeySchedule",
+                "label": "KeySchedule_label8",
+                "directive_type":"unroll"
+            },
+
+            "pipeline KeySchedule_label9": {
+                "possible_directives":["","set_directive_pipeline \"KeySchedule/KeySchedule_label9\""],
+                "function":"KeySchedule",
+                "label": "KeySchedule_label9",
+                "directive_type":"pipeline"
+            },
+            
+            "unroll KeySchedule_label9": {
+                "possible_directives":["",
+                    "set_directive_unroll -factor 2 \"KeySchedule/KeySchedule_label9\"",
+                    "set_directive_unroll \"KeySchedule/KeySchedule_label9\""],
+                "function":"KeySchedule",
+                "label": "KeySchedule_label9",
+                "directive_type":"unroll"
+            },
+
+            "pipeline KeySchedule_label4": {
+                "possible_directives":["","set_directive_pipeline \"KeySchedule/KeySchedule_label4\""],
+                "function":"KeySchedule",
+                "label": "KeySchedule_label4",
+                "directive_type":"pipeline"
+            },
+
+            "unroll KeySchedule_label4": {
+                "possible_directives":["","set_directive_unroll \"KeySchedule/KeySchedule_label4\""],
+                "function":"KeySchedule",
+                "label": "KeySchedule_label4",
+                "directive_type":"unroll"
+            },
+            "pipeline KeySchedule_label5": {
+                "possible_directives":["","set_directive_pipeline \"KeySchedule/KeySchedule_label5\""],
+                "function":"KeySchedule",
+                "label": "KeySchedule_label5",
+                "directive_type":"pipeline"
+            },
+            "unroll KeySchedule_label5": {
+                "possible_directives":["","set_directive_unroll \"KeySchedule/KeySchedule_label5\""],
+                "function":"KeySchedule",
+                "label": "KeySchedule_label5",
+                "directive_type":"unroll"
+            },
+            "pipeline KeySchedule_label6": {
+                "possible_directives":["","set_directive_pipeline \"KeySchedule/KeySchedule_label6\""],
+                "function":"KeySchedule",
+                "label": "KeySchedule_label6",
+                "directive_type":"pipeline"
+            },
+
+            "unroll KeySchedule_label6": {
+                "possible_directives":["","set_directive_unroll \"KeySchedule/KeySchedule_label6\""],
+                "function":"KeySchedule",
+                "label": "KeySchedule_label6",
+                "directive_type":"unroll"
+            }
+        },
+           
+        
+        "nested_loops":
+        [
+ 
+            {
+                "function":"AddRoundKey_InversMixColumn",
+                "label":"AddRoundKey_InversMixColumn_label0",
+                "nest": {
+                    "function":"AddRoundKey_InversMixColumn",
+                    "label":"AddRoundKey_InversMixColumn_label1",
+                    "nest": {}
+                }
+
+            },
+            {
+                "function":"KeySchedule",
+                "label":"KeySchedule_label4",
+                "nest": {
+                    "function":"KeySchedule",
+                    "label":"KeySchedule_label5",
+                    "nest": {}
+                }
+                
+            },
+            {
+                "function":"KeySchedule",
+                "label":"KeySchedule_label6",
+                "nest": {
+                    "function":"KeySchedule",
+                    "label":"KeySchedule_label8",
+                    "nest": {}
+                }
+                
+            },
+            {
+                "function":"KeySchedule",
+                "label":"KeySchedule_label6",
+                "nest": {
+                    "function":"KeySchedule",
+                    "label":"KeySchedule_label9",
+                    "nest": {}
+                }
+                
+            }
+            
+        ]     
+}

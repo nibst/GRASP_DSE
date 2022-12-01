@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -130,3 +131,7 @@ dmypy.json
 *.xml
 .gitignore
 Raise_dse/
+=======
+./Plot/
+./time_stamps/
+>>>>>>> b591f1d (novos jsons para benchmarks)

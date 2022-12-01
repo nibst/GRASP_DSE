@@ -1,0 +1,399 @@
+
+{
+    "directives":
+        {   
+
+            "loop_merge MixColumn_AddRoundKey": {
+                "possible_directives":["","set_directive_loop_merge \"MixColumn_AddRoundKey\""],
+                "function":"MixColumn_AddRoundKey",
+                "label": "",
+                "directive_type":"loop_merge"
+            },
+            "loop_merge AddRoundKey_InversMixColumn": {
+                "possible_directives":["","set_directive_loop_merge \"AddRoundKey_InversMixColumn\""],
+                "function":"AddRoundKey_InversMixColumn",
+                "label": "",
+                "directive_type":"loop_merge"
+            },
+        
+            "loop_flatten AddRoundKey_InversMixColumn_label0": {
+                "possible_directives":["","set_directive_loop_flatten \"AddRoundKey_InversMixColumn/AddRoundKey_InversMixColumn_label0\""],
+                "function":"AddRoundKey_InversMixColumn",
+                "label": "AddRoundKey_InversMixColumn_label0",
+                "directive_type":"loop_flatten"
+            },
+
+            "pipeline AddRoundKey_InversMixColumn_label0": {
+                "possible_directives":["","set_directive_pipeline \"AddRoundKey_InversMixColumn/AddRoundKey_InversMixColumn_label0\""],
+                "function":"AddRoundKey_InversMixColumn",
+                "label": "AddRoundKey_InversMixColumn_label0",
+                "directive_type":"pipeline"
+            },
+            "unroll AddRoundKey_InversMixColumn_label0": {
+                "possible_directives":["","set_directive_unroll \"AddRoundKey_InversMixColumn/AddRoundKey_InversMixColumn_label0\""],
+                "function":"AddRoundKey_InversMixColumn",
+                "label": "AddRoundKey_InversMixColumn_label0",
+                "directive_type":"unroll"
+            },
+
+            "pipeline AddRoundKey_InversMixColumn_label1": {
+                "possible_directives":["","set_directive_pipeline \"AddRoundKey_InversMixColumn/AddRoundKey_InversMixColumn_label1\""],
+                "function":"AddRoundKey_InversMixColumn",
+                "label": "AddRoundKey_InversMixColumn_label1",
+                "directive_type":"pipeline"
+            },
+            "unroll AddRoundKey_InversMixColumn_label1": {
+                "possible_directives":["","set_directive_unroll \"AddRoundKey_InversMixColumn/AddRoundKey_InversMixColumn_label1\""],
+                "function":"AddRoundKey_InversMixColumn",
+                "label": "AddRoundKey_InversMixColumn_label1",
+                "directive_type":"unroll"
+            },
+            "pipeline AddRoundKey_InversMixColumn_label2": {
+                "possible_directives":["","set_directive_pipeline \"AddRoundKey_InversMixColumn/AddRoundKey_InversMixColumn_label2\""],
+                "function":"AddRoundKey_InversMixColumn",
+                "label": "AddRoundKey_InversMixColumn_label2",
+                "directive_type":"pipeline"
+            },
+            "unroll AddRoundKey_InversMixColumn_label2": {
+                "possible_directives":["","set_directive_unroll \"AddRoundKey_InversMixColumn/AddRoundKey_InversMixColumn_label2\""],
+                "function":"AddRoundKey_InversMixColumn",
+                "label": "AddRoundKey_InversMixColumn_label2",
+                "directive_type":"unroll"
+            },
+            "pipeline AddRoundKey_InversMixColumn_label3": {
+                "possible_directives":["","set_directive_pipeline \"AddRoundKey_InversMixColumn/AddRoundKey_InversMixColumn_label3\""],
+                "function":"AddRoundKey_InversMixColumn",
+                "label": "AddRoundKey_InversMixColumn_label3",
+                "directive_type":"pipeline"
+            },
+            "unroll AddRoundKey_InversMixColumn_label3": {
+                "possible_directives":["","set_directive_unroll \"AddRoundKey_InversMixColumn/AddRoundKey_InversMixColumn_label3\""],
+                "function":"AddRoundKey_InversMixColumn",
+                "label": "AddRoundKey_InversMixColumn_label3",
+                "directive_type":"unroll"
+            },
+            "unroll encrypt_label1": {
+                "possible_directives":["","set_directive_unroll \"encrypt/encrypt_label1\""],
+                "function":"encrypt",
+                "label": "encrypt_label1",
+                "directive_type":"unroll"
+            },
+            "unroll encrypt_label2": {
+                "possible_directives":["","set_directive_unroll \"encrypt/encrypt_label2\""],
+                "function":"encrypt",
+                "label": "encrypt_label2",
+                "directive_type":"unroll"
+            },
+            "unroll encrypt_label3": {
+                "possible_directives":["","set_directive_unroll \"encrypt/encrypt_label3\""],
+                "function":"encrypt",
+                "label": "encrypt_label3",
+                "directive_type":"unroll"
+            },
+            "pipeline encrypt_label1": {
+                "possible_directives":["","set_directive_pipeline \"encrypt/encrypt_label1\""],
+                "function":"encrypt",
+                "label": "encrypt_label1",
+                "directive_type":"pipeline"
+            },
+            "pipeline encrypt_label2": {
+                "possible_directives":["","set_directive_pipeline \"encrypt/encrypt_label2\""],
+                "function":"encrypt",
+                "label": "encrypt_label2",
+                "directive_type":"pipeline"
+            },
+            "pipeline encrypt_label3": {
+                "possible_directives":["","set_directive_pipeline \"encrypt/encrypt_label3\""],
+                "function":"encrypt",
+                "label": "encrypt_label3",
+                "directive_type":"pipeline"
+            },
+
+            "unroll decrypt_label4": {
+                "possible_directives":["","set_directive_unroll \"decrypt/decrypt_label4\""],
+                "function":"decrypt",
+                "label": "decrypt_label4",
+                "directive_type":"unroll"
+            },
+            
+            "unroll decrypt_label5": {
+                "possible_directives":["","set_directive_unroll \"decrypt/decrypt_label5\""],
+                "function":"decrypt",
+                "label": "decrypt_label5",
+                "directive_type":"unroll"
+            },
+
+            "unroll decrypt_label6": {
+                "possible_directives":["","set_directive_unroll \"decrypt/decrypt_label6\""],
+                "function":"decrypt",
+                "label": "decrypt_label6",
+                "directive_type":"unroll"
+            },
+
+            "pipeline decrypt_label4": {
+                "possible_directives":["","set_directive_pipeline \"decrypt/decrypt_label4\""],
+                "function":"decrypt",
+                "label": "decrypt_label4",
+                "directive_type":"pipeline"
+            },
+
+            "pipeline decrypt_label5": {
+                "possible_directives":["","set_directive_pipeline \"decrypt/decrypt_label5\""],
+                "function":"decrypt",
+                "label": "decrypt_label5",
+                "directive_type":"pipeline"
+            },
+            
+            "pipeline decrypt_label6": {
+                "possible_directives":["","set_directive_pipeline \"decrypt/decrypt_label6\""],
+                "function":"decrypt",
+                "label": "decrypt_label6",
+                "directive_type":"pipeline"
+            },
+            "loop_merge KeySchedule_label7": {
+                "possible_directives":["","set_directive_loop_merge \"KeySchedule/KeySchedule_label7\""],
+                "function":"KeySchedule",
+                "label": "KeySchedule_label7",
+                "directive_type":"loop_merge"
+            },
+            "pipeline KeySchedule_label8": {
+                "possible_directives":["","set_directive_pipeline \"KeySchedule/KeySchedule_label8\""],
+                "function":"KeySchedule",
+                "label": "KeySchedule_label8",
+                "directive_type":"pipeline"
+            },
+
+            "unroll KeySchedule_label8": {
+                "possible_directives":["",
+                "set_directive_unroll -factor 2 \"KeySchedule/KeySchedule_label8\"",
+                "set_directive_unroll \"KeySchedule/KeySchedule_label8\""],
+                "function":"KeySchedule",
+                "label": "KeySchedule_label8",
+                "directive_type":"unroll"
+            },
+
+            "pipeline KeySchedule_label9": {
+                "possible_directives":["","set_directive_pipeline \"KeySchedule/KeySchedule_label9\""],
+                "function":"KeySchedule",
+                "label": "KeySchedule_label9",
+                "directive_type":"pipeline"
+            },
+            
+            "unroll KeySchedule_label9": {
+                "possible_directives":["",
+                    "set_directive_unroll -factor 2 \"KeySchedule/KeySchedule_label9\"",
+                    "set_directive_unroll \"KeySchedule/KeySchedule_label9\""],
+                "function":"KeySchedule",
+                "label": "KeySchedule_label9",
+                "directive_type":"unroll"
+            },
+            "array_partition ByteSub_ShiftRow Sbox": {
+                "possible_directives":["",
+                    "set_directive_array_partition -type block -factor 2 -dim 0 \"ByteSub_ShiftRow\" Sbox",
+                    "set_directive_array_partition -type block -factor 4 -dim 0 \"ByteSub_ShiftRow\" Sbox",
+                    "set_directive_array_partition -type block -factor 8 -dim 0 \"ByteSub_ShiftRow\" Sbox",
+                    "set_directive_array_partition -type block -factor 16 -dim 0 \"ByteSub_ShiftRow\" Sbox",
+                    "set_directive_array_partition -type cyclic -factor 2 -dim 0 \"ByteSub_ShiftRow\" Sbox",
+                    "set_directive_array_partition -type cyclic -factor 4 -dim 0 \"ByteSub_ShiftRow\" Sbox",
+                    "set_directive_array_partition -type cyclic -factor 8 -dim 0 \"ByteSub_ShiftRow\" Sbox",
+                    "set_directive_array_partition -type cyclic -factor 16 -dim 0 \"ByteSub_ShiftRow\" Sbox",
+                    "set_directive_array_partition -type complete -dim 0 \"ByteSub_ShiftRow\" Sbox"],
+                "function":"ByteSub_ShiftRow",
+                "label": "",
+                "variable": "Sbox",
+                "directive_type":"array_partition"
+            },
+
+            "array_partition ByteSub_ShiftRow invSbox": {
+                "possible_directives":["",
+                    "set_directive_array_partition -type block -factor 2 -dim 0 \"ByteSub_ShiftRow\" invSbox",
+                    "set_directive_array_partition -type block -factor 4 -dim 0 \"ByteSub_ShiftRow\" invSbox",
+                    "set_directive_array_partition -type block -factor 8 -dim 0 \"ByteSub_ShiftRow\" invSbox",
+                    "set_directive_array_partition -type block -factor 16 -dim 0 \"ByteSub_ShiftRow\" invSbox",
+                    "set_directive_array_partition -type cyclic -factor 2 -dim 0 \"ByteSub_ShiftRow\" invSbox",
+                    "set_directive_array_partition -type cyclic -factor 4 -dim 0 \"ByteSub_ShiftRow\" invSbox",
+                    "set_directive_array_partition -type cyclic -factor 8 -dim 0 \"ByteSub_ShiftRow\" invSbox",
+                    "set_directive_array_partition -type cyclic -factor 16 -dim 0 \"ByteSub_ShiftRow\" invSbox",
+                    "set_directive_array_partition -type complete -dim 0 \"ByteSub_ShiftRow\" invSbox"],
+                "function":"ByteSub_ShiftRow",
+                "label": "",
+                "variable": "invSbox",
+                "directive_type":"array_partition"
+            },
+            "array_partition aes_main statemt": {
+                "possible_directives":["",
+                    "set_directive_array_partition -type block -factor 2 -dim 0 \"aes_main\" statemt",
+                    "set_directive_array_partition -type block -factor 4 -dim 0 \"aes_main\" statemt",
+                    "set_directive_array_partition -type block -factor 8 -dim 0 \"aes_main\" statemt",
+                    "set_directive_array_partition -type block -factor 16 -dim 0 \"aes_main\" statemt",
+                    "set_directive_array_partition -type cyclic -factor 2 -dim 0 \"aes_main\" statemt",
+                    "set_directive_array_partition -type cyclic -factor 4 -dim 0 \"aes_main\" statemt",
+                    "set_directive_array_partition -type cyclic -factor 8 -dim 0 \"aes_main\" statemt",
+                    "set_directive_array_partition -type cyclic -factor 16 -dim 0 \"aes_main\" statemt",
+                    "set_directive_array_partition -type complete -dim 0 \"aes_main\" statemt"],
+                "function":"aes_main",
+                "label": "",
+                "variable": "statemt",
+                "directive_type":"array_partition"
+            },
+
+            "dataflow AddRoundKey": {
+                "possible_directives":["","set_directive_dataflow \"AddRoundKey\""],
+                "function":"AddRoundKey",
+                "label": "",
+                "directive_type":"dataflow"
+            },
+            
+            "pipeline AddRoundKey_label0": {
+                "possible_directives":["","set_directive_pipeline \"AddRoundKey/AddRoundKey_label0\""],
+                "function":"AddRoundKey",
+                "label": "AddRoundKey_label0",
+                "directive_type":"pipeline"
+            },
+            
+            "unroll AddRoundKey_label0": {
+                "possible_directives":["","set_directive_unroll \"AddRoundKey/AddRoundKey_label0\""],
+                "function":"AddRoundKey",
+                "label": "AddRoundKey_label0",
+                "directive_type":"unroll"
+            },
+            "pipeline MixColumn_AddRoundKey_label0": {
+                "possible_directives":["","set_directive_pipeline \"MixColumn_AddRoundKey/MixColumn_AddRoundKey_label0\""],
+                "function":"MixColumn_AddRoundKey",
+                "label": "MixColumn_AddRoundKey_label0",
+                "directive_type":"pipeline"
+            },
+            "unroll MixColumn_AddRoundKey_label0": {
+                "possible_directives":["","set_directive_unroll \"MixColumn_AddRoundKey/MixColumn_AddRoundKey_label0\""],
+                "function":"MixColumn_AddRoundKey",
+                "label": "MixColumn_AddRoundKey_label0",
+                "directive_type":"unroll"
+            },
+
+            "pipeline MixColumn_AddRoundKey_label1": {
+                "possible_directives":["","set_directive_pipeline \"MixColumn_AddRoundKey/MixColumn_AddRoundKey_label1\""],
+                "function":"MixColumn_AddRoundKey",
+                "label": "MixColumn_AddRoundKey_label1",
+                "directive_type":"pipeline"
+            },
+            "unroll MixColumn_AddRoundKey_label1": {
+                "possible_directives":["","set_directive_unroll \"MixColumn_AddRoundKey/MixColumn_AddRoundKey_label1\""],
+                "function":"MixColumn_AddRoundKey",
+                "label": "MixColumn_AddRoundKey_label1",
+                "directive_type":"unroll"
+            },
+            "inline aes_main": {
+                "possible_directives":["","set_directive_inline -region \"aes_main\""],
+                "function":"aes_main",
+                "label": "",
+                "directive_type":"inline"
+            },
+            "pipeline KeySchedule_label4": {
+                "possible_directives":["","set_directive_pipeline \"KeySchedule/KeySchedule_label4\""],
+                "function":"KeySchedule",
+                "label": "KeySchedule_label4",
+                "directive_type":"pipeline"
+            },
+            
+
+            "unroll KeySchedule_label4": {
+                "possible_directives":["","set_directive_unroll \"KeySchedule/KeySchedule_label4\""],
+                "function":"KeySchedule",
+                "label": "KeySchedule_label4",
+                "directive_type":"unroll"
+            },
+            "loop_flatten KeySchedule_label5": {
+                "possible_directives":["","set_directive_loop_flatten \"KeySchedule/KeySchedule_label5\""],
+                "function":"KeySchedule",
+                "label": "KeySchedule_label5",
+                "directive_type":"loop_flatten"
+            },
+            "pipeline KeySchedule_label5": {
+                "possible_directives":["","set_directive_pipeline \"KeySchedule/KeySchedule_label5\""],
+                "function":"KeySchedule",
+                "label": "KeySchedule_label5",
+                "directive_type":"pipeline"
+            },
+            "unroll KeySchedule_label5": {
+                "possible_directives":["","set_directive_unroll \"KeySchedule/KeySchedule_label5\""],
+                "function":"KeySchedule",
+                "label": "KeySchedule_label5",
+                "directive_type":"unroll"
+            },
+            "pipeline KeySchedule_label6": {
+                "possible_directives":["","set_directive_pipeline \"KeySchedule/KeySchedule_label6\""],
+                "function":"KeySchedule",
+                "label": "KeySchedule_label6",
+                "directive_type":"pipeline"
+            },
+
+            "unroll KeySchedule_label6": {
+                "possible_directives":["","set_directive_unroll \"KeySchedule/KeySchedule_label6\""],
+                "function":"KeySchedule",
+                "label": "KeySchedule_label6",
+                "directive_type":"unroll"
+            },
+            "loop_flatten KeySchedule_label9": {
+                "possible_directives":["","set_directive_loop_flatten \"KeySchedule/KeySchedule_label9\""],
+                "function":"KeySchedule",
+                "label": "KeySchedule_label9",
+                "directive_type":"loop_flatten"
+            }
+            
+            
+        },
+           
+        
+        "nested_loops":
+        [
+ 
+            {
+                "function":"AddRoundKey_InversMixColumn",
+                "label":"AddRoundKey_InversMixColumn_label0",
+                "nest": {
+                    "function":"AddRoundKey_InversMixColumn",
+                    "label":"AddRoundKey_InversMixColumn_label1",
+                    "nest": {}
+                }
+
+            },
+            {
+                "function":"KeySchedule",
+                "label":"KeySchedule_label4",
+                "nest": {
+                    "function":"KeySchedule",
+                    "label":"KeySchedule_label5",
+                    "nest": {}
+                }
+                
+            },
+            {
+                "function":"KeySchedule",
+                "label":"KeySchedule_label6",
+                "nest": {
+                    "function":"KeySchedule",
+                    "label":"KeySchedule_label8",
+                    "nest": {}
+                }
+                
+            },
+            {
+                "function":"KeySchedule",
+                "label":"KeySchedule_label6",
+                "nest": {
+                    "function":"KeySchedule",
+                    "label":"KeySchedule_label9",
+                    "nest": {}
+                }
+                
+            }
+            
+        ]     
+}
+
+
+
+
+
+
+

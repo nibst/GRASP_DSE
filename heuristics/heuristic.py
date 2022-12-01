@@ -77,12 +77,40 @@ class Heuristic(ABC):
             #não acho que precisa copiar, então vou só passar referencia(eles não deveriam ser modificados mesmo)
             paretos[count] = solutions[paretoSolutionIndex]
         return paretos
+    def countAllSpace(self):
+        totalMultiplication = 1
+        for directiveGroup in self.dictDir:
+            totalMultiplication*=len(self.dictDir[directiveGroup])
+        return totalMultiplication
+
+    def countPrunnedSpace(self):
+        totalMultiplication = 1
+        directivesByLabel:dict = self.__buildLabelDict(self.dictDir)
+        for item in directivesByLabel.values():
+            if 'pipeline'  in item and 'unroll'  in item:
+                mult = (len(item['pipeline']) * len(item['unroll'])) -1
+                totalMultiplication*=mult
+            else:
+                for directiveList in item.values():
+                    totalMultiplication*=len(directiveList)
+        return totalMultiplication
+
 
     def __buildLabelDict(self,directives:dict):
         """
+        Receives a directives dict that its keys are the group of directive and its values
+        are the directives chosen to that group.(Normally its one directive chosen for one group)
+
         returns a dictionary that the keys are the spots of application of directives
         (the function where the label is + '/' + the name of label) and the values are
-        all directives applied in that 
+        all directives applied in that spot. Directives are divided by directive type
+        Ex:
+        newDict = {local_memset/local_memset_label0:
+                    {
+                        'pipeline':'some_directive'
+                        'unroll': 'another_directive'
+                    }
+                }
         """
         newDict:dict = {}
         directivesInformation = self.DSEconfig['directives']
