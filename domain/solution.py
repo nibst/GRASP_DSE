@@ -7,11 +7,13 @@ import time
 import subprocess
 import psutil
 import sys
+
+from exceptions.timeExceededException import TimeExceededException
 class Solution:
     _MAX_RAM_USAGE =30 #in percentage
-    _DIRECTIVES_FILENAME = 'directives.tcl'
+    _DIRECTIVES_FILENAME = './domain/directives.tcl'
     _VIVADO_PROCESSNAME = 'vivado_hls'
-    _SCRIPT_PATH = './callVivado.sh'
+    _SCRIPT_PATH = './domain/callVivado.sh'
     _FF_VALUE = 1; _LUT_VALUE = 2; _DSP_VALUE = 345.68; _BRAM_VALUE = 547.33
     
     
@@ -21,7 +23,7 @@ class Solution:
         self.prjFile = prjFile
         if sys.platform == 'win32':
             self._VIVADO_PROCESSNAME = 'vivado_hls.exe'
-            self._SCRIPT_PATH = 'callVivado.bat'
+            self._SCRIPT_PATH = './domain/callVivado.bat'
         resultados = {}
         resultados['FF'] = None
         resultados['DSP'] = None
@@ -122,7 +124,7 @@ class Solution:
                     
                     if time.time()-start >= timeLimit:
                         proc.kill()   
-                        raise Exception("****Vivado_HLS has exceed max time usage****")
+                        raise TimeExceededException("****Vivado_HLS has exceed max time usage****")
                     break
             
         if os.path.exists(xml):  
