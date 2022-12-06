@@ -27,17 +27,16 @@ class M5PrimeEstimator(Estimator):
         dataset : List of Solution objects
         """
         try:
-            start = time.time()
+            
             self.__trainModelPerMetric(dataset,"latency",self.latencyModel)
             self.__trainModelPerMetric(dataset,"LUT",self.LUTModel)
             self.__trainModelPerMetric(dataset,"BRAM",self.BRAMModel)
             self.__trainModelPerMetric(dataset,"DSP",self.DSPModel)
             self.__trainModelPerMetric(dataset,"FF",self.FFModel)
             self.__trainModelPerMetric(dataset,"resources",self.resourcesModel)
-            #print(time.time() - start)
         except Exception as e:
             print(e)
-            raise e
+            raise
     def __trainModelPerMetric(self,dataset:dict,metric,model:M5Prime):
         features, results = self.processor.process(dataset)
         results = []
