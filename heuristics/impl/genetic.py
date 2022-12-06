@@ -158,6 +158,7 @@ class GA(Heuristic):
                 self.estimator.trainModel(train)
                 
                 score = self.estimator.score(test)
+                self.estimator.trainModel(sample.solutions)
             except Exception as e:
                 #do nothing, just train more
                 score = -1 
@@ -165,7 +166,7 @@ class GA(Heuristic):
             print(f'score: {score} ')
             #full train
             print(f'sample solutions lenght: {len(sample.solutions.keys())}') 
-            self.estimator.trainModel(sample.solutions)
+            
             if score < threshold: 
                 if time.time() - start >= self.TRAIN_TIME*3:
                     threshold-=0.05   
