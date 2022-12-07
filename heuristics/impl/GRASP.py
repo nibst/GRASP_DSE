@@ -19,15 +19,13 @@ class GRASP(Heuristic):
         self.TRAIN_TIME = trainTime #3
         self._SECONDS = timeLimit
         self.alpha = 0.7
+        self.start = time.time()
         sample = RandomSearch(filesDict, outPath,self.TRAIN_TIME,saveInterval=saveInterval)
         self.estimator = model
         self.estimator.trainModel(sample.solutions)
         for solution in sample.solutions.values():
             self.saveSolution(solution)
-        
-        random.seed(seed)
-        self.start = None
-        
+        random.seed(seed)        
         self.saveInterval = saveInterval#every 'saveInterval' time, save solutions in a file
         self.createSolutionsDict()
        
@@ -48,7 +46,6 @@ class GRASP(Heuristic):
         end GRASP.
 
         """
-        self.start = time.time()
         numSaves = 0 # number of times that all solutions were saved
         generateScript(self.cFiles, self.prjFile)
         end = time.time()
