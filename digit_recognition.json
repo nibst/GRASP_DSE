@@ -92,9 +92,11 @@
             },
             "unroll TEST_LOOP": {
                 "possible_directives":["",
-                    "set_directive_unroll -factor 250 \"DigitRec_sw/TEST_LOOP\"",
-                    "set_directive_unroll -factor 500 \"DigitRec_sw/TEST_LOOP\"",
-                    "set_directive_unroll -factor 1000 \"DigitRec_sw/TEST_LOOP\""],
+	            "set_directive_unroll -factor 2 \"DigitRec_sw/TEST_LOOP\"",
+		    "set_directive_unroll -factor 4 \"DigitRec_sw/TEST_LOOP\"",
+                    "set_directive_unroll -factor 8 \"DigitRec_sw/TEST_LOOP\"",
+                    "set_directive_unroll -factor 16 \"DigitRec_sw/TEST_LOOP\"",
+                    "set_directive_unroll -factor 20 \"DigitRec_sw/TEST_LOOP\""],
                 "function":"DigitRec_sw",
                 "label": "TEST_LOOP",
                 "directive_type":"unroll"
@@ -123,9 +125,11 @@
 
             "unroll TRAINING_LOOP": {
                 "possible_directives":["",
+		    "set_directive_unroll -factor 20 \"DigitRec_sw/TRAINING_LOOP\"",
+                    "set_directive_unroll -factor 60 \"DigitRec_sw/TRAINING_LOOP\"",
+                    "set_directive_unroll -factor 125 \"DigitRec_sw/TRAINING_LOOP\"",
                     "set_directive_unroll -factor 250 \"DigitRec_sw/TRAINING_LOOP\"",
-                    "set_directive_unroll -factor 500 \"DigitRec_sw/TRAINING_LOOP\"",
-                    "set_directive_unroll -factor 1000 \"DigitRec_sw/TRAINING_LOOP\""],
+		    "set_directive_unroll -factor 500 \"DigitRec_sw/TRAINING_LOOP\""],
                 "function":"DigitRec_sw",
                 "label": "TRAINING_LOOP",
                 "directive_type":"unroll"
