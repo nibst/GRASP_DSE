@@ -13,7 +13,7 @@ from typing import List
 
 class GA(Heuristic):
     TRAIN_TIME = 3600
-    def __init__(self,filesDict,outPath,estimatorFactory:EstimatorFactory,timeLimit=43200):
+    def __init__(self,filesDict,outPath,estimatorFactory:EstimatorFactory,timeLimit=43200,saveInterval = None,seed=0 ):
         super().__init__(filesDict, outPath)
         self._SECONDS = timeLimit
         self.populationSize = 60 #any number
@@ -23,12 +23,14 @@ class GA(Heuristic):
         self.crossoverRate = 0.8 #any number between 0 and 1
         self.mutationRate = 0.1 #any number between 0 and 1
         
-        random.seed(1)
+        random.seed(seed)
 
         self.numOfGenes = len(self.dictDir.keys())
         self.listOfKeys = list(self.dictDir.keys()) #to use numbers (indexes of list) instead of strings in the algorithm logic
         self.chaceToOverwrite = 0.5 #probability of overwritting parent with offspring if offspring dominates in one of the objectives
         self.new_model_interval = 120
+
+        self.saveInterval = saveInterval
         self.start = time.time()
         self.__new_predictive_model()
         self.finalPopulation = self.createSolutionsDict()
@@ -93,6 +95,7 @@ class GA(Heuristic):
         new_population = []
         parentPairs = self.selector(population)
         pairIndex = 0
+        numSaves = 0 # number of times that all solutions were saved
         while len(discardedOffsprings) < self.numOffspringsDiscarded and (time.time() - self.start) < self._SECONDS:
 
             try:
@@ -133,14 +136,19 @@ class GA(Heuristic):
                 return
             except Exception as e:
                 print(e) 
-
-
             if (time.time() - self.start) >= self._SECONDS:
                 break
+            #save all current solutions 
+            if self.saveInterval:
+                if (time.time() - self.start)/self.saveInterval >= numSaves + 1:
+                    self.writeToFile(f'./time_stamps/timeStampGenetic{numSaves}')
+                    numSaves+=1
             pairIndex+=1
             interval+=1
             if interval % self.new_model_interval == 0:
                 self.__new_predictive_model()
+            
+
 
         population = new_population
         return population
@@ -150,7 +158,7 @@ class GA(Heuristic):
         score = -1
         threshold = 0.7
         self.estimator = self.estimatorFactory.create(self.filesDict['dFile'])
-        sample = RandomSearch(self.filesDict, self.outPath,self.TRAIN_TIME)
+        sample = RandomSearch(self.filesDict, self.outPath,self.TRAIN_TIME,saveInterval=self.saveInterval,saveName="genetic")
         start = time.time()
         while score < threshold:
             try:    

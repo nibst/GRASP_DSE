@@ -20,7 +20,7 @@ class GRASP(Heuristic):
         self._SECONDS = timeLimit
         self.alpha = 0.7
         self.start = time.time()
-        sample = RandomSearch(filesDict, outPath,self.TRAIN_TIME,saveInterval=saveInterval)
+        sample = RandomSearch(filesDict, outPath,self.TRAIN_TIME,saveInterval=saveInterval,saveName="GRASP")
         self.estimator = model
         self.estimator.trainModel(sample.solutions)
         for solution in sample.solutions.values():
@@ -138,8 +138,6 @@ class GRASP(Heuristic):
                 for dir in dictDir[group]:
                     solution[group] = dir
                     if self.isRedundantDesign(solution):
-                        print(f'removed: {dir}')
-                        print(f'current: {directiveGroup}:{directive}')
                         dictDir[group].remove(dir)
                     solution[group] = ''
  
@@ -184,23 +182,3 @@ class GRASP(Heuristic):
             topSolution = max(topSynthesis,key=lambda k: k.resultados['resources'] * k.resultados['latency'])    
         return topSolution
 
-if __name__ == '__main__':
-        
-    #Initialize parser
-    parser = argparse.ArgumentParser()
-
-    # Adding argument
-    parser.add_argument("-c", "--cFiles", help = "C input files list", required=True, nargs='+')
-    parser.add_argument("-d", "--dFile", help = "Directives input file",required=True)
-    parser.add_argument("-p", "--prjFile", help = "Prj. top file",required=True)
-
- 
-    # Read arguments from command line
-    args = parser.parse_args()
-    
-    filesDict = {}
-    filesDict['cFiles'] = args.cFiles
-    filesDict['dFile'] = args.dFile
-    filesDict['prjFile'] = args.prjFile
-    model = RandomForestEstimator(filesDict['dFile'])
-    grasp = GRASP(filesDict,'directives.tcl',model,50)
