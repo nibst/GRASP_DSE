@@ -4,6 +4,7 @@ from domain.solution import Solution
 import copy
 import utils.readDirectivesFile as readDirectivesFile
 from pathlib import Path
+from exceptions.timeExceededException import TimeExceededException
 import json
 import pickle
 
@@ -77,6 +78,8 @@ class Heuristic(ABC):
             #não acho que precisa copiar, então vou só passar referencia(eles não deveriam ser modificados mesmo)
             paretos[count] = solutions[paretoSolutionIndex]
         return paretos
+
+    #TODO MOVE THESE FUNCTIONS TO ANOTHER CLASS----------------:
     def countAllSpace(self):
         totalMultiplication = 1
         for directiveGroup in self.dictDir:
@@ -94,6 +97,7 @@ class Heuristic(ABC):
                 for directiveList in item.values():
                     totalMultiplication*=len(directiveList)
         return totalMultiplication
+    #-------------------------------------------------------------
 
 
     def __buildLabelDict(self,directives:dict):

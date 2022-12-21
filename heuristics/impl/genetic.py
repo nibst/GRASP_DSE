@@ -157,7 +157,7 @@ class GA(Heuristic):
         #maybe create new model, as deep copy of self.estimator
         score = -1
         threshold = 0.7
-        self.estimator = self.estimatorFactory.create(self.filesDict['dFile'])
+        self.estimator = self.estimatorFactory.create()
         sample = RandomSearch(self.filesDict, self.outPath,self.TRAIN_TIME,saveInterval=self.saveInterval,saveName="genetic")
         start = time.time()
         while score < threshold:

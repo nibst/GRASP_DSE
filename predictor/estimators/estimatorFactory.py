@@ -5,9 +5,11 @@ class EstimatorFactory(ABC):
     object of a Product class. The Creator's subclasses usually provide the
     implementation of this method.
     """
+    def __init__(self):
+        pass
 
     @abstractmethod
-    def create(self,directivesFile):
+    def create(self):
         """
         Note that the Creator may also provide some default implementation of
         the factory method.

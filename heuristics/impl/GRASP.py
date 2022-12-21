@@ -39,7 +39,6 @@ class GRASP(Heuristic):
                 4 if Solution is not feasible then
                     5 Solution ← Repair(Solution);
                 6 end;
-                7 Solution ← Local Search(Solution);
                 8 Update Solution(Solution,Best Solution);
             9 end;
             10 return Best Solution;

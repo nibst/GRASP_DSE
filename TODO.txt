@@ -2,6 +2,12 @@
 2.[] trocar set results do solutions para receber um dict, a responsabilidade de transformar lista de results em dict n eh do solutions
 3.[] preditor de tempo que demorará uma sintese, acho que vai ser super util
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4 [] na refatoracao falta caminhos de arquivos, tipo script.tcl, callvivado,etc
 >>>>>>> 799798d (começando a organizar)
+=======
+4 [x] na refatoracao falta caminhos de arquivos, tipo script.tcl, callvivado,etc
+5.[] Trocar solutions dict por lista
+6.[] Nao rodar createSolutionsDict a cada vez que instancia heuristica, n faz sentido. Tem que ser chamada a funcao sem ser no construtor
+>>>>>>> 4105718 (pequenos ajuststes + TODO file)

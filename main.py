@@ -51,7 +51,7 @@ if __name__ == "__main__":
     #heuristic = GreedyWithEstimator(filesDict,'directives.tcl')
     #heuristic = RandomSearchWithEstimator(filesDict, 'directives.tcl', model)
 
-    factory = RandomForestFactory()
+    factory = RandomForestFactory(filesDict["dFile"])
     heuristic1 = GA(filesDict,'directives.tcl',factory,5)
 
 
