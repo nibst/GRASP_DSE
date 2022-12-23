@@ -24,14 +24,14 @@ class Solution:
         if sys.platform == 'win32':
             self._VIVADO_PROCESSNAME = 'vivado_hls.exe'
             self._SCRIPT_PATH = './domain/callVivado.bat'
-        resultados = {}
-        resultados['FF'] = None
-        resultados['DSP'] = None
-        resultados['LUT'] = None
-        resultados['BRAM'] = None
-        resultados['resources'] = None
-        resultados['latency'] = None
-        self.resultados = resultados
+        results = {}
+        results['FF'] = None
+        results['DSP'] = None
+        results['LUT'] = None
+        results['BRAM'] = None
+        results['resources'] = None
+        results['latency'] = None
+        self.results = results
 
     def setDirectives(self,directives:dict):
         """
@@ -40,15 +40,15 @@ class Solution:
         self.directives = copy.deepcopy(directives)
 
     def setOneResult(self,key,value):
-        for resultKey in self.resultados:
+        for resultKey in self.results:
             if resultKey == key:
-                self.resultados[key] = value
+                self.results[key] = value
                 break
 
-    def setResultados(self,results:list):
+    def setresults(self,results:list):
         for result in results:
-            for index,key in enumerate(self.resultados):
-                self.resultados[key] = result[index]
+            for index,key in enumerate(self.results):
+                self.results[key] = result[index]
                 
     def __writeDirectivesIntoFile(self):
         directivesFile = open(self._DIRECTIVES_FILENAME, "w")
@@ -63,15 +63,15 @@ class Solution:
             timeLimit = float('inf')
         if timeLimit<=0:
             raise Exception("****Vivado_HLS has exceed max time usage****")
-        resultados = {}
-        resultados['FF'] = randrange(100)
-        resultados['DSP'] = randrange(100)
-        resultados['LUT'] = randrange(100)
-        resultados['BRAM'] = randrange(100)
-        resultados['resources'] = randrange(100)
-        resultados['latency'] = randrange(100)
+        results = {}
+        results['FF'] = randrange(100)
+        results['DSP'] = randrange(100)
+        results['LUT'] = randrange(100)
+        results['BRAM'] = randrange(100)
+        results['resources'] = randrange(100)
+        results['latency'] = randrange(100)
 
-        self.resultados = resultados
+        self.results = results
    
     def runSynthesis(self,timeLimit = None):
         #TODO antes de chamar a sintese verificar se ja tem um processo do vivado rodando e fazer esse processo n ser confundido com o que vamos rodar
@@ -134,20 +134,20 @@ class Solution:
             tree = ET.parse(xml)
             root = tree.getroot()
 
-            resultados = {}
+            results = {}
             x = root.find('AreaEstimates')
             x = x.find('Resources')
-            resultados['FF'] =int(x.find('FF').text)
-            resultados['DSP'] = int(x.find('DSP48E').text)
-            resultados['LUT'] = int(x.find('LUT').text)
-            resultados['BRAM'] = int(x.find('BRAM_18K').text)
-            resultados['resources'] =  resultados['FF'] * self._FF_VALUE + resultados['LUT'] * self._LUT_VALUE + resultados['DSP'] * self._DSP_VALUE + resultados['BRAM'] * self._BRAM_VALUE    
+            results['FF'] =int(x.find('FF').text)
+            results['DSP'] = int(x.find('DSP48E').text)
+            results['LUT'] = int(x.find('LUT').text)
+            results['BRAM'] = int(x.find('BRAM_18K').text)
+            results['resources'] =  results['FF'] * self._FF_VALUE + results['LUT'] * self._LUT_VALUE + results['DSP'] * self._DSP_VALUE + results['BRAM'] * self._BRAM_VALUE    
             x = root.find('PerformanceEstimates')
             x = x.find('SummaryOfOverallLatency')
             try:
-                resultados['latency'] = int(x.find('Average-caseLatency').text)
+                results['latency'] = int(x.find('Average-caseLatency').text)
             except ValueError:
                 raise ValueError("****UNDETERMINED LATENCY****")
-            self.resultados = resultados
+            self.results = results
         else:
              raise Exception("****Error in synthesis - NO Synthesis Results****")       
