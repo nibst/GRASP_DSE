@@ -14,7 +14,7 @@ import random
 class GRASP(Heuristic):
     
     
-    def __init__(self,filesDict,outPath,model:Estimator,timeLimit=43200,trainTime = 7200, saveInterval = None,seed=0):
+    def __init__(self,filesDict,outPath,model:Estimator,timeLimit=43200,trainTime = 7200, saveInterval = None,seed=0, RCLSynthesisInterval=0):
         super().__init__(filesDict, outPath)
         self.TRAIN_TIME = trainTime #3
         self._SECONDS = timeLimit
@@ -27,6 +27,12 @@ class GRASP(Heuristic):
             self.saveSolution(solution)
         random.seed(seed)        
         self.saveInterval = saveInterval#every 'saveInterval' time, save solutions in a file
+        if RCLSynthesisInterval==0:
+            self.RCLSynthesisInterval = float('inf')
+        else:
+            self.RCLSynthesisInterval = RCLSynthesisInterval
+        
+        
         self.createSolutionsDict()
        
     
@@ -73,9 +79,9 @@ class GRASP(Heuristic):
             solutionToBuild[directiveGroup] = directive
             candidate = Solution(solutionToBuild,self.cFiles,self.prjFile)
             estimatedResults = self.estimator.estimateSynthesis(candidate)
-            candidate.setResultados(estimatedResults)
+            candidate.setresults(estimatedResults)
             candidates.append(candidate)
-            resourcesXlatency=  candidate.resultados['resources'] * candidate.resultados['latency']
+            resourcesXlatency=  candidate.results['resources'] * candidate.results['latency']
             if  resourcesXlatency < bestResourcesXLatency:
                 bestResourcesXLatency = resourcesXlatency
         
@@ -83,7 +89,7 @@ class GRASP(Heuristic):
         #RCL = {v E Vk | dv < (1 + alpha)*min(resourcesXlatency)}
         #v = candidate, Vk = candidates, dv = resourcesXlatency of candidate
         for candidate in candidates:
-            resourcesXlatency=  candidate.resultados['resources'] * candidate.resultados['latency']
+            resourcesXlatency=  candidate.results['resources'] * candidate.results['latency']
             if  resourcesXlatency < (1+self.alpha)*bestResourcesXLatency:
                 #append only the directive string
                 RCL.append(candidate.directives[directiveGroup])
@@ -112,21 +118,23 @@ class GRASP(Heuristic):
         directiveGroups = list(self.dictDir.keys()) 
         dictDirCopy = copy.deepcopy(self.dictDir)
         random.shuffle(directiveGroups)
-        for directiveGroup in directiveGroups:
+        for count,directiveGroup in enumerate(directiveGroups):
             RCL = self.makeRCL(directiveGroup,solutionToBuild,dictDirCopy)
             s = random.choice(RCL)
             solutionToBuild[directiveGroup] = s
+            if ((count+1) % self.RCLSynthesisInterval == 0): #count+1 just to not include 0 on the count
+                #synthesis of current solution under construction and feed solution to model
+                try:
+                    synthesisTimeLimit = self._SECONDS - (time.time() - self.start) 
+                    self.synthesisWrapper(solutionToBuild,synthesisTimeLimit)
+                except Exception as error:
+                    print(error)
+                else:
+                    self.estimator.trainModel(solutionToBuild)
+
             self.__removeRedundantDirectives(dictDirCopy,directiveGroup,s)
 
         constructedSolution = Solution(solutionToBuild,self.cFiles,self.prjFile)
-        try:
-            synthesisTimeLimit = self._SECONDS - (time.time() - self.start) 
-            self.synthesisWrapper(constructedSolution,synthesisTimeLimit)
-        except Exception as error:
-            print(error)
-        else:
-            self.estimator.trainModel(constructedSolution)
-
         return constructedSolution
 
     def __removeRedundantDirectives(self,dictDir:dict,directiveGroup,directive):
@@ -153,10 +161,10 @@ class GRASP(Heuristic):
                     neighborDirectives[directiveGroup] = directive
                     neighborSolution = Solution(neighborDirectives,self.cFiles,self.prjFile)
                     estimatedResults = self.estimator.estimateSynthesis(neighborSolution)
-                    neighborSolution.setResultados(estimatedResults)
+                    neighborSolution.setresults(estimatedResults)
                     neighbors.append(neighborSolution)
         
-        neighborsSorted = sorted(neighbors,key=lambda k: k.resultados['resources'] * k.resultados['latency']) #sort in ascending order of resource X latency
+        neighborsSorted = sorted(neighbors,key=lambda k: k.results['resources'] * k.results['latency']) #sort in ascending order of resource X latency
         #synthesize top n neighbors, for now is top 1 synthesizable
         i=0
         synthesisCount = 0
@@ -178,6 +186,7 @@ class GRASP(Heuristic):
         topSolution=None
         if topSynthesis:
             self.estimator.trainModel(topSynthesis)
-            topSolution = max(topSynthesis,key=lambda k: k.resultados['resources'] * k.resultados['latency'])    
+            topSolution = max(topSynthesis,key=lambda k: k.results['resources'] * k.results['latency'])    
         return topSolution
 
+        
