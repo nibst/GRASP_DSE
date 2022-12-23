@@ -67,7 +67,7 @@ class GA(Heuristic):
                 o1,o2 <- copia(pai1,pai2)
             return o1,o2
 
-        funcao top colocará os resultados (o fitness de cada solucao) nas Solutions da populacao
+        funcao top colocará os results (o fitness de cada solucao) nas Solutions da populacao
 
         mutation com mutacao aleatorio do domninio
         """
@@ -108,7 +108,7 @@ class GA(Heuristic):
             offspring = self.crossover(parent1,parent2)
             offspring = self.mutation(offspring)    
             estimatedResults = self.estimator.estimateSynthesis(offspring)
-            offspring.setResultados(estimatedResults)
+            offspring.setresults(estimatedResults)
             newParent1,newParent2 = self.overwriteParent(parent1,parent2,offspring)
 
             #if offspring dont overwrite neither of the parents
@@ -193,7 +193,7 @@ class GA(Heuristic):
             #This will estimate all parents in population and pair each parent to a diferent parent
             try:
                 estimatedResults = self.estimator.estimateSynthesis(parent1)
-                parent1.setResultados(estimatedResults)
+                parent1.setresults(estimatedResults)
             except Exception as e:
                 print(e)
             parent2 =random.choice(population)
@@ -228,8 +228,8 @@ class GA(Heuristic):
     def __removeWorstSolution(self,topSolutions):
         worst = float('-inf')
         for solution in topSolutions:
-            if solution.resultados['resources'] * solution.resultados['latency'] >= worst:
-                worst = solution.resultados['resources'] * solution.resultados['latency']
+            if solution.results['resources'] * solution.results['latency'] >= worst:
+                worst = solution.results['resources'] * solution.results['latency']
                 worstSolution = solution
         topSolutions.remove(worstSolution)
 
@@ -307,7 +307,7 @@ class GA(Heuristic):
     
     def __dominateAtLeastOneMetric(self,Solution1,Solution2,metric1,metric2):
         #testa se a Solution1  domina a Solution2
-        return ((Solution2.resultados[metric1]>=Solution1.resultados[metric1]) or (Solution2.resultados[metric2] >= Solution1.resultados[metric2]))
+        return ((Solution2.results[metric1]>=Solution1.results[metric1]) or (Solution2.results[metric2] >= Solution1.results[metric2]))
         
     def __generateRandomPermutation(self,controlTree:dict):
         node = controlTree

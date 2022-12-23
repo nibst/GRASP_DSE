@@ -44,8 +44,8 @@ class HillClimbing(Heuristic):
                     print(e)
                 #executa else qnd try roda sem erros
                 else:   
-                    print(solution.resultados)              
-                    resourcesXLatency = solution.resultados['resources'] * solution.resultados['latency']
+                    print(solution.results)              
+                    resourcesXLatency = solution.results['resources'] * solution.results['latency']
                     if resourcesXLatency<bestResourcesxLatency:          #mantendo aquelas onde o nro de LUTs é estritamente
                         bestResourcesxLatency = resourcesXLatency        #menor que o da anterior.
                                             

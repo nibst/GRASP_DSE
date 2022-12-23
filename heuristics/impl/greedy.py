@@ -42,8 +42,8 @@ class Greedy(Heuristic):
                     print(e)
                 #executa else qnd try roda sem erros    
                 else:
-                    print(solution.resultados)             
-                    metricXLatency = solution.resultados[self.metric] * solution.resultados['latency']
+                    print(solution.results)             
+                    metricXLatency = solution.results[self.metric] * solution.results['latency']
                     if metricXLatency<bestMetricxLatency:          #mantendo aquelas onde o nro de LUTs é estritamente
                         bestMetricxLatency = metricXLatency
                         currentBest = option        #menor que o da anterior.              

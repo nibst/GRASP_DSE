@@ -56,10 +56,10 @@ class GreedyWithEstimator(Heuristic):
                 final[diretiva] = option                             #Progressivamente popula o dicionário 'final' e cria
                 estimatedSolution = Solution(final,self.cFiles,self.prjFile)         #Solutions a partir deste     
                 estimatedResults = self.rf.estimateSynthesis(estimatedSolution)
-                estimatedSolution.setResultados(estimatedResults[0])
+                estimatedSolution.setresults(estimatedResults[0])
                 
-                print(estimatedSolution.resultados)             
-                lutXLatency = estimatedSolution.resultados['LUT'] * estimatedSolution.resultados['latency']
+                print(estimatedSolution.results)             
+                lutXLatency = estimatedSolution.results['LUT'] * estimatedSolution.results['latency']
                 if lutXLatency<bestLUTxLatency:          #mantendo aquelas onde o nro de LUTs é estritamente
                     bestLUTxLatency = lutXLatency
                     currentBest = option        #menor que o da anterior.
@@ -73,7 +73,7 @@ class GreedyWithEstimator(Heuristic):
                 print(e)
             #executa else qnd try roda sem erros    
             else:
-                print(solution.resultados)
+                print(solution.results)
                 deep = copy.deepcopy(solution)   
                 solutionsDict[solutionIndex] = deep               
                 solutionIndex+=1     

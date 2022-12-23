@@ -105,9 +105,9 @@ class RandomSearchWithEstimator(Heuristic):
             if onePermutation:
                 estimatedSolution = Solution(onePermutation,self.cFiles,self.prjFile)         #Solutions a partir deste     
                 estimatedResults = self.estimator.estimateSynthesis(estimatedSolution)
-                estimatedSolution.setResultados(estimatedResults)
+                estimatedSolution.setresults(estimatedResults)
                 estimatedSolutions.append(estimatedSolution)
-                #print(f'estimated solution: {estimatedSolution.resultados}')
+                #print(f'estimated solution: {estimatedSolution.results}')
                 topSolutions.append(estimatedSolution)
                 if i >= self._NUM_OF_TOP:
                     self.__removeWorstSolution(topSolutions)
@@ -117,8 +117,8 @@ class RandomSearchWithEstimator(Heuristic):
     def __removeWorstSolution(self,topSolutions):
         worst = float('-inf')
         for solution in topSolutions:
-            if solution.resultados['resources'] * solution.resultados['latency'] >= worst:
-                worst = solution.resultados['resources'] * solution.resultados['latency']
+            if solution.results['resources'] * solution.results['latency'] >= worst:
+                worst = solution.results['resources'] * solution.results['latency']
                 worstSolution = solution
         topSolutions.remove(worstSolution)
 

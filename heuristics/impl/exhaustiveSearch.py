@@ -49,7 +49,7 @@ class ExhaustiveSearch(Heuristic):
             except Exception as e:
                 print(e)
             else:
-                print(solution.resultados)             
+                print(solution.results)             
                 deep = copy.deepcopy(solution)   
                 solutionsDict[solutionIndex] = deep
                 print (solutionIndex)               
