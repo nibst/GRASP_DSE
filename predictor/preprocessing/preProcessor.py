@@ -140,8 +140,8 @@ class PreProcessor():
         results = []
         for solutionIndex in range(len(self.dataset)):
             solutionResults = []
-            for metric in self.dataset[solutionIndex].resultados:
-                solutionResults.append(self.dataset[solutionIndex].resultados[metric])
+            for metric in self.dataset[solutionIndex].results:
+                solutionResults.append(self.dataset[solutionIndex].results[metric])
             results.append(solutionResults)
         #print(results)
         return results

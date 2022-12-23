@@ -6,12 +6,12 @@ class RandomEstimator(Estimator):
     def trainModel(self):
         pass 
     def estimateSynthesis(self,solution:Solution):
-        resultados= {}
-        resultados['LUT'] = randrange(100)
-        resultados['FF'] = randrange(100)
-        resultados['DSP'] = randrange(100)
-        resultados['BRAM'] = randrange(100)
-        resultados['latency'] = randrange(100)
-        solution.resultados = resultados
+        results= {}
+        results['LUT'] = randrange(100)
+        results['FF'] = randrange(100)
+        results['DSP'] = randrange(100)
+        results['BRAM'] = randrange(100)
+        results['latency'] = randrange(100)
+        solution.results = results
         return solution
     

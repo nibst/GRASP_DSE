@@ -39,7 +39,12 @@ class ParetoComparer(HeuristicComparer):
         intersection = []
         for solution1 in solutions1.values():
             for solution2 in solutions2.values():
-                if solution1.resultados[self.metric1] == solution2.resultados[self.metric1] \
-                and solution1.resultados[self.metric2] == solution2.resultados[self.metric2]:
-                    intersection.append(solution1)
+                try:
+                    if solution1.resultados[self.metric1] == solution2.resultados[self.metric1] \
+                    and solution1.resultados[self.metric2] == solution2.resultados[self.metric2]:
+                        intersection.append(solution1)
+                except:
+                    if solution1.results[self.metric1] == solution2.results[self.metric1] \
+                    and solution1.results[self.metric2] == solution2.results[self.metric2]:
+                        intersection.append(solution1)
         return intersection

@@ -41,7 +41,7 @@ class M5PrimeEstimator(Estimator):
         features, results = self.processor.process(dataset)
         results = []
         for i in range(len(dataset)): # works for both dict and list of solutions that are serial keys
-            results.append(dataset[i].resultados[metric])
+            results.append(dataset[i].results[metric])
         
         features = np.array(features) 
         results = np.array(results)
@@ -77,7 +77,7 @@ class M5PrimeEstimator(Estimator):
         features, results =  self.processor.process(dataset)
         results = []
         for i in range(len(dataset)): # works for both dict and list of solutions that are serial keys
-            results.append(dataset[i].resultados[metric])
+            results.append(dataset[i].results[metric])
         return model.score(features,results)
      
     def score(self,dataset):

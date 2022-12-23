@@ -19,8 +19,12 @@ class PlotMaker:
         x_name = self.xAxis
         y_name = self.yAxis
         for i in range(len(solutions)):
-            resources = solutions[i].resultados[x_name]#self.solutions[element].resultados['resources']
-            lat = solutions[i].resultados[y_name]
+            try:
+                resources = solutions[i].results[x_name]#self.solutions[element].results['resources']
+                lat = solutions[i].results[y_name]
+            except:
+                resources = solutions[i].resultados[x_name]#self.solutions[element].results['resources']
+                lat = solutions[i].resultados[y_name]
             listLUT.append(resources)
             listLat.append(lat)
         
