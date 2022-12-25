@@ -17,6 +17,8 @@ class PreProcessor():
             solutionToLst = []
             solutionToLst.append(dataset)
             dataset = solutionToLst
+        if dataset == None:
+            raise Exception("**ERROR DATASET IS EMPTY**")
         self.dataset = dataset
         featuresByColumn = self.__takeColumns()
         processedResults = self.__extractResults()
