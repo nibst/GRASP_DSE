@@ -33,7 +33,7 @@ if __name__ == "__main__":
     parser.add_argument("-d", "--dFile", help = "Directives input file",required=True)
     parser.add_argument("-p", "--prjFile", help = "Prj. top file",required=True)
     parser.add_argument("-o", "--saveFile", help = "name of save file",required=True)
-    
+    parser.add_argument("-args", "--arguments", help = "arguments of heuristic",required=False, nargs='+')
 
  
     # Read arguments from command line
@@ -44,6 +44,7 @@ if __name__ == "__main__":
     filesDict['dFile'] = args.dFile
     filesDict['prjFile'] = args.prjFile
     filesDict['saveFile'] = args.saveFile
+    filesDict['arguments'] = args.arguments
 
     
     RESOURCE_TO_COMPARE = 'resources'
@@ -58,7 +59,7 @@ if __name__ == "__main__":
     factory = RandomForestFactory(filesDict["dFile"])
     #heuristic1 = GA(filesDict,'directives.tcl',factory,5)
      
-    heuristic1 = GRASP(filesDict,'./domain/directives.tcl',model,timeLimit=6,trainTime=1,saveInterval=1500,RCLSynthesisInterval=2)   
+    heuristic1 = GRASP(filesDict,'./domain/directives.tcl',model,timeLimit=3,trainTime=1,saveInterval=1500,RCLSynthesisInterval=int(filesDict['arguments'][0]))   
     #file para plotar o resultado do computador remoto, caso queira interagir com o plot ao invés de ser só um jpg
     heuristic1.writeToFile(filesDict['saveFile'])
     #heuristic1 = GA(filesDict,'./domain/directives.tcl',factory,36000,saveInterval=1500)
@@ -75,11 +76,6 @@ if __name__ == "__main__":
     '''
 
     
-
-   
-
-    
-
     RESOURCE_TO_COMPARE = 'resources'
     ######################### GRAPH
 
