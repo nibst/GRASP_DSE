@@ -22,7 +22,10 @@ class GRASP(Heuristic):
         self.start = time.time()
         sample = RandomSearch(filesDict, outPath,self.TRAIN_TIME,saveInterval=saveInterval,saveName="GRASP")
         self.estimator = model
-        self.estimator.trainModel(sample.solutions)
+        try:
+            self.estimator.trainModel(sample.solutions)
+        except Exception as error:
+            print(error)
         for solution in sample.solutions.values():
             self.saveSolution(solution)
         random.seed(seed)        
@@ -128,10 +131,10 @@ class GRASP(Heuristic):
                 try:
                     synthesisTimeLimit = self._SECONDS - (time.time() - self.start) 
                     self.synthesisWrapper(constructedSolution,synthesisTimeLimit)
+                    self.estimator.trainModel(constructedSolution)
                 except Exception as error:
                     print(error)
-                else:
-                    self.estimator.trainModel(constructedSolution)
+ 
 
             self.__removeRedundantDirectives(dictDirCopy,directiveGroup,s)
         #basically, if last iteration of the loop above didnt got synthesized then synthesize, else dont synthesize
@@ -140,11 +143,10 @@ class GRASP(Heuristic):
             try:
                 synthesisTimeLimit = self._SECONDS - (time.time() - self.start) 
                 self.synthesisWrapper(constructedSolution,synthesisTimeLimit)
+                self.estimator.trainModel(constructedSolution)
             except Exception as error:
                 print(error)
-            else:
-                self.estimator.trainModel(constructedSolution)
-        
+
         return constructedSolution
 
     def __removeRedundantDirectives(self,dictDir:dict,directiveGroup,directive):
@@ -187,7 +189,6 @@ class GRASP(Heuristic):
             except Exception as error:
                 print(error)
             else:
-                
                 synthesisCount+=1
                 topSynthesis.append(neighborsSorted[i])
                 if synthesisCount == n:
@@ -195,7 +196,10 @@ class GRASP(Heuristic):
             i+=1
         topSolution=None
         if topSynthesis:
-            self.estimator.trainModel(topSynthesis)
+            try:
+                self.estimator.trainModel(topSynthesis)
+            except Exception as error:
+                print(error)
             topSolution = max(topSynthesis,key=lambda k: k.results['resources'] * k.results['latency'])    
         return topSolution
 
