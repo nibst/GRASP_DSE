@@ -32,6 +32,7 @@ if __name__ == "__main__":
     parser.add_argument("-c", "--cFiles", help = "C input files list", required=True, nargs='+')
     parser.add_argument("-d", "--dFile", help = "Directives input file",required=True)
     parser.add_argument("-p", "--prjFile", help = "Prj. top file",required=True)
+    parser.add_argument("-o", "--saveFile", help = "name of save file",required=True)
     
 
  
@@ -42,6 +43,7 @@ if __name__ == "__main__":
     filesDict['cFiles'] = args.cFiles
     filesDict['dFile'] = args.dFile
     filesDict['prjFile'] = args.prjFile
+    filesDict['saveFile'] = args.saveFile
 
     
     RESOURCE_TO_COMPARE = 'resources'
@@ -55,10 +57,10 @@ if __name__ == "__main__":
 
     factory = RandomForestFactory(filesDict["dFile"])
     #heuristic1 = GA(filesDict,'directives.tcl',factory,5)
-    
-    heuristic1 = GRASP(filesDict,'./domain/directives.tcl',model,timeLimit=36000,trainTime=10800,saveInterval=1500,RCLSynthesisInterval=2)   
+     
+    heuristic1 = GRASP(filesDict,'./domain/directives.tcl',model,timeLimit=6,trainTime=1,saveInterval=1500,RCLSynthesisInterval=2)   
     #file para plotar o resultado do computador remoto, caso queira interagir com o plot ao invés de ser só um jpg
-    heuristic1.writeToFile('./dse/gsm_GRASP10h_3h_2')
+    heuristic1.writeToFile(filesDict['saveFile'])
     #heuristic1 = GA(filesDict,'./domain/directives.tcl',factory,36000,saveInterval=1500)
     #heuristic1.writeToFile('./dse/aes_genetic10h')
 
@@ -67,8 +69,11 @@ if __name__ == "__main__":
     with open("./dse/gsm_random14h",'rb') as file:
         heuristic1 = pickle.load(file)
     '''
+    '''
     with open("./dse/gsm_GRASP10h_3h",'rb') as file:
         heuristic2 = pickle.load(file)
+    '''
+
     
 
    
@@ -79,12 +84,12 @@ if __name__ == "__main__":
     ######################### GRAPH
 
     comparer = ParetoComparer(RESOURCE_TO_COMPARE,'latency')
-    print(comparer.compare(heuristic1,heuristic2))
-    print(comparer.compare(heuristic2,heuristic1))
+    #print(comparer.compare(heuristic1,heuristic2))
+    #print(comparer.compare(heuristic2,heuristic1))
    
     plt = PlotMaker("gsm", RESOURCE_TO_COMPARE, 'latency')
     plt.createPlot(heuristic1.solutions) #blue
-    plt.createPlot(heuristic2.solutions) 
+    #plt.createPlot(heuristic2.solutions) 
     
 
 
@@ -94,7 +99,7 @@ if __name__ == "__main__":
     #samplePLt.createPlot(heuristic.sample.solutions)
     #plt.createPlot(heuristic.sample2.solutions) #green
     plt.savePlotAsJPG()
-    plt.showPlot()
+
     
 
     

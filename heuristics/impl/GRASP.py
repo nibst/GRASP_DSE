@@ -124,13 +124,14 @@ class GRASP(Heuristic):
             solutionToBuild[directiveGroup] = s
             if ((count+1) % self.RCLSynthesisInterval == 0): #count+1 just to not include 0 on the count
                 #synthesis of current solution under construction and feed solution to model
+                sol = Solution(solutionToBuild,self.cFiles,self.prjFile)
                 try:
                     synthesisTimeLimit = self._SECONDS - (time.time() - self.start) 
-                    self.synthesisWrapper(solutionToBuild,synthesisTimeLimit)
+                    self.synthesisWrapper(sol,synthesisTimeLimit)
                 except Exception as error:
                     print(error)
                 else:
-                    self.estimator.trainModel(solutionToBuild)
+                    self.estimator.trainModel(sol)
 
             self.__removeRedundantDirectives(dictDirCopy,directiveGroup,s)
 
