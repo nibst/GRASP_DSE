@@ -11,8 +11,6 @@ import pickle
 
 class Heuristic(ABC):
 
-    #TODO colocar super().__init__(bla bla) em todas nossas heuristicas
-    #TODO make solutions be a list of solutions instead of a dict
     def __init__(self,filesDict,outPath):
         self.filesDict = filesDict
         self.directivesTxt = Path(filesDict['dFile']).read_text()
@@ -25,8 +23,7 @@ class Heuristic(ABC):
         self.dictDir = {}
         for key in directivesDict:
             self.dictDir[key] = directivesDict[key]['possible_directives']
-        self.solutionIndex = 0
-        self.solutions = {}
+        self.solutions = []
 
     def parsedTxt(self):
         return readDirectivesFile.fileParser(self.directivesTxt)
@@ -198,8 +195,7 @@ class Heuristic(ABC):
         #if get cached solution
         #   use cached solution
         #else add solution to tree and add solutin to self.solution
-        self.solutions[self.solutionIndex] = deep               
-        self.solutionIndex+=1
+        self.solutions.append(deep)               
 
 
     def synthesisWrapper(self,solution:Solution,timeLimit=None):

@@ -33,21 +33,19 @@ class RandomSearchWithEstimator(Heuristic):
         number of designs that will explored by estimating in that iteration
     """
 
-    _SECONDS = 100
+    _SECONDS = 1
     _NUM_OF_TOP = 10
     _NUM_OF_ESTIMATED = 1000
     def __init__(self,filesDict,outPath,model:Estimator):#TODO receber como parametro de modelo preditivo
         
         super().__init__(filesDict, outPath)       
-        sample = RandomSearch(filesDict, outPath)
+        sample = RandomSearch(filesDict, outPath,timeLimit=1)
         sample2 = Greedy(filesDict,outPath,'resources')
-        for solutionIndex in sample.solutions.keys():
-            pass
-        for solution in sample2.solutions.values():
-            solutionIndex+=1
-            sample.solutions[solutionIndex] = solution
+
+        for solution in sample2.solutions:
+            sample.solutions.append(solution)
         self.sample = sample
-        for solution in self.sample.solutions.values():
+        for solution in self.sample.solutions:
             self.saveSolution(solution)
         self.estimator = model
         self.estimator.trainModel(sample.solutions)
@@ -63,7 +61,7 @@ class RandomSearchWithEstimator(Heuristic):
     def __initializeControlTree(self,controlTree:dict):
         #colocar as sinteses do sample aqui pra n rodar novamente
         
-        for solution in self.sample.solutions.values():
+        for solution in self.sample.solutions:
             node = controlTree
             for directiveType in solution.directives.keys():
                 directive=solution.directives[directiveType]

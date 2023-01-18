@@ -71,8 +71,9 @@ class RandomSearch(Heuristic):
                     print(e)
                 #executa else qnd try roda sem erros
                 else:   
-                    print(solution.results)                  
-                    print (self.solutionIndex)      
+                    print(solution.results) 
+                    print("HEY")                 
+                    print (len(self.solutions))      
 
             end = time.time()
             if self.saveInterval:

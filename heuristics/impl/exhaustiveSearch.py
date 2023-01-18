@@ -6,11 +6,11 @@ import copy
 import itertools
 import time
 class ExhaustiveSearch(Heuristic):
-    _SECONDS = 48800
+    _SECONDS = 2
     def __init__(self,filesDict,outPath):
         super().__init__(filesDict, outPath)
 
-        self.solutions = self.createSolutionsDict()
+        self.createSolutionsDict()
         
     #Atributos dos caminhos dos arquivos de entrada e saída.
     #Gera soluções conforme métodos abaixo e as salva numa lista em solutions
@@ -18,11 +18,7 @@ class ExhaustiveSearch(Heuristic):
 
 
     def createSolutionsDict(self):
-        
-        solutionsDict = {}
                     
-        
-        solutionIndex=1
         generateScript(self.cFiles, self.prjFile)
         
         keys,values = zip(*self.dictDir.items())
@@ -41,25 +37,20 @@ class ExhaustiveSearch(Heuristic):
                 count+=1
             else:
                 invalid+=1
-        print(count)
-        print(invalid)
-        """
+    
             try:
-                solution.runSynthesis()
+                #chama synthesis e salva em self.solutions
+                self.synthesisWrapper(solution)
             except Exception as e:
                 print(e)
-            else:
-                print(solution.results)             
-                deep = copy.deepcopy(solution)   
-                solutionsDict[solutionIndex] = deep
-                print (solutionIndex)               
-                solutionIndex+=1
+            
             end = time.time()
             totalTime += (end-start)
             if totalTime >= self._SECONDS: #time that this will run for
-                return solutionsDict
-        return solutionsDict
-        """
+                return 
+        print(count)
+        print(invalid)
+        
         
        
  

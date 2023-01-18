@@ -12,17 +12,18 @@ from typing import List
 
 
 class GA(Heuristic):
-    TRAIN_TIME = 3600
-    def __init__(self,filesDict,outPath,estimatorFactory:EstimatorFactory,timeLimit=43200,saveInterval = None,seed=0 ):
+
+    def __init__(self,filesDict,outPath,estimatorFactory:EstimatorFactory,timeLimit=43200,trainTime=3600,saveInterval = None,seed=0 ):
         super().__init__(filesDict, outPath)
         self._SECONDS = timeLimit
+        self.TRAIN_TIME = trainTime
         self.populationSize = 60 #any number
-        self.numOffspringsDiscarded = 80 # exit criteria -> num of chromosomes/offsprings/individuals generated which do not improve any parent 
+        self.maxOffspringsDiscarded = 80 # exit criteria -> num of chromosomes/offsprings/individuals generated which do not improve any parent 
         self.estimatorFactory = estimatorFactory
         self.estimator = None
         self.crossoverRate = 0.8 #any number between 0 and 1
         self.mutationRate = 0.1 #any number between 0 and 1
-        
+        self.modelThreshold = 0.1
         random.seed(seed)
 
         self.numOfGenes = len(self.dictDir.keys())
@@ -91,12 +92,12 @@ class GA(Heuristic):
         population = self.randomSample() #list of random Solutions (without their HLS results yet)
         interval = 0
          
-        discardedOffsprings = []
+        discardedOffsprings = 0
         new_population = []
         parentPairs = self.selector(population)
         pairIndex = 0
         numSaves = 0 # number of times that all solutions were saved
-        while len(discardedOffsprings) < self.numOffspringsDiscarded and (time.time() - self.start) < self._SECONDS:
+        while discardedOffsprings < self.maxOffspringsDiscarded and (time.time() - self.start) < self._SECONDS:
 
             try:
                 parent1,parent2 = parentPairs[pairIndex]
@@ -110,10 +111,10 @@ class GA(Heuristic):
             estimatedResults = self.estimator.estimateSynthesis(offspring)
             offspring.setresults(estimatedResults)
             newParent1,newParent2 = self.overwriteParent(parent1,parent2,offspring)
-
+            
             #if offspring dont overwrite neither of the parents
             if newParent1.directives == parent1.directives and newParent2.directives == parent2.directives:
-                discardedOffsprings.append(offspring)
+                discardedOffsprings += 1
 
             new_population.extend([newParent1,newParent2])
             
@@ -152,11 +153,11 @@ class GA(Heuristic):
 
         population = new_population
         return population
-            
+
     def __new_predictive_model(self):
         #maybe create new model, as deep copy of self.estimator
         score = -1
-        threshold = 0.7
+        threshold = self.modelThreshold 
         self.estimator = self.estimatorFactory.create()
         sample = RandomSearch(self.filesDict, self.outPath,self.TRAIN_TIME,saveInterval=self.saveInterval,saveName="genetic")
         start = time.time()
@@ -173,9 +174,10 @@ class GA(Heuristic):
                 print(e)            
             print(f'score: {score} ')
             #full train
-            print(f'sample solutions lenght: {len(sample.solutions.keys())}') 
+            print(f'sample solutions lenght: {len(sample.solutions)}') 
             
             if score < threshold: 
+                #if the time spent creating a new model is x times the TRAIN TIME, lower the threshold
                 if time.time() - start >= self.TRAIN_TIME*3:
                     threshold-=0.05   
                 #create more samples
@@ -184,7 +186,7 @@ class GA(Heuristic):
             if (time.time() - self.start) >= self._SECONDS:
                 break
         
-        for solution in sample.solutions.values():
+        for solution in sample.solutions:
             self.saveSolution(solution)
     
     def selector(self,population):

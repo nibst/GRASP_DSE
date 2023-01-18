@@ -17,8 +17,7 @@ class HillClimbing(Heuristic):
         self.createSolutionsDict()
     def createSolutionsDict(self):
         
-        solutionsDict = {}
-        txlDict = {}
+ 
         final = dict.fromkeys(self.dictDir,None) #Cria um dicionário 'final' a partir do 'dictDir' mas 
                                                 #mantendo apenas os títulos das diretivas - seu valores são
                                                 #trocados por None
@@ -47,8 +46,7 @@ class HillClimbing(Heuristic):
                     print(solution.results)              
                     resourcesXLatency = solution.results['resources'] * solution.results['latency']
                     if resourcesXLatency<bestResourcesxLatency:          #mantendo aquelas onde o nro de LUTs é estritamente
-                        bestResourcesxLatency = resourcesXLatency        #menor que o da anterior.
-                                            
+                        bestResourcesxLatency = resourcesXLatency        #menor que o da anterior.                    
                     else:
                         break
 

@@ -26,7 +26,7 @@ class GRASP(Heuristic):
             self.estimator.trainModel(sample.solutions)
         except Exception as error:
             print(error)
-        for solution in sample.solutions.values():
+        for solution in sample.solutions:
             self.saveSolution(solution)
         random.seed(seed)        
         self.saveInterval = saveInterval#every 'saveInterval' time, save solutions in a file
