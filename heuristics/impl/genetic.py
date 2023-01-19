@@ -9,11 +9,12 @@ import copy
 import random
 from sklearn.model_selection import train_test_split
 from typing import List
+from utils.abstractSolutionsSaver import SolutionsSaver
 
 
 class GA(Heuristic):
 
-    def __init__(self,filesDict,outPath,estimatorFactory:EstimatorFactory,timeLimit=43200,trainTime=3600,saveInterval = None,seed=0 ):
+    def __init__(self,filesDict,outPath,estimatorFactory:EstimatorFactory,timeLimit=43200,trainTime=3600,solutionSaver:SolutionsSaver = None,seed=0 ):
         super().__init__(filesDict, outPath)
         self._SECONDS = timeLimit
         self.TRAIN_TIME = trainTime
@@ -29,9 +30,9 @@ class GA(Heuristic):
         self.numOfGenes = len(self.dictDir.keys())
         self.listOfKeys = list(self.dictDir.keys()) #to use numbers (indexes of list) instead of strings in the algorithm logic
         self.chaceToOverwrite = 0.5 #probability of overwritting parent with offspring if offspring dominates in one of the objectives
-        self.new_model_interval = 120
+        self.new_model_interval = 1200
 
-        self.saveInterval = saveInterval
+        self.solutionSaver = solutionSaver
         self.start = time.time()
         self.__new_predictive_model()
         self.finalPopulation = self.createSolutionsDict()
@@ -119,7 +120,7 @@ class GA(Heuristic):
             new_population.extend([newParent1,newParent2])
             
             #synthesize parents that went to final pareto population 
-
+            print('1')
             synthesisTimeLimit = self._SECONDS - (time.time() - self.start) 
             try:
                 self.synthesisWrapper(newParent1,synthesisTimeLimit)
@@ -140,10 +141,10 @@ class GA(Heuristic):
             if (time.time() - self.start) >= self._SECONDS:
                 break
             #save all current solutions 
-            if self.saveInterval:
-                if (time.time() - self.start)/self.saveInterval >= numSaves + 1:
-                    self.writeToFile(f'./time_stamps/timeStampGenetic{numSaves}')
-                    numSaves+=1
+            print('2')
+            if self.solutionSaver:
+                print('hmm')
+                self.solutionSaver.save(self.solutions,'./time_stamps/timeStampGenetic')
             pairIndex+=1
             interval+=1
             if interval % self.new_model_interval == 0:
@@ -159,7 +160,7 @@ class GA(Heuristic):
         score = -1
         threshold = self.modelThreshold 
         self.estimator = self.estimatorFactory.create()
-        sample = RandomSearch(self.filesDict, self.outPath,self.TRAIN_TIME,saveInterval=self.saveInterval,saveName="genetic")
+        sample = RandomSearch(self.filesDict, self.outPath,self.TRAIN_TIME,solutionSaver=self.solutionSaver)
         start = time.time()
         while score < threshold:
             try:    

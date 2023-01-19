@@ -20,14 +20,13 @@ from utils.Script_tcl import generateScript
 import copy
 from random import seed
 from random import randint
-
+from utils.abstractSolutionsSaver import SolutionsSaver
 
 class RandomSearch(Heuristic):
     
-    def __init__(self,filesDict,outPath,timeLimit=3600,saveInterval = None,saveName="timeStamp"):
+    def __init__(self,filesDict,outPath,timeLimit=3600,solutionSaver:SolutionsSaver = None):
         super().__init__(filesDict, outPath)
-        self.saveInterval = saveInterval
-        self.saveName = saveName
+        self.solutionSaver = solutionSaver
         self._SECONDS = timeLimit
         self.controlTree:dict = {}
         self.createSolutionsDict()
@@ -76,10 +75,8 @@ class RandomSearch(Heuristic):
                     print (len(self.solutions))      
 
             end = time.time()
-            if self.saveInterval:
-                if (end - start)/self.saveInterval >= numSaves + 1:
-                    self.writeToFile(f'./time_stamps/{self.saveName}RandomSearch{numSaves}')
-                    numSaves+=1
+            if self.solutionSaver:
+                self.solutionSaver.save(self.solutions,'./time_stamps/timeStampRandomSearch')
             if end - start >= self._SECONDS: 
                 break                
                         

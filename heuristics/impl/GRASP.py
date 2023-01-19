@@ -8,19 +8,19 @@ from domain.solution import Solution
 from utils.Script_tcl import generateScript
 import copy
 import random
-
+from utils.abstractSolutionsSaver import SolutionsSaver
 
 
 class GRASP(Heuristic):
     
     
-    def __init__(self,filesDict,outPath,model:Estimator,timeLimit=43200,trainTime = 7200, saveInterval = None,seed=0, RCLSynthesisInterval=0):
+    def __init__(self,filesDict,outPath,model:Estimator,timeLimit=43200,trainTime = 7200, solutionSaver:SolutionsSaver = None,seed=0, RCLSynthesisInterval=0):
         super().__init__(filesDict, outPath)
         self.TRAIN_TIME = trainTime #3
         self._SECONDS = timeLimit
         self.alpha = 0.7
         self.start = time.time()
-        sample = RandomSearch(filesDict, outPath,self.TRAIN_TIME,saveInterval=saveInterval,saveName="GRASP")
+        sample = RandomSearch(filesDict, outPath,self.TRAIN_TIME,solutionSaver=solutionSaver)
         self.estimator = model
         try:
             self.estimator.trainModel(sample.solutions)
@@ -29,7 +29,7 @@ class GRASP(Heuristic):
         for solution in sample.solutions:
             self.appendSolution(solution)
         random.seed(seed)        
-        self.saveInterval = saveInterval#every 'saveInterval' time, save solutions in a file
+        self.solutionSaver = solutionSaver#every 'x' time, save solutions in a file
         if RCLSynthesisInterval==0:
             self.RCLSynthesisInterval = float('inf')
         else:
@@ -60,11 +60,9 @@ class GRASP(Heuristic):
         #for i in range(iterations):
         while end-self.start <= self._SECONDS:
             solution = self.constructGreedyRandomizedSolution()
-            #save all current solutions 
-            if self.saveInterval:
-                if (time.time() - self.start)/self.saveInterval >= numSaves + 1:
-                    self.writeToFile(f'./time_stamps/timeStampGRASP{numSaves}')
-                    numSaves+=1
+            #save all current solutions every interval determined by solutionsaver
+            if self.solutionSaver:
+                self.solutionSaver.save(self.solutions,'./time_stamps/timeStampGRASP')
             #repair solution?
             solution = self.localSearch(solution)
             end = time.time()
