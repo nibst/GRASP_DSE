@@ -27,7 +27,7 @@ class GRASP(Heuristic):
         except Exception as error:
             print(error)
         for solution in sample.solutions:
-            self.saveSolution(solution)
+            self.appendSolution(solution)
         random.seed(seed)        
         self.saveInterval = saveInterval#every 'saveInterval' time, save solutions in a file
         if RCLSynthesisInterval==0:

@@ -190,7 +190,7 @@ class Heuristic(ABC):
         """
         pass
 
-    def saveSolution(self,solution):
+    def appendSolution(self,solution):
         deep = copy.deepcopy(solution)   
         #if get cached solution
         #   use cached solution
@@ -207,5 +207,5 @@ class Heuristic(ABC):
         except Exception as e:
             raise
         else:
-            self.saveSolution(solution)
+            self.appendSolution(solution)
             

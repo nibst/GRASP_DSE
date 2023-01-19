@@ -187,7 +187,7 @@ class GA(Heuristic):
                 break
         
         for solution in sample.solutions:
-            self.saveSolution(solution)
+            self.appendSolution(solution)
     
     def selector(self,population):
         parentsList = []
