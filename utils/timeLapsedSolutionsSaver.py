@@ -13,6 +13,7 @@ class TimeLapsedSolutionsSaver():
 
     def save(self,solutions:List[Solution],savePath):
         #save all current solutions 
+        self.solutions.append(solutions)
         if self.saveInterval:
             if (time.time() - self.start)/self.saveInterval >= self.numSaves + 1:
                 self.__writeToFile(f'{savePath}{self.numSaves}')
@@ -20,4 +21,4 @@ class TimeLapsedSolutionsSaver():
 
     def __writeToFile(self,filePath):
         with open(filePath, 'wb') as solutionsFile:
-            pickle.dump(self, solutionsFile)
+            pickle.dump(self.solutions, solutionsFile)
