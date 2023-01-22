@@ -35,10 +35,10 @@ class GA(Heuristic):
         self.solutionSaver = solutionSaver
         self.start = time.time()
         self.__new_predictive_model()
-        self.finalPopulation = self.createSolutionsDict()
+        self.finalPopulation = self.run()
         
         
-    def createSolutionsDict(self):
+    def run(self):
         """
         n: numero de individuos
         g: numero de gerações
@@ -182,7 +182,7 @@ class GA(Heuristic):
                 if time.time() - start >= self.TRAIN_TIME*3:
                     threshold-=0.05   
                 #create more samples
-                sample.createSolutionsDict()
+                sample.run()
             #if time runs out
             if (time.time() - self.start) >= self._SECONDS:
                 break

@@ -32,7 +32,7 @@ class Heuristic(ABC):
     
 
     @abstractmethod                         # Método abstrato a sere herdados e implementado
-    def createSolutionsDict(self):           # pelas classes filhas
+    def run(self):           # pelas classes filhas
         pass
 
     def writeToFile(self,filename):

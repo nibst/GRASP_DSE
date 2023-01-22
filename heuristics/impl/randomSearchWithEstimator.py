@@ -24,7 +24,7 @@ class RandomSearchWithEstimator(Heuristic):
     Attributes
     ----------
     _SECONDS : int
-        number of seconds that the function ``createSolutionsDict`` runs for
+        number of seconds that the function ``run`` runs for
     
     _NUM_OF_TOP : int
         number of estimated designs that will be select to be on the top designs list
@@ -49,7 +49,7 @@ class RandomSearchWithEstimator(Heuristic):
             self.appendSolution(solution)
         self.estimator = model
         self.estimator.trainModel(sample.solutions)
-        self.createSolutionsDict()
+        self.run()
         """
         for solutionIndex in self.solutions.keys():
             pass
@@ -120,7 +120,7 @@ class RandomSearchWithEstimator(Heuristic):
                 worstSolution = solution
         topSolutions.remove(worstSolution)
 
-    def createSolutionsDict(self):
+    def run(self):
         controlTree = {}
         self.__initializeControlTree(controlTree)
         solutionIndex=0

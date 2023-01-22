@@ -27,12 +27,12 @@ class GreedyWithEstimator(Heuristic):
         score = self.rf.score(test)
         print(score)
         
-        self.solutions = self.createSolutionsDict()
+        self.solutions = self.run()
     #Atributos dos caminhos dos arquivos de entrada e saída.
     #Gera soluções conforme métodos abaixo e as salva numa lista em solutions
 
     
-    def createSolutionsDict(self):
+    def run(self):
         
         dictDir=self.parsedTxt() 
         solutionsDict = {}

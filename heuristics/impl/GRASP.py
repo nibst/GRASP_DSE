@@ -36,10 +36,10 @@ class GRASP(Heuristic):
             self.RCLSynthesisInterval = RCLSynthesisInterval
         
         
-        self.createSolutionsDict()
+        self.run()
        
     
-    def createSolutionsDict(self,iterations=10):
+    def run(self,iterations=10):
         """
         procedure GRASP(Max Iterations,Seed)
             1 Read Input();

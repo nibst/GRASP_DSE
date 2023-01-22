@@ -13,9 +13,9 @@ class Greedy(Heuristic):
         self.metric = metricName
 
         #Gera soluções conforme métodos abaixo e as salva num dict em self.solutions
-        self.createSolutionsDict()
+        self.run()
 
-    def createSolutionsDict(self):
+    def run(self):
         
         
         final = dict.fromkeys(self.dictDir,None) #Cria um dicionário 'final' a partir do 'dictDir' mas 

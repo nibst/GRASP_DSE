@@ -10,14 +10,14 @@ class ExhaustiveSearch(Heuristic):
     def __init__(self,filesDict,outPath):
         super().__init__(filesDict, outPath)
 
-        self.createSolutionsDict()
+        self.run()
         
     #Atributos dos caminhos dos arquivos de entrada e saída.
     #Gera soluções conforme métodos abaixo e as salva numa lista em solutions
 
 
 
-    def createSolutionsDict(self):
+    def run(self):
                     
         generateScript(self.cFiles, self.prjFile)
         

@@ -14,8 +14,8 @@ class HillClimbing(Heuristic):
 
     def __init__(self,filesDict,outPath):
         super().__init__(filesDict, outPath)    
-        self.createSolutionsDict()
-    def createSolutionsDict(self):
+        self.run()
+    def run(self):
         
  
         final = dict.fromkeys(self.dictDir,None) #Cria um dicionário 'final' a partir do 'dictDir' mas 
