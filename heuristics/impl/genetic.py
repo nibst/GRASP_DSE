@@ -19,7 +19,6 @@ class GA(Heuristic):
         self._SECONDS = timeLimit
         self.TRAIN_TIME = trainTime
         self.populationSize = 60 #any number
-        self.maxOffspringsDiscarded = 80 # exit criteria -> num of chromosomes/offsprings/individuals generated which do not improve any parent 
         self.estimatorFactory = estimatorFactory
         self.estimator = None
         self.crossoverRate = 0.8 #any number between 0 and 1
@@ -86,64 +85,38 @@ class GA(Heuristic):
         else:
             mutation = False
         if crossover or mutation:
-            new_population.extend([offspring])
+            newPopulation.extend([offspring])
 
         """
         generateScript(self.cFiles, self.prjFile)
         population = self.randomSample() #list of random Solutions (without their HLS results yet)
         interval = 0
          
-        discardedOffsprings = 0
-        new_population = []
+        newPopulation = []
         parentPairs = self.selector(population)
         pairIndex = 0
         numSaves = 0 # number of times that all solutions were saved
-        while discardedOffsprings < self.maxOffspringsDiscarded and (time.time() - self.start) < self._SECONDS:
+        while (time.time() - self.start) < self._SECONDS:
 
             try:
-                parent1,parent2 = parentPairs[pairIndex]
-            except:
+                newParent1,newParent2 = self.__generateNextPairOfParents(parentPairs[pairIndex])
+            except IndexError:
                 population = self.randomSample() #list of random Solutions (without their HLS results yet)
                 parentPairs = self.selector(population)
                 pairIndex = 0
-                parent1,parent2 = parentPairs[pairIndex]
-            offspring = self.crossover(parent1,parent2)
-            offspring = self.mutation(offspring)    
-            estimatedResults = self.estimator.estimateSynthesis(offspring)
-            offspring.setresults(estimatedResults)
-            newParent1,newParent2 = self.overwriteParent(parent1,parent2,offspring)
-            
-            #if offspring dont overwrite neither of the parents
-            if newParent1.directives == parent1.directives and newParent2.directives == parent2.directives:
-                discardedOffsprings += 1
 
-            new_population.extend([newParent1,newParent2])
-            
+            newPopulation.extend([newParent1,newParent2])
             #synthesize parents that went to final pareto population 
-            print('1')
-            synthesisTimeLimit = self._SECONDS - (time.time() - self.start) 
             try:
-                self.synthesisWrapper(newParent1,synthesisTimeLimit)
+                self.__synthesizeBothNewParents(newParent1,newParent2)
             except TimeExceededException as e:
                 print(e)
                 return
-            except Exception as e:
-                print(e)
 
-            synthesisTimeLimit = self._SECONDS - (time.time() - self.start)  
-            try:
-                self.synthesisWrapper(newParent2,synthesisTimeLimit)
-            except TimeExceededException as e:
-                print(e)
-                return
-            except Exception as e:
-                print(e) 
             if (time.time() - self.start) >= self._SECONDS:
                 break
             #save all current solutions 
-            print('2')
             if self.solutionSaver:
-                print('hmm')
                 self.solutionSaver.save(self.solutions,'./time_stamps/timeStampGenetic')
             pairIndex+=1
             interval+=1
@@ -152,9 +125,37 @@ class GA(Heuristic):
             
 
 
-        population = new_population
+        population = newPopulation
         return population
 
+    def __generateNextPairOfParents(self,parentPair):
+            parent1,parent2 = parentPair
+            offspring = self.crossover(parent1,parent2)
+            offspring = self.mutation(offspring)    
+            estimatedResults = self.estimator.estimateSynthesis(offspring)
+            offspring.setresults(estimatedResults)
+            newParent1,newParent2 = self.overwriteParent(parent1,parent2,offspring)
+            return (newParent1,newParent2)
+
+    def __synthesizeBothNewParents(self,newParent1,newParent2):
+            synthesisTimeLimit = self._SECONDS - (time.time() - self.start) 
+            try:
+                self.synthesisWrapper(newParent1,synthesisTimeLimit)
+            except TimeExceededException as e:
+                print(e)
+                raise
+            except Exception as e:
+                print(e)
+
+            synthesisTimeLimit = self._SECONDS - (time.time() - self.start)  
+            try:
+                self.synthesisWrapper(newParent2,synthesisTimeLimit)
+            except TimeExceededException as e:
+                print(e)
+                raise
+            except Exception as e:
+                print(e) 
+                
     def __new_predictive_model(self):
         #maybe create new model, as deep copy of self.estimator
         score = -1
