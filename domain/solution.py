@@ -7,7 +7,6 @@ import time
 import subprocess
 import psutil
 import sys
-
 from exceptions.timeExceededException import TimeExceededException
 class Solution:
     _MAX_RAM_USAGE =30 #in percentage
@@ -73,7 +72,7 @@ class Solution:
 
         self.results = results
    
-    def runSynthesis(self,timeLimit = None):
+    def runSynthesis(self,timeLimit = None, solutionSaver= None):
         #TODO antes de chamar a sintese verificar se ja tem um processo do vivado rodando e fazer esse processo n ser confundido com o que vamos rodar
         #path to synthesis data
         xml='./Raise_dse/solution1/syn/report/csynth.xml'
@@ -125,6 +124,8 @@ class Solution:
                     if time.time()-start >= timeLimit:
                         proc.kill()   
                         raise TimeExceededException("****Vivado_HLS has exceed max time usage****")
+                    if solutionSaver:
+                        solutionSaver.save(None,'./time_stamps/timeStampFiller')
                     break
             
         if os.path.exists(xml):  
