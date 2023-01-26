@@ -29,7 +29,7 @@ class GA(Heuristic):
         self.numOfGenes = len(self.dictDir.keys())
         self.listOfKeys = list(self.dictDir.keys()) #to use numbers (indexes of list) instead of strings in the algorithm logic
         self.chaceToOverwrite = 0.5 #probability of overwritting parent with offspring if offspring dominates in one of the objectives
-        self.new_model_interval = 1200
+        self.new_model_interval = 120
 
         self.solutionSaver = solutionSaver
         self.start = time.time()
@@ -95,9 +95,9 @@ class GA(Heuristic):
         newPopulation = []
         parentPairs = self.selector(population)
         pairIndex = 0
-        numSaves = 0 # number of times that all solutions were saved
         while (time.time() - self.start) < self._SECONDS:
-
+            if self.solutionSaver:
+                self.solutionSaver.save(self.solutions,'./time_stamps/timeStampGenetic')
             try:
                 newParent1,newParent2 = self.__generateNextPairOfParents(parentPairs[pairIndex])
             except IndexError:
@@ -122,9 +122,10 @@ class GA(Heuristic):
             interval+=1
             if interval % self.new_model_interval == 0:
                 self.__new_predictive_model()
-            
-
-
+                        #save all current solutions 
+                
+        if self.solutionSaver:
+            self.solutionSaver.save(self.solutions,'./time_stamps/timeStampGenetic')
         population = newPopulation
         return population
 
@@ -269,7 +270,7 @@ class GA(Heuristic):
         substitutes one of the parents or not.
         """    
         #if offspring dominates parent1 and parent2 in all objectives, replace one of the parents randomly            
-        if self.dominateInBothMetrics(offspring,parent1,'resources','latency') and self.dominateInBothMetrics(offspring,parent2,'resources','latency'):
+        if Heuristic.dominateInBothMetrics(offspring,parent1,'resources','latency') and Heuristic.dominateInBothMetrics(offspring,parent2,'resources','latency'):
             #replace one of the parents randomly
             if random.random() < 0.5:
                 parent1 = offspring
@@ -277,11 +278,11 @@ class GA(Heuristic):
                 parent2 = offspring
             return parent1,parent2
         #if offspring dominates parent1 in all objectives, replace parent1
-        elif self.dominateInBothMetrics(offspring,parent1,'resources','latency'):
+        elif Heuristic.dominateInBothMetrics(offspring,parent1,'resources','latency'):
             parent1 = offspring
             return parent1,parent2
         #if offspring dominates parent2 in all objectives, replace parent2
-        elif self.dominateInBothMetrics(offspring,parent2,'resources','latency'):
+        elif Heuristic.dominateInBothMetrics(offspring,parent2,'resources','latency'):
             parent2 = offspring
             return parent1,parent2
 

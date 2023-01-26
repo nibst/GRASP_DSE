@@ -1,4 +1,6 @@
 import copy
+from typing import List
+from domain.solution import Solution
 from utils.abstractHeuristicComparer import HeuristicComparer
 from heuristics.heuristic import Heuristic
 class ParetoComparer(HeuristicComparer):
@@ -9,36 +11,33 @@ class ParetoComparer(HeuristicComparer):
         """
         self.metric1 = metric1
         self.metric2 = metric2
-    def compare(self, heuristic1: Heuristic, heuristic2: Heuristic):
+    def compare(self, solutions1: List[Solution], solutions2: List[Solution]):
         """
-        return percentage of paretos in solutions of heuristic1 relative 
-        to the total of paretos in solutions of heuristic1 + heuristic2
+        return percentage of paretos in solutions1 relative 
+        to the total of paretos in solutions2 + solutions1
         i.e len(paretos1)/len(totalNumberOfParetos)
         """
-        paretos1 = heuristic1.paretoSolutions(self.metric1,self.metric2)
-        paretos2 = heuristic2.paretoSolutions(self.metric1,self.metric2)
+        paretos1 = Heuristic.paretoSolutions(self.metric1,self.metric2,solutions=solutions1)
+        paretos2 = Heuristic.paretoSolutions(self.metric1,self.metric2,solutions=solutions2)
         
         #join paretos1 and paretos2
-        paretosJoint = copy.deepcopy(paretos1)
-        index = len(paretos1)
-        for solution in paretos2.values():
-            paretosJoint[index] = solution
-            index+=1
+        paretosJoint:list = copy.deepcopy(paretos1)
+        paretosJoint.extend(paretos2)
         #take paretos of the junction of paretos1 and paretos2
-        paretosOfPaertosJoint = heuristic1.paretoSolutions(self.metric1,self.metric2,paretosJoint)
+        paretosOfPaertosJoint = Heuristic.paretoSolutions(self.metric1,self.metric2,paretosJoint)
         intersection  = self.__intersect(paretos1,paretosOfPaertosJoint)
         intersectionLenght = len(intersection)
         totalNumberOfParetos = len(paretosOfPaertosJoint)
         return intersectionLenght/totalNumberOfParetos
 
-    def __intersect(self,solutions1:dict,solutions2:dict):
+    def __intersect(self,solutions1:list,solutions2:list):
         """
         returns the solutions in solutions1 that intersect with solutions2
         the intersection takes in account the results in self.metric1 and self.metric2
         """
         intersection = []
-        for solution1 in solutions1.values():
-            for solution2 in solutions2.values():
+        for solution1 in solutions1:
+            for solution2 in solutions2:
                 try:
                     if solution1.resultados[self.metric1] == solution2.resultados[self.metric1] \
                     and solution1.resultados[self.metric2] == solution2.resultados[self.metric2]:

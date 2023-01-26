@@ -30,7 +30,6 @@ class RandomSearch(Heuristic):
         self._SECONDS = timeLimit
         self.controlTree:dict = {}
         self.run()
-        seed(1)
 
     def __generateRandomPermutation(self,dictDir:dict):
         node = self.controlTree
@@ -55,8 +54,6 @@ class RandomSearch(Heuristic):
         onePermutation = {}
         generateScript(self.cFiles, self.prjFile)
         inTime = True
-        totalTime = 0
-        numSaves=0
         start = time.time()
         while inTime:
 
@@ -71,7 +68,6 @@ class RandomSearch(Heuristic):
                 #executa else qnd try roda sem erros
                 else:   
                     print(solution.results) 
-                    print("HEY")                 
                     print (len(self.solutions))      
 
             end = time.time()

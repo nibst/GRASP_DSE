@@ -65,6 +65,8 @@ class GRASP(Heuristic):
                 self.solutionSaver.save(self.solutions,'./time_stamps/timeStampGRASP')
             #repair solution?
             solution = self.localSearch(solution)
+            if self.solutionSaver:
+                self.solutionSaver.save(self.solutions,'./time_stamps/timeStampGRASP')
             end = time.time()
 
     def makeRCL(self,directiveGroup:str,solutionToBuild:dict,dictDir:dict):

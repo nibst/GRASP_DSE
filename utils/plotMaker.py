@@ -1,7 +1,5 @@
 import matplotlib.pyplot as plt
 from matplotlib.widgets import Cursor
-import pandas as pd
-
 class PlotMaker:
     #TODO change to scatter plot
     _PLOT_PATH = './Plot/plot.jpg'
@@ -9,43 +7,40 @@ class PlotMaker:
         self.plotName = plotName
         self.xAxis = xAxis
         self.yAxis = yAxis
+        plt.rcParams["font.size"] =7
+        fig, ax = plt.subplots(1)
+        plt.title(self.plotName)
+        plt.xlabel(self.xAxis)
+        plt.ylabel(self.yAxis)
         
-        self.plt = plt
-        fig, ax = self.plt.subplots(1)
-        
-    def createPlot(self,solutions):
-        listLUT = []
-        listLat = []
+    def createSolutionsPlot(self,solutions):
+        listMetric1 = []
+        listMetric2 = []
         x_name = self.xAxis
         y_name = self.yAxis
         for i in range(len(solutions)):
             try:
-                resources = solutions[i].results[x_name]#self.solutions[element].results['resources']
-                lat = solutions[i].results[y_name]
+                metric1 = solutions[i].results[x_name]#self.solutions[element].results['resources']
+                metric2 = solutions[i].results[y_name]
             except:
-                resources = solutions[i].resultados[x_name]#self.solutions[element].results['resources']
-                lat = solutions[i].resultados[y_name]
-            listLUT.append(resources)
-            listLat.append(lat)
+                metric1 = solutions[i].resultados[x_name]#self.solutions[element].results['resources']
+                metric2 = solutions[i].resultados[y_name]
+            listMetric1.append(metric1)
+            listMetric2.append(metric2)
         
+        plt.scatter(listMetric1,listMetric2)
+        plt.xlim(left=0)
+        plt.ylim(bottom=0) 
 
-        
-        df = pd.DataFrame(list(zip(listLUT, listLat)),
-                columns =[x_name, y_name])
-        x = df[x_name]
-        y = df[y_name]
-        
-        
-        
-        self.plt.plot(listLUT,listLat,'s',)
-        self.plt.title(self.plotName)
-        self.plt.xlabel(x_name)
-        self.plt.ylabel(y_name)
-        self.plt.xlim(left=0)
-        self.plt.ylim(bottom=0)    
-        return self.plt
-        
+    def plot(self,x,y,label=None):
+  
+        plt.plot(x,y,label=label,marker = 'o')
+
+        plt.legend()
+        plt.xlim(left=0)
+        plt.ylim(bottom=0) 
+
     def savePlotAsJPG(self):
-        self.plt.savefig(self._PLOT_PATH)
+        plt.savefig(self._PLOT_PATH)
     def showPlot(self):
-        self.plt.show()
+        plt.show()

@@ -10,16 +10,18 @@ class TimeLapsedSolutionsSaver(SolutionsSaver):
     def __init__(self,saveInterval=None):
         self.saveInterval = saveInterval
         self.numSaves = 0
+        self.solutions = []
         self.start = time.time()
 
     def save(self,solutions:List[Solution],savePath):
         #save all current solutions 
-        
+        if solutions:
+            self.solutions = solutions
         timeElapsed = time.time() - self.start
         if self.saveInterval:
-            if timeElapsed >= self.saveInterval:
-                shallow = list(solutions)  
-                self.__writeToFile(shallow,f'{savePath}{self.numSaves}')
+            while timeElapsed >= self.saveInterval:
+                timeElapsed -= self.saveInterval
+                self.__writeToFile(self.solutions,f'{savePath}{self.numSaves}')
                 self.numSaves+=1
                 self.start = time.time() # reset timer
                 

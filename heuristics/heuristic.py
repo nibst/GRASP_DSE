@@ -39,13 +39,11 @@ class Heuristic(ABC):
         with open(filename, 'wb') as solutionsFile:
             pickle.dump(self, solutionsFile)
 
-    def dominateInBothMetrics(self,Solution1,Solution2,metric1,metric2):
+    def dominateInBothMetrics(Solution1,Solution2,metric1,metric2):
         #testa se a Solution1  domina a Solution2
         return ((Solution2.results[metric1]>=Solution1.results[metric1]) and (Solution2.results[metric2] >= Solution1.results[metric2]))
-    def paretoSolutions(self,metric1,metric2,solutions=None ):
+    def paretoSolutions(metric1,metric2,solutions):
 
-        if solutions == None:
-            solutions = self.solutions
         """consegue as soluções que são dominadas por outras. Eliminas essas soluções, retorando só nas que são pareto
             Retorna um dicionário enumerado de paretos(soluções). Ex: paretos[0],paretos[1],etc. paretos[i] == algum objeto Solution"""
         toRemove = [] #armazena o indice da solução que deve ser eliminada
@@ -61,19 +59,19 @@ class Heuristic(ABC):
                 for paretoSolutionIndex in paretoCandidates:
                     if currentSolutionIndex != paretoSolutionIndex:
                         #se current solution dominar a solucao candidate a pareto
-                        if(self.dominateInBothMetrics(solutions[currentSolutionIndex],solutions[paretoSolutionIndex],metric1,metric2)):
+                        if(Heuristic.dominateInBothMetrics(solutions[currentSolutionIndex],solutions[paretoSolutionIndex],metric1,metric2)):
                             toRemove.append(paretoSolutionIndex)
                         #se a solucao candidata a pareto dominar a current solution
-                        elif(self.dominateInBothMetrics(solutions[paretoSolutionIndex],solutions[currentSolutionIndex],metric1,metric2)):
+                        elif(Heuristic.dominateInBothMetrics(solutions[paretoSolutionIndex],solutions[currentSolutionIndex],metric1,metric2)):
                             toRemove.append(currentSolutionIndex)
                             break
                 for discardedSolution in toRemove:
                     paretoCandidates.remove(discardedSolution)
                 toRemove = []
-        paretos = {} #mesma estrutura de self.solutions, só que só de paretos, para retornar
-        for count,paretoSolutionIndex in enumerate(paretoCandidates):
+        paretos = [] #mesma estrutura de self.solutions, só que só de paretos, para retornar
+        for paretoSolutionIndex in paretoCandidates:
             #não acho que precisa copiar, então vou só passar referencia(eles não deveriam ser modificados mesmo)
-            paretos[count] = solutions[paretoSolutionIndex]
+            paretos.append(solutions[paretoSolutionIndex])
         return paretos
 
     #TODO MOVE THESE FUNCTIONS TO ANOTHER CLASS----------------:
