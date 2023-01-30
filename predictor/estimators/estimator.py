@@ -15,6 +15,9 @@ class Estimator(ABC):
         """
         pass
 
+    @abstractmethod
+    def isTrained(self):
+        pass
 
  
         

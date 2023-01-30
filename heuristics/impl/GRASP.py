@@ -20,14 +20,15 @@ class GRASP(Heuristic):
         self._SECONDS = timeLimit
         self.alpha = 0.7
         self.start = time.time()
-        sample = RandomSearch(filesDict, outPath,self.TRAIN_TIME,solutionSaver=solutionSaver)
         self.estimator = model
-        try:
-            self.estimator.trainModel(sample.solutions)
-        except Exception as error:
-            print(error)
-        for solution in sample.solutions:
-            self.appendSolution(solution)
+        if not self.estimator.isTrained():
+            sample = RandomSearch(filesDict, outPath,self.TRAIN_TIME,solutionSaver=solutionSaver)
+            try:
+                self.estimator.trainModel(sample.solutions)
+            except Exception as error:
+                print(error)
+            for solution in sample.solutions:
+                self.appendSolution(solution)
         random.seed(seed)        
         self.solutionSaver = solutionSaver#every 'x' time, save solutions in a file
         if RCLSynthesisInterval==0:
@@ -131,7 +132,7 @@ class GRASP(Heuristic):
                 try:
                     synthesisTimeLimit = self._SECONDS - (time.time() - self.start) 
                     self.synthesisWrapper(constructedSolution,synthesisTimeLimit)
-                    self.estimator.trainModel(constructedSolution)
+                    self.estimator.trainModel(self.solutions)
                 except Exception as error:
                     print(error)
  
@@ -143,7 +144,7 @@ class GRASP(Heuristic):
             try:
                 synthesisTimeLimit = self._SECONDS - (time.time() - self.start) 
                 self.synthesisWrapper(constructedSolution,synthesisTimeLimit)
-                self.estimator.trainModel(constructedSolution)
+                self.estimator.trainModel(self.solutions)
             except Exception as error:
                 print(error)
 
@@ -197,7 +198,7 @@ class GRASP(Heuristic):
         topSolution=None
         if topSynthesis:
             try:
-                self.estimator.trainModel(topSynthesis)
+                self.estimator.trainModel(self.solutions)
             except Exception as error:
                 print(error)
             topSolution = max(topSynthesis,key=lambda k: k.results['resources'] * k.results['latency'])    

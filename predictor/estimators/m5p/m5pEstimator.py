@@ -18,6 +18,10 @@ class M5PrimeEstimator(Estimator):
         self.features = []
         self.results = []
         self.processor = PreProcessor(directivesFile)
+        self.isFit = False
+    
+    def isTrained(self):
+        return self.isFit
 
     def trainModel(self,dataset):
         """
@@ -37,8 +41,13 @@ class M5PrimeEstimator(Estimator):
         except Exception as e:
             print(e)
             raise
+        else:
+            self.isFit = True
     def __trainModelPerMetric(self,dataset:dict,metric,model:M5Prime):
-        features, results = self.processor.process(dataset)
+        try:
+            features, results = self.processor.process(dataset)
+        except:
+            raise
         results = []
         for i in range(len(dataset)): # works for both dict and list of solutions that are serial keys
             results.append(dataset[i].results[metric])

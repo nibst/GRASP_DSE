@@ -11,11 +11,31 @@ class RandomForestEstimator(Estimator):
         self.features = []
         self.results = []
         self.processor = PreProcessor(directivesFile)
-
+        self.isFit = False
+    def isTrained(self):
+        return self.isFit
     def trainModel(self,dataset):
         """
-        Build a forest of trees from the dataset.
-        Can be retrained with with new data
+        fit a whole new forest of trees from the dataset.
+        Parameters
+        ----------
+        dataset : List of Solution objects
+        """
+        features, results = self.processor.process(dataset)
+        self.features = features
+        self.results = results
+        self.rfRegressor.fit(features,results) #train
+        self.isFit = True
+
+    def trainModelPerMetric(self,metric):
+        #TODO
+        self.rfRegressor.fit(self.features,self.results) #train
+
+   
+    def retrain(self,dataset):
+        """
+        reuse the solution of the previous call to fit 
+        and add more estimators to the ensemble.
         Parameters
         ----------
         dataset : List of Solution objects
@@ -24,14 +44,8 @@ class RandomForestEstimator(Estimator):
         self.features.extend(features)
         self.results.extend(results)
         self.rfRegressor.fit(self.features,self.results) #train
-        
-    def trainModelPerMetric(self,metric):
-        #TODO
-        self.rfRegressor.fit(self.features,self.results) #train
+        self.isFit = True
 
-    #TODO separate retraining capability from trainModel 
-    def retrain(self):
-        pass
     def estimateSynthesis(self, dataset):
         #TODO talvez futuramente retornar lista de solutions
         """
@@ -47,6 +61,7 @@ class RandomForestEstimator(Estimator):
                 estimated for these features
         """
         processedFeatures, processedResults =  self.processor.process(dataset)
+
         return self.rfRegressor.predict(processedFeatures)
 
     

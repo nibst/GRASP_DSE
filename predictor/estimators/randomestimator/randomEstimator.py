@@ -14,4 +14,6 @@ class RandomEstimator(Estimator):
         results['latency'] = randrange(100)
         solution.results = results
         return solution
-    
+
+    def isTrained(self):
+        return True

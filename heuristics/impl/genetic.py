@@ -14,13 +14,12 @@ from utils.abstractSolutionsSaver import SolutionsSaver
 
 class GA(Heuristic):
 
-    def __init__(self,filesDict,outPath,estimatorFactory:EstimatorFactory,timeLimit=43200,trainTime=3600,solutionSaver:SolutionsSaver = None,seed=0 ):
+    def __init__(self,filesDict,outPath,estimatorFactory:EstimatorFactory,baseEstimator = None,timeLimit=43200,trainTime=3600,solutionSaver:SolutionsSaver = None,seed=0 ):
         super().__init__(filesDict, outPath)
         self._SECONDS = timeLimit
         self.TRAIN_TIME = trainTime
         self.populationSize = 60 #any number
         self.estimatorFactory = estimatorFactory
-        self.estimator = None
         self.crossoverRate = 0.8 #any number between 0 and 1
         self.mutationRate = 0.1 #any number between 0 and 1
         self.modelThreshold = 0.1
@@ -33,7 +32,11 @@ class GA(Heuristic):
 
         self.solutionSaver = solutionSaver
         self.start = time.time()
-        self.__new_predictive_model()
+        #use this base estimator until next call of new predictive model
+        if not baseEstimator:
+            self.__new_predictive_model()
+        else:
+            self.estimator = baseEstimator
         self.finalPopulation = self.run()
         
         
