@@ -19,13 +19,12 @@ class TimeLapsedSolutionsSaver(SolutionsSaver):
             self.solutions = solutions
         timeElapsed = time.time() - self.start
         if self.saveInterval:
-            while timeElapsed >= self.saveInterval:
-                timeElapsed -= self.saveInterval
-                self.__writeToFile(self.solutions,f'{savePath}{self.numSaves}')
+            if timeElapsed >= self.saveInterval:
+                self.__writeToFile(f'{savePath}{self.numSaves}')
                 self.numSaves+=1
                 self.start = time.time() # reset timer
                 
                 
-    def __writeToFile(self,solutions,filePath):
+    def __writeToFile(self,filePath):
         with open(filePath, 'wb') as solutionsFile:
-            pickle.dump(solutions, solutionsFile)
+            pickle.dump(self.solutions, solutionsFile)

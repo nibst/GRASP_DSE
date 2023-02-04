@@ -42,6 +42,7 @@ class Heuristic(ABC):
     def dominateInBothMetrics(Solution1,Solution2,metric1,metric2):
         #testa se a Solution1  domina a Solution2
         return ((Solution2.results[metric1]>=Solution1.results[metric1]) and (Solution2.results[metric2] >= Solution1.results[metric2]))
+    @staticmethod
     def paretoSolutions(metric1,metric2,solutions):
 
         """consegue as soluções que são dominadas por outras. Eliminas essas soluções, retorando só nas que são pareto
@@ -196,12 +197,12 @@ class Heuristic(ABC):
         self.solutions.append(deep)               
 
 
-    def synthesisWrapper(self,solution:Solution,timeLimit=None):
+    def synthesisWrapper(self,solution:Solution,timeLimit=None,solutionSaver= None):
         """
         Calls synthesis and, if its successful, it saves solution in self.solutions.
         """
         try:
-            solution.runSynthesisTeste(timeLimit)
+            solution.runSynthesisTeste(timeLimit,solutionSaver)
         except Exception as e:
             raise
         else:

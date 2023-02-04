@@ -14,7 +14,7 @@ from utils.abstractSolutionsSaver import SolutionsSaver
 class GRASP(Heuristic):
     
     
-    def __init__(self,filesDict,outPath,model:Estimator,timeLimit=43200,trainTime = 7200, solutionSaver:SolutionsSaver = None,seed=0, RCLSynthesisInterval=0):
+    def __init__(self,filesDict,outPath,model:Estimator,timeLimit=43200,trainTime = 7200, solutionSaver:SolutionsSaver = None,seed=None, RCLSynthesisInterval=0):
         super().__init__(filesDict, outPath)
         self.TRAIN_TIME = trainTime #3
         self._SECONDS = timeLimit
@@ -131,7 +131,7 @@ class GRASP(Heuristic):
                 constructedSolution = Solution(solutionToBuild,self.cFiles,self.prjFile)
                 try:
                     synthesisTimeLimit = self._SECONDS - (time.time() - self.start) 
-                    self.synthesisWrapper(constructedSolution,synthesisTimeLimit)
+                    self.synthesisWrapper(constructedSolution,synthesisTimeLimit,self.solutionSaver)
                     self.estimator.trainModel(self.solutions)
                 except Exception as error:
                     print(error)
@@ -143,7 +143,7 @@ class GRASP(Heuristic):
             constructedSolution = Solution(solutionToBuild,self.cFiles,self.prjFile)
             try:
                 synthesisTimeLimit = self._SECONDS - (time.time() - self.start) 
-                self.synthesisWrapper(constructedSolution,synthesisTimeLimit)
+                self.synthesisWrapper(constructedSolution,synthesisTimeLimit,self.solutionSaver)
                 self.estimator.trainModel(self.solutions)
             except Exception as error:
                 print(error)
@@ -186,7 +186,7 @@ class GRASP(Heuristic):
         while i < len(neighborsSorted):
             try:
                 synthesisTimeLimit = self._SECONDS - (time.time() - self.start)#totalTimeAvailable - timePassed
-                self.synthesisWrapper(neighborsSorted[i],synthesisTimeLimit)
+                self.synthesisWrapper(neighborsSorted[i],synthesisTimeLimit,self.solutionSaver)
             except Exception as error:
                 print(error)
             else:

@@ -62,7 +62,7 @@ class RandomSearch(Heuristic):
                 solution = Solution(onePermutation,self.cFiles,self.prjFile)         #Solutions a partir deste
                 try:
                     synthesisTimeLimit = self._SECONDS - (time.time() - start) 
-                    self.synthesisWrapper(solution,synthesisTimeLimit)
+                    self.synthesisWrapper(solution,synthesisTimeLimit,self.solutionSaver)
                 except Exception as e:
                     print(e)
                 #executa else qnd try roda sem erros

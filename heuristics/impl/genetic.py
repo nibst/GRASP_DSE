@@ -14,7 +14,7 @@ from utils.abstractSolutionsSaver import SolutionsSaver
 
 class GA(Heuristic):
 
-    def __init__(self,filesDict,outPath,estimatorFactory:EstimatorFactory,baseEstimator = None,timeLimit=43200,trainTime=3600,solutionSaver:SolutionsSaver = None,seed=0 ):
+    def __init__(self,filesDict,outPath,estimatorFactory:EstimatorFactory,baseEstimator = None,timeLimit=43200,trainTime=3600,solutionSaver:SolutionsSaver = None,seed=None ):
         super().__init__(filesDict, outPath)
         self._SECONDS = timeLimit
         self.TRAIN_TIME = trainTime
@@ -144,7 +144,7 @@ class GA(Heuristic):
     def __synthesizeBothNewParents(self,newParent1,newParent2):
             synthesisTimeLimit = self._SECONDS - (time.time() - self.start) 
             try:
-                self.synthesisWrapper(newParent1,synthesisTimeLimit)
+                self.synthesisWrapper(newParent1,synthesisTimeLimit,self.solutionSaver)
             except TimeExceededException as e:
                 print(e)
                 raise
@@ -153,7 +153,7 @@ class GA(Heuristic):
 
             synthesisTimeLimit = self._SECONDS - (time.time() - self.start)  
             try:
-                self.synthesisWrapper(newParent2,synthesisTimeLimit)
+                self.synthesisWrapper(newParent2,synthesisTimeLimit,self.solutionSaver)
             except TimeExceededException as e:
                 print(e)
                 raise
