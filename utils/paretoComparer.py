@@ -31,7 +31,12 @@ class ParetoComparer(HeuristicComparer):
         intersection  = self.__intersect(paretos,ParetosJoint)
         intersectionLenght = len(intersection)
         totalNumberOfParetos = len(ParetosJoint)
-        return intersectionLenght/totalNumberOfParetos
+        #if paretosJoint is empty, then there isnt any design space to begin with.
+        #so, paretos is empty too, then (paretos and ParetosJoint) have the same paretos, which is empty
+        if totalNumberOfParetos == 0:
+            return 1
+        else:
+            return intersectionLenght/totalNumberOfParetos
 
     def __intersect(self,solutions1:list,solutions2:list):
         """
