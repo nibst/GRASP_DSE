@@ -14,8 +14,8 @@ from utils.abstractSolutionsSaver import SolutionsSaver
 
 class GA(Heuristic):
 
-    def __init__(self,filesDict,outPath,estimatorFactory:EstimatorFactory,baseEstimator = None,timeLimit=43200,trainTime=3600,solutionSaver:SolutionsSaver = None,seed=None ):
-        super().__init__(filesDict, outPath)
+    def __init__(self,filesDict,estimatorFactory:EstimatorFactory,baseEstimator = None,timeLimit=43200,trainTime=3600,solutionSaver:SolutionsSaver = None,seed=None ):
+        super().__init__(filesDict)
         self._SECONDS = timeLimit
         self.TRAIN_TIME = trainTime
         self.populationSize = 60 #any number
@@ -165,7 +165,7 @@ class GA(Heuristic):
         score = -1
         threshold = self.modelThreshold 
         self.estimator = self.estimatorFactory.create()
-        sample = RandomSearch(self.filesDict, self.outPath,self.TRAIN_TIME,solutionSaver=self.solutionSaver)
+        sample = RandomSearch(self.filesDict,self.TRAIN_TIME,solutionSaver=self.solutionSaver)
         start = time.time()
         while score < threshold:
             try:    

@@ -36,11 +36,11 @@ class RandomSearchWithEstimator(Heuristic):
     _SECONDS = 1
     _NUM_OF_TOP = 10
     _NUM_OF_ESTIMATED = 1000
-    def __init__(self,filesDict,outPath,model:Estimator):#TODO receber como parametro de modelo preditivo
+    def __init__(self,filesDict,model:Estimator):#TODO receber como parametro de modelo preditivo
         
-        super().__init__(filesDict, outPath)       
-        sample = RandomSearch(filesDict, outPath,timeLimit=1)
-        sample2 = Greedy(filesDict,outPath,'resources')
+        super().__init__(filesDict)       
+        sample = RandomSearch(filesDict,timeLimit=1)
+        sample2 = Greedy(filesDict,'resources')
 
         for solution in sample2.solutions:
             sample.solutions.append(solution)

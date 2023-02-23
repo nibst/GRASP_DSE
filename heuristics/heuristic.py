@@ -11,12 +11,11 @@ import pickle
 
 class Heuristic(ABC):
 
-    def __init__(self,filesDict,outPath):
+    def __init__(self,filesDict):
         self.filesDict = filesDict
         self.directivesTxt = Path(filesDict['dFile']).read_text()
         self.cFiles = filesDict['cFiles']
         self.prjFile = filesDict['prjFile']
-        self.outPath = outPath
         with open(filesDict['dFile']) as jsonFile:
             self.DSEconfig:dict =  json.load(jsonFile)
         directivesDict = copy.deepcopy(self.DSEconfig['directives'])
@@ -152,11 +151,10 @@ class Heuristic(ABC):
                 return True
 
         for loop in loopsInformation:
-            #go to the most inner loop
             innerLoop = loop
             function = loop['function']
             pipelineLoop=None
-            #get the loop that has pipeline active, if any
+            #get the inner loop that has pipeline active, if any
             while innerLoop['nest']:
                 label = innerLoop['label']
                 key = function + '/' + label

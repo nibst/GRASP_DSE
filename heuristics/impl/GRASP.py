@@ -14,15 +14,15 @@ from utils.abstractSolutionsSaver import SolutionsSaver
 class GRASP(Heuristic):
     
     
-    def __init__(self,filesDict,outPath,model:Estimator,timeLimit=43200,trainTime = 7200, solutionSaver:SolutionsSaver = None,seed=None, RCLSynthesisInterval=0):
-        super().__init__(filesDict, outPath)
+    def __init__(self,filesDict,model:Estimator,timeLimit=43200,trainTime = 7200, solutionSaver:SolutionsSaver = None,seed=None, RCLSynthesisInterval=0):
+        super().__init__(filesDict)
         self.TRAIN_TIME = trainTime #3
         self._SECONDS = timeLimit
         self.alpha = 0.7
         self.start = time.time()
         self.estimator = model
         if not self.estimator.isTrained():
-            sample = RandomSearch(filesDict, outPath,self.TRAIN_TIME,solutionSaver=solutionSaver)
+            sample = RandomSearch(filesDict,self.TRAIN_TIME,solutionSaver=solutionSaver)
             try:
                 self.estimator.trainModel(sample.solutions)
             except Exception as error:
@@ -136,8 +136,8 @@ class GRASP(Heuristic):
                 except Exception as error:
                     print(error)
  
-
-            self.__removeRedundantDirectives(dictDirCopy,directiveGroup,s)
+            if s != '':
+                dictDirCopy = self.__removeRedundantDirectives(dictDirCopy,directiveGroup,s)
         #basically, if last iteration of the loop above didnt got synthesized then synthesize, else dont synthesize
         if not ((count+1) % self.RCLSynthesisInterval == 0):
             constructedSolution = Solution(solutionToBuild,self.cFiles,self.prjFile)
@@ -152,16 +152,17 @@ class GRASP(Heuristic):
 
     def __removeRedundantDirectives(self,dictDir:dict,directiveGroup,directive):
         solution = dict.fromkeys(self.dictDir,'')
+        newDict = copy.deepcopy(dictDir)
         solution[directiveGroup] = directive
         for group in dictDir.keys():
             if group is not directiveGroup:
                 for dir in dictDir[group]:
                     solution[group] = dir
                     if self.isRedundantDesign(solution):
-                        dictDir[group].remove(dir)
+                        newDict[group].remove(dir)
                     solution[group] = ''
  
-        return dictDir
+        return newDict
 
 
     def localSearch(self,solution:Solution):

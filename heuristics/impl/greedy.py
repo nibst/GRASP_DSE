@@ -8,8 +8,8 @@ class Greedy(Heuristic):
     
     
     
-    def __init__(self,filesDict,outPath,metricName):
-        super().__init__(filesDict, outPath)
+    def __init__(self,filesDict,metricName):
+        super().__init__(filesDict)
         self.metric = metricName
 
         #Gera soluções conforme métodos abaixo e as salva num dict em self.solutions

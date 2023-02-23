@@ -8,16 +8,15 @@ from sklearn.model_selection import train_test_split
 class RandomSamplesEstimatorTrainer:
     def __init__(self, filesDict, estimator, timeLimit,randomSampler=None):
         self._filesDict = filesDict
-        self._outPath = './domain/directives.tcl'
         self.estimator = estimator
         self._SECONDS = timeLimit
-
+        self.score = -1
     def trainUntilErrorThreshold(self, threshold,trainTimeBetweenThresholdsChecks):
         score = -1
         valueToLowerThreshold = 0.05
         trainTime = trainTimeBetweenThresholdsChecks
         start = time.time()
-        sample = RandomSearch(self._filesDict, self._outPath,trainTime,solutionSaver=None)
+        sample = RandomSearch(self._filesDict,trainTime,solutionSaver=None)
         while score < threshold:
             try:    
                 train, test = train_test_split(sample.solutions, test_size=0.2)
@@ -41,6 +40,6 @@ class RandomSamplesEstimatorTrainer:
             #if time runs out
             if (time.time() - start) >= self._SECONDS:
                 break
-
+        self.score = score
         self.estimator.trainModel(sample.solutions) 
 

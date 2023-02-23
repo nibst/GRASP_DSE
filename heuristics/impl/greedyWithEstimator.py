@@ -11,13 +11,12 @@ class GreedyWithEstimator(Heuristic):
     
     
     
-    def __init__(self,filesDict,outPath):
+    def __init__(self,filesDict):
         self.directivesTxt = Path(filesDict['dFile']).read_text()
         self.cFiles = filesDict['cFiles']
         self.prjFile = filesDict['prjFile']
-        self.outPath = outPath
         
-        sample = RandomSearch(filesDict, outPath)
+        sample = RandomSearch(filesDict)
         processor = PreProcessor(filesDict['dFile'])
         train, test = train_test_split(sample.solutions, test_size=0.3,random_state=0)
         processedFeatures, processedResults = processor.process(train)

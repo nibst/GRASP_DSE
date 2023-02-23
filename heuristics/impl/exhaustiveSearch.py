@@ -7,8 +7,8 @@ import itertools
 import time
 class ExhaustiveSearch(Heuristic):
     _SECONDS = 2
-    def __init__(self,filesDict,outPath):
-        super().__init__(filesDict, outPath)
+    def __init__(self,filesDict):
+        super().__init__(filesDict)
 
         self.run()
         

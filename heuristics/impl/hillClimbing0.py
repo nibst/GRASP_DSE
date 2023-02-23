@@ -12,8 +12,8 @@ class HillClimbing(Heuristic):
     #   combinações de diretivas contidas no arquivo 'dFile' fornecido via terminal.
     #Um dicionário de soluções é criado.
 
-    def __init__(self,filesDict,outPath):
-        super().__init__(filesDict, outPath)    
+    def __init__(self,filesDict):
+        super().__init__(filesDict)    
         self.run()
     def run(self):
         
