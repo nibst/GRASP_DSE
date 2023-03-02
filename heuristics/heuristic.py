@@ -200,7 +200,7 @@ class Heuristic(ABC):
         Calls synthesis and, if its successful, it saves solution in self.solutions.
         """
         try:
-            solution.runSynthesisTeste(timeLimit,solutionSaver)
+            solution.runSynthesis(timeLimit,solutionSaver)
         except Exception as e:
             raise
         else:

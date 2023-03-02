@@ -61,13 +61,8 @@ class GRASP(Heuristic):
         #for i in range(iterations):
         while end-self.start <= self._SECONDS:
             solution = self.constructGreedyRandomizedSolution()
-            #save all current solutions every interval determined by solutionsaver
-            if self.solutionSaver:
-                self.solutionSaver.save(self.solutions,'./time_stamps/timeStampGRASP')
             #repair solution?
             solution = self.localSearch(solution)
-            if self.solutionSaver:
-                self.solutionSaver.save(self.solutions,'./time_stamps/timeStampGRASP')
             end = time.time()
 
     def makeRCL(self,directiveGroup:str,solutionToBuild:dict,dictDir:dict):
@@ -135,6 +130,9 @@ class GRASP(Heuristic):
                     self.estimator.trainModel(self.solutions)
                 except Exception as error:
                     print(error)
+                else:
+                    if self.solutionSaver:
+                        self.solutionSaver.save(self.solutions,'./time_stamps/timeStampGRASP')
  
             if s != '':
                 dictDirCopy = self.__removeRedundantDirectives(dictDirCopy,directiveGroup,s)
@@ -147,6 +145,9 @@ class GRASP(Heuristic):
                 self.estimator.trainModel(self.solutions)
             except Exception as error:
                 print(error)
+            else:
+                if self.solutionSaver:
+                    self.solutionSaver.save(self.solutions,'./time_stamps/timeStampGRASP')
 
         return constructedSolution
 
@@ -161,7 +162,6 @@ class GRASP(Heuristic):
                     if self.isRedundantDesign(solution):
                         newDict[group].remove(dir)
                     solution[group] = ''
- 
         return newDict
 
 
@@ -191,6 +191,8 @@ class GRASP(Heuristic):
             except Exception as error:
                 print(error)
             else:
+                if self.solutionSaver:
+                    self.solutionSaver.save(self.solutions,'./time_stamps/timeStampGRASP')
                 synthesisCount+=1
                 topSynthesis.append(neighborsSorted[i])
                 if synthesisCount == n:

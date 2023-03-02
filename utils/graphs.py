@@ -46,7 +46,7 @@ class Graphs:
     @staticmethod
     def bestADP(solutions:List[Solution]):
         metrics = ['resources','latency']
-        if len(solutions) is 0:
-            return -1
+        if len(solutions) == 0:
+            return None
         ADPs = list(map(lambda x: x.results[metrics[0]] * x.results[metrics[1]], solutions))
         return min(ADPs)

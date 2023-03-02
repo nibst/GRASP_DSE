@@ -66,44 +66,6 @@
                 "label": "Autocorrelation_label0",
                 "directive_type":"unroll"
             },
-            "unroll main_label0": {
-                "possible_directives":["","set_directive_unroll \"main/main_label0\"",
-                "set_directive_unroll -factor 3 \"main/main_label0\"",
-                "set_directive_unroll -factor 10 \"main/main_label0\"",
-                "set_directive_unroll -factor 30 \"main/main_label0\"",
-                "set_directive_unroll -factor 60 \"main/main_label0\""],
-                "function":"main",
-                "label": "main_label0",
-                "directive_type":"unroll"
-            },
-            "unroll main_label1": {
-                "possible_directives":["","set_directive_unroll \"main/main_label1\"",
-                "set_directive_unroll -factor 3 \"main/main_label1\"",
-                "set_directive_unroll -factor 10 \"main/main_label1\"",
-                "set_directive_unroll -factor 30 \"main/main_label1\"",
-                "set_directive_unroll -factor 60 \"main/main_label1\""],
-                "function":"main",
-                "label": "main_label1",
-                "directive_type":"unroll"
-            },
-            "pipeline main_label2": {
-                "possible_directives":["","set_directive_pipeline \"main/main_label2\""],
-                "function":"main",
-                "label": "main_label2",
-                "directive_type":"pipeline"
-            },
-            "pipeline main_label0": {
-                "possible_directives":["","set_directive_pipeline \"main/main_label0\""],
-                "function":"main",
-                "label": "main_label0",
-                "directive_type":"pipeline"
-            },
-            "pipeline main_label1": {
-                "possible_directives":["","set_directive_pipeline \"main/main_label1\""],
-                "function":"main",
-                "label": "main_label1",
-                "directive_type":"pipeline"
-            },
             "loop_merge Reflection_coefficients": {
                 "possible_directives":["","set_directive_loop_merge \"Reflection_coefficients\""],
                 "function":"Reflection_coefficients",

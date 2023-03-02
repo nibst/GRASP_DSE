@@ -22,18 +22,18 @@ class GA(Heuristic):
         self.estimatorFactory = estimatorFactory
         self.crossoverRate = 0.8 #any number between 0 and 1
         self.mutationRate = 0.1 #any number between 0 and 1
-        self.modelThreshold = 0.1
+        self.modelThreshold = 0.6
         random.seed(seed)
 
         self.numOfGenes = len(self.dictDir.keys())
         self.listOfKeys = list(self.dictDir.keys()) #to use numbers (indexes of list) instead of strings in the algorithm logic
         self.chaceToOverwrite = 0.5 #probability of overwritting parent with offspring if offspring dominates in one of the objectives
-        self.new_model_interval = 120
+        self.new_model_interval = 180
 
         self.solutionSaver = solutionSaver
         self.start = time.time()
         #use this base estimator until next call of new predictive model
-        if not baseEstimator:
+        if baseEstimator is None:
             self.__new_predictive_model()
         else:
             self.estimator = baseEstimator
@@ -115,12 +115,11 @@ class GA(Heuristic):
             except TimeExceededException as e:
                 print(e)
                 return
-
-            if (time.time() - self.start) >= self._SECONDS:
-                break
             #save all current solutions 
             if self.solutionSaver:
                 self.solutionSaver.save(self.solutions,'./time_stamps/timeStampGenetic')
+            if (time.time() - self.start) >= self._SECONDS:
+                break
             pairIndex+=1
             interval+=1
             if interval % self.new_model_interval == 0:
@@ -150,6 +149,9 @@ class GA(Heuristic):
                 raise
             except Exception as e:
                 print(e)
+            #save all current solutions 
+            if self.solutionSaver:
+                self.solutionSaver.save(self.solutions,'./time_stamps/timeStampGenetic')
 
             synthesisTimeLimit = self._SECONDS - (time.time() - self.start)  
             try:
@@ -158,7 +160,10 @@ class GA(Heuristic):
                 print(e)
                 raise
             except Exception as e:
-                print(e) 
+                print(e)
+            #save all current solutions 
+            if self.solutionSaver:
+                self.solutionSaver.save(self.solutions,'./time_stamps/timeStampGenetic') 
                 
     def __new_predictive_model(self):
         #maybe create new model, as deep copy of self.estimator

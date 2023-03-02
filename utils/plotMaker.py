@@ -40,7 +40,7 @@ class PlotMaker:
         plt.xlim(left=0)
         plt.ylim(bottom=0) 
 
-    def savePlotAsJPG(self):
+    def savePlotAsJPG(self,path):
         plt.savefig(self._PLOT_PATH)
     def showPlot(self):
         plt.show()

@@ -29,6 +29,7 @@ class RandomSearch(Heuristic):
         self.solutionSaver = solutionSaver
         self._SECONDS = timeLimit
         self.controlTree:dict = {}
+        seed()
         self.run()
 
     def __generateRandomPermutation(self,dictDir:dict):

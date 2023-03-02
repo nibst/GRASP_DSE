@@ -57,7 +57,7 @@ class Solution:
             print(value)
         directivesFile.close()  
 
-    def runSynthesisTeste(self,timeLimit=None):
+    def runSynthesisTeste(self,timeLimit=None,solutionSaver=None):
         if timeLimit is None:
             timeLimit = float('inf')
         if timeLimit<=0:
@@ -77,22 +77,24 @@ class Solution:
         #path to synthesis data
         xml='./Raise_dse/solution1/syn/report/csynth.xml'
 
+        mydir='./Raise_dse'
+        while os.path.exists(mydir):
+            time.sleep(2) #time between checks
+            try:
+                shutil.rmtree(mydir)
+            except Exception as error:
+                pass
+            for proc in psutil.process_iter(['name']):
+                if proc.name() == self._VIVADO_PROCESSNAME:
+                    proc.kill()
+                    break
+
         #if not especified, there is infinite time to run synthesis
         if timeLimit is None:
             timeLimit = float('inf')
         if timeLimit<=0:
             raise Exception("****Vivado_HLS has exceed max time usage****")
-            
-        mydir='./Raise_dse'
-        if os.path.exists(mydir):
-            try:
-                shutil.rmtree(mydir)
-            except Exception as error:
-                for proc in psutil.process_iter(['name']):
-                    if proc.name() == self._VIVADO_PROCESSNAME:
-                        proc.kill()
-                        break
-                shutil.rmtree(mydir)
+
         self.__writeDirectivesIntoFile()
         print('Running Synthesis...')
         #vivado call using subprocess
