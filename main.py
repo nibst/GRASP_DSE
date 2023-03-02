@@ -54,23 +54,23 @@ if __name__ == "__main__":
     RESOURCE_TO_COMPARE = 'resources'
     factory = RandomForestFactory(filesDict["dFile"])   
     model = RandomForestEstimator(filesDict['dFile'])
-    trainer = RandomSamplesEstimatorTrainer(filesDict,model,8*hour)
+    trainer = RandomSamplesEstimatorTrainer(filesDict,model,20*hour)
     try:
         with open(filesDict['arguments'][1], 'rb') as modelFile:
             loadModel = pickle.load(modelFile)
     except Exception as e:
-        trainer.trainUntilErrorThreshold(0.8,4*hour)
+        trainer.trainUntilErrorThreshold(0.8,10*hour)
         with open(filesDict['arguments'][1], 'wb') as modelFile:
-            pickle.dump(model,modelFile)
+            pickle.dump(trainer,modelFile)
     with open(filesDict['arguments'][1], 'rb') as modelFile:
         model = pickle.load(modelFile)
     '''
     if (-1 == int(filesDict['arguments'][0])):
         solutionsSaver = TimeLapsedSolutionsSaver(0.2*hour)
-        heuristic1 = GA(filesDict,'./domain/directives.tcl',factory,timeLimit=2*hour,baseEstimator=model,trainTime=1*hour,solutionSaver=solutionsSaver) 
+        heuristic1 = GA(filesDict,factory,timeLimit=2*hour,baseEstimator=model,trainTime=1*hour,solutionSaver=solutionsSaver) 
     else:
         solutionsSaver = TimeLapsedSolutionsSaver(0.2*hour)
-        heuristic1 = GRASP(filesDict,'./domain/directives.tcl',model,timeLimit=2*hour,trainTime=1*hour,solutionSaver=solutionsSaver,RCLSynthesisInterval=int(filesDict['arguments'][0]))   
+        heuristic1 = GRASP(filesDict,model,timeLimit=2*hour,trainTime=1*hour,solutionSaver=solutionsSaver,RCLSynthesisInterval=int(filesDict['arguments'][0]))   
     #heuristic1 = GRASP(filesDict,'./domain/directives.tcl',model,timeLimit=2*hour,trainTime=1*hour,solutionSaver=solutionsSaver,RCLSynthesisInterval=int(filesDict['arguments'][0]),seed=0)   
     #file para plotar o resultado do computador remoto, caso queira interagir com o plot ao invés de ser só um jpg
     
