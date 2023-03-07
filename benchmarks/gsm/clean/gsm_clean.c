@@ -17,8 +17,27 @@
 +--------------------------------------------------------------------------+
 */
 #include <stdio.h>
-#include "lpc.c"
-#include "private.h"
+#include "add.c"
+
+
+#ifndef	PRIVATE_H
+#define	PRIVATE_H
+
+typedef short word;		/* 16 bit signed int    */
+typedef long longword;		/* 32 bit signed int    */
+
+#define	MIN_WORD	((-32767)-1)
+#define	MAX_WORD	( 32767)
+
+#define	SASR(x, by)	((x) >> (by))
+
+#define GSM_MULT_R(a, b)	gsm_mult_r(a, b)
+#define GSM_MULT(a, b)		gsm_mult(a, b)
+#define GSM_ADD(a, b)		gsm_add(a, b)
+#define GSM_ABS(a)		gsm_abs(a)
+
+#endif /* PRIVATE_H */
+
 /*
 +--------------------------------------------------------------------------+
 | * Test Vectors (added for CHStone)                                       |
@@ -84,6 +103,271 @@ const word outData[N] =
 
 const word outLARc[M] = { 32, 33, 22, 13, 7, 5, 3, 2 };
 
+void
+Gsm_LPC_Analysis (word * s /* 0..159 signals       IN/OUT  */ ,
+		  word * LARc /* 0..7   LARc's        OUT     */ )
+{
+  longword L_ACF[9];
+//Autocorrelation (so, L_ACF);
+//Autocorrelation (word * s /* [0..159]     IN/OUT  */ ,longword * L_ACF /* [0..8]       OUT     */ )
+/*
+ *  The goal is to compute the array L_ACF[k].  The signal s[i] must
+ *  be scaled in order to avoid an overflow situation.
+ */
+{
+  register int k, i;
+
+  word temp;
+  word smax;
+  word scalauto, n;
+  word *sp;
+  word sl;
+
+  /*  Search for the maximum.
+   */
+  smax = 0;
+  for (k = 0; k <= 159; k++)
+    {
+      temp = GSM_ABS (s[k]);
+      if (temp > smax)
+	      smax = temp;
+    }
+
+  /*  Computation of the scaling factor.
+   */
+  if (smax == 0)
+    scalauto = 0;
+  else
+    scalauto = 4 - gsm_norm ((longword) smax << 16);	/* sub(4,..) */
+
+  if (scalauto > 0 && scalauto <= 4)
+    {
+      n = scalauto;
+      for (k = 0; k <= 159; k++)
+	      s[k] = GSM_MULT_R (s[k], 16384 >> (n - 1));
+    }
+
+  /*  Compute the L_ACF[..].
+   */
+  {
+    sp = s;
+    sl = *sp;
+
+#define STEP(k)	 L_ACF[k] += ((longword)sl * sp[ -(k) ]);
+
+#define NEXTI	 sl = *++sp
+    for (k = 8; k >= 0; k--)
+      L_ACF[k] = 0;
+
+    STEP (0);
+    NEXTI;
+    STEP (0);
+    STEP (1);
+    NEXTI;
+    STEP (0);
+    STEP (1);
+    STEP (2);
+    NEXTI;
+    STEP (0);
+    STEP (1);
+    STEP (2);
+    STEP (3);
+    NEXTI;
+    STEP (0);
+    STEP (1);
+    STEP (2);
+    STEP (3);
+    STEP (4);
+    NEXTI;
+    STEP (0);
+    STEP (1);
+    STEP (2);
+    STEP (3);
+    STEP (4);
+    STEP (5);
+    NEXTI;
+    STEP (0);
+    STEP (1);
+    STEP (2);
+    STEP (3);
+    STEP (4);
+    STEP (5);
+    STEP (6);
+    NEXTI;
+    STEP (0);
+    STEP (1);
+    STEP (2);
+    STEP (3);
+    STEP (4);
+    STEP (5);
+    STEP (6);
+    STEP (7);
+
+    for (i = 8; i <= 159; i++)
+    {
+
+      NEXTI;
+
+      STEP (0);
+      STEP (1);
+      STEP (2);
+      STEP (3);
+      STEP (4);
+      STEP (5);
+      STEP (6);
+      STEP (7);
+      STEP (8);
+    }
+
+    for (k = 8; k >= 0; k--)
+      L_ACF[k] <<= 1;
+
+  }
+  /*   Rescaling of the array s[0..159]
+   */
+  if (scalauto > 0)
+    for (k = 159; k >= 0; k--)
+      *s++ <<= scalauto;
+}
+//Reflection_coefficients (L_ACF, LARc);
+//Reflection_coefficients (longword * L_ACF /* 0...8        IN      */ ,register word * r /* 0...7        OUT     */ )
+{
+  register int i, m, n;
+  register word temp;
+  word ACF[9];			/* 0..8 */
+  word P[9];			/* 0..8 */
+  word K[9];			/* 2..8 */
+
+  /*  Schur recursion with 16 bits arithmetic.
+   */
+
+  if (L_ACF[0] == 0)
+    {
+      for (i = 8; i > 0; i--)
+        *LARc++ = 0;
+        return;
+    }
+
+  temp = gsm_norm (L_ACF[0]);
+  for (i = 0; i <= 8; i++)
+    ACF[i] = SASR (L_ACF[i] << temp, 16);
+
+  /*   Initialize array P[..] and K[..] for the recursion.
+   */
+
+  for (i = 1; i <= 7; i++)
+    K[i] = ACF[i];
+  for (i = 0; i <= 8; i++)
+    P[i] = ACF[i];
+
+  /*   Compute reflection coefficients
+   */
+  for (n = 1; n <= 8; n++, LARc++)
+  {
+  //#pragma HLS LOOP_TRIPCOUNT min=1 max=8
+
+    temp = P[1];
+    temp = GSM_ABS (temp);
+    if (P[0] < temp)
+    {
+      for (i = n; i <= 8; i++)
+      //#pragma HLS LOOP_TRIPCOUNT min=1 max=8
+        *LARc++ = 0;
+      return;
+    }
+
+    *LARc = gsm_div (temp, P[0]);
+
+    if (P[1] > 0)
+      *LARc = -*LARc;		/* r[n] = sub(0, r[n]) */
+    if (n == 8)
+      return;
+
+    /*  Schur recursion
+      */
+    temp = GSM_MULT_R (P[1], *LARc);
+    P[0] = GSM_ADD (P[0], temp);
+
+    for (m = 1; m <= 8 - n; m++)
+    {
+      //#pragma HLS LOOP_TRIPCOUNT min=1 max=7
+      temp = GSM_MULT_R (K[m], *LARc);
+      P[m] = GSM_ADD (P[m + 1], temp);
+
+      temp = GSM_MULT_R (P[m + 1], *LARc);
+      K[m] = GSM_ADD (K[m], temp);
+    }
+  }
+}
+//Transformation_to_Log_Area_Ratios (LARc);
+//Transformation_to_Log_Area_Ratios (register word * r /* 0..7    IN/OUT */ )
+{
+  register word temp;
+  register int i;
+  /* Computation of the LAR[0..7] from the r[0..7]
+   */
+  for (i = 1; i <= 8; i++, LARc++)
+    {
+
+      temp = *LARc;
+      temp = temp < 0 ? (temp == MIN_WORD ? MAX_WORD : -temp) : temp;
+
+      if (temp < 22118)
+      {
+        temp >>= 1;
+      }
+      else if (temp < 31130)
+      {
+        temp -= 11059;
+      }
+      else
+      {
+        temp -= 26112;
+        temp <<= 2;
+      }
+
+      *LARc = *LARc < 0 ? -temp : temp;
+    }
+}
+
+//Quantization_and_coding (LARc);
+
+//Quantization_and_coding (register word * LAR /* [0..7]       IN/OUT  */ )
+{
+  register word temp;
+
+
+  /*  This procedure needs four tables; the following equations
+   *  give the optimum scaling for the constants:
+   *  
+   *  A[0..7] = integer( real_A[0..7] * 1024 )
+   *  B[0..7] = integer( real_B[0..7] *  512 )
+   *  MAC[0..7] = maximum of the LARc[0..7]
+   *  MIC[0..7] = minimum of the LARc[0..7]
+   */
+
+#	undef STEP
+#	define	STEP( A, B, MAC, MIC )		\
+		temp = GSM_MULT( A,   *LARc );	\
+		temp = GSM_ADD(  temp,   B );	\
+		temp = GSM_ADD(  temp, 256 );	\
+		temp = SASR(     temp,   9 );	\
+		*LARc  =  temp>MAC ? MAC - MIC : (temp<MIC ? 0 : temp - MIC); \
+		LARc++;
+
+  STEP (20480, 0, 31, -32);
+  STEP (20480, 0, 31, -32);
+  STEP (20480, 2048, 15, -16);
+  STEP (20480, -2560, 15, -16);
+
+  STEP (13964, 94, 7, -8);
+  STEP (15360, -1792, 7, -8);
+  STEP (8534, -341, 3, -4);
+  STEP (9036, -1144, 3, -4);
+
+#	undef	STEP
+}
+}
 
 int
 main ()
@@ -94,16 +378,16 @@ main ()
   word LARc[M];
       main_result = 0;
 
- for (i = 0; i < N; i++)
-	so[i] = inData[i];
+  for (i = 0; i < N; i++)
+    so[i] = inData[i];
 
-      Gsm_LPC_Analysis (so, LARc);
+  Gsm_LPC_Analysis (so, LARc);
 
- for (i = 0; i < N; i++)
-	main_result += (so[i] != outData[i]);
- for (i = 0; i < M; i++)
-	main_result += (LARc[i] != outLARc[i]);
+  for (i = 0; i < N; i++)
+    main_result += (so[i] != outData[i]);
+  for (i = 0; i < M; i++)
+	  main_result += (LARc[i] != outLARc[i]);
 
-      printf ("%d\n", main_result);
-      return main_result;
-    }
+  printf ("%d\n", main_result);
+  return main_result;
+}

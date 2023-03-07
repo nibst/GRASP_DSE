@@ -6,6 +6,7 @@
 /*                                                               */
 /*===============================================================*/
 
+//#define SW
 #include "digitrec_sw.h"
 
 // types and constants used in the functions below

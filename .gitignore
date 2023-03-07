@@ -4,8 +4,10 @@ time_stamps/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
+*__pycache__/
 *.py[cod]
-
+heuristics/__pycache__/
+heuristics/impl/__pycache__/
 # C extensions
 *.so
 

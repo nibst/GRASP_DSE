@@ -86,7 +86,6 @@ const word outData[N] =
 
 const word outLARc[M] = { 32, 33, 22, 13, 7, 5, 3, 2 };
 
-
 int
 main ()
 {

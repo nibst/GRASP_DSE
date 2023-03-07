@@ -29,6 +29,7 @@ class Graphs:
     def plotParetoPercentage(plotMaker:PlotMaker,comparer:HeuristicComparer,solutions1:List[List[Solution]],solutions2:List[List[Solution]],label, saveInterval):
         x = []
         y = []
+        
         saveInterval = saveInterval/60 #convert seconds to minutes
         for i in range(len(solutions1)):
             y.append(comparer.compare(solutions1[i],solutions2[i]))
@@ -45,6 +46,7 @@ class Graphs:
         plotMaker.plot(x,y,label)
     @staticmethod
     def bestADP(solutions:List[Solution]):
+
         metrics = ['resources','latency']
         if len(solutions) == 0:
             return None

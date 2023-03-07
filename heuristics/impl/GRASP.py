@@ -177,34 +177,35 @@ class GRASP(Heuristic):
                     estimatedResults = self.estimator.estimateSynthesis(neighborSolution)
                     neighborSolution.setresults(estimatedResults)
                     neighbors.append(neighborSolution)
-        
-        neighborsSorted = sorted(neighbors,key=lambda k: k.results['resources'] * k.results['latency']) #sort in ascending order of resource X latency
-        #synthesize top n neighbors, for now is top 1 synthesizable
-        i=0
+        topNSynthesis = self.__synthesizeTopNSolutions(1,neighbors)
+        topSolution = max(topNSynthesis,key=lambda k: k.results['resources'] * k.results['latency'])    
+        return topSolution
+    
+    def __synthesizeTopNSolutions(self,n:int,solutions:list):
+        #synthesize top n solutions in the solutions list
+        solutionsSorted = sorted(solutions,key=lambda k: k.results['resources'] * k.results['latency']) #sort in ascending order of resource X latency
         synthesisCount = 0
-        n = 1
-        topSynthesis = []
-        while i < len(neighborsSorted):
+        topNSynthesis = []
+        i = 0
+        while i < len(solutionsSorted):
             try:
                 synthesisTimeLimit = self._SECONDS - (time.time() - self.start)#totalTimeAvailable - timePassed
-                self.synthesisWrapper(neighborsSorted[i],synthesisTimeLimit,self.solutionSaver)
+                self.synthesisWrapper(solutionsSorted[i],synthesisTimeLimit,self.solutionSaver)
             except Exception as error:
                 print(error)
             else:
                 if self.solutionSaver:
                     self.solutionSaver.save(self.solutions,'./time_stamps/timeStampGRASP')
                 synthesisCount+=1
-                topSynthesis.append(neighborsSorted[i])
+                topNSynthesis.append(solutionsSorted[i])
                 if synthesisCount == n:
                     break
             i+=1
-        topSolution=None
-        if topSynthesis:
+        if topNSynthesis:
             try:
                 self.estimator.trainModel(self.solutions)
             except Exception as error:
                 print(error)
-            topSolution = max(topSynthesis,key=lambda k: k.results['resources'] * k.results['latency'])    
-        return topSolution
+        return topNSynthesis
 
         

@@ -196,9 +196,7 @@
                 "possible_directives":[
                     "",
                     "set_directive_array_partition -type block -factor 2 -dim 1 \"sha_transform\" sha_info_digest",
-                    "set_directive_array_partition -type block -factor 4 -dim 1 \"sha_transform\" sha_info_digest",
                     "set_directive_array_partition -type cyclic -factor 2 -dim 1 \"sha_transform\" sha_info_digest",
-                    "set_directive_array_partition -type cyclic -factor 4 -dim 1 \"sha_transform\" sha_info_digest",
                     "set_directive_array_partition -type complete -dim 1 \"sha_transform\" sha_info_digest"],
                 "function":"sha_transform",
                 "label":"",
