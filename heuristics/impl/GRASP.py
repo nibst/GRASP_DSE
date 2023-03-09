@@ -202,9 +202,9 @@ class GRASP(Heuristic):
         if topSynthesis:
             try:
                 self.estimator.trainModel(self.solutions)
+                topSolution = max(topSynthesis,key=lambda k: k.results['resources'] * k.results['latency'])    
             except Exception as error:
                 print(error)
-            topSolution = max(topSynthesis,key=lambda k: k.results['resources'] * k.results['latency'])    
         return topSolution
 
         
