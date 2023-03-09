@@ -178,8 +178,22 @@ class Heuristic(ABC):
                         if item['pipeline'] != '' or item['unroll'] != '':
                             return True
         return False 
+    
 
-
+    def isRestrictedDesign(self,directives:dict):
+        """
+        there is a list of constraints on every directive group on benchmarks json,
+        if the design disrespect the constraint then its a restricted design
+        """
+        constraintsDict =self.DSEconfig['directives']
+        for key in directives:
+            for directivesGroup in constraintsDict:
+                constraints = constraintsDict[directivesGroup]['constraints']
+                if  key in constraints and directivesGroup in directives:
+                    if directives[directivesGroup]!= "" and directives[key] != "" : 
+                        return True
+        return False
+    
     def getCachedSoltuion(self,solution:Solution):
         """
         get especified solution from self.solutions if it exists.
@@ -200,7 +214,7 @@ class Heuristic(ABC):
         Calls synthesis and, if its successful, it saves solution in self.solutions.
         """
         try:
-            solution.runSynthesis(timeLimit,solutionSaver)
+            solution.runSynthesisTeste(timeLimit,solutionSaver)
         except Exception as e:
             raise
         else:

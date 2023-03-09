@@ -2,6 +2,9 @@
     "cmake.sourceDirectory": "${workspaceFolder}/benchmarks/firewall",
     "cmake.configureOnOpen": true,
     "files.associations": {
-        "sha.h": "c"
+        "sha.h": "c",
+        "algorithm": "c",
+        "numbers": "c",
+        "random": "c"
     }
 }

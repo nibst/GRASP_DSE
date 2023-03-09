@@ -7,7 +7,7 @@ class PlotMaker:
         self.plotName = plotName
         self.xAxis = xAxis
         self.yAxis = yAxis
-        plt.rcParams["font.size"] =7
+        #plt.rcParams["font.size"] =7
         fig, ax = plt.subplots(1)
         plt.title(self.plotName)
         plt.xlabel(self.xAxis)

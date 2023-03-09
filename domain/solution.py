@@ -9,7 +9,7 @@ import psutil
 import sys
 from exceptions.timeExceededException import TimeExceededException
 class Solution:
-    _MAX_RAM_USAGE =30 #in percentage
+    _MAX_RAM_USAGE =50 #in percentage
     _DIRECTIVES_FILENAME = './domain/directives.tcl'
     _VIVADO_PROCESSNAME = 'vivado_hls'
     _SCRIPT_PATH = './domain/callVivado.sh'
@@ -57,18 +57,18 @@ class Solution:
             print(value)
         directivesFile.close()  
 
-    def runSynthesisTeste(self,timeLimit=None,solutionSaver=None):
+    def runSynthesisTeste(self,timeLimit=None, solutionSaver = None):
         if timeLimit is None:
             timeLimit = float('inf')
         if timeLimit<=0:
             raise Exception("****Vivado_HLS has exceed max time usage****")
         results = {}
-        results['FF'] = randrange(100)
-        results['DSP'] = randrange(100)
-        results['LUT'] = randrange(100)
-        results['BRAM'] = randrange(100)
-        results['resources'] = randrange(100)
-        results['latency'] = randrange(100)
+        results['FF'] = randrange(10)
+        results['DSP'] = randrange(1)
+        results['LUT'] = randrange(10)
+        results['BRAM'] = randrange(2)
+        results['resources'] = randrange(3)
+        results['latency'] = randrange(4)
 
         self.results = results
    
@@ -76,19 +76,18 @@ class Solution:
         #TODO antes de chamar a sintese verificar se ja tem um processo do vivado rodando e fazer esse processo n ser confundido com o que vamos rodar
         #path to synthesis data
         xml='./Raise_dse/solution1/syn/report/csynth.xml'
-
         mydir='./Raise_dse'
         while os.path.exists(mydir):
-            time.sleep(2) #time between checks
+            time.sleep(3)
             try:
                 shutil.rmtree(mydir)
             except Exception as error:
-                pass
+                print(error)
             for proc in psutil.process_iter(['name']):
                 if proc.name() == self._VIVADO_PROCESSNAME:
                     proc.kill()
                     break
-
+            
         #if not especified, there is infinite time to run synthesis
         if timeLimit is None:
             timeLimit = float('inf')
@@ -102,10 +101,8 @@ class Solution:
         #testing if the synthesis ended
         vivadoIsRunning = True
                     
-        time.sleep(2) #para dar tempo de iniciar vivado
         start = time.time()
         
-
         while vivadoIsRunning:
             #tempo entre duas checagens de se o vivado continua rodando
             time.sleep(3)
@@ -116,7 +113,6 @@ class Solution:
                     try:
                         memoryUse = proc.memory_percent()
                     except Exception as e:
-                        #proc.terminate()
                         print(e)
                         break
                     if memoryUse > self._MAX_RAM_USAGE:

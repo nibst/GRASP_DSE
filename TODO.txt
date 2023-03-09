@@ -1,13 +1,24 @@
-1.[] trocar nomes em portugues por ingles (resultados = results)
-2.[] trocar set results do solutions para receber um dict, a responsabilidade de transformar lista de results em dict n eh do solutions
+1.[x] trocar nomes em portugues por ingles (resultados = results)
+2.[x] trocar set results do solutions para receber um dict, a responsabilidade de transformar lista de results em dict n eh do solutions
 3.[] preditor de tempo que demorará uma sintese, acho que vai ser super util
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-4 [] na refatoracao falta caminhos de arquivos, tipo script.tcl, callvivado,etc
->>>>>>> 799798d (começando a organizar)
-=======
+
 4 [x] na refatoracao falta caminhos de arquivos, tipo script.tcl, callvivado,etc
-5.[] Trocar solutions dict por lista
+
+4 [x] na refatoracao falta caminhos de arquivos, tipo script.tcl, callvivado,etc
+5.[x] Trocar solutions dict por lista
 6.[] Nao rodar createSolutionsDict a cada vez que instancia heuristica, n faz sentido. Tem que ser chamada a funcao sem ser no construtor
->>>>>>> 4105718 (pequenos ajuststes + TODO file)
+7.[] Em Pareto comparer e plotmaker fiz uma gambiarra pra rodar a velha nomenclatura que está salva nos dse ja rodados (solution.resultados) 
+e ao mesmo tempo rodar a nova nomenclatura solution.results (mantendo todos nomes em ingles). Tentar modificar os objetos salvos para ao inves 
+de ser resultados, virar results.
+8. [x] mudar nome de saveSolution para appendSolution
+9. [] Como resolver problema do score no genetic? Primeiro score eh feito separando uma parte para teste de score e outra pra treino, 
+apos obter score eh feito treino completo. Porém, digamos que esse score deu abaixo do threshold. É possivel que,
+se RandomSearch obter apenas poucas sinteses, ocorra um boost de score que nao deveria existir(pois todo resto ja foi treinado então teria um overfitting do modelo).
+Talvez seja necessario trocar funcao de score
+    |__ Sepa ja sei. Treina as partes de teste só no final de tudo, ou seja, vai armazenando a parte que sobrou para teste em alguma variavel
+        depois no final da func bota elas tudo no estimador tambem, mas cuidado, talvez isso bugue com m5p estimator
+
+10 [] Usar nparrays nos preprocessing e tal
+11 [] Testar mudanca de passar solution saver no run symthesis
+12 [] mudar nome de argumento seed para randomstate
+13[] qnd der error sintetisando talvez passar algm resultado pro estimador

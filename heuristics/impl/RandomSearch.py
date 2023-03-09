@@ -20,6 +20,7 @@ from utils.Script_tcl import generateScript
 import copy
 from random import seed
 from random import randint
+import random
 from utils.abstractSolutionsSaver import SolutionsSaver
 
 class RandomSearch(Heuristic):
@@ -32,21 +33,26 @@ class RandomSearch(Heuristic):
         seed()
         self.run()
 
-    def __generateRandomPermutation(self,dictDir:dict):
+    def __generateRandomPermutation(self):
         node = self.controlTree
         newPermutation = {}
+        directiveGroups = list(self.dictDir.keys()) 
+        random.shuffle(directiveGroups)
         isNewPermutation = False #flag para verificar se é permutacao/solucao/design repetida ou nao
-        for directive in dictDir:              
-            domainLenght = len(dictDir[directive])   
+        for directive in directiveGroups:              
+            domainLenght = len(self.dictDir[directive])   
             randomDirective = randint(0,domainLenght-1)
-            newPermutation[directive] = dictDir[directive][randomDirective] 
+            newPermutation[directive] = self.dictDir[directive][randomDirective] 
+
+            if self.isRestrictedDesign(newPermutation):
+                break
             if randomDirective in node:
                 node = node[randomDirective]
             else:
                 node[randomDirective] = {} #cria nodo
-                node = node[randomDirective]
+                node = node[randomDirective]  
                 isNewPermutation = True
-        if isNewPermutation:
+        if isNewPermutation and not self.isRestrictedDesign(newPermutation):
             return newPermutation
         else:
             return None
@@ -58,7 +64,7 @@ class RandomSearch(Heuristic):
         start = time.time()
         while inTime:
 
-            onePermutation = self.__generateRandomPermutation(self.dictDir)
+            onePermutation = self.__generateRandomPermutation()
             if onePermutation:    #se tiver uma permutacao na variavel
                 solution = Solution(onePermutation,self.cFiles,self.prjFile)         #Solutions a partir deste
                 try:

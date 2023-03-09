@@ -11,8 +11,7 @@
             "program": "${file}",
             "console": "integratedTerminal",
             "justMyCode": true,
-            "args": ["-c", "./benchmarks/digit-recognition/src/sw/digitrec_sw.cpp", "-d" ,"digit_recognition.json" ,"-p" ,"DigitRec_sw","-o","a"],
-
+            "args": ["-c", "./benchmarks/optical-flow/src/sw/optical_flow_sw.cpp", "-d", "optical_flow.json", "-p", "optical_flow_sw", "-o", "teste1","-args","0"],
             //"python.pythonPath": "C:\\Users\\nikol\\AppData\\Local\\Programs\\Python\\Python310\\python.exe",
         }
     ]
