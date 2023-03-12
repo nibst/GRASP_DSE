@@ -11,13 +11,6 @@
                 "constraints":["pipeline gradient_xy_calc_label0"],
                 "directive_type":"unroll"
             },
-            "pipeline gradient_xy_calc_label0": {
-                "possible_directives":["","set_directive_pipeline \"gradient_xy_calc/gradient_xy_calc_label0\""],
-                "function":"gradient_xy_calc",
-                "label": "gradient_xy_calc_label0",
-                "constraints":["unroll gradient_xy_calc_label0"],
-                "directive_type":"pipeline"
-            },
             "unroll gradient_xy_calc_label1": {
                 "possible_directives":["",
                     "set_directive_unroll -factor 2 \"gradient_xy_calc/gradient_xy_calc_label1\"",
@@ -215,7 +208,7 @@
                 "possible_directives":["","set_directive_pipeline \"outer_product/outer_product_label11\""],
                 "function":"outer_product",
                 "label": "outer_product_label11",
-                "constraints":[""],
+                "constraints":["unroll outer_product_label11"],
                 "directive_type":"pipeline"
             },
             "unroll outer_product_label11": {
@@ -226,7 +219,7 @@
                     "set_directive_unroll -factor 16 \"outer_product/outer_product_label11\""],
                 "function":"outer_product",
                 "label": "outer_product_label11",
-                "constraints":[""],
+                "constraints":["pipeline outer_product_label11"],
                 "directive_type":"unroll"
             },
             "pipeline outer_product_label12": {
