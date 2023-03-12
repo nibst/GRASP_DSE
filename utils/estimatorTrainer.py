@@ -13,7 +13,7 @@ class RandomSamplesEstimatorTrainer:
         self.score = -1
         trainTime = trainTimeBetweenThresholdsChecks
         start = time.time()
-        sample = RandomSearch(self._filesDict, self._outPath,trainTime,solutionSaver=None) 
+        sample = RandomSearch(self._filesDict,trainTime,solutionSaver=None) 
         while self.score < threshold:
             try:    
                 train, test = train_test_split(sample.solutions, test_size=0.2)
