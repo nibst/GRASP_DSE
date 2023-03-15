@@ -9,6 +9,7 @@ class RandomSamplesEstimatorTrainer:
         self.estimator = estimator
         self._SECONDS = timeLimit
         self.score = -1
+        self.timeSpent=0
     def trainUntilErrorThreshold(self, threshold,trainTimeBetweenThresholdsChecks):
         self.score = -1
         trainTime = trainTimeBetweenThresholdsChecks
@@ -20,7 +21,6 @@ class RandomSamplesEstimatorTrainer:
                 self.estimator.trainModel(train)
                 self.score = self.estimator.score(test)
             except Exception as e:
-                #do nothing, just train more
                 self.score = -1 
                 print(e)
             print(f'score: {self.score} ')
@@ -30,5 +30,5 @@ class RandomSamplesEstimatorTrainer:
             if self.score < threshold: 
                 #create more samples
                 sample.run()
-        self.score = score
         self.estimator.trainModel(sample.solutions) 
+        self.timeSpent = time.time() -start
