@@ -14,7 +14,7 @@ from utils.abstractSolutionsSaver import SolutionsSaver
 class GRASP(Heuristic):
     
     
-    def __init__(self,filesDict,model:Estimator,timeLimit=43200,trainTime = 7200, solutionSaver:SolutionsSaver = None,seed=None, RCLSynthesisInterval=0):
+    def __init__(self,filesDict,model:Estimator,timeLimit=43200,trainTime = 7200, solutionSaver:SolutionsSaver = None,seed=None,RCLSynthesisInterval = None,timeTraining=0):
         super().__init__(filesDict)
         self.TRAIN_TIME = trainTime #3
         self._SECONDS = timeLimit
@@ -31,16 +31,27 @@ class GRASP(Heuristic):
                 self.appendSolution(solution)
         random.seed(seed)        
         self.solutionSaver = solutionSaver#every 'x' time, save solutions in a file
-        if RCLSynthesisInterval==0:
-            self.RCLSynthesisInterval = float('inf')
+        if RCLSynthesisInterval is None:
+            self.RCLSynthesisInterval = self.__calculateRCLSynthesisInterval(timeTraining)
         else:
             self.RCLSynthesisInterval = RCLSynthesisInterval
+            if RCLSynthesisInterval == 0:
+                self.RCLSynthesisInterval = float('inf')
         
         
         self.run()
        
-    
-    def run(self,iterations=10):
+    def __calculateRCLSynthesisInterval(self,timeTraining):
+        minutesTraining = timeTraining/60
+        if len(self.estimator.results) == 0:
+            return float('inf')
+        if minutesTraining/len(self.estimator.results) >15:
+            #high synthesis time
+            return 2
+        else:
+            return float('inf')
+
+    def run(self):
         """
         procedure GRASP(Max Iterations,Seed)
             1 Read Input();
