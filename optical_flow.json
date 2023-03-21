@@ -258,7 +258,7 @@
                 "possible_directives":["","set_directive_pipeline \"tensor_weight_y/tensor_weight_y_label14\""],
                 "function":"tensor_weight_y",
                 "label": "tensor_weight_y_label14",
-                "constraints":[""],
+                "constraints":["unroll tensor_weight_y_label14"],
                 "directive_type":"pipeline"
             },
             "unroll tensor_weight_y_label14": {
@@ -272,7 +272,7 @@
                     "set_directive_unroll -factor 64 \"tensor_weight_y/tensor_weight_y_label14\""],
                 "function":"tensor_weight_y",
                 "label": "tensor_weight_y_label14",
-                "constraints":[""],
+                "constraints":["unroll tensor_weight_y_label13"],
                 "directive_type":"unroll"
             },
             "pipeline tensor_weight_y_label15": {

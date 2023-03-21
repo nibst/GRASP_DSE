@@ -130,8 +130,9 @@ class GRASP(Heuristic):
         random.shuffle(directiveGroups)
         for count,directiveGroup in enumerate(directiveGroups):
             RCL = self.makeRCL(directiveGroup,solutionToBuild,dictDirCopy)
-            s = random.choice(RCL)
-            solutionToBuild[directiveGroup] = s
+            if len(RCL) != 0:
+                s = random.choice(RCL)
+                solutionToBuild[directiveGroup] = s
             if ((count+1) % self.RCLSynthesisInterval == 0): #count+1 just to not include 0 on the count
                 #synthesis of current solution under construction and feed solution to model
                 constructedSolution = Solution(solutionToBuild,self.cFiles,self.prjFile)
@@ -193,7 +194,6 @@ class GRASP(Heuristic):
                     neighborSolution.setresults(estimatedResults)
                     neighbors.append(neighborSolution)
         topNSynthesis = self.__synthesizeTopNSolutions(1,neighbors)
-        topSolution = None
         if topNSynthesis:
             topSolution = max(topNSynthesis,key=lambda k: k.results['resources'] * k.results['latency'])    
         return topSolution
@@ -219,9 +219,9 @@ class GRASP(Heuristic):
                     break
             i+=1
         trainingSet = copy.deepcopy(self.solutions)
-        trainingSet.extend(self.estimatorSolutions)
+        trainingSet.extend(self.estimatorSolutions)    
         try:
-            self.estimator.trainModel(trainingSet)    
+            self.estimator.trainModel(self.solutions)
         except Exception as error:
             print(error)
         return topNSynthesis

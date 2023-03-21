@@ -1,0 +1,299 @@
+{
+    "directives":
+        {  
+           
+            "pipeline encode_label0": {
+                "possible_directives":["",
+                "set_directive_pipeline \"encode/encode_label0\""],
+                "function":"encode",
+                "label": "encode_label0",
+                "constraints":[],
+                "directive_type":"pipeline"
+            },
+            "pipeline encode_label1": {
+                "possible_directives":["",
+                "set_directive_pipeline \"encode/encode_label1\""],
+                "function":"encode",
+                "label": "encode_label1",
+                "constraints":[],
+                "directive_type":"pipeline"
+            },
+            "pipeline decode_label2": {
+                "possible_directives":["",
+                "set_directive_pipeline \"decode/decode_label2\""],
+                "function":"decode",
+                "label": "decode_label2",
+                "constraints":[],
+                "directive_type":"pipeline"
+            },
+            "pipeline decode_label3": {
+                "possible_directives":["",
+                "set_directive_pipeline \"decode/decode_label3\""],
+                "function":"decode",
+                "label": "decode_label3",
+                "constraints":[],
+                "directive_type":"pipeline"
+            },
+            "pipeline reset_label4": {
+                "possible_directives":["",
+                "set_directive_pipeline \"reset/reset_label4\""],
+                "function":"reset",
+                "label": "reset_label4",
+                "constraints":[],
+                "directive_type":"pipeline"
+            },
+            "pipeline reset_label5": {
+                "possible_directives":["",
+                "set_directive_pipeline \"reset/reset_label5\""],
+                "function":"reset",
+                "label": "reset_label5",
+                "constraints":[],
+                "directive_type":"pipeline"
+            },
+            "pipeline reset_label6": {
+                "possible_directives":["",
+                "set_directive_pipeline \"reset/reset_label6\""],
+                "function":"reset",
+                "label": "reset_label6",
+                "constraints":[],
+                "directive_type":"pipeline"
+            },
+            "pipeline reset_label7": {
+                "possible_directives":["",
+                "set_directive_pipeline \"reset/reset_label7\""],
+                "function":"reset",
+                "label": "reset_label7",
+                "constraints":[],
+                "directive_type":"pipeline"
+            },
+            "pipeline filtez_label8": {
+                "possible_directives":["",
+                "set_directive_pipeline \"filtez/filtez_label8\""],
+                "function":"filtez",
+                "label": "filtez_label8",
+                "constraints":[],
+                "directive_type":"pipeline"
+            },
+            "pipeline quantl_label9": {
+                "possible_directives":["",
+                "set_directive_pipeline \"quantl/quantl_label9\""],
+                "function":"quantl",
+                "label": "quantl_label9",
+                "constraints":[],
+                "directive_type":"pipeline"
+            },
+            "pipeline upzero_label10": {
+                "possible_directives":["",
+                "set_directive_pipeline \"upzero/upzero_label10\""],
+                "function":"upzero",
+                "label": "upzero_label10",
+                "constraints":[],
+                "directive_type":"pipeline"
+            },
+            "pipeline upzero_label11": {
+                "possible_directives":["",
+                "set_directive_pipeline \"upzero/upzero_label11\""],
+                "function":"upzero",
+                "label": "upzero_label11",
+                "constraints":[],
+                "directive_type":"pipeline"
+            },
+            "pipeline adpcm_main_label12": {
+                "possible_directives":["",
+                "set_directive_pipeline \"adpcm_main/adpcm_main_label12\""],
+                "function":"adpcm_main",
+                "label": "adpcm_main_label12",
+                "constraints":[""],
+                "directive_type":"pipeline"
+            },
+            "pipeline adpcm_main_label13": {
+                "possible_directives":["",
+                "set_directive_pipeline \"adpcm_main/adpcm_main_label13\""],
+                "function":"adpcm_main",
+                "label": "adpcm_main_label13",
+                "constraints":[],
+                "directive_type":"pipeline"
+            },
+            "unroll encode_label0": {
+                "possible_directives":["",
+                "set_directive_unroll \"encode/encode_label0\"",
+                "set_directive_unroll -factor 2 \"encode/encode_label0\"",
+                "set_directive_unroll -factor 4 \"encode/encode_label0\"",
+                "set_directive_unroll -factor 8 \"encode/encode_label0\""],
+                "function":"encode",
+                "label": "encode_label0",
+                "constraints":[],
+                "directive_type":"unroll"
+            },
+            "unroll encode_label1": {
+                "possible_directives":["",
+                "set_directive_unroll \"encode/encode_label1\"",
+                "set_directive_unroll -factor 2 \"encode/encode_label1\"",
+                "set_directive_unroll -factor 4 \"encode/encode_label1\"",
+                "set_directive_unroll -factor 8 \"encode/encode_label1\""],
+                "function":"encode",
+                "label": "encode_label1",
+                "constraints":[],
+                "directive_type":"unroll"
+            },
+            "unroll decode_label2": {
+                "possible_directives":["",
+                "set_directive_unroll \"decode/decode_label2\"",
+                "set_directive_unroll -factor 2 \"decode/decode_label2\"",
+                "set_directive_unroll -factor 4 \"decode/decode_label2\"",
+                "set_directive_unroll -factor 8 \"decode/decode_label2\""],
+                "function":"decode",
+                "label": "decode_label2",
+                "constraints":[],
+                "directive_type":"unroll"
+            },
+            "unroll decode_label3": {
+                "possible_directives":["",
+                "set_directive_unroll \"decode/decode_label3\"",
+                "set_directive_unroll -factor 2 \"decode/decode_label3\"",
+                "set_directive_unroll -factor 4 \"decode/decode_label3\"",
+                "set_directive_unroll -factor 8 \"decode/decode_label3\""],
+                "function":"decode",
+                "label": "decode_label3",
+                "constraints":[],
+                "directive_type":"unroll"
+            },
+            "unroll reset_label4": {
+                "possible_directives":["",
+                "set_directive_unroll \"reset/reset_label4\"",
+                "set_directive_unroll -factor 2 \"reset/reset_label4\"",
+                "set_directive_unroll -factor 4 \"reset/reset_label4\""],
+                "function":"reset",
+                "label": "reset_label4",
+                "constraints":[],
+                "directive_type":"unroll"
+            },
+            "unroll reset_label5": {
+                "possible_directives":["",
+                "set_directive_unroll \"reset/reset_label5\"",
+                "set_directive_unroll -factor 2 \"reset/reset_label5\"",
+                "set_directive_unroll -factor 4 \"reset/reset_label5\""],
+                "function":"reset",
+                "label": "reset_label5",
+                "constraints":[],
+                "directive_type":"unroll"
+            },
+            "unroll reset_label6": {
+                "possible_directives":["",
+                "set_directive_unroll \"reset/reset_label6\"",
+                "set_directive_unroll -factor 2 \"reset/reset_label6\"",
+                "set_directive_unroll -factor 4 \"reset/reset_label6\"",
+                "set_directive_unroll -factor 8 \"reset/reset_label6\""],
+                "function":"reset",
+                "label": "reset_label6",
+                "constraints":[],
+                "directive_type":"unroll"
+            },
+            "unroll reset_label7": {
+                "possible_directives":["",
+                "set_directive_unroll \"reset/reset_label7\"",
+                "set_directive_unroll -factor 2 \"reset/reset_label7\"",
+                "set_directive_unroll -factor 4 \"reset/reset_label7\"",
+                "set_directive_unroll -factor 8 \"reset/reset_label7\""],
+                "function":"reset",
+                "label": "reset_label7",
+                "constraints":[],
+                "directive_type":"unroll"
+            },
+            "unroll filtez_label8": {
+                "possible_directives":["",
+                "set_directive_unroll \"filtez/filtez_label8\"",
+                "set_directive_unroll -factor 2 \"filtez/filtez_label8\"",
+                "set_directive_unroll -factor 4 \"filtez/filtez_label8\""],
+                "function":"filtez",
+                "label": "filtez_label8",
+                "constraints":[],
+                "directive_type":"unroll"
+            },
+            "unroll quantl_label9": {
+                "possible_directives":["",
+                "set_directive_unroll \"quantl/quantl_label9\"",
+                "set_directive_unroll -factor 2 \"quantl/quantl_label9\"",
+                "set_directive_unroll -factor 4 \"quantl/quantl_label9\"",
+                "set_directive_unroll -factor 8 \"quantl/quantl_label9\""],
+                "function":"quantl",
+                "label": "quantl_label9",
+                "constraints":[],
+                "directive_type":"unroll"
+            },
+            "unroll upzero_label10": {
+                "possible_directives":["",
+                "set_directive_unroll \"upzero/upzero_label10\"",
+                "set_directive_unroll -factor 2 \"upzero/upzero_label10\"",
+                "set_directive_unroll -factor 4 \"upzero/upzero_label10\""],
+                "function":"upzero",
+                "label": "upzero_label10",
+                "constraints":[],
+                "directive_type":"unroll"
+            },
+            "unroll upzero_label11": {
+                "possible_directives":["",
+                "set_directive_unroll \"upzero/upzero_label11\"",
+                "set_directive_unroll -factor 2 \"upzero/upzero_label11\"",
+                "set_directive_unroll -factor 4 \"upzero/upzero_label11\""],
+                "function":"upzero",
+                "label": "upzero_label11",
+                "constraints":[],
+                "directive_type":"unroll"
+            },
+            "unroll adpcm_main_label12": {
+                "possible_directives":["",
+                "set_directive_unroll \"adpcm_main/adpcm_main_label12\"",
+                "set_directive_unroll -factor 2 \"adpcm_main/adpcm_main_label12\"",
+                "set_directive_unroll -factor 4 \"adpcm_main/adpcm_main_label12\"",
+                "set_directive_unroll -factor 8 \"adpcm_main/adpcm_main_label12\"",
+                "set_directive_unroll -factor 16 \"adpcm_main/adpcm_main_label12\"",
+                "set_directive_unroll -factor 32 \"adpcm_main/adpcm_main_label12\""],
+                "function":"adpcm_main",
+                "label": "adpcm_main_label12",
+                "constraints":[],
+                "directive_type":"unroll"
+            },
+            "unroll adpcm_main_label13": {
+                "possible_directives":["",
+                "set_directive_unroll \"adpcm_main/adpcm_main_label13\"",
+                "set_directive_unroll -factor 2 \"adpcm_main/adpcm_main_label13\"",
+                "set_directive_unroll -factor 4 \"adpcm_main/adpcm_main_label13\"",
+                "set_directive_unroll -factor 8 \"adpcm_main/adpcm_main_label13\"",
+                "set_directive_unroll -factor 16 \"adpcm_main/adpcm_main_label13\"",
+                "set_directive_unroll -factor 32 \"adpcm_main/adpcm_main_label13\""],
+                "function":"adpcm_main",
+                "label": "adpcm_main_label13",
+                "constraints":[],
+                "directive_type":"unroll"
+            },
+            "array_partition adpcm_main":{
+                "possible_directives":[
+                    "",
+                    "set_directive_array_partition -type complete -dim 1 \"gsm_norm\" bitoff",
+                    "set_directive_array_partition -type block -factor 4 -dim 1 \"adpcm_main\" compressed",
+                    "set_directive_array_partition -type block -factor 8 -dim 1 \"adpcm_main\" compressed",
+                    "set_directive_array_partition -type block -factor 16 -dim 1 \"adpcm_main\" compressed",
+                    "set_directive_array_partition -type block -factor 32 -dim 1 \"adpcm_main\" compressed",
+                    "set_directive_array_partition -type block -factor 4 -dim 1  \"adpcm_main\" compressed",
+                    "set_directive_array_partition -type block -factor 8 -dim 1  \"adpcm_main\" compressed",
+                    "set_directive_array_partition -type block -factor 16 -dim 1  \"adpcm_main\" compressed",
+                    "set_directive_array_partition -type cyclic -factor 2 -dim 1  \"adpcm_main\" compressed",
+                    "set_directive_array_partition -type cyclic -factor 4 -dim 1 \"adpcm_main\" compressed",
+                    "set_directive_array_partition -type cyclic -factor 8 -dim 1  \"adpcm_main\" compressed",
+                    "set_directive_array_partition -type cyclic -factor 16 -dim 1  \"adpcm_main\" compressed",
+                    "set_directive_array_partition -type cyclic -factor 32 -dim 1 \"adpcm_main\" compressed"],
+                "function":"gsm_norm",
+                "label":"",
+                "variable": "bitoff",
+                "directive_type":"array_partition"
+            }
+
+        },
+    "nested_loops":
+        [
+            
+        ]     
+
+}
+
