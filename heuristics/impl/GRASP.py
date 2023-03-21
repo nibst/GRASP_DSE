@@ -27,8 +27,8 @@ class GRASP(Heuristic):
                 self.estimator.trainModel(sample.solutions)
             except Exception as error:
                 print(error)
-            for solution in sample.solutions:
-                self.appendSolution(solution)
+        self.estimatorSolutions = self.estimator.processor.dataset
+        
         random.seed(seed)        
         self.solutionSaver = solutionSaver#every 'x' time, save solutions in a file
         if RCLSynthesisInterval is None:
@@ -138,7 +138,9 @@ class GRASP(Heuristic):
                 try:
                     synthesisTimeLimit = self._SECONDS - (time.time() - self.start) 
                     self.synthesisWrapper(constructedSolution,synthesisTimeLimit,self.solutionSaver)
-                    self.estimator.trainModel(self.solutions)
+                    trainingSet = copy.deepcopy(self.solutions)
+                    trainingSet.extend(self.estimatorSolutions)
+                    self.estimator.trainModel(trainingSet)
                 except Exception as error:
                     print(error)
                 else:
@@ -153,7 +155,9 @@ class GRASP(Heuristic):
             try:
                 synthesisTimeLimit = self._SECONDS - (time.time() - self.start) 
                 self.synthesisWrapper(constructedSolution,synthesisTimeLimit,self.solutionSaver)
-                self.estimator.trainModel(self.solutions)
+                trainingSet = copy.deepcopy(self.solutions)
+                trainingSet.extend(self.estimatorSolutions)
+                self.estimator.trainModel(trainingSet)
             except Exception as error:
                 print(error)
             else:
@@ -189,7 +193,9 @@ class GRASP(Heuristic):
                     neighborSolution.setresults(estimatedResults)
                     neighbors.append(neighborSolution)
         topNSynthesis = self.__synthesizeTopNSolutions(1,neighbors)
-        topSolution = max(topNSynthesis,key=lambda k: k.results['resources'] * k.results['latency'])    
+        topSolution = None
+        if topNSynthesis:
+            topSolution = max(topNSynthesis,key=lambda k: k.results['resources'] * k.results['latency'])    
         return topSolution
     
     def __synthesizeTopNSolutions(self,n:int,solutions:list):
@@ -212,12 +218,12 @@ class GRASP(Heuristic):
                 if synthesisCount == n:
                     break
             i+=1
-        if topNSynthesis:
-            try:
-                self.estimator.trainModel(self.solutions)
-                topSolution = max(topNSynthesis,key=lambda k: k.results['resources'] * k.results['latency'])    
-            except Exception as error:
-                print(error)
-        return topSolution
+        trainingSet = copy.deepcopy(self.solutions)
+        trainingSet.extend(self.estimatorSolutions)
+        try:
+            self.estimator.trainModel(trainingSet)    
+        except Exception as error:
+            print(error)
+        return topNSynthesis
 
         

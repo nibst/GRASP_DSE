@@ -37,6 +37,8 @@ class GA(Heuristic):
             self.__new_predictive_model()
         else:
             self.estimator = baseEstimator
+        self.estimatorSolutions = self.estimator.processor.dataset
+
         self.finalPopulation = self.run()
         
         
@@ -132,38 +134,38 @@ class GA(Heuristic):
         return population
 
     def __generateNextPairOfParents(self,parentPair):
-            parent1,parent2 = parentPair
-            offspring = self.crossover(parent1,parent2)
-            offspring = self.mutation(offspring)    
-            estimatedResults = self.estimator.estimateSynthesis(offspring)
-            offspring.setresults(estimatedResults)
-            newParent1,newParent2 = self.overwriteParent(parent1,parent2,offspring)
-            return (newParent1,newParent2)
+        parent1,parent2 = parentPair
+        offspring = self.crossover(parent1,parent2)
+        offspring = self.mutation(offspring)    
+        estimatedResults = self.estimator.estimateSynthesis(offspring)
+        offspring.setresults(estimatedResults)
+        newParent1,newParent2 = self.overwriteParent(parent1,parent2,offspring)
+        return (newParent1,newParent2)
 
     def __synthesizeBothNewParents(self,newParent1,newParent2):
-            synthesisTimeLimit = self._SECONDS - (time.time() - self.start) 
-            try:
-                self.synthesisWrapper(newParent1,synthesisTimeLimit,self.solutionSaver)
-            except TimeExceededException as e:
-                print(e)
-                raise
-            except Exception as e:
-                print(e)
-            #save all current solutions 
-            if self.solutionSaver:
-                self.solutionSaver.save(self.solutions,'./time_stamps/timeStampGenetic')
+        synthesisTimeLimit = self._SECONDS - (time.time() - self.start) 
+        try:
+            self.synthesisWrapper(newParent1,synthesisTimeLimit,self.solutionSaver)
+        except TimeExceededException as e:
+            print(e)
+            raise
+        except Exception as e:
+            print(e)
+        #save all current solutions 
+        if self.solutionSaver:
+            self.solutionSaver.save(self.solutions,'./time_stamps/timeStampGenetic')
 
-            synthesisTimeLimit = self._SECONDS - (time.time() - self.start)  
-            try:
-                self.synthesisWrapper(newParent2,synthesisTimeLimit,self.solutionSaver)
-            except TimeExceededException as e:
-                print(e)
-                raise
-            except Exception as e:
-                print(e)
-            #save all current solutions 
-            if self.solutionSaver:
-                self.solutionSaver.save(self.solutions,'./time_stamps/timeStampGenetic') 
+        synthesisTimeLimit = self._SECONDS - (time.time() - self.start)  
+        try:
+            self.synthesisWrapper(newParent2,synthesisTimeLimit,self.solutionSaver)
+        except TimeExceededException as e:
+            print(e)
+            raise
+        except Exception as e:
+            print(e)
+        #save all current solutions 
+        if self.solutionSaver:
+            self.solutionSaver.save(self.solutions,'./time_stamps/timeStampGenetic') 
                 
     def __new_predictive_model(self):
         #maybe create new model, as deep copy of self.estimator
@@ -175,6 +177,7 @@ class GA(Heuristic):
         while score < threshold:
             try:    
                 train, test = train_test_split(sample.solutions, test_size=0.2, random_state=0)
+                
                 self.estimator.trainModel(train)
                 
                 score = self.estimator.score(test)
@@ -186,11 +189,15 @@ class GA(Heuristic):
             print(f'score: {score} ')
             #full train
             print(f'sample solutions lenght: {len(sample.solutions)}') 
-            
+            try:
+                self.estimator.trainModel(sample.solutions)
+            except Exception as e:
+                print(e)
+
             if score < threshold: 
                 #if the time spent creating a new model is x times the TRAIN TIME, lower the threshold
                 if time.time() - start >= self.TRAIN_TIME*3:
-                    threshold-=0.05   
+                    threshold-=0.1  
                 #create more samples
                 sample.run()
             #if time runs out
