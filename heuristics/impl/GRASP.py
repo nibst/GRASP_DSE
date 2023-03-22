@@ -49,7 +49,7 @@ class GRASP(Heuristic):
             #high synthesis time
             return 2
         else:
-            return float('inf')
+            return 8
 
     def run(self):
         """
