@@ -270,7 +270,7 @@
             "array_partition adpcm_main":{
                 "possible_directives":[
                     "",
-                    "set_directive_array_partition -type complete -dim 1 \"gsm_norm\" bitoff",
+                    "set_directive_array_partition -type complete -dim 1  \"adpcm_main\" compressed",
                     "set_directive_array_partition -type block -factor 4 -dim 1 \"adpcm_main\" compressed",
                     "set_directive_array_partition -type block -factor 8 -dim 1 \"adpcm_main\" compressed",
                     "set_directive_array_partition -type block -factor 16 -dim 1 \"adpcm_main\" compressed",
@@ -283,11 +283,20 @@
                     "set_directive_array_partition -type cyclic -factor 8 -dim 1  \"adpcm_main\" compressed",
                     "set_directive_array_partition -type cyclic -factor 16 -dim 1  \"adpcm_main\" compressed",
                     "set_directive_array_partition -type cyclic -factor 32 -dim 1 \"adpcm_main\" compressed"],
-                "function":"gsm_norm",
+                "function":"adpcm_main",
                 "label":"",
-                "variable": "bitoff",
+                "constraints":[],
+                "variable": "compressed",
                 "directive_type":"array_partition"
+            },
+            "loop_merge reset":{
+                "possible_directives":["","set_directive_loop_merge \"reset\""],
+                "function":"reset",
+                "label":"",
+                "constraints":[],
+                "directive_type":"loop_merge"
             }
+
 
         },
     "nested_loops":
