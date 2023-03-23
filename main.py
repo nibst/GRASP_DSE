@@ -52,30 +52,34 @@ if __name__ == "__main__":
 
     hour = 3600
     RESOURCE_TO_COMPARE = 'resources'
+    modelName = filesDict['arguments'][1]
     factory = RandomForestFactory(filesDict["dFile"])   
     model = RandomForestEstimator(filesDict['dFile'])
-    trainer = RandomSamplesEstimatorTrainer(filesDict,model,20*hour)
+    trainer = RandomSamplesEstimatorTrainer(filesDict,model,5*hour)
     try:
         with open(filesDict['arguments'][1], 'rb') as modelFile:
             loadModel = pickle.load(modelFile)
     except Exception as e:
-        trainer.trainUntilErrorThreshold(0.8,10*hour)
-        with open(filesDict['arguments'][1], 'wb') as modelFile:
+        trainer.trainUntilErrorThreshold(0.8,1.25*hour)
+        with open(f'trainers/{modelName}_TRAINER', 'wb') as modelFile:
             pickle.dump(trainer,modelFile)
+        with open(f'{modelName}', 'wb') as modelFile:
+            pickle.dump(trainer.estimator,modelFile)
     with open(filesDict['arguments'][1], 'rb') as modelFile:
         model = pickle.load(modelFile)
-    '''
+    times_dict = {"SHA_MODEL": 5*hour, "GSM_MODEL": 1.25*hour, "AES_MODEL":40*hour,"DIGIT_MODEL":20*hour,"OPTICAL_MODEL":30*hour}
+    if filesDict['arguments'][1] == "ADPCM":
+        times_dict[filesDict['arguments'][1]] = trainer.timeSpent
+ 
     if (-1 == int(filesDict['arguments'][0])):
         solutionsSaver = TimeLapsedSolutionsSaver(0.2*hour)
-        heuristic1 = GA(filesDict,factory,timeLimit=2*hour,baseEstimator=model,trainTime=1*hour,solutionSaver=solutionsSaver) 
+        heuristic1 = GA(filesDict,factory,timeLimit=2.01*hour,baseEstimator=model,trainTime=1*hour,solutionSaver=solutionsSaver) 
     else:
         solutionsSaver = TimeLapsedSolutionsSaver(0.2*hour)
-        heuristic1 = GRASP(filesDict,model,timeLimit=2*hour,trainTime=1*hour,solutionSaver=solutionsSaver,RCLSynthesisInterval=int(filesDict['arguments'][0]))   
+        heuristic1 = GRASP(filesDict,model,timeLimit=2.01*hour,trainTime=1*hour,solutionSaver=solutionsSaver,timeTraining=times_dict[filesDict['arguments'][1]])   
     #heuristic1 = GRASP(filesDict,'./domain/directives.tcl',model,timeLimit=2*hour,trainTime=1*hour,solutionSaver=solutionsSaver,RCLSynthesisInterval=int(filesDict['arguments'][0]),seed=0)   
-    #file para plotar o resultado do computador remoto, caso queira interagir com o plot ao invés de ser só um jpg
-    
+    #file para plotar o resultado do computador remoto, caso queira interagir com o plot ao invés de ser só um jpg    
     heuristic1.writeToFile(filesDict['saveFile'])
-    '''
     '''
 
     
