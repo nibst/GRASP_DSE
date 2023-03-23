@@ -194,6 +194,7 @@ class GRASP(Heuristic):
                     neighborSolution.setresults(estimatedResults)
                     neighbors.append(neighborSolution)
         topNSynthesis = self.__synthesizeTopNSolutions(1,neighbors)
+        topSolution = None
         if topNSynthesis:
             topSolution = max(topNSynthesis,key=lambda k: k.results['resources'] * k.results['latency'])    
         return topSolution
