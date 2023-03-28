@@ -188,7 +188,11 @@ class Heuristic(ABC):
         constraintsDict =self.DSEconfig['directives']
         for key in directives:
             for directivesGroup in constraintsDict:
-                constraints = constraintsDict[directivesGroup]['constraints']
+                try:
+                    constraints = constraintsDict[directivesGroup]['constraints']
+                except Exception as e:
+                    print(e)
+                    return False
                 if  key in constraints and directivesGroup in directives:
                     if directives[directivesGroup]!= "" and directives[key] != "" : 
                         return True

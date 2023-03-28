@@ -1,3 +1,4 @@
+import json
 from heuristics.impl.GRASP import GRASP
 from heuristics.impl.RandomSearch import RandomSearch
 from heuristics.impl.greedy import Greedy
@@ -31,25 +32,38 @@ if __name__ == "__main__":
     
     #Initialize parser
     parser = argparse.ArgumentParser()
- 
+    with open('./benchmarks.json') as jsonFile:
+        benchmarks:dict =  json.load(jsonFile)
+    benchmarksList = list(benchmarks.keys())
     # Adding argument
-    parser.add_argument("-c", "--cFiles", help = "C input files list", required=True, nargs='+')
-    parser.add_argument("-d", "--dFile", help = "Directives input file",required=True)
-    parser.add_argument("-p", "--prjFile", help = "Prj. top file",required=True)
+    #only one of the two arguments in 'group' are required
+    group = parser.add_mutually_exclusive_group(required=True)
+    group.add_argument("-b", "--benchmark", help = "Which benchmark",choices=benchmarksList)
+    group.add_argument("-c", "--cFiles", help = "C input files list", nargs='+')
+
+    parser.add_argument("-d", "--dFile", help = "Directives input file",required=False)
+    parser.add_argument("-p", "--prjFile", help = "Prj. top file",required=False)
+
     parser.add_argument("-o", "--saveFile", help = "name of save file",required=True)
     parser.add_argument("-args", "--arguments", help = "arguments of heuristic",required=False, nargs='+')
 
- 
+    filesDict = {}
     # Read arguments from command line
     args = parser.parse_args()
-    
-    filesDict = {}
-    filesDict['cFiles'] = args.cFiles
-    filesDict['dFile'] = args.dFile
-    filesDict['prjFile'] = args.prjFile
+    #choose between -b and -c,-d,-p as input for benchmark informations
+    if args.cFiles is not None:
+        if (args.dFile is None or args.prjFile is None):
+            raise argparse.ArgumentError(None,"error: lacking required arguments")
+        filesDict['cFiles'] = args.cFiles
+        filesDict['dFile'] = args.dFile
+        filesDict['prjFile'] = args.prjFile
+    else:
+        filesDict['cFiles'] = benchmarks[args.benchmark]["cFiles"]
+        filesDict['dFile'] = benchmarks[args.benchmark]["dFile"]
+        filesDict['prjFile'] = benchmarks[args.benchmark]["prjFile"]
     filesDict['saveFile'] = args.saveFile
     filesDict['arguments'] = args.arguments
-
+    
     hour = 3600
     RESOURCE_TO_COMPARE = 'resources'
     modelName = filesDict['arguments'][1]
