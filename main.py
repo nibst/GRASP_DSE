@@ -47,6 +47,7 @@ if __name__ == "__main__":
 
     parser.add_argument("-o", "--saveFile", help = "name of save file",required=True)
     parser.add_argument("-model", "--estimationModel", help = "model used in heuristics for estimation of synthesis",required=True)
+    parser.add_argument("-t", "--timeLimit", help = "time limit for heuristic in seconds",required=True)
     parser.add_argument("-args", "--arguments", help = "arguments of heuristic",required=False, nargs='+')
     
 
@@ -64,6 +65,7 @@ if __name__ == "__main__":
         filesDict['cFiles'] = benchmarks[args.benchmark]["cFiles"]
         filesDict['dFile'] = benchmarks[args.benchmark]["dFile"]
         filesDict['prjFile'] = benchmarks[args.benchmark]["prjFile"]
+    filesDict['timeLimit'] = args.timeLimit
     filesDict['model'] = args.estimationModel
     filesDict['heuristic'] = args.heuristic    
     filesDict['saveFile'] = args.saveFile
@@ -89,42 +91,18 @@ if __name__ == "__main__":
     times_dict = {"SHA_MODEL": 5*hour, "GSM_MODEL": 1.25*hour, "AES_MODEL":40*hour,"DIGIT_MODEL":20*hour,"OPTICAL_MODEL":30*hour}
     if filesDict['model'] == "ADPCM_MODEL":
         times_dict[filesDict['model']] = trainer.timeSpent
+    
     GENETIC_HEURISTIC = 'genetic'
     GRASP_HEURISTIC = 'GRASP'
     RANDOM_SEARCH_HEURISTIC = 'random'
     if (GENETIC_HEURISTIC == filesDict['heuristic']):
-        solutionsSaver = TimeLapsedSolutionsSaver(0.2*hour)
-        heuristic1 = GA(filesDict,factory,timeLimit=2.01*hour,baseEstimator=model,trainTime=1*hour,solutionSaver=solutionsSaver) 
+        solutionsSaver = TimeLapsedSolutionsSaver(int(filesDict['timeLimit'])/10)
+        heuristic1 = GA(filesDict,factory,timeLimit=(int(filesDict['timeLimit'])+5),baseEstimator=model,trainTime=1*hour,solutionSaver=solutionsSaver) 
     elif(GRASP_HEURISTIC == filesDict['heuristic']):
-        solutionsSaver = TimeLapsedSolutionsSaver(0.2*hour)
-        heuristic1 = GRASP(filesDict,model,timeLimit=2.01*hour,trainTime=1*hour,solutionSaver=solutionsSaver,timeTraining=times_dict[filesDict['model']])   
-    #heuristic1 = GRASP(filesDict,'./domain/directives.tcl',model,timeLimit=2*hour,trainTime=1*hour,solutionSaver=solutionsSaver,RCLSynthesisInterval=int(filesDict['arguments'][0]),seed=0)   
-    #file para plotar o resultado do computador remoto, caso queira interagir com o plot ao invés de ser só um jpg    
+        solutionsSaver = TimeLapsedSolutionsSaver(int(filesDict['timeLimit'])/10)
+        heuristic1 = GRASP(filesDict,model,timeLimit=(int(filesDict['timeLimit'])+5),trainTime=1*hour,solutionSaver=solutionsSaver,timeTraining=times_dict[filesDict['model']])   
+    elif (RANDOM_SEARCH_HEURISTIC == filesDict['heuristic']):
+        solutionsSaver = TimeLapsedSolutionsSaver(int(filesDict['timeLimit'])/10)
+        heuristic1 = RandomSearch(filesDict,timeLimit=(int(filesDict['timeLimit'])+5),solutionSaver=solutionsSaver) 
     heuristic1.writeToFile(filesDict['saveFile'])
-    '''
-
     
-    #heuristic1 = GA(filesDict,'./domain/directives.tcl',factory,36000,saveInterval=1500)
-    #heuristic1.writeToFile('./dse/aes_genetic10h')
-    
-    with open("./GRASP1_AES_2h_teste",'rb') as file:
-        heuristic1 = pickle.load(file)
-    with open("./GRASP1_DIGIT_2h_teste",'rb') as file:
-        heuristic2 = pickle.load(file)
-    
-    print(heuristic1.solutions[len(heuristic1.solutions) - 1].results)
-    print(heuristic2.solutions[0].results)
-    
-    comparer = ParetoComparer(RESOURCE_TO_COMPARE,'latency')
-    #print(comparer.compare(heuristic1,heuristic2))
-    #print(comparer.compare(heuristic2,heuristic1))
-   
-    plt = PlotMaker("gsm", RESOURCE_TO_COMPARE, 'latency')
-    grasp1Digit  = Graphs.pathToListsOfSolutions("./saves/GRASP0_SPAM_30h/")
-    geneticDigit  = Graphs.pathToListsOfSolutions("./saves/genetic_DIGIT_2h/")
-
-    Graphs.plotADP(plt,grasp1Digit,'grasp1',720) #blue
-    Graphs.plotADP(plt,geneticDigit,'genetic',720)
-    #plt.createPlot(heuristic2.solutions) 
-    plt.showPlot()
-    '''
