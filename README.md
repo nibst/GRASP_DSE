@@ -6,7 +6,7 @@ Design Space Exploration
 
  
 ```
-python main.py <heuristic> -c <c files of benchmark> -d <json of directives> -p <top function> -o <output file> -model <model of estimation chosen>
+python main.py <heuristic> -c <c files of benchmark> -d <json of directives> -p <top function> -o <output file> -t <time limit for heuristic in seconds> -model <model of estimation chosen> 
 ```
 `heuristic`: it's currently possible to choose between 5 heuristics. `hill`, `greedy`, `GRASP`, `genetic`and `random`
 `model of estimation`: if the model of estimation with the name `<model of estimation chosen> ` don't exists, then the application train an estimator and create a model with the name specified.
