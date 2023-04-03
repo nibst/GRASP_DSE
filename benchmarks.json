@@ -4,6 +4,7 @@
     "AES": {"cFiles":["./benchmarks/aes/aes_dec.c","./benchmarks/aes/aes_enc.c", "./benchmarks/aes/aes.c", "./benchmarks/aes/aes_func.c", "./benchmarks/aes/aes_key.c"] ,"dFile": "aes.json" ,"prjFile": "aes_main"},
     "DIGIT": {"cFiles":["/benchmarks/digit-recognition/src/sw/digitrec_sw.cpp"] ,"dFile": "digit_recognition.json " ,"prjFile": "DigitRec_sw"},
     "OPTICAL": {"cFiles":["./benchmarks/optical-flow/src/sw/optical_flow_sw.cpp"] ,"dFile": "optical_flow.json" ,"prjFile": "optical_flow_sw"},
-    "ADPCM": {"cFiles":["./benchmarks/adpcm/adpcm.c"] ,"dFile": "adpcm.json " ,"prjFile": "adpcm_main"}
+    "ADPCM": {"cFiles":["./benchmarks/adpcm/adpcm.c"] ,"dFile": "adpcm.json " ,"prjFile": "adpcm_main"},
+    "MOTION": {"cFiles":["./benchmarks/motion/getvlc.c","./benchmarks/motion/getbits.c","./benchmarks/motion/motion.c","./benchmarks/motion/mpeg2.c"],"dFile":"motion.json","prjFile":"main"}
 }
 
