@@ -8,7 +8,7 @@ class PlotMaker:
         self.xAxis = xAxis
         self.yAxis = yAxis
         #plt.rcParams["font.size"] =7
-        fig, ax = plt.subplots(1)
+        self.fig, self.ax = plt.subplots(1)
         plt.title(self.plotName)
         plt.xlabel(self.xAxis)
         plt.ylabel(self.yAxis)
@@ -28,19 +28,20 @@ class PlotMaker:
             listMetric1.append(metric1)
             listMetric2.append(metric2)
         
-        plt.scatter(listMetric1,listMetric2)
+        self.ax.scatter(listMetric1,listMetric2)
         plt.xlim(left=0)
         plt.ylim(bottom=0) 
 
-    def plot(self,x,y,label=None):
-  
-        plt.plot(x,y,label=label,marker = 'o')
+    def plot(self,x,y,label=None,color=None):
+        
+        self.ax.plot(x,y,label=label,marker = 'o',color=color)
 
-        plt.legend()
+        self.ax.legend()
         plt.xlim(left=0)
         plt.ylim(bottom=0) 
-
+    def twinx(self):
+        self.ax=self.ax.twinx()
     def savePlotAsJPG(self,path):
-        plt.savefig(self._PLOT_PATH)
+        self.ax.savefig(self._PLOT_PATH)
     def showPlot(self):
         plt.show()

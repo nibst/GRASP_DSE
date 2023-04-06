@@ -1,8 +1,10 @@
 
+import copy
 import os
 import pickle
 from typing import List
 from domain.solution import Solution
+from heuristics.heuristic import Heuristic
 from utils.plotMaker import PlotMaker
 from utils.abstractHeuristicComparer import HeuristicComparer
 class Graphs:
@@ -44,6 +46,21 @@ class Graphs:
             y.append(Graphs.bestADP(solutions))
             x.append(saveInterval*(i+1))
         plotMaker.plot(x,y,label)
+    @staticmethod
+    def plotParetosFrontSize(plotMaker:PlotMaker,solutions1:List[List[Solution]],solutions2:List[List[Solution]],label, saveInterval):
+        
+        x = []
+        y = []
+        saveInterval = saveInterval/60 #convert seconds to minutes
+        for i in range(len(solutions1)):
+            paretos1 = Heuristic.paretoSolutions('resources','latency',solutions=solutions1[i])
+            paretos2 = Heuristic.paretoSolutions('resources','latency',solutions=solutions2[i])
+            #join paretos1 and paretos2
+            paretosJoint:list = copy.deepcopy(paretos1)
+            paretosJoint.extend(paretos2)
+            y.append(len(paretos1))
+            x.append(saveInterval*(i+1))
+        plotMaker.plot(x,y,label,'green')
     @staticmethod
     def bestADP(solutions:List[Solution]):
 
