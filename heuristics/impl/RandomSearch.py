@@ -37,7 +37,6 @@ class RandomSearch(Heuristic):
         node = self.controlTree
         newPermutation = {}
         directiveGroups = list(self.dictDir.keys()) 
-        random.shuffle(directiveGroups)
         isNewPermutation = False #flag para verificar se é permutacao/solucao/design repetida ou nao
         for directive in directiveGroups:              
             domainLenght = len(self.dictDir[directive])   
