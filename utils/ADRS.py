@@ -17,9 +17,11 @@ class ADRS(HeuristicComparer):
         adrs = 0
         referenceParetoFrontSet = Heuristic.paretoSolutions(self.metric1,self.metric2,solutions1)
         approximateParetoFrontSet = Heuristic.paretoSolutions(self.metric1,self.metric2,solutions2)
+        adrsList = []
         for referenceSetSolution in referenceParetoFrontSet:
             for approximateSetSolution in approximateParetoFrontSet:
-                adrs += self.distance(referenceSetSolution,approximateSetSolution)
+                adrsList.append(self.distance(referenceSetSolution,approximateSetSolution))
+            adrs += min(adrsList)
         return 1/(len(referenceParetoFrontSet)) * adrs
     
     def distance(self,referenceSetSolution:Solution, approximateSetSolution:Solution):
