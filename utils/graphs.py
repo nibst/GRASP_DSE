@@ -7,6 +7,8 @@ from domain.solution import Solution
 from heuristics.heuristic import Heuristic
 from utils.plotMaker import PlotMaker
 from utils.abstractHeuristicComparer import HeuristicComparer
+from utils.ADRS import ADRS
+
 class Graphs:
     @staticmethod
     def __getOrderedSavesPaths(path):
@@ -51,14 +53,16 @@ class Graphs:
         
         x = []
         y = []
+        metrics = ['resources','latency']
         saveInterval = saveInterval/60 #convert seconds to minutes
         for i in range(len(solutions1)):
-            paretos1 = Heuristic.paretoSolutions('resources','latency',solutions=solutions1[i])
-            paretos2 = Heuristic.paretoSolutions('resources','latency',solutions=solutions2[i])
+            paretos1 = Heuristic.paretoSolutions(metrics[0],metrics[1],solutions=solutions1[i])
+            paretos2 = Heuristic.paretoSolutions(metrics[0],metrics[1],solutions=solutions2[i])
             #join paretos1 and paretos2
             paretosJoint:list = copy.deepcopy(paretos1)
             paretosJoint.extend(paretos2)
-            y.append(len(paretos1))
+            paretosOfParetosJoint = Heuristic.paretoSolutions(metrics[0],metrics[1],paretosJoint)
+            y.append(len(paretosOfParetosJoint))
             x.append(saveInterval*(i+1))
         plotMaker.plot(x,y,label,'green')
     @staticmethod
@@ -69,3 +73,42 @@ class Graphs:
             return None
         ADPs = list(map(lambda x: x.results[metrics[0]] * x.results[metrics[1]], solutions))
         return min(ADPs)
+    
+    @staticmethod
+    def plotAverageADP(plotMaker:PlotMaker,solutions1:List[List[Solution]],solutions2:List[List[Solution]],label,saveInterval,color=None):
+        x = []
+        y = []
+        metrics = ['resources','latency']
+
+        saveInterval = saveInterval/60 #convert seconds to minutes
+        for i in range(len(solutions1)):
+            paretos1 = Heuristic.paretoSolutions(metrics[0],metrics[1],solutions=solutions1[i])
+            paretos2 = Heuristic.paretoSolutions(metrics[0],metrics[1],solutions=solutions2[i])
+            #join paretos1 and paretos2
+            paretosJoint:list = copy.deepcopy(paretos1)
+            paretosJoint.extend(paretos2)
+            y.append(Graphs.averageADP(paretosJoint))
+            x.append(saveInterval*(i+1))
+        plotMaker.plot(x,y,label,'green')
+
+    @staticmethod
+    def averageADP(solutions:List[Solution]):
+        metrics = ['resources','latency']
+        if len(solutions) == 0:
+            return None
+        ADPs = list(map(lambda x: x.results[metrics[0]] * x.results[metrics[1]], solutions))
+        if len(ADPs) != 0:
+            return sum(ADPs)/len(ADPs)
+        else:
+            return None 
+    @staticmethod
+    def plotADRS(plotMaker:PlotMaker,comparer:HeuristicComparer,referenceSet:List[Solution], approximateSet:List[List[Solution]],label, saveInterval):
+        x = []
+        y = []
+        
+        saveInterval = saveInterval/60 #convert seconds to minutes
+        for i in range(len(approximateSet)):
+            y.append(comparer.compare(referenceSet,approximateSet[i]))
+            x.append(saveInterval*(i+1))
+        plotMaker.plot(x,y,label)
+
