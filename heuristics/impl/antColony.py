@@ -52,19 +52,28 @@ class AntColony(Heuristic):
         self.distances  = self.__initializeDistances()
         initialPheromone = 0.25
         self.pheromones = self.__initializePheromones(initialPheromone)
-        self.all_inds = range(len(self.dictDir))
         self.n_ants = n_ants
         self.evaporationRate = evaporationRate
         self.alpha = alpha
         self.beta = beta
-        self.weightArea = 0.1 #it changes during heuristic
-        self.weightLatency = 0.9 #it changes during heuristic
+        self.areaWeight = [0.9,0.5,0.1] #it changes during heuristic
+        self.latencyWeight = [0.1,0.5,0.9] #it changes during heuristic
+        self.weightIndex = 0
+        
+
         self.initalization()
     
 
     def run(self):
         end = time.time()
+
         while end-self.start <= self.SECONDS:
+            #change of weights of cost function
+            if end-self.start >= self.SECONDS/3:
+                self.weightIndex = 1
+            if end-self.start >= 2*self.SECONDS/3:
+                self.weightIndex = 2
+                
             directiveGroups = list(self.dictDir.keys()) 
             random.shuffle(directiveGroups)
             ants = []
@@ -78,7 +87,7 @@ class AntColony(Heuristic):
                 ants.append(ant)
 
             synthesisTimeLimit = self.SECONDS - (time.time() - self.start)#totalTimeAvailable - timePassed
-            topAnt = max(ants,key=lambda k: k.results['resources'] * k.results['latency']) #TODO change to self.cost?
+            topAnt = min(ants,key=self.costFunction)
             try:
                 self.synthesisWrapper(topAnt,synthesisTimeLimit,self.solutionSaver)
                 print(topAnt.results)
@@ -87,8 +96,16 @@ class AntColony(Heuristic):
             else:
                 if self.solutionSaver:
                     self.solutionSaver.save(self.solutions,'./time_stamps/timeStampACO')
+            
+            trainingSet = copy.deepcopy(self.solutions)
+            trainingSet.extend(self.estimatorSolutions)   
+            try:
+                self.estimator.trainModel(trainingSet)
+            except Exception as error:
+                print(error)
             if time.time()-self.start >= self.SECONDS:
                 break
+            
             directivesCosts = self.computeDirectivesCosts(ants)
             epsilon = self.computeEpsilon(directivesCosts)
             self.updatePheromone(epsilon)
@@ -211,7 +228,7 @@ class AntColony(Heuristic):
                 self.pheromones[directiveGroup][directive] = (1 - self.evaporationRate) * self.pheromones[directiveGroup][directive] + epsilon[directiveGroup][directive]
         
     def costFunction(self,ant:Solution):
-        return self.weightArea*ant.results['resources']+ self.weightLatency*ant.results['latency']
+        return self.areaWeight[self.weightIndex]*ant.results['resources']+ self.latencyWeight[self.weightIndex]*ant.results['latency']
 
     def localHeuristic(self):
         return 1

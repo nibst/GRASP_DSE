@@ -224,7 +224,7 @@ class GRASP(Heuristic):
         trainingSet = copy.deepcopy(self.solutions)
         trainingSet.extend(self.estimatorSolutions)    
         try:
-            self.estimator.trainModel(self.solutions)
+            self.estimator.trainModel(trainingSet)
         except Exception as error:
             print(error)
         return topNSynthesis
