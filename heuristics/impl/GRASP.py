@@ -14,7 +14,7 @@ from utils.abstractSolutionsSaver import SolutionsSaver
 class GRASP(Heuristic):
     
     
-    def __init__(self,filesDict,model:Estimator,timeLimit=43200,trainTime = 7200, solutionSaver:SolutionsSaver = None,seed=None,RCLSynthesisInterval = None,timeTraining=0):
+    def __init__(self,filesDict,model:Estimator,timeSpentTraining=0,timeLimit=43200,trainTime = 7200, solutionSaver:SolutionsSaver = None,seed=None,RCLSynthesisInterval = None):
         super().__init__(filesDict)
         self.TRAIN_TIME = trainTime #3
         self._SECONDS = timeLimit
@@ -32,7 +32,7 @@ class GRASP(Heuristic):
         random.seed(seed)        
         self.solutionSaver = solutionSaver#every 'x' time, save solutions in a file
         if RCLSynthesisInterval is None:
-            self.RCLSynthesisInterval = self.__calculateRCLSynthesisInterval(timeTraining)
+            self.RCLSynthesisInterval = self.__calculateRCLSynthesisInterval(timeSpentTraining)
         else:
             self.RCLSynthesisInterval = RCLSynthesisInterval
             if RCLSynthesisInterval == 0:
@@ -42,14 +42,16 @@ class GRASP(Heuristic):
         self.run()
        
     def __calculateRCLSynthesisInterval(self,timeTraining):
+        longAverageSynthesisTime = 15 #minutes
+        intervalUsedForLongTime = 2
+        intervalUsedForShortTime = 8
         minutesTraining = timeTraining/60
         if len(self.estimator.results) == 0:
             return float('inf')
-        if minutesTraining/len(self.estimator.results) >15:
-            #high synthesis time
-            return 2
+        if minutesTraining/len(self.estimator.results) >longAverageSynthesisTime:
+            return intervalUsedForLongTime
         else:
-            return 8
+            return intervalUsedForShortTime
 
     def run(self):
         """

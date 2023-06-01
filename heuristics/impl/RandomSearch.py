@@ -29,41 +29,21 @@ class RandomSearch(Heuristic):
         super().__init__(filesDict)
         self.solutionSaver = solutionSaver
         self._SECONDS = timeLimit
-        self.controlTree:dict = {}
         seed()
         self.run()
-
-    def __generateRandomPermutation(self):
-        node = self.controlTree
-        newPermutation = {}
-        directiveGroups = list(self.dictDir.keys()) 
-        isNewPermutation = False #flag para verificar se é permutacao/solucao/design repetida ou nao
-        for directive in directiveGroups:              
-            domainLenght = len(self.dictDir[directive])   
-            randomDirective = randint(0,domainLenght-1)
-            newPermutation[directive] = self.dictDir[directive][randomDirective] 
-
-            if self.isRestrictedDesign(newPermutation):
-                break
-            if randomDirective in node:
-                node = node[randomDirective]
-            else:
-                node[randomDirective] = {} #cria nodo
-                node = node[randomDirective]  
-                isNewPermutation = True
-        if isNewPermutation and not self.isRestrictedDesign(newPermutation):
-            return newPermutation
-        else:
-            return None
 
     def run(self):
         onePermutation = {}
         generateScript(self.cFiles, self.prjFile)
         inTime = True
         start = time.time()
+        controlTree:dict = {}
         while inTime:
 
-            onePermutation = self.__generateRandomPermutation()
+            onePermutation = self.generateRandomPermutation(controlTree)
+            while not self.isRestrictedDesign(onePermutation) and not self.isRedundantDesign(onePermutation):
+                onePermutation = self.generateRandomPermutation(controlTree)
+
             if onePermutation:    #se tiver uma permutacao na variavel
                 solution = Solution(onePermutation,self.cFiles,self.prjFile)         #Solutions a partir deste
                 try:

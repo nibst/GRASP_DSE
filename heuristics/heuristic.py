@@ -1,7 +1,9 @@
 from abc import ABC, abstractmethod
+from random import randint
 import re
 from domain.solution import Solution
 import copy
+from utils.Script_tcl import generateScript
 import utils.readDirectivesFile as readDirectivesFile
 from pathlib import Path
 from exceptions.timeExceededException import TimeExceededException
@@ -16,6 +18,8 @@ class Heuristic(ABC):
         self.directivesTxt = Path(filesDict['dFile']).read_text()
         self.cFiles = filesDict['cFiles']
         self.prjFile = filesDict['prjFile']
+        generateScript(self.cFiles, self.prjFile)
+
         with open(filesDict['dFile']) as jsonFile:
             self.DSEconfig:dict =  json.load(jsonFile)
         directivesDict = copy.deepcopy(self.DSEconfig['directives'])
@@ -191,13 +195,72 @@ class Heuristic(ABC):
                 try:
                     constraints = constraintsDict[directivesGroup]['constraints']
                 except Exception as e:
-                    print(e)
                     return False
                 if  key in constraints and directivesGroup in directives:
                     if directives[directivesGroup]!= "" and directives[key] != "" : 
                         return True
         return False
     
+    def generateRandomPermutation(self,controlTree):
+        """ non repeating random permutation generator"""
+        node = controlTree
+        newPermutation = dict.fromkeys(self.dictDir,'')
+        isNewPermutation = False #flag para verificar se é permutacao/solucao/design repetida ou nao
+        for directiveGroup in self.dictDir:              
+            domainLenght = len(self.dictDir[directiveGroup])   
+            randomDirective = randint(0,domainLenght-1)
+            newPermutation[directiveGroup] = self.dictDir[directiveGroup][randomDirective] 
+            #TODO this may be bad if the rule of restriction is to have a certain directive.
+            #Ex: need to apply directive1 for directive_dataflow to work. For now i dont have such restrictions
+            if self.isRestrictedDesign(newPermutation) or self.isRedundantDesign(newPermutation):
+                newPermutation[directiveGroup] = ''
+                indexOfEmptyDirective = self.dictDir[directiveGroup].index('')
+                randomDirective = indexOfEmptyDirective
+
+            if randomDirective in node:
+                node = node[randomDirective]
+            else:
+                node[randomDirective] = {} #cria nodo
+                node = node[randomDirective]  
+                isNewPermutation = True
+        if isNewPermutation:
+            return newPermutation
+        else:
+            return None
+    def generateRandomPermutation1(self,controlTree):
+        newPermutation = dict.fromkeys(self.dictDir,'')
+        return self.__recursive(controlTree,newPermutation,0)
+
+    def __recursive(self,controlTree,newPermutation,directiveGroupNumber):
+        node = controlTree
+        directiveGroups = list(self.dictDir.keys())
+        isNewPermutation = False #flag para verificar se é permutacao/solucao/design repetida ou nao
+
+        directiveGroup = directiveGroups[directiveGroupNumber]
+                    
+        domainLenght = len(self.dictDir[directiveGroup])   
+        randomDirective = randint(0,domainLenght-1)
+        newPermutation[directiveGroup] = self.dictDir[directiveGroup][randomDirective] 
+
+        if self.isRestrictedDesign(newPermutation) or self.isRedundantDesign(newPermutation):
+            if directiveGroupNumber == 0:
+                return None
+            newPermutation[directiveGroup] = ''
+            self.__recursive(node,newPermutation,directiveGroupNumber-1)
+
+        if randomDirective in node:
+            node = node[randomDirective]
+        else:
+            node[randomDirective] = {} #cria nodo
+            node = node[randomDirective]  
+            isNewPermutation = True
+        if directiveGroupNumber < len(directiveGroups):
+            self.__recursive(node,newPermutation,directiveGroupNumber+1)
+        if isNewPermutation:
+            return newPermutation
+        else:
+            return self.__recursive(node,newPermutation,directiveGroupNumber-1)
+
     def getCachedSoltuion(self,solution:Solution):
         """
         get especified solution from self.solutions if it exists.

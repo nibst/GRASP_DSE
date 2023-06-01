@@ -1,35 +1,37 @@
-import json
-from heuristics.impl.GRASP import GRASP
-from heuristics.impl.RandomSearch import RandomSearch
-from heuristics.impl.greedy import Greedy
-from heuristics.heuristic import Heuristic
-from heuristics.impl.hillClimbing0 import HillClimbing
-from heuristics.impl.exhaustiveSearch import ExhaustiveSearch
-from heuristics.impl.greedyWithEstimator import GreedyWithEstimator
-from heuristics.impl.randomSearchWithEstimator import RandomSearchWithEstimator
-from heuristics.impl.genetic import GA
 import argparse
+import json
+import pickle
+
+import pandas as pd
 #import matplotlib.pyplot as plt
 from matplotlib.widgets import Cursor
+from sklearn.model_selection import train_test_split
+
+from heuristics.heuristic import Heuristic
+from heuristics.impl.antColony import AntColony
+from heuristics.impl.exhaustiveSearch import ExhaustiveSearch
+from heuristics.impl.genetic import GA
+from heuristics.impl.GRASP import GRASP
+from heuristics.impl.greedy import Greedy
+from heuristics.impl.greedyWithEstimator import GreedyWithEstimator
+from heuristics.impl.hillClimbing0 import HillClimbing
+from heuristics.impl.RandomSearch import RandomSearch
+from heuristics.impl.randomSearchWithEstimator import RandomSearchWithEstimator
+from predictor.estimators.m5p.m5pEstimator import M5PrimeEstimator
+from predictor.estimators.m5p.m5pFactory import M5PrimeFactory
+from predictor.estimators.randomforest.randomForest import \
+    RandomForestEstimator
+from predictor.estimators.randomforest.randomForestFactory import \
+    RandomForestFactory
+from predictor.preprocessing.preProcessor import PreProcessor
+from utils.estimatorTrainer import RandomSamplesEstimatorTrainer
 from utils.graphs import Graphs
 from utils.paretoComparer import ParetoComparer
 from utils.plotMaker import PlotMaker
-import pandas as pd
-from predictor.estimators.randomforest.randomForest import RandomForestEstimator
-from predictor.estimators.randomforest.randomForestFactory import RandomForestFactory
-from predictor.preprocessing.preProcessor import PreProcessor
-from sklearn.model_selection import train_test_split
-from predictor.estimators.m5p.m5pEstimator import M5PrimeEstimator
-from predictor.estimators.m5p.m5pFactory import M5PrimeFactory
-from utils.estimatorTrainer import  RandomSamplesEstimatorTrainer
 from utils.timeLapsedSolutionsSaver import TimeLapsedSolutionsSaver
 
-import pickle 
-
-
 if __name__ == "__main__": 
-    
-    
+
     #Initialize parser
     parser = argparse.ArgumentParser()
     with open('./benchmarks.json') as jsonFile:
@@ -49,7 +51,6 @@ if __name__ == "__main__":
     parser.add_argument("-model", "--estimationModel", help = "model used in heuristics for estimation of synthesis",required=True)
     parser.add_argument("-t", "--timeLimit", help = "time limit for heuristic in seconds",required=True)
     parser.add_argument("-args", "--arguments", help = "arguments of heuristic",required=False, nargs='+')
-    
 
     filesDict = {}
     # Read arguments from command line
@@ -95,14 +96,20 @@ if __name__ == "__main__":
     GENETIC_HEURISTIC = 'genetic'
     GRASP_HEURISTIC = 'GRASP'
     RANDOM_SEARCH_HEURISTIC = 'random'
+    ANT_COLONY_HEURISTIC = 'ACO'
+
     if (GENETIC_HEURISTIC == filesDict['heuristic']):
         solutionsSaver = TimeLapsedSolutionsSaver(int(filesDict['timeLimit'])/10)
         heuristic1 = GA(filesDict,factory,timeLimit=(int(filesDict['timeLimit'])+5),baseEstimator=model,trainTime=1*hour,solutionSaver=solutionsSaver) 
     elif(GRASP_HEURISTIC == filesDict['heuristic']):
         solutionsSaver = TimeLapsedSolutionsSaver(int(filesDict['timeLimit'])/10)
-        heuristic1 = GRASP(filesDict,model,timeLimit=(int(filesDict['timeLimit'])+5),trainTime=1*hour,solutionSaver=solutionsSaver,timeTraining=times_dict[filesDict['model']])   
+        heuristic1 = GRASP(filesDict,model,timeLimit=(int(filesDict['timeLimit'])+5),trainTime=1*hour,solutionSaver=solutionsSaver,timeSpentTraining=times_dict[filesDict['model']])   
     elif (RANDOM_SEARCH_HEURISTIC == filesDict['heuristic']):
         solutionsSaver = TimeLapsedSolutionsSaver(int(filesDict['timeLimit'])/10)
         heuristic1 = RandomSearch(filesDict,timeLimit=(int(filesDict['timeLimit'])+5),solutionSaver=solutionsSaver) 
+    elif (ANT_COLONY_HEURISTIC == filesDict['heuristic']):
+        solutionsSaver = TimeLapsedSolutionsSaver(int(filesDict['timeLimit'])/10)
+        heuristic1 = AntColony(filesDict,model,10,0.9,alpha=1,beta=1,timeLimit=(int(filesDict['timeLimit'])+5),trainTime=1*hour,solutionSaver=solutionsSaver) 
+        heuristic1.run()
     heuristic1.writeToFile(filesDict['saveFile'])
     
