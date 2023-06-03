@@ -21,7 +21,8 @@ class ADRS(HeuristicComparer):
         for referenceSetSolution in referenceParetoFrontSet:
             for approximateSetSolution in approximateParetoFrontSet:
                 adrsList.append(self.distance(referenceSetSolution,approximateSetSolution))
-            adrs += min(adrsList)
+            if adrsList:
+                adrs += min(adrsList)
         return 1/(len(referenceParetoFrontSet)) * adrs
     
     def distance(self,referenceSetSolution:Solution, approximateSetSolution:Solution):

@@ -45,3 +45,6 @@ class PlotMaker:
         self.ax.savefig(self._PLOT_PATH)
     def showPlot(self):
         plt.show()
+
+    def ylim(self,bot,top):
+        self.ax.set_ylim(bot,top)
