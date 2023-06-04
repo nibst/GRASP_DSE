@@ -153,7 +153,7 @@ class AntColony(Heuristic):
         maxRetriesPermutation = 1000#for not looping inifinitely if all permutations are already achieved
         permutationRetryCount = 0
         ant = self.generateRandomPermutation(controlTree)
-        while self.isRestrictedDesign(ant) or self.isRedundantDesign(ant) or ant == None:
+        while ant == None:
             ant = self.generateRandomPermutation(controlTree)
             permutationRetryCount += 1
             if permutationRetryCount >= maxRetriesPermutation:
