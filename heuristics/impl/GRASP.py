@@ -42,16 +42,23 @@ class GRASP(Heuristic):
         self.run()
        
     def __calculateRCLSynthesisInterval(self,timeTraining):
-        longAverageSynthesisTime = 15 #minutes
-        intervalUsedForLongTime = 2
+        longAverageSynthesisTime = 20 #minutes
+        shortAverageSynthesisTime = 10
+        intervalUsedForLongTime = len(self.dictDir.keys())
+        intervalUsedForMediumTime = 2
         intervalUsedForShortTime = 8
         minutesTraining = timeTraining/60
         if len(self.estimator.results) == 0:
-            return float('inf')
-        if minutesTraining/len(self.estimator.results) >longAverageSynthesisTime:
             return intervalUsedForLongTime
-        else:
+        #less than 10
+        if minutesTraining/len(self.estimator.results) < shortAverageSynthesisTime:
             return intervalUsedForShortTime
+        #longer than 20
+        elif minutesTraining/len(self.estimator.results) >longAverageSynthesisTime:
+            return intervalUsedForLongTime
+        #between 10 and 20
+        else:
+            return intervalUsedForMediumTime
 
     def run(self):
         """
@@ -68,13 +75,10 @@ class GRASP(Heuristic):
         end GRASP.
 
         """
-        numSaves = 0 # number of times that all solutions were saved
-        generateScript(self.cFiles, self.prjFile)
         end = time.time()
         #for i in range(iterations):
         while end-self.start <= self._SECONDS:
             solution = self.constructGreedyRandomizedSolution()
-            #repair solution?
             solution = self.localSearch(solution)
             end = time.time()
 
@@ -99,6 +103,7 @@ class GRASP(Heuristic):
         
         #create RCL from some or all candidates
         #RCL = {v E Vk | dv < (1 + alpha)*min(resourcesXlatency)}
+        
         #v = candidate, Vk = candidates, dv = resourcesXlatency of candidate
         for candidate in candidates:
             resourcesXlatency=  candidate.results['resources'] * candidate.results['latency']
@@ -152,21 +157,6 @@ class GRASP(Heuristic):
  
             if s != '':
                 dictDirCopy = self.__removeRedundantDirectives(dictDirCopy,directiveGroup,s)
-        #basically, if last iteration of the loop above didnt got synthesized then synthesize, else dont synthesize
-        if not ((count+1) % self.RCLSynthesisInterval == 0):
-            constructedSolution = Solution(solutionToBuild,self.cFiles,self.prjFile)
-            try:
-                synthesisTimeLimit = self._SECONDS - (time.time() - self.start) 
-                self.synthesisWrapper(constructedSolution,synthesisTimeLimit,self.solutionSaver)
-                trainingSet = copy.deepcopy(self.solutions)
-                trainingSet.extend(self.estimatorSolutions)
-                self.estimator.trainModel(trainingSet)
-            except Exception as error:
-                print(error)
-            else:
-                if self.solutionSaver:
-                    self.solutionSaver.save(self.solutions,'./time_stamps/timeStampGRASP')
-
         return constructedSolution
 
     def __removeRedundantDirectives(self,dictDir:dict,directiveGroup,directive):
