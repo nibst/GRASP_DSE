@@ -31,10 +31,7 @@ from utils.plotMaker import PlotMaker
 from utils.timeLapsedSolutionsSaver import TimeLapsedSolutionsSaver
 
 if __name__ == "__main__": 
-
-    #Initialize parser
-    with open("./trainers/ADPCM_MODEL_TRAINER","rb") as file:
-        trainer = pickle.load(file)
+   
     parser = argparse.ArgumentParser()
     with open('./benchmarks.json') as jsonFile:
         benchmarks:dict =  json.load(jsonFile)
@@ -91,9 +88,7 @@ if __name__ == "__main__":
             pickle.dump(trainer.estimator,modelFile)
     with open(filesDict['model'], 'rb') as modelFile:
         model = pickle.load(modelFile)
-    times_dict = {"SHA_MODEL": 5*hour, "GSM_MODEL": 1.25*hour, "AES_MODEL":40*hour,"DIGIT_MODEL":20*hour,"OPTICAL_MODEL":30*hour,"SPAM_MODL":10*hour,"MOTION_MODEL":5*hour,"ADPCM_MODEL":5*hour}
-
-    
+    times_dict = {"SHA_MODEL": 5*hour, "GSM_MODEL": 1.25*hour, "AES_MODEL":40*hour,"DIGIT_MODEL":20*hour,"OPTICAL_MODEL":30*hour,"SPAM_MODEL":10*hour,"MOTION_MODEL":5*hour,"ADPCM_MODEL":5*hour}
     GENETIC_HEURISTIC = 'genetic'
     GRASP_HEURISTIC = 'GRASP'
     RANDOM_SEARCH_HEURISTIC = 'random'
@@ -101,16 +96,16 @@ if __name__ == "__main__":
 
     if (GENETIC_HEURISTIC == filesDict['heuristic']):
         solutionsSaver = TimeLapsedSolutionsSaver(int(filesDict['timeLimit'])/10)
-        heuristic1 = GA(filesDict,factory,timeLimit=(int(filesDict['timeLimit'])+5),baseEstimator=model,trainTime=1*hour,solutionSaver=solutionsSaver) 
+        heuristic1 = GA(filesDict,factory,timeLimit=(int(filesDict['timeLimit'])+10),baseEstimator=model,trainTime=1*hour,solutionSaver=solutionsSaver) 
     elif(GRASP_HEURISTIC == filesDict['heuristic']):
         solutionsSaver = TimeLapsedSolutionsSaver(int(filesDict['timeLimit'])/10)
-        heuristic1 = GRASP(filesDict,model,timeLimit=(int(filesDict['timeLimit'])+5),trainTime=1*hour,solutionSaver=solutionsSaver,timeSpentTraining=times_dict[filesDict['model']])   
+        heuristic1 = GRASP(filesDict,model,timeLimit=(int(filesDict['timeLimit'])+10),trainTime=1*hour,solutionSaver=solutionsSaver,timeSpentTraining=times_dict[filesDict['model']])   
     elif (RANDOM_SEARCH_HEURISTIC == filesDict['heuristic']):
         solutionsSaver = TimeLapsedSolutionsSaver(int(filesDict['timeLimit'])/10)
-        heuristic1 = RandomSearch(filesDict,timeLimit=(int(filesDict['timeLimit'])+5),solutionSaver=solutionsSaver) 
+        heuristic1 = RandomSearch(filesDict,timeLimit=(int(filesDict['timeLimit'])+10),solutionSaver=solutionsSaver) 
     elif (ANT_COLONY_HEURISTIC == filesDict['heuristic']):
         solutionsSaver = TimeLapsedSolutionsSaver(int(filesDict['timeLimit'])/10)
-        heuristic1 = AntColony(filesDict,model,12,0.9,alpha=1,beta=1,timeLimit=(int(filesDict['timeLimit'])+5),trainTime=1*hour,solutionSaver=solutionsSaver) 
+        heuristic1 = AntColony(filesDict,model,12,0.9,alpha=1,beta=1,timeLimit=(int(filesDict['timeLimit'])+10),trainTime=1*hour,solutionSaver=solutionsSaver) 
         heuristic1.run()
     heuristic1.writeToFile(filesDict['saveFile'])
     

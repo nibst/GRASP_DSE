@@ -12,17 +12,21 @@ class ADRS(HeuristicComparer):
         """
         self.metric1 = metric1
         self.metric2 = metric2
+        self.lastminAdrsList = []
 
     def compare(self, solutions1: List[Solution], solutions2: List[Solution]):
+        if len(solutions2) == 0:
+            return None
         adrs = 0
         referenceParetoFrontSet = Heuristic.paretoSolutions(self.metric1,self.metric2,solutions1)
-        approximateParetoFrontSet = Heuristic.paretoSolutions(self.metric1,self.metric2,solutions2)
-        adrsList = []
+        approximateParetoFrontSet = solutions2#Heuristic.paretoSolutions(self.metric1,self.metric2,solutions2)
         for referenceSetSolution in referenceParetoFrontSet:
+            adrsList = []
             for approximateSetSolution in approximateParetoFrontSet:
                 adrsList.append(self.distance(referenceSetSolution,approximateSetSolution))
             if adrsList:
                 adrs += min(adrsList)
+                self.lastminAdrsList.append((min(adrsList),adrsList.index(min(adrsList))))
         return 1/(len(referenceParetoFrontSet)) * adrs
     
     def distance(self,referenceSetSolution:Solution, approximateSetSolution:Solution):

@@ -227,39 +227,6 @@ class Heuristic(ABC):
             return newPermutation
         else:
             return None
-    def generateRandomPermutation1(self,controlTree):
-        newPermutation = dict.fromkeys(self.dictDir,'')
-        return self.__recursive(controlTree,newPermutation,0)
-
-    def __recursive(self,controlTree,newPermutation,directiveGroupNumber):
-        node = controlTree
-        directiveGroups = list(self.dictDir.keys())
-        isNewPermutation = False #flag para verificar se é permutacao/solucao/design repetida ou nao
-
-        directiveGroup = directiveGroups[directiveGroupNumber]
-                    
-        domainLenght = len(self.dictDir[directiveGroup])   
-        randomDirective = randint(0,domainLenght-1)
-        newPermutation[directiveGroup] = self.dictDir[directiveGroup][randomDirective] 
-
-        if self.isRestrictedDesign(newPermutation) or self.isRedundantDesign(newPermutation):
-            if directiveGroupNumber == 0:
-                return None
-            newPermutation[directiveGroup] = ''
-            self.__recursive(node,newPermutation,directiveGroupNumber-1)
-
-        if randomDirective in node:
-            node = node[randomDirective]
-        else:
-            node[randomDirective] = {} #cria nodo
-            node = node[randomDirective]  
-            isNewPermutation = True
-        if directiveGroupNumber < len(directiveGroups):
-            self.__recursive(node,newPermutation,directiveGroupNumber+1)
-        if isNewPermutation:
-            return newPermutation
-        else:
-            return self.__recursive(node,newPermutation,directiveGroupNumber-1)
 
     def getCachedSoltuion(self,solution:Solution):
         """

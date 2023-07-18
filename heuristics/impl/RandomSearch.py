@@ -31,7 +31,8 @@ class RandomSearch(Heuristic):
         self._SECONDS = timeLimit
         seed()
         self.run()
-
+    def setTimeLimit(self,seconds):
+        self._SECONDS = seconds
     def run(self):
         onePermutation = {}
         generateScript(self.cFiles, self.prjFile)
@@ -41,9 +42,6 @@ class RandomSearch(Heuristic):
         while inTime:
 
             onePermutation = self.generateRandomPermutation(controlTree)
-            while not self.isRestrictedDesign(onePermutation) and not self.isRedundantDesign(onePermutation):
-                onePermutation = self.generateRandomPermutation(controlTree)
-
             if onePermutation:    #se tiver uma permutacao na variavel
                 solution = Solution(onePermutation,self.cFiles,self.prjFile)         #Solutions a partir deste
                 try:

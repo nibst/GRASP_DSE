@@ -100,7 +100,7 @@ class GA(Heuristic):
         newPopulation = []
         parentPairs = self.selector(population)
         pairIndex = 0
-        while (time.time() - self.start) < self._SECONDS:
+        while self.withinTime():
             if self.solutionSaver:
                 self.solutionSaver.save(self.solutions,'./time_stamps/timeStampGenetic')
             try:
@@ -120,7 +120,7 @@ class GA(Heuristic):
             #save all current solutions 
             if self.solutionSaver:
                 self.solutionSaver.save(self.solutions,'./time_stamps/timeStampGenetic')
-            if (time.time() - self.start) >= self._SECONDS:
+            if not self.withinTime():
                 break
             pairIndex+=1
             interval+=1
@@ -172,25 +172,30 @@ class GA(Heuristic):
         score = -1
         threshold = self.modelThreshold 
         self.estimator = self.estimatorFactory.create()
-        sample = RandomSearch(self.filesDict,self.TRAIN_TIME,solutionSaver=self.solutionSaver)
         start = time.time()
-        while score < threshold:
+        remainingTime = self._SECONDS - (time.time() - self.start)
+        if remainingTime <= self.TRAIN_TIME:
+            timeTraining = remainingTime
+        else:
+            timeTraining = self.TRAIN_TIME
+        randomSearchHeuristic = RandomSearch(self.filesDict,timeTraining,solutionSaver=self.solutionSaver)
+        while score < threshold and self.withinTime():
             try:    
-                train, test = train_test_split(sample.solutions, test_size=0.2, random_state=0)
+                train, test = train_test_split(randomSearchHeuristic.solutions, test_size=0.2, random_state=0)
                 
                 self.estimator.trainModel(train)
                 
                 score = self.estimator.score(test)
-                self.estimator.trainModel(sample.solutions)
+                self.estimator.trainModel(randomSearchHeuristic.solutions)
             except Exception as e:
                 #do nothing, just train more
                 score = -1 
                 print(e)            
             print(f'score: {score} ')
             #full train
-            print(f'sample solutions lenght: {len(sample.solutions)}') 
+            print(f'randomSearchHeuristic solutions lenght: {len(randomSearchHeuristic.solutions)}') 
             try:
-                self.estimator.trainModel(sample.solutions)
+                self.estimator.trainModel(randomSearchHeuristic.solutions)
             except Exception as e:
                 print(e)
 
@@ -198,13 +203,11 @@ class GA(Heuristic):
                 #if the time spent creating a new model is x times the TRAIN TIME, lower the threshold
                 if time.time() - start >= self.TRAIN_TIME*3:
                     threshold-=0.1  
-                #create more samples
-                sample.run()
-            #if time runs out
-            if (time.time() - self.start) >= self._SECONDS:
-                break
+                #create more solutions
+                randomSearchHeuristic.setTimeLimit()
+                randomSearchHeuristic.run()
         
-        for solution in sample.solutions:
+        for solution in randomSearchHeuristic.solutions:
             self.appendSolution(solution)
     
     def selector(self,population):
@@ -229,7 +232,7 @@ class GA(Heuristic):
         onePermutation = None
         i=0
         while i<(self.populationSize):
-            onePermutation = self.__generateRandomPermutation(controlTree)
+            onePermutation = self.generateRandomPermutation(controlTree)
             if onePermutation:
                 solution = Solution(onePermutation,self.cFiles,self.prjFile)         #Solutions a partir deste
                 sample.append(solution)
@@ -328,28 +331,10 @@ class GA(Heuristic):
     def __dominateAtLeastOneMetric(self,Solution1,Solution2,metric1,metric2):
         #testa se a Solution1  domina a Solution2
         return ((Solution2.results[metric1]>=Solution1.results[metric1]) or (Solution2.results[metric2] >= Solution1.results[metric2]))
-        
-    def __generateRandomPermutation(self,controlTree:dict):
-        node = controlTree
-        newPermutation = {}
-        isNewPermutation = False #flag para verificar se é permutacao/solucao/design repetida ou nao
-        for directive in self.dictDir:              
-            domainLenght = len(self.dictDir[directive])   
-            randomDirective = random.randint(0,domainLenght-1)
-            newPermutation[directive] = self.dictDir[directive][randomDirective] 
-            if randomDirective in node:
-                node = node[randomDirective]
-            else:
-                node[randomDirective] = {} #cria nodo
-                node = node[randomDirective]
-                isNewPermutation = True
-        if isNewPermutation:
-            return newPermutation
-        else:
-            #if self.__exhaustedEverySolution():
-            return None
-    #TODO
-    def __exhaustedEverySolution(self,controlTree):
-        return True
 
-    
+    def withinTime(self):
+        #if time runs out
+        if (time.time() - self.start) >= self._SECONDS:
+            return False
+        else:
+            return True
