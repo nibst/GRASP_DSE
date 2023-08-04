@@ -28,7 +28,6 @@ class GA(Heuristic):
         self.numOfGenes = len(self.dictDir.keys())
         self.listOfKeys = list(self.dictDir.keys()) #to use numbers (indexes of list) instead of strings in the algorithm logic
         self.chaceToOverwrite = 0.5 #probability of overwritting parent with offspring if offspring dominates in one of the objectives
-        self.new_model_interval = 180
 
         self.solutionSaver = solutionSaver
         self.start = time.time()
@@ -43,59 +42,9 @@ class GA(Heuristic):
         
         
     def run(self):
-        """
-        n: numero de individuos
-        g: numero de gerações
-        f: funcao de aptidao que quero maximizar/minimizar
-        #no nosso caso f seria rodar sintese e utilizar alguma forma de analisar (seja pareto, seja alguma metrica individual, seja minimizar latXresources)
-        #o1,o2 = offspring1 offspring2
-        P<-aleatorios(n)
-        repetir g vezes:
-            P' <-  Vazio
-            enquanto tam(P')<n:
-                pai1,pai2 <- selecao(P)
-                o1,o2 <- crossover(pai1,pai2)
-                o1 <- mutation(o1)
-                o2 <- mutation(o2)
-                P' <- P'  U {o1,o2}
-        P <- P'
-        retornar top(x,P,f) #top x individuos de P
         
-        #k: numero de participantes torneio
-        selecao_torneio(P,f,k):
-            part <- unif.aleatorio(P,k)
-            return top(2,part,f)
-
-        crossover(pai1,pai2):
-            se random < prob_crossover
-                o1,o2 <- troca(pai1,pai2)
-            senao
-                o1,o2 <- copia(pai1,pai2)
-            return o1,o2
-
-        funcao top colocará os results (o fitness de cada solucao) nas Solutions da populacao
-
-        mutation com mutacao aleatorio do domninio
-        """
-        """
-        maybe do something like this:
-        mutation= True
-        crossover =True
-        if random() < self.crossOverRate:
-            offspring = self.crossover(parent1,parent2)
-        else:
-            crossover = False
-        if random() < self.mutationRate:
-            offspring = self.mutation(offspring)
-        else:
-            mutation = False
-        if crossover or mutation:
-            newPopulation.extend([offspring])
-
-        """
         generateScript(self.cFiles, self.prjFile)
         population = self.randomSample() #list of random Solutions (without their HLS results yet)
-        interval = 0
          
         newPopulation = []
         parentPairs = self.selector(population)
@@ -123,11 +72,7 @@ class GA(Heuristic):
             if (time.time() - self.start) >= self._SECONDS:
                 break
             pairIndex+=1
-            interval+=1
-            if interval % self.new_model_interval == 0:
-                self.__new_predictive_model()
-                        #save all current solutions 
-                
+
         if self.solutionSaver:
             self.solutionSaver.save(self.solutions,'./time_stamps/timeStampGenetic')
         population = newPopulation
@@ -168,7 +113,6 @@ class GA(Heuristic):
             self.solutionSaver.save(self.solutions,'./time_stamps/timeStampGenetic') 
                 
     def __new_predictive_model(self):
-        #maybe create new model, as deep copy of self.estimator
         score = -1
         threshold = self.modelThreshold 
         self.estimator = self.estimatorFactory.create()
