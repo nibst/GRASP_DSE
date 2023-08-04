@@ -44,9 +44,9 @@ class GRASP(Heuristic):
     def __calculateRCLSynthesisInterval(self,timeTraining):
         longAverageSynthesisTime = 20 #minutes
         shortAverageSynthesisTime = 10
-        intervalUsedForLongTime = len(self.dictDir.keys())
-        intervalUsedForMediumTime = 2
-        intervalUsedForShortTime = 8
+        intervalUsedForLongTime = len(self.dictDir.keys()) #never synthesize partial solution, only the final constructed solution
+        intervalUsedForMediumTime = 2 #synthesizes every 2 partial solutions
+        intervalUsedForShortTime = 8 #synthesizes every 8 partial solutions
         minutesTraining = timeTraining/60
         if len(self.estimator.results) == 0:
             return intervalUsedForLongTime
