@@ -88,7 +88,9 @@ if __name__ == "__main__":
             pickle.dump(trainer.estimator,modelFile)
     with open(filesDict['model'], 'rb') as modelFile:
         model = pickle.load(modelFile)
-    times_dict = {"SHA_MODEL": 5*hour, "GSM_MODEL": 1.25*hour, "AES_MODEL":40*hour,"DIGIT_MODEL":20*hour,"OPTICAL_MODEL":30*hour,"SPAM_MODEL":10*hour,"MOTION_MODEL":5*hour,"ADPCM_MODEL":5*hour}
+    times_dict = {"./models/SHA_MODEL": 5*hour, "./models/GSM_MODEL": 1.25*hour, "./models/AES_MODEL":40*hour,
+                  "./models/DIGIT_MODEL":20*hour,"./models/OPTICAL_MODEL":30*hour,"./models/SPAM_MODEL":10*hour,
+                  "./models/MOTION_MODEL":5*hour,"./models/ADPCM_MODEL":5*hour}
     GENETIC_HEURISTIC = 'genetic'
     GRASP_HEURISTIC = 'GRASP'
     RANDOM_SEARCH_HEURISTIC = 'random'
