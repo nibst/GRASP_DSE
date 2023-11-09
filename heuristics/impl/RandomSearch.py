@@ -35,7 +35,6 @@ class RandomSearch(Heuristic):
         self._SECONDS = seconds
     def run(self):
         onePermutation = {}
-        generateScript(self.cFiles, self.prjFile)
         inTime = True
         start = time.time()
         controlTree:dict = {}
@@ -43,7 +42,7 @@ class RandomSearch(Heuristic):
 
             onePermutation = self.generateRandomPermutation(controlTree)
             if onePermutation:    #se tiver uma permutacao na variavel
-                solution = Solution(onePermutation,self.cFiles,self.prjFile)         #Solutions a partir deste
+                solution = Solution(onePermutation)         #Solutions a partir deste
                 try:
                     synthesisTimeLimit = self._SECONDS - (time.time() - start) 
                     self.synthesisWrapper(solution,synthesisTimeLimit,self.solutionSaver)

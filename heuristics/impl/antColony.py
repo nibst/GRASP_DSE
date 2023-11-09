@@ -81,7 +81,7 @@ class AntColony(Heuristic):
                 ant = dict.fromkeys(self.dictDir,'')
                 for directiveGroup in directiveGroups:
                     ant[directiveGroup] = self.dictDir[directiveGroup][self.pickMove(directiveGroup)]
-                ant = Solution(ant,self.cFiles,self.prjFile)
+                ant = Solution(ant)
                 estimatedResults = self.estimator.estimateSynthesis(ant)
                 ant.setresults(estimatedResults)  
                 ants.append(ant)
@@ -143,7 +143,7 @@ class AntColony(Heuristic):
         controlTree = {} #for generating non repeating permutations
         for i in range(numberOfAnts):
             ant = self.__generateRandomAnt(controlTree)
-            solution = Solution(ant,self.cFiles,self.prjFile)
+            solution = Solution(ant)
             estimatedResults = self.estimator.estimateSynthesis(solution)
             solution.setresults(estimatedResults)
             ants.append(solution)

@@ -101,7 +101,7 @@ class RandomSearchWithEstimator(Heuristic):
         for i in range(self._NUM_OF_ESTIMATED):
             onePermutation = self.__generateRandomPermutation(controlTree)
             if onePermutation:
-                estimatedSolution = Solution(onePermutation,self.cFiles,self.prjFile)         #Solutions a partir deste     
+                estimatedSolution = Solution(onePermutation)         #Solutions a partir deste     
                 estimatedResults = self.estimator.estimateSynthesis(estimatedSolution)
                 estimatedSolution.setresults(estimatedResults)
                 estimatedSolutions.append(estimatedSolution)
@@ -124,7 +124,6 @@ class RandomSearchWithEstimator(Heuristic):
         controlTree = {}
         self.__initializeControlTree(controlTree)
         solutionIndex=0
-        generateScript(self.cFiles, self.prjFile)
         inTime = True
         seed(2)
         totalTime = 0
@@ -135,7 +134,7 @@ class RandomSearchWithEstimator(Heuristic):
             #print(topEstimatedSolutions) 
             topSynthesized = [] #synthesis of the top estimated solutions
             for estimatedSolution in topEstimatedSolutions:    
-                solution = Solution(estimatedSolution.directives,self.cFiles,self.prjFile)         #Solutions a partir deste
+                solution = Solution(estimatedSolution.directives)         #Solutions a partir deste
                 try:
                     self.synthesisWrapper(solution)
                 except Exception as e:

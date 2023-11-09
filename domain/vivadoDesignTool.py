@@ -9,19 +9,18 @@ import subprocess
 import psutil
 import sys
 from exceptions.timeExceededException import TimeExceededException
-class Vitis(DesignTool):
- 
+class Vivado(DesignTool):
     
     
     def __init__(self, maxRAMUsage = 50, directivesFilename = './domain/directives.tcl'):
         self._MAX_RAM_USAGE = maxRAMUsage #in percentage
         self._DIRECTIVES_FILENAME = directivesFilename
-        self._PROCESSNAME = 'vitis_hls'
-        self._SCRIPT_PATH = './domain/callVitis.sh'
+        self._PROCESSNAME = 'vivado_hls'
+        self._SCRIPT_PATH = './domain/callVivado.sh'
         self._FF_VALUE = 1; self._LUT_VALUE = 2; self._DSP_VALUE = 345.68; self._BRAM_VALUE = 547.33
         if sys.platform == 'win32':
-            self._PROCESSNAME = 'vitis_hls.exe'
-            self._SCRIPT_PATH = './domain/callVitis.bat'
+            self._PROCESSNAME = 'vivado_hls.exe'
+            self._SCRIPT_PATH = './domain/callVivado.bat'
         
     def runSynthesisTeste(self, solution: Solution, timeLimit=None, solutionSaver = None):
         if timeLimit is None:
@@ -39,7 +38,7 @@ class Vitis(DesignTool):
         return solution
     
     def runSynthesis(self, solution: Solution, timeLimit = None, solutionSaver= None):
-        self.__killOnGoingVitisProcessIfAny()    
+        self.__killOnGoingVivadoProcessIfAny()    
         #if not especified, there is infinite time to run synthesis
         if timeLimit is None:
             timeLimit = float('inf')
@@ -47,15 +46,13 @@ class Vitis(DesignTool):
             raise Exception(f"****{self._PROCESSNAME} has exceed max time usage****")
         self.__writeDirectivesIntoFile(solution.directives)
         print('Running Synthesis...')
-        #vitis call using subprocess
+        #vivado call using subprocess
         subprocess.Popen([self._SCRIPT_PATH])
-        self.__monitorVitisProcess(timeLimit, solutionSaver)
-
+        self.__monitorVivadoProcess(timeLimit, solutionSaver)
         xml='./Raise_dse/solution1/syn/report/csynth.xml'
         results = self.__getResultsFromSynthesis(xml)
         for key in results:
             solution.setOneResult(key, results[key])
-        print (results)
         return solution
 
     def __writeDirectivesIntoFile(self,directives):
@@ -66,7 +63,7 @@ class Vitis(DesignTool):
             print(value)
         directivesFile.close()  
 
-    def __killOnGoingVitisProcessIfAny(self):
+    def __killOnGoingVivadoProcessIfAny(self):
         mydir='./Raise_dse'
         while os.path.exists(mydir):
             time.sleep(3)
@@ -79,17 +76,17 @@ class Vitis(DesignTool):
                     proc.kill()
                     break        
 
-    def __monitorVitisProcess(self, timeLimit, solutionSaver):
+    def __monitorVivadoProcess(self, timeLimit, solutionSaver):
         #testing if the synthesis ended
-        vitisIsRunning = True   
+        vivadoIsRunning = True   
         start = time.time()
-        while vitisIsRunning:
+        while vivadoIsRunning:
             #time between checking if the process is still running
             time.sleep(3)
-            vitisIsRunning = False
+            vivadoIsRunning = False
             for proc in psutil.process_iter(['name']):
                 if proc.name() == self._PROCESSNAME:
-                    vitisIsRunning = True
+                    vivadoIsRunning = True
                     #check memory usage
                     try:
                         memoryUse = proc.memory_percent()
@@ -118,7 +115,7 @@ class Vitis(DesignTool):
             x = root.find('AreaEstimates')
             x = x.find('Resources')
             results['FF'] =int(x.find('FF').text)
-            results['DSP'] = int(x.find('DSP').text)
+            results['DSP'] = int(x.find('DSP48E').text)
             results['LUT'] = int(x.find('LUT').text)
             results['BRAM'] = int(x.find('BRAM_18K').text)
             results['resources'] =  results['FF'] * self._FF_VALUE + results['LUT'] * self._LUT_VALUE + results['DSP'] * self._DSP_VALUE + results['BRAM'] * self._BRAM_VALUE    

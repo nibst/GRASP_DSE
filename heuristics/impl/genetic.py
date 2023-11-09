@@ -42,8 +42,6 @@ class GA(Heuristic):
         
         
     def run(self):
-        
-        generateScript(self.cFiles, self.prjFile)
         population = self.randomSample() #list of random Solutions (without their HLS results yet)
          
         newPopulation = []
@@ -178,7 +176,7 @@ class GA(Heuristic):
         while i<(self.populationSize):
             onePermutation = self.generateRandomPermutation(controlTree)
             if onePermutation:
-                solution = Solution(onePermutation,self.cFiles,self.prjFile)         #Solutions a partir deste
+                solution = Solution(onePermutation)         #Solutions a partir deste
                 sample.append(solution)
                 i+=1
         return sample
@@ -221,7 +219,7 @@ class GA(Heuristic):
                 if key == cutPoint:
                     parent = parent2 #swap from which parent take genes
                 offspringDirectives[key] = parent.directives[key]
-            offspring = Solution(offspringDirectives, self.cFiles, self.prjFile)
+            offspring = Solution(offspringDirectives)
         else:
             offspring = copy.deepcopy(parent1)
         return offspring

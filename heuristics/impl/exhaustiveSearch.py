@@ -17,10 +17,7 @@ class ExhaustiveSearch(Heuristic):
 
 
 
-    def run(self):
-                    
-        generateScript(self.cFiles, self.prjFile)
-        
+    def run(self):        
         keys,values = zip(*self.dictDir.items())
         totalTime = 0
         count =0
@@ -32,7 +29,7 @@ class ExhaustiveSearch(Heuristic):
             start = time.time()
             perumtationDict = dict(zip(keys,permutation)) # one permutation
             
-            solution = Solution(perumtationDict,self.cFiles,self.prjFile)         #Solutions a partir deste
+            solution = Solution(perumtationDict)         #Solutions a partir deste
             if not self.isRedundantDesign(solution.directives):
                 count+=1
             else:

@@ -21,8 +21,6 @@ class Greedy(Heuristic):
         final = dict.fromkeys(self.dictDir,None) #Cria um dicionário 'final' a partir do 'dictDir' mas 
                                                 #mantendo apenas os títulos das diretivas - seu valores são
                                                 #trocados por None
-        generateScript(self.cFiles, self.prjFile)
-
         for diretiva in self.dictDir: 
             currentBest = None
             bestMetricxLatency = float('inf') #infinito
@@ -33,7 +31,7 @@ class Greedy(Heuristic):
                     option = None
 
                 final[diretiva] = option                             #Progressivamente popula o dicionário 'final' e cria
-                solution = Solution(final,self.cFiles,self.prjFile)         #Solutions a partir deste     
+                solution = Solution(final)         #Solutions a partir deste     
                 try:
                     #chama synthesis e salva em self.solutions
                     self.synthesisWrapper(solution)

@@ -20,11 +20,7 @@ class HillClimbing(Heuristic):
  
         final = dict.fromkeys(self.dictDir,None) #Cria um dicionário 'final' a partir do 'dictDir' mas 
                                                 #mantendo apenas os títulos das diretivas - seu valores são
-                                                #trocados por None
-        
-        solutionIndex=0
-        generateScript(self.cFiles, self.prjFile)
-        
+                                                #trocados por None        
         for diretiva in self.dictDir:  
             
             bestResourcesxLatency = float('inf') #infinito
@@ -35,7 +31,7 @@ class HillClimbing(Heuristic):
                     option = None
                        
                 final[diretiva] = option                             #Progressivamente popula o dicionário 'final' e cria
-                solution = Solution(final,self.cFiles,self.prjFile)         #Solutions a partir deste
+                solution = Solution(final)         #Solutions a partir deste
                 try:
                     self.synthesisWrapper(solution)
                 except Exception as e:

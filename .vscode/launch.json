@@ -11,7 +11,7 @@
             "program": "${file}",
             "console": "integratedTerminal",
             "justMyCode": true,
-            "args": ["-c", "./benchmarks/optical-flow/src/sw/optical_flow_sw.cpp", "-d", "optical_flow.json", "-p", "optical_flow_sw", "-o", "teste1","-args","0"],
+            "args": ["GRASP","-b", "SHA", "-o", "teste1", "-t", "300", "-model", "./models/SHA_MODEL"],
             //"python.pythonPath": "C:\\Users\\nikol\\AppData\\Local\\Programs\\Python\\Python310\\python.exe",
         }
     ]

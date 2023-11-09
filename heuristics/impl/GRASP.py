@@ -37,8 +37,6 @@ class GRASP(Heuristic):
             self.RCLSynthesisInterval = RCLSynthesisInterval
             if RCLSynthesisInterval == 0:
                 self.RCLSynthesisInterval = float('inf')
-        
-        
         self.run()
        
     def __calculateRCLSynthesisInterval(self,timeTraining):
@@ -93,7 +91,7 @@ class GRASP(Heuristic):
         #take all candidates
         for directive in dictDir[directiveGroup]:
             solutionToBuild[directiveGroup] = directive
-            candidate = Solution(solutionToBuild,self.cFiles,self.prjFile)
+            candidate = Solution(solutionToBuild)
             estimatedResults = self.estimator.estimateSynthesis(candidate)
             candidate.setresults(estimatedResults)
             candidates.append(candidate)
@@ -142,7 +140,7 @@ class GRASP(Heuristic):
                 solutionToBuild[directiveGroup] = s
             if ((count+1) % self.RCLSynthesisInterval == 0): #count+1 just to not include 0 on the count
                 #synthesis of current solution under construction and feed solution to model
-                constructedSolution = Solution(solutionToBuild,self.cFiles,self.prjFile)
+                constructedSolution = Solution(solutionToBuild)
                 try:
                     synthesisTimeLimit = self._SECONDS - (time.time() - self.start) 
                     self.synthesisWrapper(constructedSolution,synthesisTimeLimit,self.solutionSaver)
@@ -181,7 +179,7 @@ class GRASP(Heuristic):
             for directive in self.dictDir[directiveGroup]:
                 if solution.directives[directiveGroup] != directive:
                     neighborDirectives[directiveGroup] = directive
-                    neighborSolution = Solution(neighborDirectives,self.cFiles,self.prjFile)
+                    neighborSolution = Solution(neighborDirectives)
                     estimatedResults = self.estimator.estimateSynthesis(neighborSolution)
                     neighborSolution.setresults(estimatedResults)
                     neighbors.append(neighborSolution)

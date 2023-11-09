@@ -1,33 +1,20 @@
 import argparse
 import json
 import pickle
-
-import pandas as pd
-#import matplotlib.pyplot as plt
-from matplotlib.widgets import Cursor
-from sklearn.model_selection import train_test_split
-
 from heuristics.heuristic import Heuristic
 from heuristics.impl.antColony import AntColony
 from heuristics.impl.exhaustiveSearch import ExhaustiveSearch
 from heuristics.impl.genetic import GA
 from heuristics.impl.GRASP import GRASP
 from heuristics.impl.greedy import Greedy
-from heuristics.impl.greedyWithEstimator import GreedyWithEstimator
 from heuristics.impl.hillClimbing0 import HillClimbing
 from heuristics.impl.RandomSearch import RandomSearch
 from heuristics.impl.randomSearchWithEstimator import RandomSearchWithEstimator
-from predictor.estimators.m5p.m5pEstimator import M5PrimeEstimator
-from predictor.estimators.m5p.m5pFactory import M5PrimeFactory
 from predictor.estimators.randomforest.randomForest import \
     RandomForestEstimator
 from predictor.estimators.randomforest.randomForestFactory import \
     RandomForestFactory
-from predictor.preprocessing.preProcessor import PreProcessor
 from utils.estimatorTrainer import RandomSamplesEstimatorTrainer
-from utils.graphs import Graphs
-from utils.paretoComparer import ParetoComparer
-from utils.plotMaker import PlotMaker
 from utils.timeLapsedSolutionsSaver import TimeLapsedSolutionsSaver
 
 if __name__ == "__main__": 

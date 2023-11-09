@@ -4,9 +4,9 @@ import re
 from domain.solution import Solution
 import copy
 from utils.Script_tcl import generateScript
+from domain.designToolFactory import DesignToolFactory
 import utils.readDirectivesFile as readDirectivesFile
 from pathlib import Path
-from exceptions.timeExceededException import TimeExceededException
 import json
 import pickle
 
@@ -243,12 +243,13 @@ class Heuristic(ABC):
         self.solutions.append(deep)               
 
 
-    def synthesisWrapper(self,solution:Solution,timeLimit=None,solutionSaver= None):
+    def synthesisWrapper(self,solution:Solution, timeLimit=None, solutionSaver= None, designToolChoice = "vitis"):
         """
         Calls synthesis and, if its successful, it saves solution in self.solutions.
         """
+        designTool = DesignToolFactory.getDesignTool(designToolChoice)
         try:
-            solution.runSynthesis(timeLimit,solutionSaver)
+            designTool.runSynthesis(solution,timeLimit,solutionSaver)
         except Exception as e:
             raise
         else:
