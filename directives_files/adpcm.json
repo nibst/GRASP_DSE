@@ -103,7 +103,7 @@
                 "set_directive_pipeline \"adpcm_main/adpcm_main_label12\""],
                 "function":"adpcm_main",
                 "label": "adpcm_main_label12",
-                "constraints":[""],
+                "constraints":[],
                 "directive_type":"pipeline"
             },
             "pipeline adpcm_main_label13": {
