@@ -11,7 +11,8 @@
             "program": "${file}",
             "console": "integratedTerminal",
             "justMyCode": true,
-            "args": ["GRASP","-b", "SHA", "-o", "teste1", "-t", "300", "-model", "./models/SHA_MODEL"],
+            "args" : ["./input.bc"]
+            //"args": ["GRASP","-b", "SHA", "-o", "teste1", "-t", "300", "-model", "./models/SHA_MODEL"],
             //"python.pythonPath": "C:\\Users\\nikol\\AppData\\Local\\Programs\\Python\\Python310\\python.exe",
         }
     ]

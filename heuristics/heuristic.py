@@ -249,7 +249,7 @@ class Heuristic(ABC):
         """
         designTool = DesignToolFactory.getDesignTool(designToolChoice)
         try:
-            designTool.runSynthesis(solution,timeLimit,solutionSaver)
+            solution = designTool.runSynthesis(solution,timeLimit,solutionSaver)
         except Exception as e:
             raise
         else:
