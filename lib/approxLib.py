@@ -1,3 +1,4 @@
+from os import environ
 from pathlib2 import Path
 from math import sqrt
 import subprocess
@@ -7,21 +8,19 @@ from domain.solution import Solution
 import shutil
 
 VERBOSE = True
-BENCH_IOLIB_DIR = "./benchmark_testing/IOLib/"
-RCAPPROX_LLVM_LIB = "/home/nikolas/Documents/llvm-project-7/llvm-7.0.0.src/mybuilddir/lib/LLVMRCApprox.so"
-RCAPPROX_LIB_DIR= "./lib/"
-TIMEOUT= "100"
-LLVM_OPT = "/home/nikolas/Documents/llvm-project-7/llvm-7.0.0.src/mybuilddir/bin/opt"
-LLVM_LLI = "~/Documents/llvm-project-7/llvm-7.0.0.src/mybuilddir/bin/lli"
-"""
+
 try:
     RCAPPROX_LLVM_LIB = environ['RCAPPROX_LLVM_LIB']
     RCAPPROX_LIB_DIR = environ['RCAPPROX_LIB_DIR']
     TIMEOUT = environ['TIMEOUT']
+    BENCH_IOLIB_DIR = environ['BENCH_IOLIB_DIR']
+    LLVM_OPT = environ['LLVM_OPT']
+    LLVM_LLI = environ['LLVM_LLI']
+    LLVM_LINK = environ['LLVM_LINK']
 except KeyError as error:
     print('Error: environment variable {} not defined.'.format(error.args[0]))
     raise
-"""
+
 
 
 class RCApproxException(Exception):
@@ -191,17 +190,15 @@ def getMseValues(outputsValues: dict, goldenOutputsValues: dict) -> dict:
 
 def linkIOFunctionCall(bytecodeFile: Path, outputDir: Path) -> Path:
     IOLinkedBytecodeFile = outputDir / (bytecodeFile.stem + ".IOLinked.bc")
-    shutil.copy(bytecodeFile,IOLinkedBytecodeFile)
-    """
+    
 
-    linkIOFunctionCallCmd = ("llvm-link -o " + IOLinkedBytecodeFile.as_posix() +
+    linkIOFunctionCallCmd = (LLVM_LINK + " -o " + IOLinkedBytecodeFile.as_posix() +
                             " " + bytecodeFile.as_posix() +
                             " " + BENCH_IOLIB_DIR + "populateIO.bc;")
     try: 
         subprocess.check_output(linkIOFunctionCallCmd, stderr=subprocess.STDOUT, shell=True)
     except subprocess.CalledProcessError as error:
         raise IOFunctionCallLinkError(bytecodeFile.as_posix(), error.returncode, error.output) 
-    """
     return IOLinkedBytecodeFile
 
 
@@ -216,9 +213,9 @@ def instrumentBytecode(bytecodeFile: Path, dataStatsFile: Path, outputDir: Path)
 
     linkedBytecodeFile = outputDir / (instrumentedBytecodeFile.stem + ".Linked.bc")
 
-    linkProfileFCallCmd = ("llvm-link -o " + linkedBytecodeFile.as_posix() +
+    linkProfileFCallCmd = (LLVM_LINK + " -o " + linkedBytecodeFile.as_posix() +
                             " " + instrumentedBytecodeFile.as_posix() +
-                            " " + RCAPPROX_LIB_DIR + "profiler.bc;")
+                            " " + RCAPPROX_LIB_DIR + "profiler.bc")
     
     try: 
         subprocess.check_output(instrumentationCmd + linkProfileFCallCmd, stderr=subprocess.STDOUT, shell=True)

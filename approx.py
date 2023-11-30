@@ -57,8 +57,10 @@ def main():
 	# evaluate actual resources usage of exact design (LUTs, REGs and DSPs) and get operations metadata
 	try:
 		exactDesignUpdatedBytecodeFile = updateBytecodeOpsMetadata(exactDesignBytecodeFile, exactDesignDir)
-		exactDesignReportFiles = compileBytecode(exactDesignUpdatedBytecodeFile, exactDesignDir)
+		#exactDesignReportFiles = compileBytecode(exactDesignUpdatedBytecodeFile, exactDesignDir)
 		#exactDesignOpsMetadataFile = getOpsMetadataFromBytecode(exactDesignUpdatedBytecodeFile, exactDesignReportFiles['scheduling'], exactDesignDir)
+		
+		
 		goldenOutputsTest = getOutputsValues(exactDesignUpdatedBytecodeFile, testInputsDir, exactDesignTestOutputsDir, deleteOutputFiles=False)
 		goldenOutputsTraining, dataStatsTraining = getOutputsValuesAndDataStats(exactDesignUpdatedBytecodeFile,
 																				trainingInputsDir,
@@ -70,6 +72,7 @@ def main():
 	except RCApproxException:
 		print("Error: something went wrong when trying to profile the exact design.")
 		raise
-
+	finally:
+		shutil.rmtree('./approx_results')
 if __name__ == '__main__':
 	main()
