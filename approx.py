@@ -4,6 +4,7 @@ from lib.approxLib import *
 import argparse
 from concurrent.futures import ThreadPoolExecutor
 import shutil 
+
 parser = argparse.ArgumentParser()
 parser.add_argument('EXACT_DESIGN_BC', type=str, nargs=1)
 parsed = parser.parse_args() 
@@ -70,9 +71,9 @@ def main():
 		#exactDesignLUTs, exactDesignREGs, exactDesignDSPs = getDesignResourcesFromFile(exactDesignReportFiles['resources'])
 		print("OK")
 	except RCApproxException:
+		shutil.rmtree('./approx_results')
 		print("Error: something went wrong when trying to profile the exact design.")
 		raise
-	finally:
-		shutil.rmtree('./approx_results')
+		
 if __name__ == '__main__':
 	main()

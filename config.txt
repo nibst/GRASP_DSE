@@ -5,5 +5,6 @@ export RCAPPROX_LLVM_LIB=/home/nikolas/Documents/llvm-7.0.0.src/mybuilddir/lib/L
 export RCAPPROX_LIB_DIR=./lib/
 export TIMEOUT=100
 export LLVM_OPT=/home/nikolas/Documents/llvm-7.0.0.src/mybuilddir/bin/opt
-export LLVM_LLI=/home/nikolas/Documents/llvm-7.0.0.src/mybuilddir/bin/lli
+export LLVM_LLI=/home/nikolas/Documents/IC_Things/hls-llvm-project/hls-build/bin/lli
 export LLVM_LINK=/home/nikolas/Documents/llvm-7.0.0.src/mybuilddir/bin/llvm-link
+export CLANG=/home/nikolas/Documents/IC_Things/hls-llvm-project/hls-build/bin/clang

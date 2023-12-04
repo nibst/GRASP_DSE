@@ -104,15 +104,15 @@ void saveProfile(const char *fileName) {
      BinOpInfo* nextOp;
      FILE* outputFile = fopen(fileName, "w");
      if(outputFile){
-         while(ops != NULL){ 
-             fprintf (outputFile, "%"PRIu32"|%"PRIu32"|%"PRIu32"|%"PRIu32"|%"PRIu32"|%"PRIu32"|%lf|%lf|%lf|%lf|\n", 
-                      ops->opID, ops->opCode, (uint32_t)ops->isSignedValue, (uint32_t)ops->isFpValue, 
-                      ops->bitwidth, (uint32_t)ops->numOccurs, ops->mean, ops->variance, ops->standardDev, ops->sumOfSquares); 
-             
-             nextOp = ops->next;
-             free(ops);
-             ops = nextOp;
-             count++;
+         while(ops != NULL){
+        //OPID | OPCode | isSignedValue | isFloatingPointValue | bitwidth | numOccurs | mean | variance | standardDev | sumOfSquares 
+            fprintf (outputFile, "%"PRIu32"|%"PRIu32"|%"PRIu32"|%"PRIu32"|%"PRIu32"|%"PRIu32"|%lf|%lf|%lf|%lf|\n", 
+                    ops->opID, ops->opCode, (uint32_t)ops->isSignedValue, (uint32_t)ops->isFpValue, 
+                    ops->bitwidth, (uint32_t)ops->numOccurs, ops->mean, ops->variance, ops->standardDev, ops->sumOfSquares); 
+            nextOp = ops->next;
+            free(ops);
+            ops = nextOp;
+            count++;
          }
          fclose(outputFile);  
      }

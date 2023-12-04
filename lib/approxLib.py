@@ -5,7 +5,7 @@ import subprocess
 import numpy  
 from domain.designToolFactory import DesignToolFactory
 from domain.solution import Solution
-import shutil
+from math import floor, ceil, sqrt, log
 
 VERBOSE = True
 
@@ -15,6 +15,7 @@ try:
     TIMEOUT = environ['TIMEOUT']
     BENCH_IOLIB_DIR = environ['BENCH_IOLIB_DIR']
     LLVM_OPT = environ['LLVM_OPT']
+    CLANG = environ['CLANG']
     LLVM_LLI = environ['LLVM_LLI']
     LLVM_LINK = environ['LLVM_LINK']
 except KeyError as error:
@@ -227,12 +228,15 @@ def instrumentBytecode(bytecodeFile: Path, dataStatsFile: Path, outputDir: Path)
 def executeBytecode(bytecodeFile: Path, inputFile: Path, outputDir: Path) -> Path:
 
     outputFile = outputDir / (inputFile.stem + ".output.txt")
-            
+    executableFile = "a.out"
     executionCmd = ("timeout -k 5 " + TIMEOUT + " " +
                     LLVM_LLI + " " + bytecodeFile.as_posix() +
                     " " + inputFile.as_posix() +
                     " " + outputFile.as_posix())
-    
+    """
+    " -o " + " " + executableFile + "; " +
+                    executableFile + 
+    """
     try: 
         subprocess.check_output(executionCmd, stderr=subprocess.STDOUT, shell=True)
     except subprocess.CalledProcessError as error:
@@ -385,3 +389,20 @@ def getOutputsValuesAndDataStats(bytecodeFile: Path, inputsDir: Path, outputsDir
         
     return outputValues, dataStats	
 
+def getConstantValueFromStatistics(grandMean: float, grandStdDev: float, operationBitwidth: int) -> int:
+
+	intervalFloor = grandMean - grandStdDev
+	intervalCeil = grandMean + grandStdDev 
+
+	if intervalFloor <=  0 <= intervalCeil: # variable to zero
+			return 0
+	else:
+		wrapAround = 0 if grandMean > 0 else 2 ** operationBitwidth
+		nextPowerOf2 = 2 ** (ceil(log(grandMean + wrapAround, 2))) 
+		previousPowerOf2 = 2 ** (floor(log(grandMean + wrapAround, 2)))
+		nearestPowerOf2 = previousPowerOf2 if (grandMean - previousPowerOf2) <= (nextPowerOf2 - grandMean) else nextPowerOf2
+
+		if intervalFloor <= nearestPowerOf2 <= intervalCeil: # variable to power of 2
+			return nearestPowerOf2
+		else: # variable to mean
+			return grandMean 

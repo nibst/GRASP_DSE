@@ -54,16 +54,12 @@ namespace {
                 ConstantInt *opID;
                 if (MDNode* N = I.getMetadata("stats.instNumber")) {
                   const char* string = cast<MDString>(N->getOperand(0))->getString().data();
-                  fprintf(stderr,"wee good");
+                  fprintf(stderr,"%s",string);
                   opID = ConstantInt::get(Type::getInt64Ty(Ctx), std::stoi(string));
                 }
-
-                //cast<ConstantInt>(I.getMetadata("opID")->getOperand(0));
-                //ConstantInt *opID = cast<ConstantInt>(dyn_cast<ConstantAsMetadata>(dyn_cast<MDNode>(idMDNode->getOperand(0))->getOperand(0))->getValue())->getZExtValue()
                 ConstantInt *opCode = ConstantInt::get(Type::getInt8Ty(Ctx), I.getOpcode()); 
                 StringRef opSignedness = cast<MDString>(I.getMetadata("opSignedness")->getOperand(0))->getString();
-                fprintf(stderr,"AA");           	                
-                fprintf(stderr,"BB");  
+  
                 //algum erro no switch, alem de ter erro no opID e opCode que comentei         	                
                 switch(I.getOpcode()){
                   case Instruction::FAdd:
@@ -122,7 +118,6 @@ namespace {
                           }
                           else { 
                             if((opSignedness == "signed") || (opSignedness == "unknownSignedness")){//assume signed?
-                              fprintf(stderr,"else");
                               args[0] = opID; 
                               args[1] = opCode; 
                               args[2] = builder.CreateSExt(&I, Type::getInt64Ty(Ctx)); 
@@ -133,7 +128,6 @@ namespace {
                               args[7] = ConstantInt::get(Type::getInt32Ty(Ctx), I.getType()->getPrimitiveSizeInBits());
                               builder.SetInsertPoint(&B, builder.GetInsertPoint());
                               builder.CreateCall(profOp, args);
-                              fprintf(stderr,"buik sign");
                               profiled = true;
                             }
                           }
