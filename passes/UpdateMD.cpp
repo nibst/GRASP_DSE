@@ -31,7 +31,9 @@ namespace {
 		std::list<uint64_t>::iterator opIDIterator;
 		std::list<uint64_t> listOfOps;
 		uint64_t opID, opIDCounter;
-		
+		Type* retType = Type::getVoidTy(Ctx);
+		std::vector<Type*> paramTypes = {Type::getInt64Ty(Ctx)};
+		std::vector<Type*> paramTypeFileName = {Type::getInt8PtrTy(Ctx)};
 		// get the instruction counter value from the module metadata. If it's the first iteration, create the metadata						
 		NamedMDNode* counterNamedMDNode = module.getOrInsertNamedMetadata("OP-ID-COUNTER");
 		if(counterNamedMDNode->getNumOperands() != 0){
@@ -40,14 +42,17 @@ namespace {
 		}   	
 		else
 			opIDCounter = 0;
-
+		fprintf(stderr,"aaaa");
 		bool MDUpdated = false;
 		// iterates over all instructions to set metadata (unique dientifier and signedness) and names
 		for (auto &func : module){
 			for (auto &basicBlock : func){
 				for (auto &instruction : basicBlock){
+					fprintf(stderr,"bb");
+
 					if(MDNode* idMDNode = instruction.getMetadata("opID")){
-						// instruction already has ID and signedness metadata (old instruction)     
+						// instruction already has ID and signedness metadata (old instruction)   
+						fprintf(stderr,"opid");
 						opID = cast<ConstantInt>(dyn_cast<ConstantAsMetadata>(dyn_cast<MDNode>(idMDNode->getOperand(0))->getOperand(0))->getValue())->getZExtValue();
 						opIDIterator = std::find(listOfOps.begin(), listOfOps.end(), opID);
 						//if opID not found:

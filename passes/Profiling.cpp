@@ -12,6 +12,7 @@
 #include <string.h>
 #include <iostream>
 #include <list>
+#include "llvm/IR/NoFolder.h"
 
 using namespace llvm;
 
@@ -46,14 +47,18 @@ namespace {
           for (auto &I : B) { 
             if(I.isBinaryOp() && I.hasMetadataOtherThanDebugLoc()){ 
             	  // Insert *after* `op`.
-                IRBuilder<> builder(&I);
+                IRBuilder<NoFolder> builder(&I);
             	  builder.SetInsertPoint(&B, ++builder.GetInsertPoint());
             	  // Insert a call to the profiling function. 
                 MDNode* idMDNode = I.getMetadata("opID");
-                ConstantInt *opID = cast<ConstantInt>(dyn_cast<ConstantAsMetadata>(dyn_cast<MDNode>(idMDNode->getOperand(0))->getOperand(0))->getValue());
+                //cast<ConstantInt>(I.getMetadata("opID")->getOperand(0));
+                //ConstantInt *opID = cast<ConstantInt>(dyn_cast<ConstantAsMetadata>(dyn_cast<MDNode>(idMDNode->getOperand(0))->getOperand(0))->getValue())->getZExtValue()
                 ConstantInt *opCode = ConstantInt::get(Type::getInt8Ty(Ctx), I.getOpcode()); 
-            	  StringRef opSignedness = cast<MDString>(I.getMetadata("opSignedness")->getOperand(0))->getString();
-                           	                
+                ConstantInt *opID = ConstantInt::get(Type::getInt8Ty(Ctx), 23);
+                StringRef opSignedness = cast<MDString>(I.getMetadata("opSignedness")->getOperand(0))->getString();
+                fprintf(stderr,"AA");           	                
+                fprintf(stderr,"BB");  
+                //algum erro no switch, alem de ter erro no opID e opCode que comentei         	                
                 switch(I.getOpcode()){
                   case Instruction::FAdd:
                   case Instruction::FSub:
@@ -61,14 +66,23 @@ namespace {
                   case Instruction::FDiv:
                   case Instruction::FRem:
                           args[0] = opID; 
+                          fprintf(stderr,"0");  
                           args[1] = opCode; 
+                          fprintf(stderr,"1");  
                           args[2] = ConstantInt::get(Type::getInt64Ty(Ctx), 0); 
+                          fprintf(stderr,"2");  
                           args[3] = ConstantInt::get(Type::getInt64Ty(Ctx), 0); 
+                          fprintf(stderr,"3");
                           args[4] = builder.CreateFPExt(&I, Type::getDoubleTy(Ctx)); 
+                          fprintf(stderr,"4");
                           args[5] = ConstantInt::get(Type::getInt1Ty(Ctx), 0); 
+                          fprintf(stderr,"5");
                           args[6] = ConstantInt::get(Type::getInt1Ty(Ctx), 1);
+                          fprintf(stderr,"6");
                           args[7] = ConstantInt::get(Type::getInt32Ty(Ctx), I.getType()->getPrimitiveSizeInBits());
-               		        builder.CreateCall(profOp, args);
+               		        fprintf(stderr,"7");
+                          builder.CreateCall(profOp, args);
+                          fprintf(stderr,"builder");
                           profiled = true;
                           break;
                   case Instruction::Add:
@@ -82,18 +96,27 @@ namespace {
                   case Instruction::AShr:
                           if(opSignedness == "unsigned"){
                               args[0] = opID; 
+                              fprintf(stderr,"0 uns");
                               args[1] = opCode; 
+                              fprintf(stderr,"1 uns");
                               args[2] = ConstantInt::get(Type::getInt64Ty(Ctx), 0);
+                              fprintf(stderr,"2 uns");
                               args[3] = builder.CreateZExt(&I, Type::getInt64Ty(Ctx)); 
+                              fprintf(stderr,"3 uns");
                               args[4] = ConstantFP::get(Type::getDoubleTy(Ctx), 0); 
+                              fprintf(stderr,"4 uns");
                               args[5] = ConstantInt::get(Type::getInt1Ty(Ctx), 0); 
+                              fprintf(stderr,"2 uns");
                               args[6] = ConstantInt::get(Type::getInt1Ty(Ctx), 0);
+                              fprintf(stderr,"2 uns");
                               args[7] = ConstantInt::get(Type::getInt32Ty(Ctx), I.getType()->getPrimitiveSizeInBits());
+                              fprintf(stderr,"2 uns");
                               builder.CreateCall(profOp, args);
                               profiled = true;
                           }
                           else { 
                             if((opSignedness == "signed") || (opSignedness == "unknownSignedness")){//assume signed?
+                              fprintf(stderr,"else");
                               args[0] = opID; 
                               args[1] = opCode; 
                               args[2] = builder.CreateSExt(&I, Type::getInt64Ty(Ctx)); 
@@ -102,7 +125,9 @@ namespace {
                               args[5] = ConstantInt::get(Type::getInt1Ty(Ctx), 1); 
                               args[6] = ConstantInt::get(Type::getInt1Ty(Ctx), 0);
                               args[7] = ConstantInt::get(Type::getInt32Ty(Ctx), I.getType()->getPrimitiveSizeInBits());
+                              builder.SetInsertPoint(&B, builder.GetInsertPoint());
                               builder.CreateCall(profOp, args);
+                              fprintf(stderr,"buik sign");
                               profiled = true;
                             }
                           }
@@ -110,27 +135,45 @@ namespace {
 		              case Instruction::UDiv:
                   case Instruction::URem:
                           args[0] = opID; 
+                          fprintf(stderr,"0");
                           args[1] = opCode; 
+                          fprintf(stderr,"0");
                           args[2] = ConstantInt::get(Type::getInt64Ty(Ctx), 0);
+                          fprintf(stderr,"2");
                           args[3] = builder.CreateZExt(&I, Type::getInt64Ty(Ctx)); 
+                          fprintf(stderr,"3");
                           args[4] = ConstantFP::get(Type::getDoubleTy(Ctx), 0); 
+                          fprintf(stderr,"4");
                           args[5] = ConstantInt::get(Type::getInt1Ty(Ctx), 0); 
+                          fprintf(stderr,"5");
                           args[6] = ConstantInt::get(Type::getInt1Ty(Ctx), 0);
+                          fprintf(stderr,"6");
                           args[7] = ConstantInt::get(Type::getInt32Ty(Ctx), I.getType()->getPrimitiveSizeInBits());
+                          fprintf(stderr,"7");
                           builder.CreateCall(profOp, args);
+                          fprintf(stderr,"udiv builkd");
                           profiled = true;
                           break;
                   case Instruction::SDiv:
                   case Instruction::SRem:
                           args[0] = opID; 
+                          fprintf(stderr,"0 srem");
                           args[1] = opCode; 
+                          fprintf(stderr,"1 srem");
                           args[2] = builder.CreateSExt(&I, Type::getInt64Ty(Ctx)); 
+                          fprintf(stderr,"2 srem");
                           args[3] = ConstantInt::get(Type::getInt64Ty(Ctx), 0);
+                          fprintf(stderr,"3 srem");
                           args[4] = ConstantFP::get(Type::getDoubleTy(Ctx), 0); 
+                          fprintf(stderr,"4 srem");
                           args[5] = ConstantInt::get(Type::getInt1Ty(Ctx), 1); 
+                          fprintf(stderr,"5 srem");
                           args[6] = ConstantInt::get(Type::getInt1Ty(Ctx), 0);
+                          fprintf(stderr,"6 srem");
                           args[7] = ConstantInt::get(Type::getInt32Ty(Ctx), I.getType()->getPrimitiveSizeInBits());
+                          fprintf(stderr,"7 srem");
                           builder.CreateCall(profOp, args);
+                          fprintf(stderr,"build SREM");
                           profiled = true;
                 	        break;
                   default:;
@@ -141,6 +184,7 @@ namespace {
             else { 
               if(auto *op = dyn_cast<ReturnInst>(&I)){
                 if(F.getName() == "main" && profiled){
+                  fprintf(stderr,"else");
           	      IRBuilder<> builder(op);
                   builder.SetInsertPoint(&B, builder.GetInsertPoint());
                   builder.CreateCall(saveProfile, fileNameRef);
