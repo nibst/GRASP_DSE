@@ -51,10 +51,16 @@ namespace {
             	  builder.SetInsertPoint(&B, ++builder.GetInsertPoint());
             	  // Insert a call to the profiling function. 
                 MDNode* idMDNode = I.getMetadata("opID");
+                ConstantInt *opID;
+                if (MDNode* N = I.getMetadata("stats.instNumber")) {
+                  const char* string = cast<MDString>(N->getOperand(0))->getString().data();
+                  fprintf(stderr,"wee good");
+                  opID = ConstantInt::get(Type::getInt64Ty(Ctx), std::stoi(string));
+                }
+
                 //cast<ConstantInt>(I.getMetadata("opID")->getOperand(0));
                 //ConstantInt *opID = cast<ConstantInt>(dyn_cast<ConstantAsMetadata>(dyn_cast<MDNode>(idMDNode->getOperand(0))->getOperand(0))->getValue())->getZExtValue()
                 ConstantInt *opCode = ConstantInt::get(Type::getInt8Ty(Ctx), I.getOpcode()); 
-                ConstantInt *opID = ConstantInt::get(Type::getInt8Ty(Ctx), 23);
                 StringRef opSignedness = cast<MDString>(I.getMetadata("opSignedness")->getOperand(0))->getString();
                 fprintf(stderr,"AA");           	                
                 fprintf(stderr,"BB");  

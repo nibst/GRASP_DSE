@@ -42,17 +42,13 @@ namespace {
 		}   	
 		else
 			opIDCounter = 0;
-		fprintf(stderr,"aaaa");
 		bool MDUpdated = false;
 		// iterates over all instructions to set metadata (unique dientifier and signedness) and names
 		for (auto &func : module){
 			for (auto &basicBlock : func){
 				for (auto &instruction : basicBlock){
-					fprintf(stderr,"bb");
-
 					if(MDNode* idMDNode = instruction.getMetadata("opID")){
 						// instruction already has ID and signedness metadata (old instruction)   
-						fprintf(stderr,"opid");
 						opID = cast<ConstantInt>(dyn_cast<ConstantAsMetadata>(dyn_cast<MDNode>(idMDNode->getOperand(0))->getOperand(0))->getValue())->getZExtValue();
 						opIDIterator = std::find(listOfOps.begin(), listOfOps.end(), opID);
 						//if opID not found:
@@ -61,16 +57,22 @@ namespace {
 							listOfOps.push_back(opID); 
 						}
 	                	else{ 
+							
 							// instruction with duplicated ID (cloned as a result of LLVM optimizations)
 							instruction.setMetadata("opID", MDNode::get(Ctx, ConstantAsMetadata::get(ConstantInt::get(Type::getInt64Ty(Ctx), ++opIDCounter))));
+							MDNode* N = MDNode::get(Ctx, MDString::get(Ctx, std::to_string(opIDCounter)));
+         					instruction.setMetadata("stats.instNumber", N);
 							if (!instruction.getType()->isVoidTy())
 								instruction.setName(std::to_string(opIDCounter) + "." + instruction.getName().str()); 
 							MDUpdated = true;
 	                   	}
 					}	   
 					else{ 
+
 						// new intruction not profiled yet 						
 						instruction.setMetadata("opID", MDNode::get(Ctx, ConstantAsMetadata::get(ConstantInt::get(Type::getInt64Ty(Ctx), ++opIDCounter))));
+						MDNode* N = MDNode::get(Ctx, MDString::get(Ctx, std::to_string(opIDCounter)));
+         				instruction.setMetadata("stats.instNumber", N);
 						if (!instruction.getType()->isVoidTy())
 							instruction.setName(std::to_string(opIDCounter) + "." +instruction.getName().str()); 
 						if(MDNode* signednessMDNode = instruction.getMetadata("opSignedness")){
