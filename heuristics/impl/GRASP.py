@@ -129,7 +129,7 @@ class GRASP(Heuristic):
         """
         solutionToBuild = dict.fromkeys(self.dictDir,'') #Cria um dicionário 'diretivas' a partir do 'dictDir' mas 
                                                         #mantendo apenas os títulos das diretivas - seu valores são
-                                                        #trocados por None
+                                                        #trocados por ''
         directiveGroups = list(self.dictDir.keys()) 
         dictDirCopy = copy.deepcopy(self.dictDir)
         random.shuffle(directiveGroups)

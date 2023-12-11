@@ -5,7 +5,6 @@ from domain.solution import Solution
 import copy
 from utils.Script_tcl import generateScript
 from domain.designToolFactory import DesignToolFactory
-import utils.readDirectivesFile as readDirectivesFile
 from pathlib import Path
 import json
 import pickle
@@ -27,11 +26,6 @@ class Heuristic(ABC):
         for key in directivesDict:
             self.dictDir[key] = directivesDict[key]['possible_directives']
         self.solutions = []
-
-    def parsedTxt(self):
-        return readDirectivesFile.fileParser(self.directivesTxt)
-    #Passa para o arquivo readDirectivesFile.py o texto lido do arquivo
-
     
 
     @abstractmethod                         # Método abstrato a sere herdados e implementado

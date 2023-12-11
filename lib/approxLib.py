@@ -406,3 +406,15 @@ def getConstantValueFromStatistics(grandMean: float, grandStdDev: float, operati
 			return nearestPowerOf2
 		else: # variable to mean
 			return grandMean 
+        
+def getMseValues(outputsValues: dict, goldenOutputsValues: dict) -> dict:
+	
+	assert outputsValues.keys() == goldenOutputsValues.keys()
+
+	mseValues = dict()
+
+	for output, values in outputsValues.items():
+		squaredDifferences = numpy.square(numpy.array(goldenOutputsValues[output])-numpy.array(values))
+		mseValues[output] = numpy.mean(squaredDifferences, dtype=numpy.float64)
+
+	return mseValues
