@@ -4,7 +4,8 @@ from lib.approxLib import *
 import argparse
 from concurrent.futures import ThreadPoolExecutor
 import shutil 
-
+from heuristics.impl.greedyApprox import GreedyApprox
+from utils.Script_tcl import generateScriptWithInputIR
 parser = argparse.ArgumentParser()
 parser.add_argument('EXACT_DESIGN_BC', type=str, nargs=1)
 parsed = parser.parse_args() 
@@ -57,8 +58,15 @@ def main():
 	
 	# evaluate actual resources usage of exact design (LUTs, REGs and DSPs) and get operations metadata
 	try:
+		filesDict = {}
+		filesDict['cFiles'] = ["./benchmark_testing/synthesizable_input.cpp"]
+		filesDict['dFile'] =  "./directives_files/sha.json"
+		filesDict['prjFile'] = "example"
+		synthesizableBytecode = Path("./synthesizable_input.bc")
 		exactDesignUpdatedBytecodeFile = updateBytecodeOpsMetadata(exactDesignBytecodeFile, exactDesignDir)
-		#exactDesignReportFiles = compileBytecode(exactDesignUpdatedBytecodeFile, exactDesignDir)
+		#synthesizableUpdatedBytecode = updateBytecodeOpsMetadata(synthesizableBytecode,exactDesignDir)
+
+		exactDesignReportFiles = compileBytecode(exactDesignUpdatedBytecodeFile, exactDesignDir, filesDict)
 		#exactDesignOpsMetadataFile = getOpsMetadataFromBytecode(exactDesignUpdatedBytecodeFile, exactDesignReportFiles['scheduling'], exactDesignDir)
 		
 		
@@ -67,7 +75,14 @@ def main():
 																				trainingInputsDir,
 																				exactDesignTrainingOutputsDir,
 																				exactDesignProfilesDir, deleteOutputFiles=False)
-		
+		filesDict["exactDesignUpdatedBytecodeFile"] = exactDesignUpdatedBytecodeFile
+		#filesDict["synthesizableUpdatedBytecode"] = synthesizableUpdatedBytecode
+		#filesDict["solution"] = exactDesignReportFiles
+		filesDict["goldenOutPutsTest"] = goldenOutputsTest
+		filesDict["goldenOutputsTraining"] = goldenOutputsTraining
+		filesDict["dataStatsTraining"] = dataStatsTraining
+		heuristic = GreedyApprox(filesDict)
+		heuristic.run()
 		#exactDesignLUTs, exactDesignREGs, exactDesignDSPs = getDesignResourcesFromFile(exactDesignReportFiles['resources'])
 		print("OK")
 	except RCApproxException:
