@@ -7,6 +7,8 @@ from domain.designToolFactory import DesignToolFactory
 from domain.solution import Solution
 from math import floor, ceil, sqrt, log
 
+from utils.Script_tcl import generateScriptWithInputIR
+
 VERBOSE = True
 
 try:
@@ -151,7 +153,7 @@ def getOpsMetadataFromBytecode(bytecodeFile: Path, legupSchedulingRptFile: Path,
     return opsMetadataFile
 
 
-def compileBytecode(bytecodeFile: Path, outputsDir: Path) -> dict:
+def compileBytecode(bytecodeFile: Path, outputsDir: Path, filesDict = None) -> dict:
 
     assert (bytecodeFile.is_file() and outputsDir.is_dir())
 
@@ -168,7 +170,8 @@ def compileBytecode(bytecodeFile: Path, outputsDir: Path) -> dict:
         subprocess.check_output(removeIOFunctionCallCmd, stderr=subprocess.STDOUT, shell=True)
     except subprocess.CalledProcessError as error:
         raise CompilationError(bytecodeFile.as_posix(), error.returncode, error.output) 
-    
+    if(filesDict):
+        generateScriptWithInputIR(filesDict["cFiles"],filesDict["prjFile"],IOFunctionCallRemovedBytecodeFile.as_posix(),LLVM_OPT)
     designTool = DesignToolFactory().getDesignTool('vitis')
     solution = Solution({})
     try:
