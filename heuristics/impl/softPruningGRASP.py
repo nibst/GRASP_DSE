@@ -78,7 +78,7 @@ class SoftPruningGRASP(GRASP):
                 constructedSolution = Solution(solutionToBuild)
                 try:
                     synthesisTimeLimit = self._SECONDS - (time.time() - self.start) 
-                    self.synthesisWrapper(constructedSolution,synthesisTimeLimit,self.solutionSaver)
+                    self.synthesisWrapper(constructedSolution,synthesisTimeLimit,self.solutionSaver, self.designTool)
                     trainingSet = copy.deepcopy(self.solutions)
                     trainingSet.extend(self.estimatorSolutions)
                     self.estimator.trainModel(trainingSet)
