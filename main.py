@@ -102,7 +102,7 @@ if __name__ == "__main__":
         heuristic1.run()
     elif (SOFT_PRUNING_GRASP == filesDict['heuristic']):
         solutionsSaver = TimeLapsedSolutionsSaver(int(filesDict['timeLimit'])/10)
-        heuristic1 = SoftPruningGRASP(filesDict,model,timeLimit=(int(filesDict['timeLimit'])+10),trainTime=1*hour,solutionSaver=solutionsSaver,timeSpentTraining=times_dict[filesDict['model']])   
+        heuristic1 = SoftPruningGRASP(filesDict,model,timeLimit=(int(filesDict['timeLimit'])+10),trainTime=1*hour,solutionSaver=solutionsSaver,timeSpentTraining=times_dict[filesDict['model']], designTool='vivado')   
         heuristic1.run()
     heuristic1.writeToFile(filesDict['saveFile'])
     

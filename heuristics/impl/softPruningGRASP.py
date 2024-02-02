@@ -14,10 +14,10 @@ from utils.checkDirectivesImpact import CheckDirectivesImpact
 
 class SoftPruningGRASP(GRASP):
     
-    def __init__(self,filesDict,model:Estimator,timeSpentTraining=0,timeLimit=43200,trainTime = 7200, solutionSaver:SolutionsSaver = None,seed=None,RCLSynthesisInterval = None):
+    def __init__(self,filesDict,model:Estimator,timeSpentTraining=0,timeLimit=43200,trainTime = 7200, solutionSaver:SolutionsSaver = None,seed=None,RCLSynthesisInterval = None, designTool = 'vitis'):
         super().__init__(filesDict,model,timeSpentTraining,timeLimit,trainTime, solutionSaver,seed,RCLSynthesisInterval)
         self.cutThreshold = 0.5 #take just the 50% best
-    
+        self.designTool = designTool
     def run(self):
         end = time.time()
         #for i in range(iterations):
@@ -124,7 +124,7 @@ class SoftPruningGRASP(GRASP):
     
     def _getNewPreFixedSolution(self, cutThreshold):
         dictDirCopy = copy.deepcopy(self.dictDir)
-        impactChecker = CheckDirectivesImpact(self.estimator,'vitis')
+        impactChecker = CheckDirectivesImpact(self.estimator,self.designTool)
         results = impactChecker.getResults(dictDirCopy)
         prefixedSolution = dict.fromkeys(self.dictDir,'')
         directiveGroupsSorted = self._sortBestDirectiveGroups(results)
