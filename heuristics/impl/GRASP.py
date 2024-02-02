@@ -14,8 +14,9 @@ from utils.abstractSolutionsSaver import SolutionsSaver
 class GRASP(Heuristic):
     
     
-    def __init__(self,filesDict,model:Estimator,timeSpentTraining=0,timeLimit=43200,trainTime = 7200, solutionSaver:SolutionsSaver = None,seed=None,RCLSynthesisInterval = None):
+    def __init__(self,filesDict,model:Estimator,timeSpentTraining=0,timeLimit=43200,trainTime = 7200, solutionSaver:SolutionsSaver = None,seed=None,RCLSynthesisInterval = None, desingTool='vitis'):
         super().__init__(filesDict)
+        self.desingTool = desingTool
         self.TRAIN_TIME = trainTime #3
         self._SECONDS = timeLimit
         self.alpha = 0.7
@@ -142,7 +143,7 @@ class GRASP(Heuristic):
                 constructedSolution = Solution(solutionToBuild)
                 try:
                     synthesisTimeLimit = self._SECONDS - (time.time() - self.start) 
-                    self.synthesisWrapper(constructedSolution,synthesisTimeLimit,self.solutionSaver)
+                    self.synthesisWrapper(constructedSolution,synthesisTimeLimit,self.solutionSaver, self.desingTool)
                     trainingSet = copy.deepcopy(self.solutions)
                     trainingSet.extend(self.estimatorSolutions)
                     self.estimator.trainModel(trainingSet)
@@ -197,7 +198,7 @@ class GRASP(Heuristic):
         while i < len(solutionsSorted):
             try:
                 synthesisTimeLimit = self._SECONDS - (time.time() - self.start)#totalTimeAvailable - timePassed
-                self.synthesisWrapper(solutionsSorted[i],synthesisTimeLimit,self.solutionSaver)
+                self.synthesisWrapper(solutionsSorted[i],synthesisTimeLimit,self.solutionSaver,self.desingTool)
             except Exception as error:
                 print(error)
             else:
