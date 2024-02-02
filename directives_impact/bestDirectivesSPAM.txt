@@ -1,0 +1,3 @@
+pipeline DOT
+unroll GRAD
+unroll TRAINING_INST

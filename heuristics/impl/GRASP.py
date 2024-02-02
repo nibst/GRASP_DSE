@@ -37,7 +37,6 @@ class GRASP(Heuristic):
             self.RCLSynthesisInterval = RCLSynthesisInterval
             if RCLSynthesisInterval == 0:
                 self.RCLSynthesisInterval = float('inf')
-        self.run()
        
     def __calculateRCLSynthesisInterval(self,timeTraining):
         longAverageSynthesisTime = 20 #minutes
@@ -154,10 +153,10 @@ class GRASP(Heuristic):
                         self.solutionSaver.save(self.solutions,'./time_stamps/timeStampGRASP')
  
             if s != '':
-                dictDirCopy = self.__removeRedundantDirectives(dictDirCopy,directiveGroup,s)
+                dictDirCopy = self.removeRedundantDirectives(dictDirCopy,directiveGroup,s)
         return constructedSolution
 
-    def __removeRedundantDirectives(self,dictDir:dict,directiveGroup,directive):
+    def removeRedundantDirectives(self,dictDir:dict,directiveGroup,directive):
         solution = dict.fromkeys(self.dictDir,'')
         newDict = copy.deepcopy(dictDir)
         solution[directiveGroup] = directive
@@ -183,13 +182,13 @@ class GRASP(Heuristic):
                     estimatedResults = self.estimator.estimateSynthesis(neighborSolution)
                     neighborSolution.setresults(estimatedResults)
                     neighbors.append(neighborSolution)
-        topNSynthesis = self.__synthesizeTopNSolutions(1,neighbors)
+        topNSynthesis = self.synthesizeTopNSolutions(1,neighbors)
         topSolution = None
         if topNSynthesis:
             topSolution = max(topNSynthesis,key=lambda k: k.results['resources'] * k.results['latency'])    
         return topSolution
     
-    def __synthesizeTopNSolutions(self,n:int,solutions:list):
+    def synthesizeTopNSolutions(self,n:int,solutions:list):
         #synthesize top n solutions in the solutions list
         solutionsSorted = sorted(solutions,key=lambda k: k.results['resources'] * k.results['latency']) #sort in ascending order of resource X latency
         synthesisCount = 0

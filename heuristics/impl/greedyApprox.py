@@ -8,36 +8,6 @@ from lib.approxLib import *
 import argparse
 import shutil 
 
-parser = argparse.ArgumentParser()
-parser.add_argument('EXACT_DESIGN_BC', type=str, nargs=1)
-parsed = parser.parse_args() 
-
-EXACT_DESIGN_BC = parsed.EXACT_DESIGN_BC[0]
-try:
-    TRAINING_VECS_DIR = environ['TRAINING_VECS_DIR']
-    TEST_VECS_DIR = environ['TEST_VECS_DIR']
-except KeyError as error:
-    print('Error: environment variable {} not defined.'.format(error.args[0]))
-    raise
-
-resultsDir = Path("approx_results")
-exactDesignDir = resultsDir / "exact_design"
-exactDesignProfilesDir = exactDesignDir / "profiles"
-exactDesignOutputsDir = exactDesignDir / "outputs"
-exactDesignTestOutputsDir = exactDesignOutputsDir / "test"
-exactDesignTrainingOutputsDir = exactDesignOutputsDir / "training"
-approxDesignsDir = resultsDir / "approx_designs"
-
-if not resultsDir.exists():
-    resultsDir.mkdir()
-    exactDesignDir.mkdir()
-    exactDesignProfilesDir.mkdir()
-    exactDesignOutputsDir.mkdir()
-    exactDesignTestOutputsDir.mkdir()
-    exactDesignTrainingOutputsDir.mkdir()
-    approxDesignsDir.mkdir()
-trainingInputsDir = Path(TRAINING_VECS_DIR)
-testInputsDir = Path(TEST_VECS_DIR)
 
 class GreedyApprox(Heuristic): 
     def __init__(self,filesDict):
@@ -100,6 +70,36 @@ class GreedyApprox(Heuristic):
 
 def main():
 
+    parser = argparse.ArgumentParser()
+    parser.add_argument('EXACT_DESIGN_BC', type=str, nargs=1)
+    parsed = parser.parse_args() 
+
+    EXACT_DESIGN_BC = parsed.EXACT_DESIGN_BC[0]
+    try:
+        TRAINING_VECS_DIR = environ['TRAINING_VECS_DIR']
+        TEST_VECS_DIR = environ['TEST_VECS_DIR']
+    except KeyError as error:
+        print('Error: environment variable {} not defined.'.format(error.args[0]))
+        raise
+
+    resultsDir = Path("approx_results")
+    exactDesignDir = resultsDir / "exact_design"
+    exactDesignProfilesDir = exactDesignDir / "profiles"
+    exactDesignOutputsDir = exactDesignDir / "outputs"
+    exactDesignTestOutputsDir = exactDesignOutputsDir / "test"
+    exactDesignTrainingOutputsDir = exactDesignOutputsDir / "training"
+    approxDesignsDir = resultsDir / "approx_designs"
+
+    if not resultsDir.exists():
+        resultsDir.mkdir()
+        exactDesignDir.mkdir()
+        exactDesignProfilesDir.mkdir()
+        exactDesignOutputsDir.mkdir()
+        exactDesignTestOutputsDir.mkdir()
+        exactDesignTrainingOutputsDir.mkdir()
+        approxDesignsDir.mkdir()
+        trainingInputsDir = Path(TRAINING_VECS_DIR)
+        testInputsDir = Path(TEST_VECS_DIR)
     print ('Info: compiling the exact design ...')
     exactDesignBytecodeFile = exactDesignDir / EXACT_DESIGN_BC
     shutil.copy(EXACT_DESIGN_BC,exactDesignBytecodeFile)

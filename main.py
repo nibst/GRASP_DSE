@@ -10,6 +10,7 @@ from heuristics.impl.greedy import Greedy
 from heuristics.impl.hillClimbing0 import HillClimbing
 from heuristics.impl.RandomSearch import RandomSearch
 from heuristics.impl.randomSearchWithEstimator import RandomSearchWithEstimator
+from heuristics.impl.softPruningGRASP import SoftPruningGRASP
 from predictor.estimators.randomforest.randomForest import \
     RandomForestEstimator
 from predictor.estimators.randomforest.randomForestFactory import \
@@ -57,6 +58,7 @@ if __name__ == "__main__":
     filesDict['heuristic'] = args.heuristic    
     filesDict['saveFile'] = args.saveFile
     filesDict['arguments'] = args.arguments
+    filesDict['benchmark'] = args.benchmark
     
     hour = 3600
     RESOURCE_TO_COMPARE = 'resources'
@@ -82,6 +84,7 @@ if __name__ == "__main__":
     GRASP_HEURISTIC = 'GRASP'
     RANDOM_SEARCH_HEURISTIC = 'random'
     ANT_COLONY_HEURISTIC = 'ACO'
+    SOFT_PRUNING_GRASP = 'SOFT_PRUNING_GRASP'
 
     if (GENETIC_HEURISTIC == filesDict['heuristic']):
         solutionsSaver = TimeLapsedSolutionsSaver(int(filesDict['timeLimit'])/10)
@@ -89,12 +92,17 @@ if __name__ == "__main__":
     elif(GRASP_HEURISTIC == filesDict['heuristic']):
         solutionsSaver = TimeLapsedSolutionsSaver(int(filesDict['timeLimit'])/10)
         heuristic1 = GRASP(filesDict,model,timeLimit=(int(filesDict['timeLimit'])+10),trainTime=1*hour,solutionSaver=solutionsSaver,timeSpentTraining=times_dict[filesDict['model']])   
+        heuristic1.run()
     elif (RANDOM_SEARCH_HEURISTIC == filesDict['heuristic']):
         solutionsSaver = TimeLapsedSolutionsSaver(int(filesDict['timeLimit'])/10)
         heuristic1 = RandomSearch(filesDict,timeLimit=(int(filesDict['timeLimit'])+10),solutionSaver=solutionsSaver) 
     elif (ANT_COLONY_HEURISTIC == filesDict['heuristic']):
         solutionsSaver = TimeLapsedSolutionsSaver(int(filesDict['timeLimit'])/10)
         heuristic1 = AntColony(filesDict,model,12,0.9,alpha=1,beta=1,timeLimit=(int(filesDict['timeLimit'])+10),trainTime=1*hour,solutionSaver=solutionsSaver) 
+        heuristic1.run()
+    elif (SOFT_PRUNING_GRASP == filesDict['heuristic']):
+        solutionsSaver = TimeLapsedSolutionsSaver(int(filesDict['timeLimit'])/10)
+        heuristic1 = SoftPruningGRASP(filesDict,model,timeLimit=(int(filesDict['timeLimit'])+10),trainTime=1*hour,solutionSaver=solutionsSaver,timeSpentTraining=times_dict[filesDict['model']])   
         heuristic1.run()
     heuristic1.writeToFile(filesDict['saveFile'])
     

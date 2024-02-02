@@ -1,8 +1,8 @@
 {
     "SHA": {"cFiles": ["./benchmarks/sha/sha.c", "./benchmarks/sha/sha_driver.c"], "dFile": "./directives_files/sha.json", "prjFile":"sha_stream"},
-    "GSM": {"cFiles":["./benchmarks/gsm/add.c", "./benchmarks/gsm/gsm.c", "./benchmarks/gsm/lpc.c"] ,"dFile": "./directives_files/gsm.json" ,"prjFile": "Gsm_LPC_Analysis"},
+    "GSM": {"cFiles":["./benchmarks/gsm/add.c", "./benchmarks/gsm/lpc.c"] ,"dFile": "./directives_files/gsm.json" ,"prjFile": "Gsm_LPC_Analysis"},
     "AES": {"cFiles":["./benchmarks/aes/aes_dec.c","./benchmarks/aes/aes_enc.c", "./benchmarks/aes/aes.c", "./benchmarks/aes/aes_func.c", "./benchmarks/aes/aes_key.c"] ,"dFile": "./directives_files/aes.json" ,"prjFile": "aes_main"},
-    "SPAM":{"cFiles":["./benchmarks/spam-filter/src/sw/sgd_sw.cpp"],"dFile": "./directives_files/spam_filter_reduc.json", "prjFile": "SgdLR_sw"},
+    "SPAM":{"cFiles":["./benchmarks/spam-filter/src/sw/sgd_sw.cpp"],"dFile": "./directives_files/spam_filter.json", "prjFile": "SgdLR_sw"},
     "DIGIT": {"cFiles":["./benchmarks/digit-recognition/src/sw/digitrec_sw.cpp"] ,"dFile": "./directives_files/digit_recognition.json" ,"prjFile": "DigitRec_sw"},
     "OPTICAL": {"cFiles":["./benchmarks/optical-flow/src/sw/optical_flow_sw.cpp"] ,"dFile": "./directives_files/optical_flow.json" ,"prjFile": "optical_flow_sw"},
     "ADPCM": {"cFiles":["./benchmarks/adpcm/adpcm.c"] ,"dFile": "./directives_files/adpcm.json" ,"prjFile": "adpcm_main"},

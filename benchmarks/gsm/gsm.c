@@ -17,7 +17,7 @@
 +--------------------------------------------------------------------------+
 */
 #include <stdio.h>
-#include "lpc.h"
+#include "lpc.c"
 #include "private.h"
 
 /*
