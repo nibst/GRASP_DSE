@@ -31,9 +31,9 @@ class CheckDirectivesImpact:
                     estimatedResults = self.estimator.estimateSynthesis(solution)
                     solution.setresults(estimatedResults)
                     self.solutions.append(solution)
-                    latencyGainPercentage = 1 - (solution.results['latency']/defaultSolution.results['latency'])
-                    resourcesGainPercentage = 1 -(solution.results['resources']/defaultSolution.results['resources'])
-                    results[directiveGroup][directive] = {'latency': latencyGainPercentage, 'resources': resourcesGainPercentage}              
+                    latencyIncrease = (solution.results['latency']/defaultSolution.results['latency'])
+                    resourcesIncrease = (solution.results['resources']/defaultSolution.results['resources'])
+                    results[directiveGroup][directive] = {'latency': latencyIncrease, 'resources': resourcesIncrease}              
 
                 appliedDirectives[directiveGroup] = ''    
         return results

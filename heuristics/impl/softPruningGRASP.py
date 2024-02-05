@@ -137,15 +137,17 @@ class SoftPruningGRASP(GRASP):
             dictDirCopy = self.removeRedundantDirectives(dictDirCopy,group,directiveChosen)
             results = impactChecker.getResults(dictDirCopy)
             prefixedSolution[group] = directiveChosen
-        return Solution(prefixedSolution), directiveGroupsSorted[:topN]
+        groupsNotFixated = directiveGroupsSorted[:topN]
+        return Solution(prefixedSolution),groupsNotFixated 
     
     def bestEstimatedDirectiveOfGroup(self,results, group):
         bestEstimatedDirective = ''
-        bestEstimatedLatencyPlusResources = float('-inf')
+        bestMinimunIncrease = float('-inf')
         for directive in results[group].keys():
-            latencyGain   = max(0,results[group][directive]['latency']) #if negative number, then goes to 0
-            resourcesGain = max(0,results[group][directive]['resources'])
-            if bestEstimatedLatencyPlusResources < latencyGain+resourcesGain:
+            latencyIncrease   = results[group][directive]['latency'] #between 0 and 1 if it reduced latency
+            resourceIncrease = results[group][directive]['resources'] #between 0 and 1 if it reduced resources
+            minimunIncrease = min(latencyIncrease,resourceIncrease) 
+            if bestMinimunIncrease < minimunIncrease:
                 bestEstimatedDirective = directive
-                bestEstimatedLatencyPlusResources = latencyGain+resourcesGain
+                bestMinimunIncrease = minimunIncrease
         return bestEstimatedDirective  
