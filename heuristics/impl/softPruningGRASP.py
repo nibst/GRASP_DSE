@@ -6,28 +6,36 @@ from heuristics.impl.GRASP import GRASP
 from heuristics.heuristic import Heuristic
 from predictor.estimators.randomforest.randomForest import RandomForestEstimator
 from domain.solution import Solution
-from utils.Script_tcl import generateScript
 import copy
 import random
 from utils.abstractSolutionsSaver import SolutionsSaver
-from utils.checkDirectivesImpact import CheckDirectivesImpact
+from directives_impact_analyzer.directivesImpactAnalyzer import DirectivesImpactAnalyzer
+from directives_impact_analyzer.estimatorBasedDirectivesImpactAnalyzer import EstimatorBasedDirectivesImpactAnalyzer
+
 
 class SoftPruningGRASP(GRASP):
     
-    def __init__(self,filesDict,model:Estimator,timeSpentTraining=0,timeLimit=43200,trainTime = 7200, solutionSaver:SolutionsSaver = None,seed=None,RCLSynthesisInterval = None, designTool = 'vitis'):
-        super().__init__(filesDict,model,timeSpentTraining,timeLimit,trainTime, solutionSaver,seed,RCLSynthesisInterval)
+    def __init__(self,filesDict,model:Estimator,timeSpentTraining=0,timeLimit=43200,
+                trainTime = 7200, solutionSaver:SolutionsSaver = None,seed=None,
+                RCLSynthesisInterval = None, designTool = 'vitis', directivesImpactAnalyzer:DirectivesImpactAnalyzer=None):
+        
+        super().__init__(filesDict,model,timeSpentTraining,timeLimit,trainTime, solutionSaver,seed,RCLSynthesisInterval,designTool)
+        defaultDirectiveAnalzer = EstimatorBasedDirectivesImpactAnalyzer(self.estimator)
+        self.directivesImpactAnalyzer = directivesImpactAnalyzer if directivesImpactAnalyzer is not None else defaultDirectiveAnalzer
         self.cutThreshold = 0.5 #take just the 50% best
         self.designTool = designTool
     def run(self):
         end = time.time()
-        #for i in range(iterations):
-        numberOfIterationsInThatConfiguration=[0,2,4,8,16,32]
+        numberOfIterationsInThatConfiguration=[1,2,4,8,16,32,32,32,9999999999]
         configuration = 0
-        iteration = 0
+        iteration = 1
         while end-self.start <= self._SECONDS:
-            if iteration == numberOfIterationsInThatConfiguration[configuration]:
+            #change prefixed solution every x iterations, x is determined by the current configuration
+            if iteration % numberOfIterationsInThatConfiguration[configuration] == 0:
                 solution,groupsAvailable = self._getNewPreFixedSolution(self.cutThreshold)
                 configuration+=1
+            if solution is None:
+                print("a")
             solution = self.constructGreedyRandomizedSolution(solution,groupsAvailable)
             solution = self.localSearch(solution,groupsAvailable)
             end = time.time()
@@ -46,7 +54,7 @@ class SoftPruningGRASP(GRASP):
             solutionToBuild[directiveGroup] = directive
             candidate = Solution(solutionToBuild)
             estimatedResults = self.estimator.estimateSynthesis(candidate)
-            candidate.setresults(estimatedResults)
+            candidate.setResultsWithListOfResults(estimatedResults)
             candidates.append(candidate)
             resourcesXlatency=  candidate.results['resources'] * candidate.results['latency']
             if  resourcesXlatency < bestResourcesXLatency:
@@ -101,7 +109,7 @@ class SoftPruningGRASP(GRASP):
                     neighborDirectives[directiveGroup] = directive
                     neighborSolution = Solution(neighborDirectives)
                     estimatedResults = self.estimator.estimateSynthesis(neighborSolution)
-                    neighborSolution.setresults(estimatedResults)
+                    neighborSolution.setResultsWithListOfResults(estimatedResults)
                     neighbors.append(neighborSolution)
         topNSynthesis = self.synthesizeTopNSolutions(1,neighbors)
         topSolution = None
@@ -124,18 +132,17 @@ class SoftPruningGRASP(GRASP):
     
     def _getNewPreFixedSolution(self, cutThreshold):
         dictDirCopy = copy.deepcopy(self.dictDir)
-        impactChecker = CheckDirectivesImpact(self.estimator,self.designTool)
-        results = impactChecker.getResults(dictDirCopy)
+        results = self.directivesImpactAnalyzer.getImpacts(dictDirCopy)
         prefixedSolution = dict.fromkeys(self.dictDir,'')
         directiveGroupsSorted = self._sortBestDirectiveGroups(results)
-        topN = max(1,int(len(results)*cutThreshold)) #saturates into 1
+        topN = max(1,int(len(results)*cutThreshold)) #saturates into 1 if below 1
         badGroups = directiveGroupsSorted[topN:] #get all groups that arent at topN
 
         for group in badGroups: 
             #select the best estimated directive for this group
             directiveChosen = self.bestEstimatedDirectiveOfGroup(results,group)
             dictDirCopy = self.removeRedundantDirectives(dictDirCopy,group,directiveChosen)
-            results = impactChecker.getResults(dictDirCopy)
+            results = self.directivesImpactAnalyzer.getImpacts(dictDirCopy)
             prefixedSolution[group] = directiveChosen
         groupsNotFixated = directiveGroupsSorted[:topN]
         return Solution(prefixedSolution),groupsNotFixated 

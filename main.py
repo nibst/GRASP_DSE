@@ -1,6 +1,7 @@
 import argparse
 import json
 import pickle
+from directives_impact_analyzer.synthesisBasedDirectivesImpactAnalyzer import  SynthesisBasedDirectivesImpactAnalyzer
 from heuristics.heuristic import Heuristic
 from heuristics.impl.antColony import AntColony
 from heuristics.impl.exhaustiveSearch import ExhaustiveSearch
@@ -18,30 +19,65 @@ from predictor.estimators.randomforest.randomForestFactory import \
 from utils.estimatorTrainer import RandomSamplesEstimatorTrainer
 from utils.timeLapsedSolutionsSaver import TimeLapsedSolutionsSaver
 
-if __name__ == "__main__": 
-   
-    parser = argparse.ArgumentParser()
-    with open('./benchmarks.json') as jsonFile:
-        benchmarks:dict =  json.load(jsonFile)
-    benchmarksList = list(benchmarks.keys())
-    # Adding argument
-    #only one of the two arguments in 'group' are required
-    group = parser.add_mutually_exclusive_group(required=True)
-    group.add_argument("-b", "--benchmark", help = "Which benchmark",choices=benchmarksList)
-    group.add_argument("-c", "--cFiles", help = "C input files list", nargs='+')
+def run_heuristic(filesDict, model):
+    hour = 3600
+    factory = RandomForestFactory(filesDict["dFile"]) 
 
-    parser.add_argument('heuristic')
-    parser.add_argument("-d", "--dFile", help = "Directives input file",required=False)
-    parser.add_argument("-p", "--prjFile", help = "Prj. top file",required=False)
+    GENETIC_HEURISTIC = 'genetic'
+    GRASP_HEURISTIC = 'GRASP'
+    RANDOM_SEARCH_HEURISTIC = 'random'
+    ANT_COLONY_HEURISTIC = 'ACO'
+    SOFT_PRUNING_GRASP = 'SOFT_PRUNING_GRASP'
+    times_dict = {"./models/SHA_MODEL": 5*hour, "./models/GSM_MODEL": 1.25*hour, "./models/AES_MODEL":40*hour,
+                  "./models/DIGIT_MODEL":20*hour,"./models/OPTICAL_MODEL":30*hour,"./models/SPAM_MODEL":10*hour,
+                  "./models/MOTION_MODEL":5*hour,"./models/ADPCM_MODEL":5*hour}
+    #choose heuristic
+    if (GENETIC_HEURISTIC == filesDict['heuristic']):
+        solutionsSaver = TimeLapsedSolutionsSaver(int(filesDict['timeLimit'])/10)
+        heuristic = GA(filesDict,factory,timeLimit=(int(filesDict['timeLimit'])+10),baseEstimator=model,trainTime=1*hour,solutionSaver=solutionsSaver) 
+    elif(GRASP_HEURISTIC == filesDict['heuristic']):
+        solutionsSaver = TimeLapsedSolutionsSaver(int(filesDict['timeLimit'])/10)
+        heuristic = GRASP(filesDict,model,timeLimit=(int(filesDict['timeLimit'])+10),trainTime=1*hour,solutionSaver=solutionsSaver,timeSpentTraining=times_dict[filesDict['model']])   
+        heuristic.run()
+    elif (RANDOM_SEARCH_HEURISTIC == filesDict['heuristic']):
+        solutionsSaver = TimeLapsedSolutionsSaver(int(filesDict['timeLimit'])/10)
+        heuristic = RandomSearch(filesDict,timeLimit=(int(filesDict['timeLimit'])+10),solutionSaver=solutionsSaver) 
+    elif (ANT_COLONY_HEURISTIC == filesDict['heuristic']):
+        solutionsSaver = TimeLapsedSolutionsSaver(int(filesDict['timeLimit'])/10)
+        heuristic = AntColony(filesDict,model,12,0.9,alpha=1,beta=1,timeLimit=(int(filesDict['timeLimit'])+10),trainTime=1*hour,solutionSaver=solutionsSaver) 
+        heuristic.run()
+    elif (SOFT_PRUNING_GRASP == filesDict['heuristic']):
+        designTool = "vivado"
+        directiveImpactAnalyzer = SynthesisBasedDirectivesImpactAnalyzer(designTool)
+        with open(filesDict['dFile']) as jsonFile:
+            DSEconfig:dict =  json.load(jsonFile)
+        directivesDict = DSEconfig['directives']
+        dictDir = {}
+        for key in directivesDict:
+            dictDir[key] = directivesDict[key]['possible_directives']
+        directivesImpactFile = f"./directives_impact_analyzer/directives_impact/{designTool}SynthesisBased_{filesDict['benchmark']}.json"
+        try:
+            with open(directivesImpactFile) as jsonFile:
+                directivesImpact:dict =  json.load(jsonFile)
+        except Exception as e:
+            directiveImpactAnalyzer.getImpacts(dictDir)
+            directiveImpactAnalyzer.writeImpactsToFile(directivesImpactFile)
+        else:
+            directiveImpactAnalyzer.setImpacts(directivesImpact)
+        solutionsSaver = TimeLapsedSolutionsSaver(int(filesDict['timeLimit'])/10)
+        heuristic = SoftPruningGRASP(filesDict,
+                                     model,
+                                     timeLimit=(int(filesDict['timeLimit'])+100),
+                                     trainTime=1*hour,
+                                     solutionSaver=solutionsSaver,
+                                     timeSpentTraining=times_dict[filesDict['model']], 
+                                     designTool=designTool, 
+                                     directivesImpactAnalyzer=directiveImpactAnalyzer)   
+        heuristic.run()
+    heuristic.writeToFile(filesDict['saveFile'])
 
-    parser.add_argument("-o", "--saveFile", help = "name of save file",required=True)
-    parser.add_argument("-model", "--estimationModel", help = "model used in heuristics for estimation of synthesis",required=True)
-    parser.add_argument("-t", "--timeLimit", help = "time limit for heuristic in seconds",required=True)
-    parser.add_argument("-args", "--arguments", help = "arguments of heuristic",required=False, nargs='+')
-
+def passArgumentsToDictionary(args):
     filesDict = {}
-    # Read arguments from command line
-    args = parser.parse_args()
     #choose between -b and -c,-d,-p as input for benchmark informations
     if args.cFiles is not None:
         if (args.dFile is None or args.prjFile is None):
@@ -59,50 +95,50 @@ if __name__ == "__main__":
     filesDict['saveFile'] = args.saveFile
     filesDict['arguments'] = args.arguments
     filesDict['benchmark'] = args.benchmark
-    
-    hour = 3600
-    RESOURCE_TO_COMPARE = 'resources'
-    modelName = filesDict['model']
-    factory = RandomForestFactory(filesDict["dFile"])   
-    model = RandomForestEstimator(filesDict['dFile'])
-    trainer = RandomSamplesEstimatorTrainer(filesDict,model,5*hour)
-    try:
-        with open(filesDict['model'], 'rb') as modelFile:
-            loadModel = pickle.load(modelFile)
-    except Exception as e:
-        trainer.trainUntilErrorThreshold(0.8,1.25*hour)
-        with open(f'trainers/{modelName}_TRAINER', 'wb') as modelFile:
-            pickle.dump(trainer,modelFile)
-        with open(f'{modelName}', 'wb') as modelFile:
-            pickle.dump(trainer.estimator,modelFile)
-    with open(filesDict['model'], 'rb') as modelFile:
-        model = pickle.load(modelFile)
-    times_dict = {"./models/SHA_MODEL": 5*hour, "./models/GSM_MODEL": 1.25*hour, "./models/AES_MODEL":40*hour,
-                  "./models/DIGIT_MODEL":20*hour,"./models/OPTICAL_MODEL":30*hour,"./models/SPAM_MODEL":10*hour,
-                  "./models/MOTION_MODEL":5*hour,"./models/ADPCM_MODEL":5*hour}
-    GENETIC_HEURISTIC = 'genetic'
-    GRASP_HEURISTIC = 'GRASP'
-    RANDOM_SEARCH_HEURISTIC = 'random'
-    ANT_COLONY_HEURISTIC = 'ACO'
-    SOFT_PRUNING_GRASP = 'SOFT_PRUNING_GRASP'
+    return filesDict
 
-    if (GENETIC_HEURISTIC == filesDict['heuristic']):
-        solutionsSaver = TimeLapsedSolutionsSaver(int(filesDict['timeLimit'])/10)
-        heuristic1 = GA(filesDict,factory,timeLimit=(int(filesDict['timeLimit'])+10),baseEstimator=model,trainTime=1*hour,solutionSaver=solutionsSaver) 
-    elif(GRASP_HEURISTIC == filesDict['heuristic']):
-        solutionsSaver = TimeLapsedSolutionsSaver(int(filesDict['timeLimit'])/10)
-        heuristic1 = GRASP(filesDict,model,timeLimit=(int(filesDict['timeLimit'])+10),trainTime=1*hour,solutionSaver=solutionsSaver,timeSpentTraining=times_dict[filesDict['model']])   
-        heuristic1.run()
-    elif (RANDOM_SEARCH_HEURISTIC == filesDict['heuristic']):
-        solutionsSaver = TimeLapsedSolutionsSaver(int(filesDict['timeLimit'])/10)
-        heuristic1 = RandomSearch(filesDict,timeLimit=(int(filesDict['timeLimit'])+10),solutionSaver=solutionsSaver) 
-    elif (ANT_COLONY_HEURISTIC == filesDict['heuristic']):
-        solutionsSaver = TimeLapsedSolutionsSaver(int(filesDict['timeLimit'])/10)
-        heuristic1 = AntColony(filesDict,model,12,0.9,alpha=1,beta=1,timeLimit=(int(filesDict['timeLimit'])+10),trainTime=1*hour,solutionSaver=solutionsSaver) 
-        heuristic1.run()
-    elif (SOFT_PRUNING_GRASP == filesDict['heuristic']):
-        solutionsSaver = TimeLapsedSolutionsSaver(int(filesDict['timeLimit'])/10)
-        heuristic1 = SoftPruningGRASP(filesDict,model,timeLimit=(int(filesDict['timeLimit'])+10),trainTime=1*hour,solutionSaver=solutionsSaver,timeSpentTraining=times_dict[filesDict['model']], designTool='vivado')   
-        heuristic1.run()
-    heuristic1.writeToFile(filesDict['saveFile'])
-    
+def getEstimationModel(modelName):
+    #try to open model file for estimation
+    try:
+        with open(modelName, 'rb') as modelFile:
+            model = pickle.load(modelFile)
+    except Exception as e:
+        raise
+
+    return model
+
+def parseArguments():
+    parser = argparse.ArgumentParser()
+    benchmarksList = list(benchmarks.keys())
+    # Adding argument
+    #only one of the two arguments in 'group' are required
+    group = parser.add_mutually_exclusive_group(required=True)
+    group.add_argument("-b", "--benchmark", help = "Which benchmark",choices=benchmarksList)
+    group.add_argument("-c", "--cFiles", help = "C input files list", nargs='+')
+
+    parser.add_argument('heuristic')
+    parser.add_argument("-d", "--dFile", help = "Directives input file",required=False)
+    parser.add_argument("-p", "--prjFile", help = "Prj. top file",required=False)
+
+    parser.add_argument("-o", "--saveFile", help = "name of save file",required=True)
+    parser.add_argument("-model", "--estimationModel", help = "model used in heuristics for estimation of synthesis",required=True)
+    parser.add_argument("-t", "--timeLimit", help = "time limit for heuristic in seconds",required=True)
+    parser.add_argument("-args", "--arguments", help = "arguments of heuristic",required=False, nargs='+')
+    return parser.parse_args()
+
+def main():
+    # Read arguments from command line
+    args = parseArguments()
+    filesDict = passArgumentsToDictionary(args)
+    modelName = filesDict['model']
+    model = getEstimationModel(modelName)
+    run_heuristic(filesDict,model)
+
+if __name__ == "__main__": 
+    with open('./benchmarks/benchmarks.json') as jsonFile:
+        benchmarks:dict =  json.load(jsonFile)
+    main()
+
+
+
+

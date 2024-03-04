@@ -28,7 +28,7 @@ class GRASP(Heuristic):
                 self.estimator.trainModel(sample.solutions)
             except Exception as error:
                 print(error)
-        self.estimatorSolutions = self.estimator.processor.dataset
+        self.estimatorSolutions = copy.deepcopy(self.estimator.processor.dataset)
         
         random.seed(seed)        
         self.solutionSaver = solutionSaver#every 'x' time, save solutions in a file
@@ -93,7 +93,7 @@ class GRASP(Heuristic):
             solutionToBuild[directiveGroup] = directive
             candidate = Solution(solutionToBuild)
             estimatedResults = self.estimator.estimateSynthesis(candidate)
-            candidate.setresults(estimatedResults)
+            candidate.setResultsWithListOfResults(estimatedResults)
             candidates.append(candidate)
             resourcesXlatency=  candidate.results['resources'] * candidate.results['latency']
             if  resourcesXlatency < bestResourcesXLatency:
@@ -181,7 +181,7 @@ class GRASP(Heuristic):
                     neighborDirectives[directiveGroup] = directive
                     neighborSolution = Solution(neighborDirectives)
                     estimatedResults = self.estimator.estimateSynthesis(neighborSolution)
-                    neighborSolution.setresults(estimatedResults)
+                    neighborSolution.setResultsWithListOfResults(estimatedResults)
                     neighbors.append(neighborSolution)
         topNSynthesis = self.synthesizeTopNSolutions(1,neighbors)
         topSolution = None

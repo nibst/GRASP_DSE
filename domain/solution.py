@@ -22,7 +22,10 @@ class Solution:
     def setOneResult(self,key,value):
         self.results[key] = value
 
-    def setresults(self,results:list):
+    def setResults(self,results:dict):
+        self.results = results
+
+    def setResultsWithListOfResults(self, results:list):
         for result in results:
             for index,key in enumerate(self.results):
                 self.results[key] = result[index]

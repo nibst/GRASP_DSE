@@ -81,7 +81,7 @@ class GA(Heuristic):
         offspring = self.crossover(parent1,parent2)
         offspring = self.mutation(offspring)    
         estimatedResults = self.estimator.estimateSynthesis(offspring)
-        offspring.setresults(estimatedResults)
+        offspring.setResultsWithListOfResults(estimatedResults)
         newParent1,newParent2 = self.overwriteParent(parent1,parent2,offspring)
         return (newParent1,newParent2)
 
@@ -158,7 +158,7 @@ class GA(Heuristic):
             #This will estimate all parents in population and pair each parent to a diferent parent
             try:
                 estimatedResults = self.estimator.estimateSynthesis(parent1)
-                parent1.setresults(estimatedResults)
+                parent1.setResultsWithListOfResults(estimatedResults)
             except Exception as e:
                 print(e)
             parent2 =random.choice(population)

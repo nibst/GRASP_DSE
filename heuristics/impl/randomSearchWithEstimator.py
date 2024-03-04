@@ -103,7 +103,7 @@ class RandomSearchWithEstimator(Heuristic):
             if onePermutation:
                 estimatedSolution = Solution(onePermutation)         #Solutions a partir deste     
                 estimatedResults = self.estimator.estimateSynthesis(estimatedSolution)
-                estimatedSolution.setresults(estimatedResults)
+                estimatedSolution.setResultsWithListOfResults(estimatedResults)
                 estimatedSolutions.append(estimatedSolution)
                 #print(f'estimated solution: {estimatedSolution.results}')
                 topSolutions.append(estimatedSolution)

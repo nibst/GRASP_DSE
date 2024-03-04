@@ -83,7 +83,7 @@ class AntColony(Heuristic):
                     ant[directiveGroup] = self.dictDir[directiveGroup][self.pickMove(directiveGroup)]
                 ant = Solution(ant)
                 estimatedResults = self.estimator.estimateSynthesis(ant)
-                ant.setresults(estimatedResults)  
+                ant.setResultsWithListOfResults(estimatedResults)  
                 ants.append(ant)
 
             synthesisTimeLimit = self.SECONDS - (time.time() - self.start)#totalTimeAvailable - timePassed
@@ -145,7 +145,7 @@ class AntColony(Heuristic):
             ant = self.__generateRandomAnt(controlTree)
             solution = Solution(ant)
             estimatedResults = self.estimator.estimateSynthesis(solution)
-            solution.setresults(estimatedResults)
+            solution.setResultsWithListOfResults(estimatedResults)
             ants.append(solution)
         return ants
     
