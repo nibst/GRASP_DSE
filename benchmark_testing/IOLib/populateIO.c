@@ -4,11 +4,13 @@
 void populateInput (int *inputVector, int numElts, const char *fileName)
 {
     FILE* inputFile = fopen(fileName, "r");  
-  
+
     int i;
-    for (i = 0; i < numElts; i++)
+    for (i = 0; i < numElts; i++){
         fscanf (inputFile, "%i", &inputVector[i]);
-    
+    }
+    fprintf(stderr,"input good");
+   
     fclose(inputFile);
        
 }

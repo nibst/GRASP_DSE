@@ -232,19 +232,14 @@ def executeBytecode(bytecodeFile: Path, inputFile: Path, outputDir: Path) -> Pat
 
     outputFile = outputDir / (inputFile.stem + ".output.txt")
     executableFile = "a.out"
-    executionCmd = ("timeout -k 5 " + TIMEOUT + " " +
-                    LLVM_LLI + " " + bytecodeFile.as_posix() +
-                    " " + inputFile.as_posix() +
-                    " " + outputFile.as_posix())
-    """
-    " -o " + " " + executableFile + "; " +
-                    executableFile + 
-    """
+    compileCmd = ("timeout -k 5 " + TIMEOUT + " " +
+                    CLANG + " " + bytecodeFile.as_posix() + " -lm " +  "-o " + executableFile + "; ")
+    executionCmd = ("./" + executableFile + " " + inputFile.as_posix() + " " + outputFile.as_posix())
     try: 
+        subprocess.check_output(compileCmd, stderr=subprocess.STDOUT, shell=True)
         subprocess.check_output(executionCmd, stderr=subprocess.STDOUT, shell=True)
     except subprocess.CalledProcessError as error:
         raise ExecutionError(bytecodeFile.as_posix(), inputFile.as_posix(), error.returncode, error.output) from error
-    
     return outputFile
 
 def variableToConstantTransformation(bytecodeFile: Path, operation: str, constantValue: str, outputDir: Path) -> Path:

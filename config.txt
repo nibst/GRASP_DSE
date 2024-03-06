@@ -1,10 +1,10 @@
 export TRAINING_VECS_DIR=./benchmark_testing/inputs/training
 export TEST_VECS_DIR=./benchmark_testing/inputs/test
 export BENCH_IOLIB_DIR=./benchmark_testing/IOLib/
-export RCAPPROX_LLVM_LIB=/home/nikolas/Documents/llvm-project-7/llvm-7.0.0.src/mybuilddir/lib/LLVMRCApprox.so
+export RCAPPROX_LLVM_LIB=/home/nikolas/Documents/IC_Things/hls-llvm-project/hls-build/lib/LLVMRCApprox.so
 export RCAPPROX_LIB_DIR=./lib/
 export TIMEOUT=100
-export LLVM_OPT=/home/nikolas/Documents/llvm-project-7/llvm-7.0.0.src/mybuilddir/bin/opt
-export LLVM_LLI=/home/nikolas/Documents/IC_Things/hls-llvm-project/hls-build/bin/lli
+export LLVM_OPT=/home/nikolas/Documents/IC_Things/hls-llvm-project/hls-build/bin/opt
+export LLVM_LLI=/home/nikolas/Documents/llvm-project-7/llvm-7.0.0.src/mybuilddir/bin/lli
 export LLVM_LINK=/home/nikolas/Documents/llvm-project-7/llvm-7.0.0.src/mybuilddir/bin/llvm-link
-export CLANG=/home/nikolas/Documents/IC_Things/hls-llvm-project/hls-build/bin/clang
+export CLANG=/home/nikolas/Documents/llvm-project-7/llvm-7.0.0.src/mybuilddir/bin/clang
