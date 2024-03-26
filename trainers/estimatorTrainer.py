@@ -14,10 +14,16 @@ class RandomSamplesEstimatorTrainer:
         self.score = -1
         trainTime = trainTimeBetweenThresholdsChecks
         start = time.time()
-        sample = RandomSearch(self._filesDict,trainTime,solutionSaver=None) 
+        randomSearch = RandomSearch(self._filesDict,solutionSaver=None) 
         while self.score < threshold:
+            remainingTime = self._SECONDS - (time.time() - self.start)
+            if remainingTime <= self.TRAIN_TIME:
+                trainTime = remainingTime
+            else:
+                trainTime = self.TRAIN_TIME
+            randomSearch.run(trainTime)
             try:    
-                train, test = train_test_split(sample.solutions, test_size=0.2)
+                train, test = train_test_split(randomSearch.solutions, test_size=0.2)
                 self.estimator.trainModel(train)
                 self.score = self.estimator.score(test)
             except Exception as e:
@@ -27,8 +33,5 @@ class RandomSamplesEstimatorTrainer:
             #if time runs out
             if (time.time() - start) >= self._SECONDS:
                 break
-            if self.score < threshold: 
-                #create more samples
-                sample.run()
-        self.estimator.trainModel(sample.solutions) 
+        self.estimator.trainModel(randomSearch.solutions) 
         self.timeSpent = time.time() -start

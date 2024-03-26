@@ -114,14 +114,16 @@ class GA(Heuristic):
         score = -1
         threshold = self.modelThreshold 
         self.estimator = self.estimatorFactory.create()
-        start = time.time()
-        remainingTime = self._SECONDS - (time.time() - self.start)
-        if remainingTime <= self.TRAIN_TIME:
-            timeTraining = remainingTime
-        else:
-            timeTraining = self.TRAIN_TIME
-        randomSearchHeuristic = RandomSearch(self.filesDict,timeTraining,solutionSaver=self.solutionSaver)
+        startOfNewPredictiveModelConstruction = time.time()
+
+        randomSearchHeuristic = RandomSearch(self.filesDict,solutionSaver=self.solutionSaver)
         while score < threshold and self.withinTime():
+            remainingTime = self._SECONDS - (time.time() - self.start)
+            if remainingTime <= self.TRAIN_TIME:
+                timeTraining = remainingTime
+            else:
+                timeTraining = self.TRAIN_TIME
+            randomSearchHeuristic.run(timeTraining)
             try:    
                 train, test = train_test_split(randomSearchHeuristic.solutions, test_size=0.2, random_state=0)
                 
@@ -140,18 +142,14 @@ class GA(Heuristic):
                 self.estimator.trainModel(randomSearchHeuristic.solutions)
             except Exception as e:
                 print(e)
-
-            if score < threshold: 
-                #if the time spent creating a new model is x times the TRAIN TIME, lower the threshold
-                if time.time() - start >= self.TRAIN_TIME*3:
-                    threshold-=0.1  
-                #create more solutions
-                randomSearchHeuristic.setTimeLimit()
-                randomSearchHeuristic.run()
+            
+            #if the time spent creating a new model is x times the TRAIN TIME, lower the threshold
+            if time.time() - startOfNewPredictiveModelConstruction >= self.TRAIN_TIME*3:
+                threshold-=0.1  
         
         for solution in randomSearchHeuristic.solutions:
             self.appendSolution(solution)
-    
+
     def selector(self,population):
         parentsList = []
         for parent1 in population:

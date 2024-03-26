@@ -25,15 +25,14 @@ from utils.abstractSolutionsSaver import SolutionsSaver
 
 class RandomSearch(Heuristic):
     
-    def __init__(self,filesDict,timeLimit=3600,solutionSaver:SolutionsSaver = None):
+    def __init__(self,filesDict,solutionSaver:SolutionsSaver = None):
         super().__init__(filesDict)
         self.solutionSaver = solutionSaver
-        self._SECONDS = timeLimit
         seed()
-        self.run()
     def setTimeLimit(self,seconds):
         self._SECONDS = seconds
-    def run(self):
+    def run(self,timeLimit=3600):
+        self._SECONDS = timeLimit
         onePermutation = {}
         inTime = True
         start = time.time()

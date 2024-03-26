@@ -23,9 +23,10 @@ class GRASP(Heuristic):
         self.start = time.time()
         self.estimator = model
         if not self.estimator.isTrained():
-            sample = RandomSearch(filesDict,self.TRAIN_TIME,solutionSaver=solutionSaver)
+            randomSearch = RandomSearch(filesDict,solutionSaver=solutionSaver)
+            randomSearch.run(self.TRAIN_TIME)
             try:
-                self.estimator.trainModel(sample.solutions)
+                self.estimator.trainModel(randomSearch.solutions)
             except Exception as error:
                 print(error)
         self.estimatorSolutions = self.estimator.processor.dataset

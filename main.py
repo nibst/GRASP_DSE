@@ -15,7 +15,7 @@ from predictor.estimators.randomforest.randomForest import \
     RandomForestEstimator
 from predictor.estimators.randomforest.randomForestFactory import \
     RandomForestFactory
-from utils.estimatorTrainer import RandomSamplesEstimatorTrainer
+from trainers.estimatorTrainer import RandomSamplesEstimatorTrainer
 from utils.timeLapsedSolutionsSaver import TimeLapsedSolutionsSaver
 
 if __name__ == "__main__": 
@@ -95,7 +95,8 @@ if __name__ == "__main__":
         heuristic1.run()
     elif (RANDOM_SEARCH_HEURISTIC == filesDict['heuristic']):
         solutionsSaver = TimeLapsedSolutionsSaver(int(filesDict['timeLimit'])/10)
-        heuristic1 = RandomSearch(filesDict,timeLimit=(int(filesDict['timeLimit'])+10),solutionSaver=solutionsSaver) 
+        heuristic1 = RandomSearch(filesDict,solutionSaver=solutionsSaver) 
+        heuristic1.run(timeLimit=(int(filesDict['timeLimit'])+10))
     elif (ANT_COLONY_HEURISTIC == filesDict['heuristic']):
         solutionsSaver = TimeLapsedSolutionsSaver(int(filesDict['timeLimit'])/10)
         heuristic1 = AntColony(filesDict,model,12,0.9,alpha=1,beta=1,timeLimit=(int(filesDict['timeLimit'])+10),trainTime=1*hour,solutionSaver=solutionsSaver) 
