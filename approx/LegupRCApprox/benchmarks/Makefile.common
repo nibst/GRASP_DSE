@@ -1,0 +1,12 @@
+# rcapprox LLVM library
+export RCAPPROX_LLVM_LIB = ~/legup-4.0/llvm/Release+Asserts/lib/LLVMRCApprox.so
+
+# rcapprox sources directory
+export RCAPPROX_LIB_DIR = ~/legup-4.0/examples/RCApprox/lib/
+
+# device characterizaton file (according to config.tcl)
+export DEVICE_CHAR_FILE = ~/legup-4.0/boards/CycloneV/CycloneV.tcl
+
+
+
+
