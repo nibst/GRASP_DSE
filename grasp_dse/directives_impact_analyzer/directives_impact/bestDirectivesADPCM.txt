@@ -1,2 +1,0 @@
-pipeline adpcm_main_label12
-pipeline adpcm_main_label13
