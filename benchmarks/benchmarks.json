@@ -1,0 +1,14 @@
+{
+    "SHA": {"cFiles": ["./benchmarks/sha/sha.c"], "dFile": "./directives/sha.json", "prjFile":"sha_stream"},
+    "GSM": {"cFiles":["./benchmarks/gsm/gsm_add.c", "./benchmarks/gsm/gsm_lpc.c", "./benchmarks/gsm/gsm.c"] ,"dFile": "./directives/gsm.json" ,"prjFile": "Gsm_LPC_Analysis"},
+    "AES": {"cFiles":["./benchmarks/aes/aes_dec.c","./benchmarks/aes/aes_enc.c", "./benchmarks/aes/aes_key.c", "./benchmarks/aes/aes.c"] ,"dFile": "./directives/aes.json" ,"prjFile": "aes_main"},
+    "ADPCM": {"cFiles":["./benchmarks/adpcm/adpcm.c"] ,"dFile": "./directives/adpcm.json" ,"prjFile": "adpcm_main"},
+    "GEMM": {"cFiles":["./benchmarks/gemm/gemm.c"], "dFile":"./directives/gemm.json", "prjFile":"bbgemm"},
+    "KNN": {"cFiles":["./benchmarks/knn/md.c"], "dFile":"./directives/knn.json", "prjFile":"md_kernel"},
+    "MOTION": {"cFiles":["./benchmarks/motion/getvlc.c","./benchmarks/motion/getbits.c","./benchmarks/motion/motion.c","./benchmarks/motion/mpeg2.c"],"dFile":"./directives/motion.json","prjFile":"main"},
+    "TRANS_FFT": {"cFiles":["./benchmarks/transposed_fft/transposed_fft.c"], "dFile":"./directives/transposed_fft.json", "prjFile":"fft1D_512"},
+    "SPAM":{"cFiles":["./benchmarks/spam-filter/src/sw/sgd_sw.cpp"],"dFile": "./directives/spam_filter_reduced.json", "prjFile": "SgdLR_sw"},
+    "DIGIT": {"cFiles":["./benchmarks/digit-recognition/src/sw/digitrec_sw.cpp"] ,"dFile": "./directives/digit_recognition.json" ,"prjFile": "DigitRec_sw"},
+    "OPTICAL": {"cFiles":["./benchmarks/optical-flow/src/sw/optical_flow_sw.cpp"] ,"dFile": "./directives/optical_flow.json" ,"prjFile": "optical_flow_sw"}
+}
+

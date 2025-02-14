@@ -1,0 +1,173 @@
+
+{
+    "directives":
+        {  
+            "pipeline update_knn_label0": {
+                "possible_directives":["","set_directive_pipeline \"update_knn/update_knn_label0\""],
+                "function":"update_knn",
+                "label": "update_knn_label0",
+                "directive_type":"pipeline"
+            },
+            "unroll update_knn_label0": {
+                "possible_directives":["",
+                    "set_directive_unroll \"update_knn/update_knn_label0\"",
+                    "set_directive_unroll -factor 2 \"update_knn/update_knn_label0\"",
+                    "set_directive_unroll -factor 3 \"update_knn/update_knn_label0\""],
+                "function":"update_knn",
+                "label": "update_knn_label0",
+                "directive_type":"unroll"
+            },
+            "pipeline FIND_MAX_DIST": {
+                "possible_directives":["","set_directive_pipeline \"update_knn/FIND_MAX_DIST\""],
+                "function":"update_knn",
+                "label": "FIND_MAX_DIST",
+                "directive_type":"pipeline"
+            },
+            "unroll FIND_MAX_DIST": {
+                "possible_directives":["",
+                    "set_directive_unroll \"update_knn/FIND_MAX_DIST\"",
+                    "set_directive_unroll -factor 1 \"update_knn/FIND_MAX_DIST\"",
+                    "set_directive_unroll -factor 2 \"update_knn/FIND_MAX_DIST\""],
+                "function":"update_knn",
+                "label": "FIND_MAX_DIST",
+                "directive_type":"unroll"
+            },
+            "dependence FIND_MAX_DIST": {
+                "possible_directives":["","set_directive_dependence -type inter -dependent true \"update_knn/FIND_MAX_DIST\""],
+                "function":"update_knn",
+                "label": "FIND_MAX_DIST",
+                "directive_type":"dependence"
+            },
+            "array_partition knn_vote votes": {
+                "possible_directives":["","set_directive_array_partition -type complete -dim 1 \"knn_vote\" votes"],
+                "function":"knn_vote",
+                "label": "",
+                "variable": "votes",
+                "directive_type":"array_partition"
+            },
+            "pipeline knn_vote_label1": {
+                "possible_directives":["","set_directive_pipeline \"knn_vote/knn_vote_label1\""],
+                "function":"knn_vote",
+                "label": "knn_vote_label1",
+                "directive_type":"pipeline"
+            },
+            "unroll knn_vote_label1": {
+                "possible_directives":["",
+                    "set_directive_unroll \"knn_vote/knn_vote_label1\"",
+                    "set_directive_unroll -factor 1 \"knn_vote/knn_vote_label1\"",
+                    "set_directive_unroll -factor 2 \"knn_vote/knn_vote_label1\""],
+                "function":"knn_vote",
+                "label": "knn_vote_label1",
+                "directive_type":"unroll"
+            },
+            "unroll knn_vote_label2": {
+                "possible_directives":["",
+                    "set_directive_unroll \"knn_vote/knn_vote_label2\"",
+                    "set_directive_unroll -factor 2 \"knn_vote/knn_vote_label2\"",
+                    "set_directive_unroll -factor 5 \"knn_vote/knn_vote_label2\""],
+                "function":"knn_vote",
+                "label": "knn_vote_label2",
+                "directive_type":"unroll"
+            },
+            "pipeline knn_vote_label2": {
+                "possible_directives":["","set_directive_pipeline \"knn_vote/knn_vote_label2\""],
+                "function":"knn_vote",
+                "label": "knn_vote_label2",
+                "directive_type":"pipeline"
+            },
+            "array_partition DigitRec_sw dists": {
+                "possible_directives":["","set_directive_array_partition -type complete -dim 1 \"DigitRec_sw\" dists"],
+                "function":"DigitRec_sw",
+                "label": "",
+                "variable": "dists",
+                "directive_type":"array_partition"
+            },
+            
+            "array_partition DigitRec_sw labels": {
+                "possible_directives":["","set_directive_array_partition -type complete -dim 1 \"DigitRec_sw\" labels"],
+                "function":"DigitRec_sw",
+                "label": "",
+                "variable": "labels",
+                "directive_type":"array_partition"
+            },
+            "unroll TEST_LOOP": {
+                "possible_directives":["",
+	            "set_directive_unroll -factor 2 \"DigitRec_sw/TEST_LOOP\"",
+		    "set_directive_unroll -factor 4 \"DigitRec_sw/TEST_LOOP\"",
+                    "set_directive_unroll -factor 8 \"DigitRec_sw/TEST_LOOP\"",
+                    "set_directive_unroll -factor 16 \"DigitRec_sw/TEST_LOOP\"",
+                    "set_directive_unroll -factor 20 \"DigitRec_sw/TEST_LOOP\""],
+                "function":"DigitRec_sw",
+                "label": "TEST_LOOP",
+                "directive_type":"unroll"
+            },
+            "pipeline TEST_LOOP": {
+                "possible_directives":["","set_directive_pipeline \"DigitRec_sw/TEST_LOOP\""],
+                "function":"DigitRec_sw",
+                "label": "TEST_LOOP",
+                "directive_type":"pipeline"
+            },
+            "unroll SET_KNN_SET": {
+                "possible_directives":["",
+                    "set_directive_unroll \"DigitRec_sw/SET_KNN_SET\"",
+                    "set_directive_unroll -factor 1 \"DigitRec_sw/SET_KNN_SET\"",
+                    "set_directive_unroll -factor 2 \"DigitRec_sw/SET_KNN_SET\""],
+                "function":"DigitRec_sw",
+                "label": "SET_KNN_SET",
+                "directive_type":"unroll"
+            },
+            "pipeline SET_KNN_SET": {
+                "possible_directives":["","set_directive_pipeline \"DigitRec_sw/SET_KNN_SET\""],
+                "function":"DigitRec_sw",
+                "label": "SET_KNN_SET",
+                "directive_type":"pipeline"
+            },
+
+            "unroll TRAINING_LOOP": {
+                "possible_directives":["",
+		    "set_directive_unroll -factor 20 \"DigitRec_sw/TRAINING_LOOP\"",
+                    "set_directive_unroll -factor 60 \"DigitRec_sw/TRAINING_LOOP\"",
+                    "set_directive_unroll -factor 125 \"DigitRec_sw/TRAINING_LOOP\"",
+                    "set_directive_unroll -factor 250 \"DigitRec_sw/TRAINING_LOOP\"",
+		    "set_directive_unroll -factor 500 \"DigitRec_sw/TRAINING_LOOP\""],
+                "function":"DigitRec_sw",
+                "label": "TRAINING_LOOP",
+                "directive_type":"unroll"
+            },
+            "pipeline TRAINING_LOOP": {
+                "possible_directives":["","set_directive_pipeline \"DigitRec_sw/TRAINING_LOOP\""],
+                "function":"DigitRec_sw",
+                "label": "TRAINING_LOOP",
+                "directive_type":"pipeline"
+            }
+        },
+           
+        
+        "nested_loops":
+        [
+ 
+            {
+                "function":"DigitRec_sw",
+                "label":"TEST_LOOP",
+                "nest": {
+                    "function":"DigitRec_sw",
+                    "label":"SET_KNN_SET",
+                    "nest": {}
+                }
+            },
+            {
+                "function":"DigitRec_sw",
+                "label":"TEST_LOOP",
+                "nest": {
+                    "function":"DigitRec_sw",
+                    "label":"TRAINING_LOOP",
+                    "nest": {}
+                }
+            }
+            
+        ]     
+}
+
+
+
+

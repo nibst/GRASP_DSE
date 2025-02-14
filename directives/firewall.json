@@ -1,0 +1,83 @@
+
+
+*
+unroll outer_top_loop
+"set_directive_unroll \"firewall_outer_top/outer_top_loop\"",
+"set_directive_unroll -factor 6 \"firewall_outer_top/outer_top_loop\"",
+"set_directive_unroll -factor 4 \"firewall_outer_top/outer_top_loop\"",
+"set_directive_unroll -factor 3 \"firewall_outer_top/outer_top_loop\"",
+"set_directive_unroll -factor 2 \"firewall_outer_top/outer_top_loop\""
+*
+pipeline map_metadata_to_hash_lookup
+"set_directive_pipeline -II 3 \"map_metadata_to_hash_lookup\"",
+"set_directive_pipeline -II 3 -enable_flush \"map_metadata_to_hash_lookup\""
+*
+pipeline gateway
+"set_directive_pipeline -II 3 -enable_flush \"gateway\"",
+"set_directive_pipeline -II 3 \"gateway\""
+*
+inline firewall_step
+"set_directive_inline \"firewall_step\""
+*
+pipeline gateway
+"set_directive_pipeline -II 3 -enable_flush \"gateway\""
+*
+inline firewall_rpc
+"set_directive_inline \"firewall_rpc\""
+*
+unroll set_data_label0
+"set_directive_unroll \"set_data/set_data_label0\"",
+"set_directive_unroll -factor 16 \"set_data/set_data_label0\"",
+"set_directive_unroll -factor 8 \"set_data/set_data_label0\"",
+"set_directive_unroll -factor 4 \"set_data/set_data_label0\"",
+"set_directive_unroll -factor 2 \"set_data/set_data_label0\""
+*
+unroll get_data_label1
+"set_directive_unroll \"get_data/get_data_label1\""
+"set_directive_unroll -factor 16 \"get_data/get_data_label1\"",
+"set_directive_unroll -factor 8 \"get_data/get_data_label1\"",
+"set_directive_unroll -factor 4 \"get_data/get_data_label1\"",
+"set_directive_unroll -factor 2 \"get_data/get_data_label1\""
+*
+pipeline hash_table
+"set_directive_pipeline -II 3 -enable_flush \"hash_table\""
+*
+inline gateway_execute_command
+"set_directive_inline \"gateway_execute_command\""
+*
+inline gateway_add_entry
+"set_directive_inline \"gateway_add_entry\""
+*
+inline gateway_delete_entry
+"set_directive_inline \"gateway_delete_entry\""
+*
+pipeline dup
+"set_directive_pipeline \"dup\""
+*
+unroll hash_label2
+"set_directive_unroll \"hash::hash/hash_label2\""
+*
+pipeline hash_label2
+"set_directive_pipeline \"hash::hash/hash_label2\""
+*
+unroll erase_label3
+"set_directive_unroll \"hash::erase/erase_label3\""
+*
+pipeline erase_label3
+"set_directive_pipeline \"hash::erase/erase_label3\""
+*
+inline label0
+"set_directive_inline \"hash::find/label0/label0\""
+*
+inline find
+"set_directive_inline \"hash::find\""
+*
+unroll lookup_label4
+"set_directive_unroll \"hash::lookup/lookup_label4\""
+*
+pipeline lookup_label4
+"set_directive_pipeline \"hash::lookup/lookup_label4\""
+*
+pipeline link
+"set_directive_pipeline \"link\""
+*

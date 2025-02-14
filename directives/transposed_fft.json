@@ -1,0 +1,303 @@
+{
+    "directives":{
+        "unroll loop1":{
+            "possible_directives":["",
+                "set_directive_unroll -factor 2 \"fft1D_512/loop1\"",
+                "set_directive_unroll -factor 4 \"fft1D_512/loop1\"",
+                "set_directive_unroll -factor 8 \"fft1D_512/loop1\"",
+                "set_directive_unroll -factor 16 \"fft1D_512/loop1\"",
+                "set_directive_unroll -factor 32 \"fft1D_512/loop1\"",
+                "set_directive_unroll \"fft1D_512/loop1\""],
+            "function":"fft1D_512",
+            "label": "loop1",
+            "directive_type":"unroll"
+        },
+        "unroll loop2":{
+            "possible_directives":["",
+                "set_directive_unroll -factor 2 \"fft1D_512/loop2\"",
+                "set_directive_unroll -factor 4 \"fft1D_512/loop2\"",
+                "set_directive_unroll -factor 8 \"fft1D_512/loop2\"",
+                "set_directive_unroll -factor 16 \"fft1D_512/loop2\"",
+                "set_directive_unroll -factor 32 \"fft1D_512/loop2\"",
+                "set_directive_unroll \"fft1D_512/loop2\""],
+            "function":"fft1D_512",
+            "label": "loop2",
+            "directive_type":"unroll"
+        },
+        "unroll loop3":{
+            "possible_directives":["",
+                "set_directive_unroll -factor 2 \"fft1D_512/loop3\"",
+                "set_directive_unroll -factor 4 \"fft1D_512/loop3\"",
+                "set_directive_unroll -factor 8 \"fft1D_512/loop3\"",
+                "set_directive_unroll -factor 16 \"fft1D_512/loop3\"",
+                "set_directive_unroll -factor 32 \"fft1D_512/loop3\"",
+                "set_directive_unroll \"fft1D_512/loop3\""],
+            "function":"fft1D_512",
+            "label": "loop3",
+            "directive_type":"unroll"
+        },
+        "unroll loop4":{
+            "possible_directives":["",
+                "set_directive_unroll -factor 2 \"fft1D_512/loop4\"",
+                "set_directive_unroll -factor 4 \"fft1D_512/loop4\"",
+                "set_directive_unroll -factor 8 \"fft1D_512/loop4\"",
+                "set_directive_unroll -factor 16 \"fft1D_512/loop4\"",
+                "set_directive_unroll -factor 32 \"fft1D_512/loop4\"",
+                "set_directive_unroll \"fft1D_512/loop4\""],
+            "function":"fft1D_512",
+            "label": "loop4",
+            "directive_type":"unroll"
+        },
+        "unroll loop5":{
+            "possible_directives":["",
+                "set_directive_unroll -factor 2 \"fft1D_512/loop5\"",
+                "set_directive_unroll -factor 4 \"fft1D_512/loop5\"",
+                "set_directive_unroll -factor 8 \"fft1D_512/loop5\"",
+                "set_directive_unroll -factor 16 \"fft1D_512/loop5\"",
+                "set_directive_unroll -factor 32 \"fft1D_512/loop5\"",
+                "set_directive_unroll \"fft1D_512/loop5\""],
+            "function":"fft1D_512",
+            "label": "loop5",
+            "directive_type":"unroll"
+        },
+        "unroll loop6":{
+            "possible_directives":["",
+                "set_directive_unroll -factor 2 \"fft1D_512/loop6\"",
+                "set_directive_unroll -factor 4 \"fft1D_512/loop6\"",
+                "set_directive_unroll -factor 8 \"fft1D_512/loop6\"",
+                "set_directive_unroll -factor 16 \"fft1D_512/loop6\"",
+                "set_directive_unroll -factor 32 \"fft1D_512/loop6\"",
+                "set_directive_unroll \"fft1D_512/loop6\""],
+            "function":"fft1D_512",
+            "label": "loop6",
+            "directive_type":"unroll"
+        },
+        "unroll loop7":{
+            "possible_directives":["",
+                "set_directive_unroll -factor 2 \"fft1D_512/loop7\"",
+                "set_directive_unroll -factor 4 \"fft1D_512/loop7\"",
+                "set_directive_unroll -factor 8 \"fft1D_512/loop7\"",
+                "set_directive_unroll -factor 16 \"fft1D_512/loop7\"",
+                "set_directive_unroll -factor 32 \"fft1D_512/loop7\"",
+                "set_directive_unroll \"fft1D_512/loop7\""],
+            "function":"fft1D_512",
+            "label": "loop7",
+            "directive_type":"unroll"
+        },
+        "unroll loop8":{
+            "possible_directives":["",
+                "set_directive_unroll -factor 2 \"fft1D_512/loop8\"",
+                "set_directive_unroll -factor 4 \"fft1D_512/loop8\"",
+                "set_directive_unroll -factor 8 \"fft1D_512/loop8\"",
+                "set_directive_unroll -factor 16 \"fft1D_512/loop8\"",
+                "set_directive_unroll -factor 32 \"fft1D_512/loop8\"",
+                "set_directive_unroll \"fft1D_512/loop8\""],
+            "function":"fft1D_512",
+            "label": "loop8",
+            "directive_type":"unroll"
+        },
+        "unroll loop9":{
+            "possible_directives":["",
+                "set_directive_unroll -factor 2 \"fft1D_512/loop9\"",
+                "set_directive_unroll -factor 4 \"fft1D_512/loop9\"",
+                "set_directive_unroll -factor 8 \"fft1D_512/loop9\"",
+                "set_directive_unroll -factor 16 \"fft1D_512/loop9\"",
+                "set_directive_unroll -factor 32 \"fft1D_512/loop9\"",
+                "set_directive_unroll \"fft1D_512/loop9\""],
+            "function":"fft1D_512",
+            "label": "loop9",
+            "directive_type":"unroll"
+        },
+        "unroll loop10":{
+            "possible_directives":["",
+                "set_directive_unroll -factor 2 \"fft1D_512/loop10\"",
+                "set_directive_unroll -factor 4 \"fft1D_512/loop10\"",
+                "set_directive_unroll -factor 8 \"fft1D_512/loop10\"",
+                "set_directive_unroll -factor 16 \"fft1D_512/loop10\"",
+                "set_directive_unroll -factor 32 \"fft1D_512/loop10\"",
+                "set_directive_unroll \"fft1D_512/loop10\""],
+            "function":"fft1D_512",
+            "label": "loop10",
+            "directive_type":"unroll"
+        },
+        "unroll loop11":{
+            "possible_directives":["",
+                "set_directive_unroll -factor 2 \"fft1D_512/loop11\"",
+                "set_directive_unroll -factor 4 \"fft1D_512/loop11\"",
+                "set_directive_unroll -factor 8 \"fft1D_512/loop11\"",
+                "set_directive_unroll -factor 16 \"fft1D_512/loop11\"",
+                "set_directive_unroll -factor 32 \"fft1D_512/loop11\"",
+                "set_directive_unroll \"fft1D_512/loop11\""],
+            "function":"fft1D_512",
+            "label": "loop11",
+            "directive_type":"unroll"
+        },
+        "pipeline loop1":{
+            "possible_directives":["", "set_directive_pipeline \"fft1D_512/loop1\""],
+            "function":"fft1D_512",
+            "label": "loop1",
+            "directive_type":"pipeline"
+        },
+        "pipeline loop2":{
+            "possible_directives":["", "set_directive_pipeline \"fft1D_512/loop2\""],
+            "function":"fft1D_512",
+            "label": "loop2",
+            "directive_type":"pipeline"
+        },
+        "pipeline loop3":{
+            "possible_directives":["", "set_directive_pipeline \"fft1D_512/loop3\""],
+            "function":"fft1D_512",
+            "label": "loop3",
+            "directive_type":"pipeline"
+        },
+        "pipeline loop4":{
+            "possible_directives":["", "set_directive_pipeline \"fft1D_512/loop4\""],
+            "function":"fft1D_512",
+            "label": "loop4",
+            "directive_type":"pipeline"
+        },
+        "pipeline loop5":{
+            "possible_directives":["", "set_directive_pipeline \"fft1D_512/loop5\""],
+            "function":"fft1D_512",
+            "label": "loop5",
+            "directive_type":"pipeline"
+        },
+        "pipeline loop6":{
+            "possible_directives":["", "set_directive_pipeline \"fft1D_512/loop6\""],
+            "function":"fft1D_512",
+            "label": "loop6",
+            "directive_type":"pipeline"
+        },
+        "pipeline loop7":{
+            "possible_directives":["", "set_directive_pipeline \"fft1D_512/loop7\""],
+            "function":"fft1D_512",
+            "label": "loop7",
+            "directive_type":"pipeline"
+        },
+        "pipeline loop8":{
+            "possible_directives":["", "set_directive_pipeline \"fft1D_512/loop8\""],
+            "function":"fft1D_512",
+            "label": "loop8",
+            "directive_type":"pipeline"
+        },
+        "pipeline loop9":{
+            "possible_directives":["", "set_directive_pipeline \"fft1D_512/loop9\""],
+            "function":"fft1D_512",
+            "label": "loop9",
+            "directive_type":"pipeline"
+        },
+        "pipeline loop10":{
+            "possible_directives":["",  "set_directive_pipeline \"fft1D_512/loop10\""],
+            "function":"fft1D_512",
+            "label": "loop10",
+            "directive_type":"pipeline"
+        },
+        "pipeline loop11":{
+            "possible_directives":["", "set_directive_pipeline \"fft1D_512/loop11\""],
+            "function":"fft1D_512",
+            "label": "loop11",
+            "directive_type":"pipeline"
+        },
+        "array_partition fft1D_512 reversed":{
+            "possible_directives":["", 
+                "set_directive_array_partition -type complete -dim 0 \"fft1D_512\" reversed",
+                "set_directive_array_partition -type block -factor 2 -dim 0 \"fft1D_512\" reversed",
+                "set_directive_array_partition -type cyclic -factor 2 -dim 0 \"fft1D_512\" reversed"],
+            "function":"fft1D_512",
+            "label":"",
+            "variable": "reversed",
+            "directive_type":"array_partition"
+        },
+        "array_partition fft1D_512 DATA_x":{
+            "possible_directives":["", 
+                "set_directive_array_partition -type complete -dim 0 \"fft1D_512\" DATA_x",
+                "set_directive_array_partition -type block -factor 2 -dim 0 \"fft1D_512\" DATA_x",
+                "set_directive_array_partition -type cyclic -factor 2 -dim 0 \"fft1D_512\" DATA_x",
+                "set_directive_array_partition -type block -factor 4 -dim 0 \"fft1D_512\" DATA_x",
+                "set_directive_array_partition -type cyclic -factor 4 -dim 0 \"fft1D_512\" DATA_x",
+                "set_directive_array_partition -type block -factor 8 -dim 0 \"fft1D_512\" DATA_x",
+                "set_directive_array_partition -type cyclic -factor 8 -dim 0 \"fft1D_512\" DATA_x",
+                "set_directive_array_partition -type block -factor 16 -dim 0 \"fft1D_512\" DATA_x",
+                "set_directive_array_partition -type cyclic -factor 16 -dim 0 \"fft1D_512\" DATA_x",
+                "set_directive_array_partition -type block -factor 32 -dim 0 \"fft1D_512\" DATA_x",
+                "set_directive_array_partition -type cyclic -factor 32 -dim 0 \"fft1D_512\" DATA_x",
+                "set_directive_array_partition -type block -factor 64 -dim 0 \"fft1D_512\" DATA_x",
+                "set_directive_array_partition -type cyclic -factor 64 -dim 0 \"fft1D_512\" DATA_x"],
+            "function":"fft1D_512",
+            "label":"",
+            "variable": "DATA_x",
+            "directive_type":"array_partition"
+        },
+        "array_partition fft1D_512 DATA_y":{
+            "possible_directives":["", 
+                "set_directive_array_partition -type complete -dim 0 \"fft1D_512\" DATA_y",
+                "set_directive_array_partition -type block -factor 2 -dim 0 \"fft1D_512\" DATA_y",
+                "set_directive_array_partition -type cyclic -factor 2 -dim 0 \"fft1D_512\" DATA_y",
+                "set_directive_array_partition -type block -factor 4 -dim 0 \"fft1D_512\" DATA_y",
+                "set_directive_array_partition -type cyclic -factor 4 -dim 0 \"fft1D_512\" DATA_y",
+                "set_directive_array_partition -type block -factor 8 -dim 0 \"fft1D_512\" DATA_y",
+                "set_directive_array_partition -type cyclic -factor 8 -dim 0 \"fft1D_512\" DATA_y",
+                "set_directive_array_partition -type block -factor 16 -dim 0 \"fft1D_512\" DATA_y",
+                "set_directive_array_partition -type cyclic -factor 16 -dim 0 \"fft1D_512\" DATA_y",
+                "set_directive_array_partition -type block -factor 32 -dim 0 \"fft1D_512\" DATA_y",
+                "set_directive_array_partition -type cyclic -factor 32 -dim 0 \"fft1D_512\" DATA_y",
+                "set_directive_array_partition -type block -factor 64 -dim 0 \"fft1D_512\" DATA_y",
+                "set_directive_array_partition -type cyclic -factor 64 -dim 0 \"fft1D_512\" DATA_y"],
+            "function":"fft1D_512",
+            "label":"",
+            "variable": "DATA_y",
+            "directive_type":"array_partition"
+        },
+        "array_partition fft1D_512 smem":{
+            "possible_directives":["", 
+                "set_directive_array_partition -type complete -dim 0 \"fft1D_512\" smem",
+                "set_directive_array_partition -type block -factor 2 -dim 0 \"fft1D_512\" smem",
+                "set_directive_array_partition -type cyclic -factor 2 -dim 0 \"fft1D_512\" smem",
+                "set_directive_array_partition -type block -factor 4 -dim 0 \"fft1D_512\" smem",
+                "set_directive_array_partition -type cyclic -factor 4 -dim 0 \"fft1D_512\" smem",
+                "set_directive_array_partition -type block -factor 8 -dim 0 \"fft1D_512\" smem",
+                "set_directive_array_partition -type cyclic -factor 8 -dim 0 \"fft1D_512\" smem",
+                "set_directive_array_partition -type block -factor 16 -dim 0 \"fft1D_512\" smem",
+                "set_directive_array_partition -type cyclic -factor 16 -dim 0 \"fft1D_512\" smem",
+                "set_directive_array_partition -type block -factor 32 -dim 0 \"fft1D_512\" smem",
+                "set_directive_array_partition -type cyclic -factor 32 -dim 0 \"fft1D_512\" smem",
+                "set_directive_array_partition -type block -factor 64 -dim 0 \"fft1D_512\" smem",
+                "set_directive_array_partition -type cyclic -factor 64 -dim 0 \"fft1D_512\" smem"],
+            "function":"fft1D_512",
+            "label":"",
+            "variable": "smem",
+            "directive_type":"array_partition"
+        },
+        "array_partition fft1D_512 data_x":{
+            "possible_directives":["", 
+                "set_directive_array_partition -type complete -dim 0 \"fft1D_512\" data_x",
+                "set_directive_array_partition -type block -factor 2 -dim 0 \"fft1D_512\" data_x",
+                "set_directive_array_partition -type cyclic -factor 2 -dim 0 \"fft1D_512\" data_x",
+                "set_directive_array_partition -type block -factor 4 -dim 0 \"fft1D_512\" data_x",
+                "set_directive_array_partition -type cyclic -factor 4 -dim 0 \"fft1D_512\" data_x"],
+            "function":"fft1D_512",
+            "label":"",
+            "variable": "data_x",
+            "directive_type":"array_partition"
+        },
+        "array_partition fft1D_512 data_y":{
+            "possible_directives":["", 
+                "set_directive_array_partition -type complete -dim 0 \"fft1D_512\" data_y",
+                "set_directive_array_partition -type block -factor 2 -dim 0 \"fft1D_512\" data_y",
+                "set_directive_array_partition -type cyclic -factor 2 -dim 0 \"fft1D_512\" data_y",
+                "set_directive_array_partition -type block -factor 4 -dim 0 \"fft1D_512\" data_y",
+                "set_directive_array_partition -type cyclic -factor 4 -dim 0 \"fft1D_512\" data_y"],
+            "function":"fft1D_512",
+            "label":"",
+            "variable": "data_y",
+            "directive_type":"array_partition"
+        },
+        "loop_merge fft1D_512": {
+                "possible_directives":["","set_directive_loop_merge \"fft1D_512\""],
+                "function":"fft1D_512",
+                "label": "",
+                "directive_type":"loop_merge"
+        }
+    },
+    "nested_loops":[]
+}

@@ -1,0 +1,198 @@
+{
+    "directives":{
+        "unroll loopjj":{
+            "possible_directives":["",
+                "set_directive_unroll -factor 2 \"bbgemm/loopjj\"",
+                "set_directive_unroll -factor 4 \"bbgemm/loopjj\"",
+                "set_directive_unroll -factor 8 \"bbgemm/loopjj\""],
+            "function":"bbgemm",
+            "label": "loopjj",
+            "directive_type":"unroll"
+        },
+        "unroll loopkk":{
+            "possible_directives":["",
+                "set_directive_unroll -factor 2 \"bbgemm/loopkk\"",
+                "set_directive_unroll -factor 4 \"bbgemm/loopkk\"",
+                "set_directive_unroll -factor 8 \"bbgemm/loopkk\""],
+            "function":"bbgemm",
+            "label": "loopkk",
+            "directive_type":"unroll"
+        },
+        "unroll loopi":{
+            "possible_directives":["",
+                "set_directive_unroll -factor 2 \"bbgemm/loopi\"",
+                "set_directive_unroll -factor 4 \"bbgemm/loopi\"",
+                "set_directive_unroll -factor 8 \"bbgemm/loopi\"",
+                "set_directive_unroll -factor 16 \"bbgemm/loopi\"",
+                "set_directive_unroll -factor 32 \"bbgemm/loopi\"",
+                "set_directive_unroll \"bbgemm/loopi\""],
+            "function":"bbgemm",
+            "label": "loopi",
+            "directive_type":"unroll"
+        },
+        "unroll loopk":{
+            "possible_directives":["",
+                "set_directive_unroll -factor 2 \"bbgemm/loopk\"",
+                "set_directive_unroll -factor 4 \"bbgemm/loopk\"",
+                "set_directive_unroll \"bbgemm/loopk\""],
+            "function":"bbgemm",
+            "label": "loopk",
+            "directive_type":"unroll"
+        },
+        "unroll loopj":{
+            "possible_directives":["",
+                "set_directive_unroll -factor 2 \"bbgemm/loopj\"",
+                "set_directive_unroll -factor 4 \"bbgemm/loopj\"",
+                "set_directive_unroll -factor 8 \"bbgemm/loopj\"",
+                "set_directive_unroll -factor 16 \"bbgemm/loopj\"",
+                "set_directive_unroll -factor 32 \"bbgemm/loopj\"",
+                "set_directive_unroll \"bbgemm/loopj\""],
+            "function":"bbgemm",
+            "label": "loopj",
+            "directive_type":"unroll"
+        },
+        "pipeline loopjj":{
+            "possible_directives":["", "set_directive_pipeline \"bbgemm/loopjj\""],
+            "function":"bbgemm",
+            "label": "loopjj",
+            "directive_type":"pipeline"
+        },
+        "pipeline loopkk":{
+            "possible_directives":["", "set_directive_pipeline \"bbgemm/loopkk\""],
+            "function":"bbgemm",
+            "label": "loopkk",
+            "directive_type":"pipeline"
+        },
+        "pipeline loopi":{
+            "possible_directives":["", "set_directive_pipeline \"bbgemm/loopi\""],
+            "function":"bbgemm",
+            "label": "loopi",
+            "directive_type":"pipeline"
+        },
+        "pipeline loopk":{
+            "possible_directives":["", "set_directive_pipeline \"bbgemm/loopk\""],
+            "function":"bbgemm",
+            "label": "loopk",
+            "directive_type":"pipeline"
+        },
+        "pipeline loopj":{
+            "possible_directives":["", "set_directive_pipeline \"bbgemm/loopj\""],
+            "function":"bbgemm",
+            "label": "loopj",
+            "directive_type":"pipeline"
+        },
+        "array_partition bbgemm m1":{
+            "possible_directives":["", 
+                "set_directive_array_partition -type complete -dim 0 \"bbgemm\" m1",
+                "set_directive_array_partition -type block -factor 2 -dim 0 \"bbgemm\" m1",
+                "set_directive_array_partition -type cyclic -factor 2 -dim 0 \"bbgemm\" m1",
+                "set_directive_array_partition -type block -factor 4 -dim 0 \"bbgemm\" m1",
+                "set_directive_array_partition -type cyclic -factor 4 -dim 0 \"bbgemm\" m1",
+                "set_directive_array_partition -type block -factor 8 -dim 0 \"bbgemm\" m1",
+                "set_directive_array_partition -type cyclic -factor 8 -dim 0 \"bbgemm\" m1",
+                "set_directive_array_partition -type block -factor 16 -dim 0 \"bbgemm\" m1",
+                "set_directive_array_partition -type cyclic -factor 16 -dim 0 \"bbgemm\" m1",
+                "set_directive_array_partition -type block -factor 32 -dim 0 \"bbgemm\" m1",
+                "set_directive_array_partition -type cyclic -factor 32 -dim 0 \"bbgemm\" m1",
+                "set_directive_array_partition -type block -factor 64 -dim 0 \"bbgemm\" m1",
+                "set_directive_array_partition -type cyclic -factor 64 -dim 0 \"bbgemm\" m1"],
+            "function":"bbgemm",
+            "label":"",
+            "variable": "m1",
+            "directive_type":"array_partition"
+        },
+        "array_partition bbgemm m2":{
+            "possible_directives":["", 
+                "set_directive_array_partition -type complete -dim 0 \"bbgemm\" m2",
+                "set_directive_array_partition -type block -factor 2 -dim 0 \"bbgemm\" m2",
+                "set_directive_array_partition -type cyclic -factor 2 -dim 0 \"bbgemm\" m2",
+                "set_directive_array_partition -type block -factor 4 -dim 0 \"bbgemm\" m2",
+                "set_directive_array_partition -type cyclic -factor 4 -dim 0 \"bbgemm\" m2",
+                "set_directive_array_partition -type block -factor 8 -dim 0 \"bbgemm\" m2",
+                "set_directive_array_partition -type cyclic -factor 8 -dim 0 \"bbgemm\" m2",
+                "set_directive_array_partition -type block -factor 16 -dim 0 \"bbgemm\" m2",
+                "set_directive_array_partition -type cyclic -factor 16 -dim 0 \"bbgemm\" m2",
+                "set_directive_array_partition -type block -factor 32 -dim 0 \"bbgemm\" m2",
+                "set_directive_array_partition -type cyclic -factor 32 -dim 0 \"bbgemm\" m2",
+                "set_directive_array_partition -type block -factor 64 -dim 0 \"bbgemm\" m2",
+                "set_directive_array_partition -type cyclic -factor 64 -dim 0 \"bbgemm\" m2"],
+            "function":"bbgemm",
+            "label":"",
+            "variable": "m2",
+            "directive_type":"array_partition"
+        },
+        "array_partition bbgemm prod":{
+            "possible_directives":["", 
+                "set_directive_array_partition -type complete -dim 0 \"bbgemm\" prod",
+                "set_directive_array_partition -type block -factor 2 -dim 0 \"bbgemm\" prod",
+                "set_directive_array_partition -type cyclic -factor 2 -dim 0 \"bbgemm\" prod",
+                "set_directive_array_partition -type block -factor 4 -dim 0 \"bbgemm\" prod",
+                "set_directive_array_partition -type cyclic -factor 4 -dim 0 \"bbgemm\" prod",
+                "set_directive_array_partition -type block -factor 8 -dim 0 \"bbgemm\" prod",
+                "set_directive_array_partition -type cyclic -factor 8 -dim 0 \"bbgemm\" prod",
+                "set_directive_array_partition -type block -factor 16 -dim 0 \"bbgemm\" prod",
+                "set_directive_array_partition -type cyclic -factor 16 -dim 0 \"bbgemm\" prod",
+                "set_directive_array_partition -type block -factor 32 -dim 0 \"bbgemm\" prod",
+                "set_directive_array_partition -type cyclic -factor 32 -dim 0 \"bbgemm\" prod",
+                "set_directive_array_partition -type block -factor 64 -dim 0 \"bbgemm\" prod",
+                "set_directive_array_partition -type cyclic -factor 64 -dim 0 \"bbgemm\" prod"],
+            "function":"bbgemm",
+            "label":"",
+            "variable": "prod",
+            "directive_type":"array_partition"
+        },
+        "loop_merge loopjj": {
+                "possible_directives":["","set_directive_loop_merge \"bbgemm/loopjj\""],
+                "function":"bbgemm",
+                "label": "loopjj",
+                "directive_type":"loop_merge"
+        },
+        "loop_merge loopkk": {
+                "possible_directives":["","set_directive_loop_merge \"bbgemm/loopkk\""],
+                "function":"bbgemm",
+                "label": "loopkk",
+                "directive_type":"loop_merge"
+        },
+        "loop_merge loopi": {
+                "possible_directives":["","set_directive_loop_merge \"bbgemm/loopi\""],
+                "function":"bbgemm",
+                "label": "loopi",
+                "directive_type":"loop_merge"
+        },
+        "loop_merge loopk": {
+                "possible_directives":["","set_directive_loop_merge \"bbgemm/loopk\""],
+                "function":"bbgemm",
+                "label": "loopk",
+                "directive_type":"loop_merge"
+        },
+        "loop_flatten loopk": {
+                "possible_directives":["","set_directive_loop_flatten \"bbgemm/loopk\""],
+                "function":"bbgemm",
+                "label": "loopk",
+                "directive_type":"loop_flatten"
+            }
+    },
+    "nested_loops":[
+        {
+            "function":"bbgemm",
+            "label":"loopjj",
+            "nest": {
+                "function":"bbgemm",
+                "label":"loopkk",
+                "nest": {
+                    "function":"bbgemm",
+                    "label":"loopi",
+                    "nest": {
+                        "function":"bbgemm",
+                        "label":"loopk",
+                        "nest": {
+                            "function":"bbgemm",
+                            "label":"loopj",
+                            "nest": {}
+                        }
+                    }
+                }
+            }
+        }
+    ]
+}

@@ -1,0 +1,138 @@
+
+{
+    "directives":
+        {   
+
+            "pipeline DOT": {
+                "possible_directives":["","set_directive_pipeline \"dotProduct/DOT\""],
+                "function":"dotProduct",
+                "label": "DOT",
+                "directive_type":"pipeline"
+            },
+
+            "unroll DOT": {
+                "possible_directives":["",
+                "set_directive_unroll -factor 8 \"dotProduct/DOT\"",
+                "set_directive_unroll -factor 16 \"dotProduct/DOT\"",
+                "set_directive_unroll -factor 32 \"dotProduct/DOT\"",
+                "set_directive_unroll -factor 64 \"dotProduct/DOT\"",
+                "set_directive_unroll -factor 128 \"dotProduct/DOT\"",
+                "set_directive_unroll \"dotProduct/DOT\""],
+                "function":"dotProduct",
+                "label": "DOT",
+                "directive_type":"unroll"
+            },
+        
+            "pipeline GRAD": {
+                "possible_directives":["","set_directive_pipeline \"computeGradient/GRAD\""],
+                "function":"computeGradient",
+                "label": "GRAD",
+                "directive_type":"pipeline"
+            },
+
+            "unroll GRAD": {
+                "possible_directives":["",
+                "set_directive_unroll -factor 8 \"computeGradient/GRAD\"",
+                "set_directive_unroll -factor 16 \"computeGradient/GRAD\"",
+                "set_directive_unroll -factor 32 \"computeGradient/GRAD\"",
+                "set_directive_unroll -factor 64 \"computeGradient/GRAD\"",
+                "set_directive_unroll -factor 128 \"computeGradient/GRAD\"",
+                "set_directive_unroll -factor 256 \"computeGradient/GRAD\""],
+                "function":"computeGradient",
+                "label": "GRAD",
+                "directive_type":"unroll"
+            },
+            "pipeline UPDATE": {
+                "possible_directives":["","set_directive_pipeline \"updateParameter/UPDATE\""],
+                "function":"updateParameter",
+                "label": "UPDATE",
+                "directive_type":"pipeline"
+            },
+
+            "unroll UPDATE": {
+                "possible_directives":["",
+                "set_directive_unroll -factor 8 \"updateParameter/UPDATE\"",
+                "set_directive_unroll -factor 16 \"updateParameter/UPDATE\"",
+                "set_directive_unroll -factor 32 \"updateParameter/UPDATE\"",
+                "set_directive_unroll -factor 64 \"updateParameter/UPDATE\"",
+                "set_directive_unroll -factor 128 \"updateParameter/UPDATE\"",
+                "set_directive_unroll -factor 256 \"updateParameter/UPDATE\""],
+                "function":"updateParameter",
+                "label": "UPDATE",
+                "directive_type":"unroll"
+            },
+            "unroll EPOCH": {
+                "possible_directives":["","set_directive_unroll \"SgdLR_sw/EPOCH\""],
+                "function":"SgdLR_sw",
+                "label": "EPOCH",
+                "directive_type":"unroll"
+            },
+            "pipeline EPOCH": {
+                "possible_directives":["","set_directive_pipeline \"SgdLR_sw/EPOCH\""],
+                "function":"SgdLR_sw",
+                "label": "EPOCH",
+                "directive_type":"pipeline"
+            },
+            
+
+            "pipeline TRAINING_INST": {
+                "possible_directives":["","set_directive_pipeline \"SgdLR_sw/TRAINING_INST\""],
+                "function":"SgdLR_sw",
+                "label": "TRAINING_INST",
+                "directive_type":"pipeline"
+            },
+            "unroll TRAINING_INST": {
+                "possible_directives":["",
+                    "set_directive_unroll -factor 8 \"SgdLR_sw/TRAINING_INST\"",
+                    "set_directive_unroll -factor 16 \"SgdLR_sw/TRAINING_INST\"",
+                    "set_directive_unroll -factor 32 \"SgdLR_sw/TRAINING_INST\"",
+                    "set_directive_unroll -factor 64 \"SgdLR_sw/TRAINING_INST\"",
+                    "set_directive_unroll -factor 128 \"SgdLR_sw/TRAINING_INST\"",
+                    "set_directive_unroll -factor 256 \"SgdLR_sw/TRAINING_INST\""],
+                "function":"SgdLR_sw",
+                "label": "TRAINING_INST",
+                "directive_type":"unroll"
+            },
+            "array_partition SgdLR_sw": {
+                "possible_directives":["",
+                    "set_directive_array_partition -type block -factor 8 -dim 1 \"SgdLR_sw\" gradient",
+                    "set_directive_array_partition -type block -factor 16 -dim 1 \"SgdLR_sw\" gradient",
+                    "set_directive_array_partition -type block -factor 32 -dim 1 \"SgdLR_sw\" gradient",
+                    "set_directive_array_partition -type block -factor 64 -dim 1 \"SgdLR_sw\" gradient",
+                    "set_directive_array_partition -type block -factor 128 -dim 1 \"SgdLR_sw\" gradient",
+                    "set_directive_array_partition -type block -factor 256 -dim 1 \"SgdLR_sw\" gradient",
+                    "set_directive_array_partition -type cyclic -factor 8 -dim 1 \"SgdLR_sw\" gradient",
+                    "set_directive_array_partition -type cyclic -factor 16 -dim 1 \"SgdLR_sw\" gradient",
+                    "set_directive_array_partition -type cyclic -factor 32 -dim 1 \"SgdLR_sw\" gradient",
+                    "set_directive_array_partition -type cyclic -factor 64 -dim 1 \"SgdLR_sw\" gradient",
+                    "set_directive_array_partition -type cyclic -factor 128 -dim 1 \"SgdLR_sw\" gradient",
+                    "set_directive_array_partition -type cyclic -factor 256 -dim 1 \"SgdLR_sw\" gradient"],
+                "function":"SgdLR_sw",
+                "label": "",
+                "variable": "gradient",
+                "directive_type":"array_partition"
+            }
+        },
+           
+        
+        "nested_loops":
+        [
+            {
+                "function":"SgdLR_sw",
+                "label":"EPOCH",
+                "nest": {
+                    "function":"SgdLR_sw",
+                    "label":"TRAINING_INST",
+                    "nest": {}
+                }
+
+            }
+            
+        ]     
+
+}
+
+
+
+
+
