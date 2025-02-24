@@ -17,7 +17,7 @@ python main.py <heuristic> -c <c files of benchmark> -d <json of directives> -p 
 If we use this file, we can specify all fixed benchmark parameters, like files, directives file and top function. For example:
 ```
 {
-"SHA": {"cFiles": ["./benchmarks/sha/sha.c",  "./benchmarks/sha/sha_driver.c"],  "dFile":  "./directives_files/sha.json",  "prjFile":"sha_stream"}
+"SHA": {"cFiles": ["./benchmarks/sha/sha.c",  "./benchmarks/sha/sha_driver.c"],  "dFile":  "./dse_configurations_files/sha.json",  "prjFile":"sha_stream"}
 }
 ```
 Now we can call an heuristic for SHA benchmark this way:

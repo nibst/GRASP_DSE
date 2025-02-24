@@ -5,7 +5,6 @@ from predictor.estimators.estimator import Estimator
 from heuristics.heuristic import Heuristic
 from predictor.estimators.randomforest.randomForest import RandomForestEstimator
 from domain.solution import Solution
-from utils.Script_tcl import generateScript
 import copy
 import random
 from utils.abstractSolutionsSaver import SolutionsSaver
@@ -106,8 +105,11 @@ class GRASP(Heuristic):
         for candidate in candidates:
             resourcesXlatency=  candidate.results['resources'] * candidate.results['latency']
             if  resourcesXlatency < (1+self.alpha)*bestResourcesXLatency:
-                #append only the directive string
-                RCL.append(candidate.directives[directiveGroup])
+                if directiveGroup ==  'period':
+                    RCL.append(candidate.period)
+                else:
+                    #append only the directive string
+                    RCL.append(candidate.directives[directiveGroup])
         return RCL
 
     
@@ -129,10 +131,14 @@ class GRASP(Heuristic):
         """
         solutionToBuild = dict.fromkeys(self.dictDir,'') #Cria um dicionário 'diretivas' a partir do 'dictDir' mas 
                                                         #mantendo apenas os títulos das diretivas - seu valores são
-                                                        #trocados por ''
-        directiveGroups = list(self.dictDir.keys()) 
+                                                       #trocados por ''
+        solutionToBuild['period'] = ''
         dictDirCopy = copy.deepcopy(self.dictDir)
+        directiveGroups = list(dictDirCopy.keys()) 
+
         random.shuffle(directiveGroups)
+        dictDirCopy['period'] = self.DSEconfig['possible_periods']
+        directiveGroups.insert(0, 'period')
         for count,directiveGroup in enumerate(directiveGroups):
             RCL = self.makeRCL(directiveGroup,solutionToBuild,dictDirCopy)
             if len(RCL) != 0:
@@ -173,16 +179,19 @@ class GRASP(Heuristic):
 
     def localSearch(self,solution:Solution):
         neighbors = [] #in resources x latency
-        
-        for directiveGroup in self.dictDir.keys():
+        dictDirCopy = copy.deepcopy(self.dictDir)
+        dictDirCopy['period'] = self.DSEconfig['possible_periods']
+        for directiveGroup in dictDirCopy.keys():
             neighborDirectives = copy.deepcopy(solution.directives)
-            for directive in self.dictDir[directiveGroup]:
-                if solution.directives[directiveGroup] != directive:
-                    neighborDirectives[directiveGroup] = directive
-                    neighborSolution = Solution(neighborDirectives)
-                    estimatedResults = self.estimator.estimateSynthesis(neighborSolution)
-                    neighborSolution.set_results_with_results_list(estimatedResults)
-                    neighbors.append(neighborSolution)
+            neighborDirectives['period'] = solution.period
+            for directive in dictDirCopy[directiveGroup]:
+                if (directiveGroup == 'period' and solution.period == directive) or (directiveGroup != 'period' and solution.directives[directiveGroup] == directive):
+                    continue
+                neighborDirectives[directiveGroup] = directive
+                neighborSolution = Solution(neighborDirectives)
+                estimatedResults = self.estimator.estimateSynthesis(neighborSolution)
+                neighborSolution.set_results_with_results_list(estimatedResults)
+                neighbors.append(neighborSolution)
         topNSynthesis = self.synthesizeTopNSolutions(1,neighbors)
         topSolution = None
         if topNSynthesis:

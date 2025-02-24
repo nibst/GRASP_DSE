@@ -1,6 +1,5 @@
 from heuristics.heuristic import Heuristic
 from domain.solution import Solution
-from utils.Script_tcl import generateScript
 
 import copy
 

@@ -292,6 +292,7 @@
             }
             
         },
+        "possible_periods" : [3,5,10,15],
         "nested_loops":
         [
  

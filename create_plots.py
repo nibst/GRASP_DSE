@@ -24,17 +24,34 @@ def main():
     grasp_timestamps_per_benchmark = {}
     genetic_timestamps_per_benchmark = {} 
     aco_timestamps_per_benchmark = {}
+    grasp_v2_timestamps_per_benchmark = {}
+    # for benchmark in benchmarks:
+    #     model_file = f"./models/{benchmark}_MODEL"
+    #     with open(model_file, "rb") as f:
+    #         model: RandomForestEstimator = pickle.load(f)
+    #     a = model.processor.dataset
+    #     grasp_dir = f"./saves/with_period_exploration_at_the_end/GRASP_{benchmark}_2h/"
+    #     for filename in os.listdir(grasp_dir):
+    #         with open(os.path.join(grasp_dir, filename), "rb") as heuristicfile:
+    #             b = pickle.load(heuristicfile)
+    #         with open(os.path.join(f"./saves/with_period_exploration_at_the_end/saves_with_model/GRASP_{benchmark}_2h/", filename), "wb") as heuristicfile:
+    #             b.extend(a)
+    #             pickle.dump(b, heuristicfile)
     for benchmark in benchmarks:
-        genetic = Graphs.pathToListsOfSolutions(f"./saves/saves_with_model/genetic_{benchmark}_2h/")
-        grasp  = Graphs.pathToListsOfSolutions(f"./saves/saves_with_model/GRASP_{benchmark}_2h/")
-        aco = Graphs.pathToListsOfSolutions(f"./saves/saves_with_model/ACO_{benchmark}_2h/")
+        genetic = Graphs.pathToListsOfSolutions(f"./saves/without_period/genetic_{benchmark}_2h/")
+        grasp  = Graphs.pathToListsOfSolutions(f"./saves/without_period/GRASP_{benchmark}_2h/")
+        #grasp_period_at_end  = Graphs.pathToListsOfSolutions(f"./saves/with_period_exploration_at_the_end/GRASP_{benchmark}_2h/")
+        aco = Graphs.pathToListsOfSolutions(f"./saves/without_period/ACO_{benchmark}_2h/")
         # soft_grasp = Graphs.pathToListsOfSolutions(f"../saves_patati/savesWithModel/SOFT_PRUNING_GRASP_{benchmark}_2h/")
         grasp_timestamps_per_benchmark[benchmark] = grasp
+        #grasp_v2_timestamps_per_benchmark[benchmark] = grasp_period_at_end
         genetic_timestamps_per_benchmark[benchmark] = genetic
         aco_timestamps_per_benchmark[benchmark] = aco
     solutions_of_all_heuristics = []    
     solutions_of_all_heuristics.append(HeuristicSolutions("ACO", aco_timestamps_per_benchmark)) 
     solutions_of_all_heuristics.append(HeuristicSolutions("GRASP", grasp_timestamps_per_benchmark))
+    # solutions_of_all_heuristics.append(HeuristicSolutions("GRASP_v2", grasp_v2_timestamps_per_benchmark))
+
     solutions_of_all_heuristics.append(HeuristicSolutions("GENETIC", genetic_timestamps_per_benchmark))
                                     
     all_heuristics_in_one_bar("PERCENTAGE", solutions_of_all_heuristics, 10)
@@ -49,10 +66,11 @@ def plot_heuristics_comparison(method: str, solutions_of_all_heuristics: List[He
     DEFAULT_LINEWIDTH = 4
     DEFAULT_LINEWIDTH_DECAY = 0.8
     for benchmark in benchmarks:
-        all_solutions = copy.deepcopy(solutions_of_all_heuristics[0].solutions_timestamps_per_benchmark[benchmark][number_of_timestamps-1])
-        for i in range(1, len(solutions_of_all_heuristics)):
-            all_solutions.extend(solutions_of_all_heuristics[i].solutions_timestamps_per_benchmark[benchmark][number_of_timestamps-1])
-        
+        # all_solutions = copy.deepcopy(solutions_of_all_heuristics[0].solutions_timestamps_per_benchmark[benchmark][number_of_timestamps-1])
+        # for i in range(1, len(solutions_of_all_heuristics)):
+        #     all_solutions.extend(solutions_of_all_heuristics[i].solutions_timestamps_per_benchmark[benchmark][number_of_timestamps-1])
+        all_solutions = get_all_solutions_from_benchmark(benchmark)
+
         if method == "PERCENTAGE":
             myplt = PlotMaker(benchmark, 'minutes', "Pareto Dominance")
             myplt.ylim(0, 1.1)
@@ -108,27 +126,34 @@ def all_heuristics_in_one_bar(method: str, solutions_of_all_heuristics: List[Heu
     averages = {}
     means = {}
     # initialize
-    for i in range(len(solutions_of_all_heuristics)):
-        averages[solutions_of_all_heuristics[i].heuristic_name] = []
-        means[solutions_of_all_heuristics[i].heuristic_name] = []
+
     heuristics = list(heuristic.heuristic_name for heuristic in solutions_of_all_heuristics)
 
     for benchmark in benchmarks:
-        all_solutions = copy.deepcopy(solutions_of_all_heuristics[0].solutions_timestamps_per_benchmark[benchmark][number_of_timestamps-1])
-        for i in range(1, len(solutions_of_all_heuristics)):
-            all_solutions.extend(solutions_of_all_heuristics[i].solutions_timestamps_per_benchmark[benchmark][number_of_timestamps-1])
-        
+        # all_solutions = copy.deepcopy(solutions_of_all_heuristics[0].solutions_timestamps_per_benchmark[benchmark][number_of_timestamps-1])
+        # for i in range(1, len(solutions_of_all_heuristics)):
+        #     all_solutions.extend(solutions_of_all_heuristics[i].solutions_timestamps_per_benchmark[benchmark][number_of_timestamps-1])
+        all_solutions = get_all_solutions_from_benchmark(benchmark)
         if method == "PERCENTAGE":
             all_solutions = [all_solutions] * 10
+            averages = {}
+            means = {}
             for i in range(len(solutions_of_all_heuristics)):
                 name = solutions_of_all_heuristics[i].heuristic_name
+                averages[name] = []
+                means[name] = []
                 averages[name].append(arithmetic_mean_percentage(solutions_of_all_heuristics[i].solutions_timestamps_per_benchmark[benchmark], all_solutions))
                 means[name] = sum(averages[name]) / len(averages[name])
 
         if method == "ADRS":
             # average ADRS: avg of all best ADRS through time from one heuristic
+            averages = {}
+            means = {}
             for i in range(len(solutions_of_all_heuristics)):
                 heuristic_name = solutions_of_all_heuristics[i].heuristic_name
+                averages[heuristic_name] = []
+                means[heuristic_name] = []
+
                 averages[heuristic_name].append(arithmetic_mean_adrs(all_solutions, solutions_of_all_heuristics[i].solutions_timestamps_per_benchmark[benchmark]))
                 means[heuristic_name] = geometric_mean(averages[heuristic_name])
             
@@ -146,8 +171,9 @@ def geometric_mean(iterable: list):
     a = np.array(iterable)
     length = len(a)
     for i in range(length):
-        if a[i] == 0:
-            a = np.delete(a, i)
+        #add a little e value to all elements of array
+        e = 0.1
+        a[i] += e
     return a.prod() ** (1.0 / len(a))
 
 def arithmetic_mean_adrs(reference_set, solutions):
@@ -168,6 +194,19 @@ def arithmetic_mean_percentage(solutions1, solutions2):
     new_lst = list(filtered_items)
     return np.mean(new_lst)
 
+def get_all_solutions_from_benchmark(benchmark):
+    all_solutions = []
+    grasp  = Graphs.pathToListsOfSolutions(f"./saves/without_period/GRASP_{benchmark}_2h/")
+    aco = Graphs.pathToListsOfSolutions(f"./saves/without_period/ACO_{benchmark}_2h/")
+    genetic = Graphs.pathToListsOfSolutions(f"./saves/without_period/genetic_{benchmark}_2h/")
+
+    with open(f"./models/{benchmark}_MODEL", "rb") as f:
+        model: RandomForestEstimator = pickle.load(f)
+    all_solutions.extend(model.processor.dataset)
+    all_solutions.extend(grasp[9])
+    all_solutions.extend(aco[9])
+    all_solutions.extend(genetic[9])
+    return all_solutions
 main()
 
 # use for adding estimators solutions to heuristics solution

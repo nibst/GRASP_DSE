@@ -3,7 +3,10 @@ import json
 import os
 import pickle
 from directives_impact_analyzer.synthesisBasedDirectivesImpactAnalyzer import  SynthesisBasedDirectivesImpactAnalyzer
+from domain.designToolFactory import DesignToolFactory
 from domain.solution import Solution
+from domain.solution_factory import SolutionFactory
+from domain.vitisDesignTool import Vitis
 from predictor.estimators.estimator import Estimator
 from heuristics.heuristic import Heuristic
 from heuristics.impl.antColony import AntColony
@@ -21,6 +24,7 @@ from predictor.estimators.randomforest.randomForestFactory import \
     RandomForestFactory
 from utils.estimatorTrainer import RandomSamplesEstimatorTrainer
 from utils.timeLapsedSolutionsSaver import TimeLapsedSolutionsSaver
+import random
 
 def run_heuristic(filesDict, model):
     hour = 3600
@@ -33,7 +37,8 @@ def run_heuristic(filesDict, model):
     SOFT_PRUNING_GRASP = 'SOFT_PRUNING_GRASP'
     times_dict = {"./models/SHA_MODEL": 5*hour, "./models/GSM_MODEL": 1.25*hour, "./models/AES_MODEL":40*hour,
                   "./models/DIGIT_MODEL":20*hour,"./models/OPTICAL_MODEL":30*hour,"./models/SPAM_MODEL":10*hour,
-                  "./models/MOTION_MODEL":5*hour,"./models/ADPCM_MODEL":5*hour, "./models/new/AES_MODEL":40*hour,}
+                  "./models/MOTION_MODEL":5*hour,"./models/ADPCM_MODEL":5*hour, "./models/new/AES_MODEL":40*hour,
+                  "./models/test/ADPCM_MODEL": 5*hour}
     #choose heuristic
     if (GENETIC_HEURISTIC == filesDict['heuristic']):
         solutionsSaver = TimeLapsedSolutionsSaver(int(filesDict['timeLimit'])/10)
@@ -133,30 +138,51 @@ def main():
     # Read arguments from command line
     args = parseArguments()
     filesDict = passArgumentsToDictionary(args)
-    # path = f"./dataset/{filesDict['benchmark']}/"
-    # estimator = RandomForestEstimator(filesDict['dFile'])
-    # train(path,estimator,filesDict['dFile'],filesDict['benchmark'])
+    path = f"./dataset/{filesDict['benchmark']}/"
+    estimator = RandomForestEstimator(filesDict['dFile'])
+    train(path,estimator,filesDict)
     modelName = filesDict['model']
     model = getEstimationModel(modelName)
-    run_heuristic(filesDict,model)
+    #run_heuristic(filesDict,model)
 
-def gather_dataset(path,directives_file):
+def explore_different_periods(solution:Solution, arguments_dict):
+    """
+    periods is a list like [3,5,7,10]
+    """
+    with open( arguments_dict["dFile"]) as json_file:
+        dse_config = json.load(json_file)
+    periods = dse_config["possible_periods"]
+    #run synthesis for each period, changing just the period of solution using solution.set_period()
+    vitis = Vitis()
     solutions = []
+    for period in periods:
+        solution.set_period(period)
+        # Assuming there is a method to run synthesis
+        solution = vitis.runSynthesis(solution,arguments_dict['cFiles'],arguments_dict['prjFile'],run_implementation=True)
+        solutions.append(solution)
+    return solutions
+def gather_dataset(path, arguments_dict):
+    solutions = []
+    dse_config_file = arguments_dict['dFile']
     for solution_dir in os.listdir(path):
         solution_path = os.path.join(path, solution_dir)
-        if os.path.isdir(solution_path):
-            if os.path.exists(solution_path):
-                solution = Solution({})
-                solution.build_solution_from_vitis_solution_path(solution_path,directives_file)
-                solutions.append(solution)
+        if os.path.isdir(solution_path) and os.path.exists(solution_path):
+            solution = SolutionFactory.create_solution_from_vitis_path(solution_path, dse_config_file)
+            solutions.append(solution)
+    
+    # Select a random sample of 15 solutions
+    random_solutions = random.sample(solutions, min(15, len(solutions)))
+    for solution in random_solutions:
+        new_solutions = explore_different_periods(solution, arguments_dict)
+        solutions.extend(new_solutions)
     return solutions
     
-def train(path,estimator:Estimator,directives_file,benchmark):
-    x = gather_dataset(path,directives_file)
+def train(path,estimator:Estimator, arguments_dict):
+    x = gather_dataset(path,arguments_dict)
     estimator.trainModel(x)
     score = estimator.cross_val(x,5)
-    print(f"{benchmark}: {str(score)}")
-    with open(f'./models/{benchmark}_MODEL', 'wb') as modelFile:
+    print(f"{arguments_dict['benchmark']}: {str(score)}")
+    with open(f'./models/{arguments_dict['benchmark']}_MODEL', 'wb') as modelFile:
         pickle.dump(estimator,modelFile)
 
 if __name__ == "__main__": 

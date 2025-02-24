@@ -1,7 +1,6 @@
 import time
 from exceptions.timeExceededException import TimeExceededException
 from heuristics.impl.RandomSearch import RandomSearch
-from utils.Script_tcl import generateScript
 from predictor.estimators.estimatorFactory import EstimatorFactory
 from heuristics.heuristic import Heuristic
 from domain.solution import Solution

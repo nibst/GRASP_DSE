@@ -1,16 +1,17 @@
-set_directive_pipeline "AddRoundKey_InversMixColumn/AddRoundKey_InversMixColumn_label0"
-set_directive_unroll "AddRoundKey_InversMixColumn/AddRoundKey_InversMixColumn_label3"
-set_directive_unroll "encrypt/encrypt_label1"
-set_directive_pipeline "decrypt/decrypt_label4"
-set_directive_unroll -factor 2 "KeySchedule/KeySchedule_label8"
-set_directive_array_partition -type cyclic -factor 8 -dim 0 "ByteSub_ShiftRow" Sbox
-set_directive_array_partition -type cyclic -factor 8 -dim 0 "InversShiftRow_ByteSub" invSbox
-set_directive_array_partition -type block -factor 8 -dim 0 "aes_main" statemt
-set_directive_dataflow "AddRoundKey"
-set_directive_pipeline "AddRoundKey/AddRoundKey_label0"
-set_directive_unroll "MixColumn_AddRoundKey/MixColumn_AddRoundKey_label0"
-set_directive_pipeline "MixColumn_AddRoundKey/MixColumn_AddRoundKey_label1"
-set_directive_inline "aes_main"
-set_directive_pipeline "KeySchedule/KeySchedule_label4"
-set_directive_unroll "KeySchedule/KeySchedule_label6"
-set_directive_loop_flatten "KeySchedule/KeySchedule_label9"
+set_directive_pipeline encode/encode_label0
+set_directive_pipeline encode/encode_label1
+set_directive_pipeline decode/decode_label2
+set_directive_pipeline decode/decode_label3
+set_directive_pipeline reset/reset_label7
+set_directive_pipeline quantl/quantl_label9
+set_directive_pipeline adpcm_main/adpcm_main_label12
+set_directive_unroll encode/encode_label0 -factor 4
+set_directive_unroll encode/encode_label1 -factor 8
+set_directive_unroll decode/decode_label3 -factor 2
+set_directive_unroll reset/reset_label5 -factor 4
+set_directive_unroll reset/reset_label6 -factor 4
+set_directive_unroll reset/reset_label7 -factor 2
+set_directive_unroll filtez/filtez_label8 -factor 4
+set_directive_unroll upzero/upzero_label11 -factor 2
+set_directive_unroll adpcm_main/adpcm_main_label12 -factor 8
+set_directive_unroll adpcm_main/adpcm_main_label13 -factor 8

@@ -3,7 +3,6 @@ from random import randint
 import re
 from domain.solution import Solution
 import copy
-from utils.Script_tcl import generateScript
 from domain.designToolFactory import DesignToolFactory
 from pathlib import Path
 import json
@@ -17,7 +16,6 @@ class Heuristic(ABC):
         self.directivesTxt = Path(filesDict['dFile']).read_text()
         self.cFiles = filesDict['cFiles']
         self.prjFile = filesDict['prjFile']
-        generateScript(self.cFiles, self.prjFile)
 
         with open(filesDict['dFile']) as jsonFile:
             self.DSEconfig:dict =  json.load(jsonFile)
@@ -112,6 +110,8 @@ class Heuristic(ABC):
         newDict:dict = {}
         directivesInformation = self.DSEconfig['directives']
         for directiveGroup in directives:
+            if directiveGroup == 'period':
+                break
             label = directivesInformation[directiveGroup]['label']
             function = directivesInformation[directiveGroup]['function']
             key = function + '/' + label
@@ -243,7 +243,7 @@ class Heuristic(ABC):
         """
         designTool = DesignToolFactory.getDesignTool(designToolChoice)
         try:
-            solution = designTool.runSynthesis(solution,timeLimit,solutionSaver)
+            solution = designTool.runSynthesis(solution,self.cFiles,self.prjFile, timeLimit, solutionSaver)
         except Exception as e:
             raise
         else:

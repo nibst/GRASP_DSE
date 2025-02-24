@@ -11,7 +11,6 @@ class SolutionFactory:
     def create_solution_from_synthesis_xml(xml_path: str) -> Solution:
         """
         xml path is the synthesis report in xml
-        directives_config_file is the benchmark specific set of all possible directives, its a json
         """
         solution = Solution()
         solution.solution_name = "default_name"
@@ -19,13 +18,17 @@ class SolutionFactory:
         return solution
 
     @staticmethod
-    def create_solution_from_vitis_path(vitis_solution_path: str, directives_config_file: str) -> Solution:
+    def create_solution_from_vitis_path(vitis_solution_path: str, dse_config_file: str) -> Solution:
+        """
+        vitis_solution_path is our dataset solution path, that has a 'reports' dir inside it with the synthesis results
+        dse_config_file is the benchmark specific set of all possible directives, its a json
+        """
         solution = Solution()
         solution.solution_name = vitis_solution_path
         SolutionFactory._parse_xml_results(solution, os.path.join(vitis_solution_path, "reports", "csynth.xml"))
         solution_data_json = SolutionFactory._find_solution_data_json(vitis_solution_path)
         solution_directives_tcl = SolutionFactory._extract_solution_directives(solution_data_json)
-        SolutionFactory._load_directives_config(solution, directives_config_file)
+        SolutionFactory._load_directives_config(solution, dse_config_file)
         solution.directives = SolutionFactory._directives_tcl_to_solution(solution_directives_tcl, solution.possible_directives)
         return solution
 
@@ -66,8 +69,8 @@ class SolutionFactory:
         return data["HlsSolution"]["DirectiveTcl"]
 
     @staticmethod
-    def _load_directives_config(solution: Solution, directives_config_file: str):
-        with open(directives_config_file) as json_file:
+    def _load_directives_config(solution: Solution, dse_config_file: str):
+        with open(dse_config_file) as json_file:
             solution.dse_config = json.load(json_file)
         directives = copy.deepcopy(solution.dse_config['directives'])
         solution.possible_directives = {key: directives[key]['possible_directives'] for key in directives}

@@ -16,7 +16,6 @@ import time
 from heuristics.heuristic import Heuristic
 from pathlib import Path
 from domain.solution import Solution
-from utils.Script_tcl import generateScript
 import copy
 from random import seed
 from random import randint

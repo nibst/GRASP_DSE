@@ -9,6 +9,7 @@ import subprocess
 import psutil
 import sys
 from exceptions.timeExceededException import TimeExceededException
+from utils.Script_tcl import generateScript
 class Vivado(DesignTool):
     
     
@@ -24,7 +25,7 @@ class Vivado(DesignTool):
         
 
     
-    def runSynthesis(self, solution: Solution, timeLimit = None, solutionSaver= None):
+    def runSynthesis(self, solution: Solution, c_files, top_func, timeLimit = None, solutionSaver= None):
         self.__killOnGoingVivadoProcessIfAny()    
         #if not especified, there is infinite time to run synthesis
         if timeLimit is None:
@@ -32,6 +33,8 @@ class Vivado(DesignTool):
         if timeLimit<=0:
             raise Exception(f"****{self._PROCESSNAME} has exceed max time usage****")
         self.__writeDirectivesIntoFile(solution.directives)
+        generateScript(c_files,top_func)
+
         print('Running Synthesis...')
         #vivado call using subprocess
         subprocess.Popen([self._SCRIPT_PATH])

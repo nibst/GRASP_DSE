@@ -7,7 +7,7 @@ class DesignTool(ABC):
         pass
 
     @abstractmethod
-    def runSynthesis(self,solution: Solution, timeLimit = None):
+    def runSynthesis(self,solution: Solution, c_files, top_func, timeLimit = None, solutionSaver= None):
         """
         Call high level synthesis tool, respecting the time limit constrainnt
         """

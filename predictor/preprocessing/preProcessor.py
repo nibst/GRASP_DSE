@@ -42,6 +42,7 @@ class PreProcessor():
                         key = directiveType + parameterType
                         if key not in columnsNames:
                             columnsNames.append(key)
+        
         return columnsNames
 
     def __decide(self,parameterType,parametersDict):
@@ -67,6 +68,7 @@ class PreProcessor():
             if len(finalDict[key]) == 0:    
                 finalDict[key] = [-1]*len(self.dataset)  
             finalDict[key][count] = self.__decide(parameterType,parametersDict)
+        return finalDict
             
     def __getParametersDict(self,parametersList):
         parametersDict = {}
@@ -80,7 +82,8 @@ class PreProcessor():
         featuresVector = []
         #pegar o primeiro elemento de cada coluna de feature para formar alinha de feature
         keys = list(featuresByColumnDict.keys())
-        for i in range(len(featuresByColumnDict[keys[0]])):
+        number_of_solutions =  len(featuresByColumnDict[keys[0]])
+        for i in range(number_of_solutions):
             solutionVector = []
             for key in featuresByColumnDict:
                 solutionVector.append(featuresByColumnDict[key][i]) 
@@ -106,7 +109,7 @@ class PreProcessor():
                     parametersList = (re.findall(regexForParameter,directive))
                     parametersDict = self.__getParametersDict(parametersList)
                     if len(parametersList)>0:
-                        self.__divideIntoMoreColumns(parametersDict,finalDict,directiveType,count)
+                        finalDict = self.__divideIntoMoreColumns(parametersDict,finalDict,directiveType,count)
                         featureValue = 0
                     else:
                         featureValue = 1
@@ -116,6 +119,9 @@ class PreProcessor():
                 count+=1
             finalDict[directiveType] = newColumn
         finalDict = self.__fillEmptyColumns(finalDict)
+        finalDict["period"] = []
+        for solution in self.dataset:
+            finalDict["period"].append(solution.period)
         featuresVector = self.__toFeaturesVector(finalDict)
         return featuresVector
 
@@ -128,14 +134,20 @@ class PreProcessor():
         return featuresByColumnDict
 
     def __takeColumns(self):
+        """
+        columns is a dictionary with each column being a key
+        """
         columnsDict = {}
         featuresTypes = self.dataset[0].directives
 
         for directiveType in featuresTypes:
             featuresColumn = []
-            for solutionIndex in range(len(self.dataset)):
-                featuresColumn.append(self.dataset[solutionIndex].directives[directiveType])
+            for solution in self.dataset:
+                featuresColumn.append(solution.directives[directiveType])
             columnsDict[directiveType] = featuresColumn
+        # columnsDict["period"] = []
+        # for solution in self.dataset:
+        #     columnsDict["period"].append(solution.period)
         return columnsDict
 
     def __extractResults(self):

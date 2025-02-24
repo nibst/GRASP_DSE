@@ -27,5 +27,5 @@ def train(path,estimator:Estimator):
 
 if __name__ == "__main__": 
     path = "./dataset/AES/"
-    estimator = RandomForestEstimator("./directives_files/aes.json")
+    estimator = RandomForestEstimator("./dse_configurations_files/aes.json")
     train(path)
