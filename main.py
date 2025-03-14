@@ -135,6 +135,30 @@ def parseArguments():
     return parser.parse_args()
 
 def main():
+    # with open('./dse/GRASP_ADPCM2h_preTrained', 'rb') as dse_file:
+    #     dse_data = pickle.load(dse_file)
+    
+    # solutions = dse_data.solutions
+    # indices = [
+    #     [1, 2],
+    #     [3, 4],
+    #     [5, 6],
+    #     [7, 8],
+    #     [9],
+    #     [10],
+    #     [11, 12],
+    #     [13],
+    #     [14],
+    #     [15]
+    # ]
+    
+    # for i, index_list in enumerate(indices):
+    #     with open(f'timeStampFiller{i}', 'wb') as file:
+    #         solutions_to_save = []
+    #         for index in index_list:
+    #             solutions_to_save.append(solutions[index-1])
+    #         pickle.dump(solutions_to_save, file)
+
     # Read arguments from command line
     args = parseArguments()
     filesDict = passArgumentsToDictionary(args)
@@ -160,6 +184,8 @@ def explore_different_periods(solution:Solution, arguments_dict):
         # Assuming there is a method to run synthesis
         solution = vitis.runSynthesis(solution,arguments_dict['cFiles'],arguments_dict['prjFile'],run_implementation=True)
         solutions.append(solution)
+        with open(f"{arguments_dict['benchmark']}-solutions", 'wb') as file:
+            pickle.dump(solutions, file)
     return solutions
 def gather_dataset(path, arguments_dict):
     solutions = []
@@ -188,6 +214,9 @@ def train(path,estimator:Estimator, arguments_dict):
 if __name__ == "__main__": 
     with open('./benchmarks/benchmarks.json') as jsonFile:
         benchmarks:dict =  json.load(jsonFile)
+    # with open('GSM-solutions', 'rb') as file:
+    #    solutions = pickle.load(file)
+    # print(solutions)
     main()
 
 

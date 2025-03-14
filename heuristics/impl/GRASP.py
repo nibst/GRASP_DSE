@@ -138,7 +138,7 @@ class GRASP(Heuristic):
 
         random.shuffle(directiveGroups)
         dictDirCopy['period'] = self.DSEconfig['possible_periods']
-        directiveGroups.insert(0, 'period')
+        directiveGroups.append('period')
         for count,directiveGroup in enumerate(directiveGroups):
             RCL = self.makeRCL(directiveGroup,solutionToBuild,dictDirCopy)
             if len(RCL) != 0:

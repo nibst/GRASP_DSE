@@ -17,6 +17,8 @@ class TimeLapsedSolutionsSaver(SolutionsSaver):
         #save all current solutions 
         if solutions:
             self.__extendWithOnlyNewSolutions(solutions)
+        with open('log_solution_saver.txt', 'a') as log_file:
+            log_file.write(f'{len(self.solutions)}\n')
         timeElapsed = time.time() - self.start
         if self.saveInterval:
             if timeElapsed >= self.saveInterval:

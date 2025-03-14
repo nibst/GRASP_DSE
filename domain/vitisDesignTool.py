@@ -18,6 +18,7 @@ class Vitis(DesignTool):
         self._MAX_RAM_USAGE = maxRAMUsage #in percentage
         self._DIRECTIVES_FILENAME = directivesFilename
         self._PROCESSNAME = 'vitis_hls'
+        self._IMPL_PROCESSNAME = 'vivado'
         self._SCRIPT_PATH = './domain/callVitis.sh'
         if sys.platform == 'win32':
             self._PROCESSNAME = 'vitis_hls.exe'
@@ -84,7 +85,7 @@ class Vitis(DesignTool):
             time.sleep(3)
             vitisIsRunning = False
             for proc in psutil.process_iter(['name']):
-                if proc.name() == self._PROCESSNAME:
+                if proc.name() == self._PROCESSNAME or proc.name() == self._IMPL_PROCESSNAME:
                     vitisIsRunning = True
                     #check memory usage
                     try:
@@ -92,7 +93,12 @@ class Vitis(DesignTool):
                     except Exception as e:
                         print(e)
                         break
-                    if memoryUse > self._MAX_RAM_USAGE:
+                    if proc.name() == self._IMPL_PROCESSNAME:
+                        ninety_percent = 80
+                        if memoryUse > ninety_percent:
+                            proc.kill()   
+                            raise Exception(f"****{self._IMPL_PROCESSNAME} has exceed max RAM usage****")
+                    elif memoryUse > self._MAX_RAM_USAGE:
                         proc.kill()   
                         raise Exception(f"****{self._PROCESSNAME} has exceed max RAM usage****")
                     #check time usage 

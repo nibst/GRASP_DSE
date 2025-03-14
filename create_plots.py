@@ -13,7 +13,7 @@ import numpy as np
 from heuristics.heuristic import Heuristic
 
 # benchmarks = ["SHA","GSM","AES","SPAM","MOTION","ADPCM","DIGIT"]
-benchmarks = ["SHA","GSM","AES","ADPCM"]
+benchmarks = ["ADPCM"]
 
 class HeuristicSolutions:
     def __init__(self, heuristic_name: str, solutions_timestamps_per_benchmark: dict[list[List[Solution]]]):
@@ -38,21 +38,21 @@ def main():
     #             b.extend(a)
     #             pickle.dump(b, heuristicfile)
     for benchmark in benchmarks:
-        genetic = Graphs.pathToListsOfSolutions(f"./saves/without_period/genetic_{benchmark}_2h/")
-        grasp  = Graphs.pathToListsOfSolutions(f"./saves/without_period/GRASP_{benchmark}_2h/")
+        #genetic = Graphs.pathToListsOfSolutions(f"./saves/without_period/genetic_{benchmark}_2h/")
+        grasp  = Graphs.pathToListsOfSolutions(f"./saves/GRASP_{benchmark}_2h/")
         #grasp_period_at_end  = Graphs.pathToListsOfSolutions(f"./saves/with_period_exploration_at_the_end/GRASP_{benchmark}_2h/")
-        aco = Graphs.pathToListsOfSolutions(f"./saves/without_period/ACO_{benchmark}_2h/")
+        aco = Graphs.pathToListsOfSolutions(f"./saves/ACO_{benchmark}_2h/")
         # soft_grasp = Graphs.pathToListsOfSolutions(f"../saves_patati/savesWithModel/SOFT_PRUNING_GRASP_{benchmark}_2h/")
         grasp_timestamps_per_benchmark[benchmark] = grasp
         #grasp_v2_timestamps_per_benchmark[benchmark] = grasp_period_at_end
-        genetic_timestamps_per_benchmark[benchmark] = genetic
+        #genetic_timestamps_per_benchmark[benchmark] = genetic
         aco_timestamps_per_benchmark[benchmark] = aco
     solutions_of_all_heuristics = []    
     solutions_of_all_heuristics.append(HeuristicSolutions("ACO", aco_timestamps_per_benchmark)) 
     solutions_of_all_heuristics.append(HeuristicSolutions("GRASP", grasp_timestamps_per_benchmark))
     # solutions_of_all_heuristics.append(HeuristicSolutions("GRASP_v2", grasp_v2_timestamps_per_benchmark))
 
-    solutions_of_all_heuristics.append(HeuristicSolutions("GENETIC", genetic_timestamps_per_benchmark))
+    #solutions_of_all_heuristics.append(HeuristicSolutions("GENETIC", genetic_timestamps_per_benchmark))
                                     
     all_heuristics_in_one_bar("PERCENTAGE", solutions_of_all_heuristics, 10)
     all_heuristics_in_one_bar("ADRS", solutions_of_all_heuristics, 10)
@@ -62,7 +62,7 @@ def main():
 
 def plot_heuristics_comparison(method: str, solutions_of_all_heuristics: List[HeuristicSolutions], save_interval, number_of_timestamps):
     method = method.upper()
-    benchmarks = ["SHA","GSM","AES","ADPCM"]
+    benchmarks = ["ADPCM"]
     DEFAULT_LINEWIDTH = 4
     DEFAULT_LINEWIDTH_DECAY = 0.8
     for benchmark in benchmarks:
@@ -121,7 +121,7 @@ def plot_heuristics_comparison(method: str, solutions_of_all_heuristics: List[He
 
 def all_heuristics_in_one_bar(method: str, solutions_of_all_heuristics: List[HeuristicSolutions], number_of_timestamps):
     method = method.upper()
-    benchmarks = ["SHA","GSM","AES","ADPCM"]
+    benchmarks = ["ADPCM"]
     myplt = PlotMaker(method, 'Heuristics', "Average")
     averages = {}
     means = {}
