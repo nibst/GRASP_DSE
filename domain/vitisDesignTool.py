@@ -75,7 +75,7 @@ class Vitis(DesignTool):
             except Exception as error:
                 print(error)
             for proc in psutil.process_iter(['name']):
-                if proc.name() == self._PROCESSNAME:
+                if proc.name() == self._PROCESSNAME or proc.name() == self._IMPL_PROCESSNAME:
                     proc.kill()
                     break        
 
