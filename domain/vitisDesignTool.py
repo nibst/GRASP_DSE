@@ -14,7 +14,7 @@ from utils.Script_tcl import generate_script_for_implementation, generateScript
 
 class Vitis(DesignTool):
     
-    def __init__(self, maxRAMUsage = 50, directivesFilename = './domain/directives.tcl'):
+    def __init__(self, maxRAMUsage = 95, directivesFilename = './domain/directives.tcl'):
         self._MAX_RAM_USAGE = maxRAMUsage #in percentage
         self._DIRECTIVES_FILENAME = directivesFilename
         self._PROCESSNAME = 'vitis_hls'
@@ -97,7 +97,7 @@ class Vitis(DesignTool):
                         print(e)
                         break
                     if proc.name() == self._IMPL_PROCESSNAME:
-                        ninety_percent = 80
+                        ninety_percent = 90
                         if memoryUse > ninety_percent:
                             proc.kill()   
                             raise Exception(f"****{self._IMPL_PROCESSNAME} has exceed max RAM usage****")
@@ -141,7 +141,7 @@ class Vitis(DesignTool):
             results['LUT'] = int(x.find('LUT').text)
             results['BRAM'] = int(x.find('BRAM').text)
         else:
-            raise Exception("****Error in implementation - NO Implementation Results****")   
+            raise Exception(f"****Error in implementation - NO Implementation Results in {impl_report_xml_path}****")   
         return results
     def getResultsFromSynthesis(self, solution:Solution, xmlPath:str):   
         results = {}

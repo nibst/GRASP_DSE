@@ -179,13 +179,20 @@ def explore_different_periods(solution:Solution, arguments_dict):
     #run synthesis for each period, changing just the period of solution using solution.set_period()
     vitis = Vitis()
     solutions = []
+    impl_error_solutions = []
     for period in periods:
         solution.set_period(period)
         # Assuming there is a method to run synthesis
-        solution = vitis.runSynthesis(solution,arguments_dict['cFiles'],arguments_dict['prjFile'],run_implementation=True)
+        try:
+            solution = vitis.runSynthesis(solution,arguments_dict['cFiles'],arguments_dict['prjFile'],run_implementation=True)
+        except Exception as e:
+            impl_error_solutions.append(solution)
+
         solutions.append(solution)
         with open(f"{arguments_dict['benchmark']}-solutions", 'wb') as file:
             pickle.dump(solutions, file)
+        with open(f"{arguments_dict['benchmark']}-error-solutions", 'wb') as file:
+            pickle.dump(impl_error_solutions, file)
     return solutions
 def gather_dataset(path, arguments_dict):
     solutions = []
