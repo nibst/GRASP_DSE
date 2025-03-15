@@ -44,9 +44,12 @@ class Vitis(DesignTool):
         synthesis_xml='./Raise_dse/solution1/syn/report/csynth.xml'
         if run_implementation:
             impl_xml='./Raise_dse/solution1/impl/report/verilog/export_syn.xml'
-            results = self.get_results_from_implementation(solution,impl_xml)
-            results['latency'] = self.get_latency_from_synthesis(synthesis_xml)
-            results['resources'] = self.compute_resources(results,synthesis_xml)
+            try:
+                results = self.get_results_from_implementation(solution,impl_xml)
+                results['latency'] = self.get_latency_from_synthesis(synthesis_xml)
+                results['resources'] = self.compute_resources(results,synthesis_xml)
+            except Exception as e:
+                raise e
         else:
             results = self.getResultsFromSynthesis(solution,synthesis_xml)
             results['resources'] = self.compute_resources(results,synthesis_xml)
