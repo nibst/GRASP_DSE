@@ -13,7 +13,17 @@ from utils.abstractSolutionsSaver import SolutionsSaver
 class GRASP(Heuristic):
     
     
-    def __init__(self,filesDict,model:Estimator,timeSpentTraining=0,timeLimit=43200,trainTime = 7200, solutionSaver:SolutionsSaver = None,seed=None,RCLSynthesisInterval = None, desingTool='vitis'):
+    def __init__(self,
+                 filesDict,
+                 model:Estimator,
+                 timeSpentTraining=0,
+                 timeLimit=43200,trainTime = 7200, 
+                 solutionSaver:SolutionsSaver = None,
+                 seed=None,
+                 RCLSynthesisInterval = None, 
+                 desingTool='vitis',
+                 explore_target_period = False,
+        ):
         super().__init__(filesDict)
         self.desingTool = desingTool
         self.TRAIN_TIME = trainTime #3
@@ -21,6 +31,8 @@ class GRASP(Heuristic):
         self.alpha = 0.7
         self.start = time.time()
         self.estimator = model
+        self.explore_target_period = explore_target_period
+    
         if not self.estimator.isTrained():
             sample = RandomSearch(filesDict,self.TRAIN_TIME,solutionSaver=solutionSaver)
             try:
@@ -132,13 +144,14 @@ class GRASP(Heuristic):
         solutionToBuild = dict.fromkeys(self.dictDir,'') #Cria um dicionário 'diretivas' a partir do 'dictDir' mas 
                                                         #mantendo apenas os títulos das diretivas - seu valores são
                                                        #trocados por ''
-        solutionToBuild['period'] = ''
         dictDirCopy = copy.deepcopy(self.dictDir)
         directiveGroups = list(dictDirCopy.keys()) 
 
         random.shuffle(directiveGroups)
-        dictDirCopy['period'] = self.DSEconfig['possible_periods']
-        directiveGroups.append('period')
+        if self.explore_target_period:
+            solutionToBuild['period'] = ''
+            dictDirCopy['period'] = self.DSEconfig['possible_periods']
+            directiveGroups.append('period')
         for count,directiveGroup in enumerate(directiveGroups):
             RCL = self.makeRCL(directiveGroup,solutionToBuild,dictDirCopy)
             if len(RCL) != 0:
@@ -180,10 +193,12 @@ class GRASP(Heuristic):
     def localSearch(self,solution:Solution):
         neighbors = [] #in resources x latency
         dictDirCopy = copy.deepcopy(self.dictDir)
-        dictDirCopy['period'] = self.DSEconfig['possible_periods']
+        if self.explore_target_period:
+            dictDirCopy['period'] = self.DSEconfig['possible_periods']
         for directiveGroup in dictDirCopy.keys():
             neighborDirectives = copy.deepcopy(solution.directives)
-            neighborDirectives['period'] = solution.period
+            if self.explore_target_period:
+                neighborDirectives['period'] = solution.period
             for directive in dictDirCopy[directiveGroup]:
                 if (directiveGroup == 'period' and solution.period == directive) or (directiveGroup != 'period' and solution.directives[directiveGroup] == directive):
                     continue
