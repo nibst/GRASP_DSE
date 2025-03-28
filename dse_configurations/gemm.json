@@ -172,7 +172,7 @@
                 "directive_type":"loop_flatten"
             }
     },
-    "possible_periods" : [3,5,10,15],
+    "possible_periods" : [3,5,8,10,15],
     "nested_loops":[
         {
             "function":"bbgemm",
