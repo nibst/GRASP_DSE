@@ -32,13 +32,14 @@ def run_heuristic(filesDict, model):
 
     GENETIC_HEURISTIC = 'genetic'
     GRASP_HEURISTIC = 'GRASP'
+    GRASP_WITH_FREQUENCY_EXPLORATION = "GRASP_FREQUENCY"
     RANDOM_SEARCH_HEURISTIC = 'random'
     ANT_COLONY_HEURISTIC = 'ACO'
     SOFT_PRUNING_GRASP = 'SOFT_PRUNING_GRASP'
     times_dict = {"./models/SHA_MODEL": 5*hour, "./models/GSM_MODEL": 1.25*hour, "./models/AES_MODEL":40*hour,
                   "./models/DIGIT_MODEL":20*hour,"./models/OPTICAL_MODEL":30*hour,"./models/SPAM_MODEL":10*hour,
                   "./models/MOTION_MODEL":5*hour,"./models/ADPCM_MODEL":5*hour, "./models/new/AES_MODEL":40*hour,
-                  "./models/test/ADPCM_MODEL": 5*hour}
+                  "./models/test/ADPCM_MODEL": 5*hour, "./models/KNN_MODEL": 10*hour}
     #choose heuristic
     if (GENETIC_HEURISTIC == filesDict['heuristic']):
         solutionsSaver = TimeLapsedSolutionsSaver(int(filesDict['timeLimit'])/10)
@@ -47,6 +48,11 @@ def run_heuristic(filesDict, model):
         solutionsSaver = TimeLapsedSolutionsSaver(int(filesDict['timeLimit'])/10)
         heuristic = GRASP(filesDict,model,timeLimit=(int(filesDict['timeLimit'])+10),trainTime=1*hour,solutionSaver=solutionsSaver,timeSpentTraining=times_dict[filesDict['model']])   
         heuristic.run()
+    elif(GRASP_WITH_FREQUENCY_EXPLORATION == filesDict['heuristic']):
+        solutionsSaver = TimeLapsedSolutionsSaver(int(filesDict['timeLimit'])/10)
+        heuristic = GRASP(filesDict,model,timeLimit=(int(filesDict['timeLimit'])+10),trainTime=1*hour,solutionSaver=solutionsSaver,timeSpentTraining=times_dict[filesDict['model']], explore_target_period=True)   
+        heuristic.run()
+
     elif (RANDOM_SEARCH_HEURISTIC == filesDict['heuristic']):
         solutionsSaver = TimeLapsedSolutionsSaver(int(filesDict['timeLimit'])/10)
         heuristic = RandomSearch(filesDict,timeLimit=(int(filesDict['timeLimit'])+10),solutionSaver=solutionsSaver) 
@@ -135,29 +141,6 @@ def parseArguments():
     return parser.parse_args()
 
 def main():
-    # with open('./dse/GRASP_ADPCM2h_preTrained', 'rb') as dse_file:
-    #     dse_data = pickle.load(dse_file)
-    
-    # solutions = dse_data.solutions
-    # indices = [
-    #     [1, 2],
-    #     [3, 4],
-    #     [5, 6],
-    #     [7, 8],
-    #     [9],
-    #     [10],
-    #     [11, 12],
-    #     [13],
-    #     [14],
-    #     [15]
-    # ]
-    
-    # for i, index_list in enumerate(indices):
-    #     with open(f'timeStampFiller{i}', 'wb') as file:
-    #         solutions_to_save = []
-    #         for index in index_list:
-    #             solutions_to_save.append(solutions[index-1])
-    #         pickle.dump(solutions_to_save, file)
 
     # Read arguments from command line
     args = parseArguments()
@@ -166,7 +149,7 @@ def main():
     estimator = RandomForestEstimator(filesDict['dFile'])
     train(path,estimator,filesDict)
     modelName = filesDict['model']
-    model = getEstimationModel(modelName)
+    #model = getEstimationModel(modelName)
     #run_heuristic(filesDict,model)
 
 def explore_different_periods(solution:Solution, arguments_dict):
@@ -185,15 +168,10 @@ def explore_different_periods(solution:Solution, arguments_dict):
         # Assuming there is a method to run synthesis
         try:
             solution = vitis.runSynthesis(solution,arguments_dict['cFiles'],arguments_dict['prjFile'],run_implementation=True)
+            solutions.append(solution)
         except Exception as e:
             impl_error_solutions.append(solution)
-
-        solutions.append(solution)
-        with open(f"{arguments_dict['benchmark']}-solutions", 'wb') as file:
-            pickle.dump(solutions, file)
-        with open(f"{arguments_dict['benchmark']}-error-solutions", 'wb') as file:
-            pickle.dump(impl_error_solutions, file)
-    return solutions
+    return solutions,impl_error_solutions
 def gather_dataset(path, arguments_dict):
     solutions = []
     dse_config_file = arguments_dict['dFile']
@@ -205,9 +183,26 @@ def gather_dataset(path, arguments_dict):
     
     # Select a random sample of 15 solutions
     random_solutions = random.sample(solutions, min(15, len(solutions)))
+    solutions_with_error = []
     for solution in random_solutions:
-        new_solutions = explore_different_periods(solution, arguments_dict)
+        new_solutions,impl_error_solutions = explore_different_periods(solution, arguments_dict)
         solutions.extend(new_solutions)
+        solutions_with_error.extend(impl_error_solutions)
+        error_solutions_file = f"{arguments_dict['benchmark']}-error-solutions"
+        try:
+            # Try to read existing solutions from the file
+            with open(error_solutions_file, 'rb') as file:
+                existing_error_solutions = pickle.load(file)
+        except (FileNotFoundError, EOFError):
+            # If the file does not exist or is empty, initialize an empty list
+            existing_error_solutions = []
+
+        # Extend the existing solutions with the new ones
+        existing_error_solutions.extend(impl_error_solutions)
+
+        # Write the updated list back to the file
+        with open(error_solutions_file, 'wb') as file:
+            pickle.dump(existing_error_solutions, file)
     return solutions
     
 def train(path,estimator:Estimator, arguments_dict):
@@ -215,17 +210,15 @@ def train(path,estimator:Estimator, arguments_dict):
     estimator.trainModel(x)
     score = estimator.cross_val(x,5)
     print(f"{arguments_dict['benchmark']}: {str(score)}")
-    with open(f'./models/{arguments_dict['benchmark']}_MODEL', 'wb') as modelFile:
+    with open(f"./models/{arguments_dict['benchmark']}_MODEL", 'wb') as modelFile:
         pickle.dump(estimator,modelFile)
 
 if __name__ == "__main__": 
     with open('./benchmarks/benchmarks.json') as jsonFile:
         benchmarks:dict =  json.load(jsonFile)
-    # with open('GSM-solutions', 'rb') as file:
-    #    solutions = pickle.load(file)
-    # print(solutions)
+    # with open('./models/KNN_MODEL', 'rb') as file:
+    #    solutions = pickle.load(file).processor.dataset
+    # print(len(solutions))
+    # with open('KNN-error-solutions','rb') as file:
+    #     print(pickle.load(file))
     main()
-
-
-
-
