@@ -52,7 +52,7 @@ class SolutionFactory:
             except ValueError:
                 raise ValueError("****UNDETERMINED LATENCY****")
         else:
-            raise Exception("****Error in synthesis - NO Synthesis Results****")
+            raise Exception(f"****Error in synthesis - NO Synthesis Results in {xml_path}****")
         
 
     @staticmethod
