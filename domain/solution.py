@@ -39,8 +39,8 @@ class Solution:
         self.results[key] = value
 
     def set_results(self,results:dict):
-        self.results = results
-
+        self.results = results.copy() #ensure that we are not modifying the original results
+    
     def set_results_with_results_list(self, results:list):
         for result in results:
             for index,key in enumerate(self.results):
@@ -48,3 +48,15 @@ class Solution:
     
     def set_period(self,period):
         self.period = period
+
+    def has_valid_results(self):
+        """
+        Validate the results of the synthesis. 
+        Check if the results are valid and not None.
+        """
+        for key in self.results:
+            if self.results[key] is None:
+                return False, Exception(f"****{key} is None****")
+            if self.results[key] < 0:
+                return False, Exception(f"****{key} is negative****")
+        return True, None
