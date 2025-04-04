@@ -158,7 +158,7 @@ def explore_different_periods(solution:Solution, arguments_dict):
     """
     with open( arguments_dict["dFile"]) as json_file:
         dse_config = json.load(json_file)
-    periods = dse_config["possible_periods"]
+    periods = [period for period in dse_config["possible_periods"] if period != 8] #exclude 8
     #run synthesis for each period, changing just the period of solution using solution.set_period()
     vitis = Vitis()
     solutions = []
@@ -178,8 +178,14 @@ def gather_dataset(path, arguments_dict):
     for solution_dir in os.listdir(path):
         solution_path = os.path.join(path, solution_dir)
         if os.path.isdir(solution_path) and os.path.exists(solution_path):
-            solution = SolutionFactory.create_solution_from_vitis_path(solution_path, dse_config_file)
-            solutions.append(solution)
+            try:
+                solution = SolutionFactory.create_solution_from_vitis_path(solution_path, dse_config_file, filtered=True, is_implementation=True)
+                solutions.append(solution)
+            except Exception as e:
+                error_log_file = "solution_creation_errors.log"
+                with open(error_log_file, 'a') as error_file:
+                    error_file.write(f"Error creating solution from {solution_path}: {e}\n")
+
     
     # Select a random sample of 15 solutions
     random_solutions = random.sample(solutions, min(15, len(solutions)))
