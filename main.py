@@ -1,9 +1,11 @@
 import argparse
+import copy
 import json
 import os
 import pickle
 from directives_impact_analyzer.synthesisBasedDirectivesImpactAnalyzer import  SynthesisBasedDirectivesImpactAnalyzer
 from domain.designToolFactory import DesignToolFactory
+from domain.mockDesignTool import MockDesignTool
 from domain.solution import Solution
 from domain.solution_factory import SolutionFactory
 from domain.vitisDesignTool import Vitis
@@ -149,7 +151,7 @@ def main():
     estimator = RandomForestEstimator(filesDict['dFile'])
     train(path,estimator,filesDict)
     modelName = filesDict['model']
-    #model = getEstimationModel(modelName)
+    model = getEstimationModel(modelName)
     #run_heuristic(filesDict,model)
 
 def explore_different_periods(solution:Solution, arguments_dict):
@@ -164,13 +166,15 @@ def explore_different_periods(solution:Solution, arguments_dict):
     solutions = []
     impl_error_solutions = []
     for period in periods:
-        solution.set_period(period)
+        new_solution = copy.deepcopy(solution)
+
+        new_solution.set_period(period)
         # Assuming there is a method to run synthesis
         try:
-            solution = vitis.runSynthesis(solution,arguments_dict['cFiles'],arguments_dict['prjFile'],run_implementation=True)
-            solutions.append(solution)
+            new_solution = vitis.runSynthesis(new_solution,arguments_dict['cFiles'],arguments_dict['prjFile'],run_implementation=True)
+            solutions.append(new_solution)
         except Exception as e:
-            impl_error_solutions.append(solution)
+            impl_error_solutions.append(new_solution)
     return solutions,impl_error_solutions
 def gather_dataset(path, arguments_dict):
     solutions = []
@@ -195,29 +199,32 @@ def gather_dataset(path, arguments_dict):
         solutions.extend(new_solutions)
         solutions_with_error.extend(impl_error_solutions)
         error_solutions_file = f"{arguments_dict['benchmark']}-error-solutions"
-        try:
-            # Try to read existing solutions from the file
-            with open(error_solutions_file, 'rb') as file:
-                existing_error_solutions = pickle.load(file)
-        except (FileNotFoundError, EOFError):
-            # If the file does not exist or is empty, initialize an empty list
-            existing_error_solutions = []
+        if impl_error_solutions:
+            try:
+                # Try to read existing solutions from the file
+                with open(error_solutions_file, 'rb') as file:
+                    existing_error_solutions = pickle.load(file)
+            except (FileNotFoundError, EOFError):
+                # If the file does not exist or is empty, initialize an empty list
+                existing_error_solutions = []
 
-        # Extend the existing solutions with the new ones
-        existing_error_solutions.extend(impl_error_solutions)
+            # Extend the existing solutions with the new ones
+            existing_error_solutions.extend(impl_error_solutions)
 
-        # Write the updated list back to the file
-        with open(error_solutions_file, 'wb') as file:
-            pickle.dump(existing_error_solutions, file)
+            # Write the updated list back to the file
+            with open(error_solutions_file, 'wb') as file:
+                pickle.dump(existing_error_solutions, file)
     return solutions
     
 def train(path,estimator:Estimator, arguments_dict):
-    x = gather_dataset(path,arguments_dict)
+    #x = gather_dataset(path,arguments_dict)
+    with open(f"../models/{arguments_dict['benchmark']}_MODEL",'rb') as model_file:
+        x = pickle.load(model_file).processor.dataset
     estimator.trainModel(x)
     score = estimator.cross_val(x,5)
     print(f"{arguments_dict['benchmark']}: {str(score)}")
-    with open(f"./models/{arguments_dict['benchmark']}_MODEL", 'wb') as modelFile:
-        pickle.dump(estimator,modelFile)
+    #with open(f"./models/{arguments_dict['benchmark']}_MODEL", 'wb') as modelFile:
+    #    pickle.dump(estimator,modelFile)
 
 if __name__ == "__main__": 
     with open('./benchmarks/benchmarks.json') as jsonFile:
@@ -225,6 +232,6 @@ if __name__ == "__main__":
     # with open('./models/KNN_MODEL', 'rb') as file:
     #    solutions = pickle.load(file).processor.dataset
     # print(len(solutions))
-    # with open('KNN-error-solutions','rb') as file:
-    #     print(pickle.load(file))
+    with open('KNN-error-solutions','rb') as file:
+        print(pickle.load(file))
     main()

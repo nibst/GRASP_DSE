@@ -19,6 +19,8 @@ class PreProcessor():
             dataset = solutionToLst
         if dataset == None:
             raise Exception("**ERROR DATASET IS EMPTY**")
+        for solution in dataset:
+            solution.directives['period'] = str(solution.period)
         self.dataset = dataset
         featuresByColumn = self.__takeColumns()
         processedResults = self.__extractResults()
@@ -30,7 +32,7 @@ class PreProcessor():
         """
         for each directive: build one or more columns
         """
-        regexForParameter = '\-[a-zA-Z]+\s[a-zA-Z0-9]*[^\s]' #pega as flags/parametros tipo: -factor 10, -dim 0, -type cyclic,etc
+        regexForParameter = r'\-[a-zA-Z]+\s[a-zA-Z0-9]*[^\s]' #pega as flags/parametros tipo: -factor 10, -dim 0, -type cyclic,etc
         columnsNames = []
         for directiveType in self.possibleDirectives:
             columnsNames.append(directiveType)
@@ -93,7 +95,7 @@ class PreProcessor():
     
 
     def __directivesToNumbers(self,featuresByColumn,possibleColumns):
-        regexForParameter = '\-[a-zA-Z]+\s[a-zA-Z0-9]*[^\s]' #pega as flags/parametros tipo: -factor 10, -dim 0, -type cyclic,etc
+        regexForParameter = r'\-[a-zA-Z]+\s[a-zA-Z0-9]*[^\s]' #pega as flags/parametros tipo: -factor 10, -dim 0, -type cyclic,etc
         finalDict = {} #terá as diretivas em forma de numero para poder aplicar random forest
         #inicializar o dict com todas possiveis keys de colunas de features
         for columnKey in possibleColumns:

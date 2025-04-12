@@ -12,9 +12,11 @@ class Solution:
         self.period = period #in nano seconds
         if directives:
             self.directives = copy.deepcopy(directives)
-            if directives.get('period',None):
+            if directives.get('period',None): #if period is in the directives and is not a empty value like None or '' or 0
                 self.period = directives['period']
-                self.directives.pop('period')
+            else:
+                self.period = period #in nano seconds
+            self.directives.pop('period')
 
         else: 
             self.directives = {}
