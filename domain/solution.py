@@ -16,7 +16,7 @@ class Solution:
                 self.period = directives['period']
             else:
                 self.period = period #in nano seconds
-            self.directives.pop('period')
+            self.directives.pop('period', None) #remove period from directives or do nothing if key 'period' doesnt exists
 
         else: 
             self.directives = {}
