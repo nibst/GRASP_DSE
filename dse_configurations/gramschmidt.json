@@ -1,0 +1,246 @@
+{
+    "directives":{
+        "unroll loop1": {
+            "possible_directives":["",
+            "set_directive_unroll -factor 2 \"kernel_gramschmidt/loop1\"",
+            "set_directive_unroll -factor 4 \"kernel_gramschmidt/loop1\"",
+            "set_directive_unroll -factor 8 \"kernel_gramschmidt/loop1\"",
+            "set_directive_unroll -factor 16 \"kernel_gramschmidt/loop1\"",
+            "set_directive_unroll -factor 32 \"kernel_gramschmidt/loop1\"",
+            "set_directive_unroll -factor 64 \"kernel_gramschmidt/loop1\""],
+            "function":"kernel_gramschmidt",
+            "label": "loop1",
+            "directive_type":"unroll"
+        },
+        "unroll loop2": {
+            "possible_directives":["",
+            "set_directive_unroll -factor 2 \"kernel_gramschmidt/loop2\"",
+            "set_directive_unroll -factor 4 \"kernel_gramschmidt/loop2\"",
+            "set_directive_unroll -factor 8 \"kernel_gramschmidt/loop2\"",
+            "set_directive_unroll -factor 16 \"kernel_gramschmidt/loop2\"",
+            "set_directive_unroll -factor 32 \"kernel_gramschmidt/loop2\"",
+            "set_directive_unroll -factor 64 \"kernel_gramschmidt/loop2\""],
+            "function":"kernel_gramschmidt",
+            "label": "loop2",
+            "directive_type":"unroll"
+        },
+        "unroll loop3": {
+            "possible_directives":["",
+            "set_directive_unroll -factor 2 \"kernel_gramschmidt/loop3\"",
+            "set_directive_unroll -factor 4 \"kernel_gramschmidt/loop3\"",
+            "set_directive_unroll -factor 8 \"kernel_gramschmidt/loop3\"",
+            "set_directive_unroll -factor 16 \"kernel_gramschmidt/loop3\"",
+            "set_directive_unroll -factor 32 \"kernel_gramschmidt/loop3\"",
+            "set_directive_unroll -factor 64 \"kernel_gramschmidt/loop3\""],
+            "function":"kernel_gramschmidt",
+            "label": "loop3",
+            "directive_type":"unroll"
+        },
+        "unroll loop4": {
+            "possible_directives":["",
+            "set_directive_unroll -factor 2 \"kernel_gramschmidt/loop4\"",
+            "set_directive_unroll -factor 4 \"kernel_gramschmidt/loop4\"",
+            "set_directive_unroll -factor 8 \"kernel_gramschmidt/loop4\"",
+            "set_directive_unroll -factor 16 \"kernel_gramschmidt/loop4\"",
+            "set_directive_unroll -factor 32 \"kernel_gramschmidt/loop4\"",
+            "set_directive_unroll -factor 64 \"kernel_gramschmidt/loop4\""],
+            "function":"kernel_gramschmidt",
+            "label": "loop4",
+            "directive_type":"unroll"
+        },
+        "unroll loop5": {
+            "possible_directives":["",
+            "set_directive_unroll -factor 2 \"kernel_gramschmidt/loop5\"",
+            "set_directive_unroll -factor 4 \"kernel_gramschmidt/loop5\"",
+            "set_directive_unroll -factor 8 \"kernel_gramschmidt/loop5\"",
+            "set_directive_unroll -factor 16 \"kernel_gramschmidt/loop5\"",
+            "set_directive_unroll -factor 32 \"kernel_gramschmidt/loop5\"",
+            "set_directive_unroll -factor 64 \"kernel_gramschmidt/loop5\""],
+            "function":"kernel_gramschmidt",
+            "label": "loop5",
+            "directive_type":"unroll"
+        },
+        "unroll loop6": {
+            "possible_directives":["",
+            "set_directive_unroll -factor 2 \"kernel_gramschmidt/loop6\"",
+            "set_directive_unroll -factor 4 \"kernel_gramschmidt/loop6\"",
+            "set_directive_unroll -factor 8 \"kernel_gramschmidt/loop6\"",
+            "set_directive_unroll -factor 16 \"kernel_gramschmidt/loop6\"",
+            "set_directive_unroll -factor 32 \"kernel_gramschmidt/loop6\"",
+            "set_directive_unroll -factor 64 \"kernel_gramschmidt/loop6\""],
+            "function":"kernel_gramschmidt",
+            "label": "loop6",
+            "directive_type":"unroll"
+        },
+        "pipeline loop1":{
+            "possible_directives":["set_directive_pipeline -off \"kernel_gramschmidt/loop1\"",
+            "set_directive_pipeline \"kernel_gramschmidt/loop1\""],
+            "function":"kernel_gramschmidt",
+            "label": "loop1",
+            "directive_type":"pipeline"
+        },
+        "pipeline loop2":{
+            "possible_directives":["set_directive_pipeline -off \"kernel_gramschmidt/loop2\"",
+            "set_directive_pipeline \"kernel_gramschmidt/loop2\""],
+            "function":"kernel_gramschmidt",
+            "label": "loop2",
+            "directive_type":"pipeline"
+        },
+        "pipeline loop3":{
+            "possible_directives":["set_directive_pipeline -off \"kernel_gramschmidt/loop3\"",
+            "set_directive_pipeline \"kernel_gramschmidt/loop3\""],
+            "function":"kernel_gramschmidt",
+            "label": "loop3",
+            "directive_type":"pipeline"
+        },
+        "pipeline loop4":{
+            "possible_directives":["set_directive_pipeline -off \"kernel_gramschmidt/loop4\"",
+            "set_directive_pipeline \"kernel_gramschmidt/loop4\""],
+            "function":"kernel_gramschmidt",
+            "label": "loop4",
+            "directive_type":"pipeline"
+        },
+        "pipeline loop5":{
+            "possible_directives":["set_directive_pipeline -off \"kernel_gramschmidt/loop5\"",
+            "set_directive_pipeline \"kernel_gramschmidt/loop5\""],
+            "function":"kernel_gramschmidt",
+            "label": "loop5",
+            "directive_type":"pipeline"
+        },
+        "pipeline loop6":{
+            "possible_directives":["set_directive_pipeline -off \"kernel_gramschmidt/loop6\"",
+            "set_directive_pipeline \"kernel_gramschmidt/loop6\""],
+            "function":"kernel_gramschmidt",
+            "label": "loop6",
+            "directive_type":"pipeline"
+        },
+        "array_partition kernel_gramschmidt A":{
+            "possible_directives":["", 
+                "set_directive_array_partition -type block -factor 2 -dim 0 \"kernel_gramschmidt\" A",
+                "set_directive_array_partition -type cyclic -factor 2 -dim 0 \"kernel_gramschmidt\" A",
+                "set_directive_array_partition -type block -factor 4 -dim 0 \"kernel_gramschmidt\" A",
+                "set_directive_array_partition -type cyclic -factor 4 -dim 0 \"kernel_gramschmidt\" A",
+                "set_directive_array_partition -type block -factor 8 -dim 0 \"kernel_gramschmidt\" A",
+                "set_directive_array_partition -type cyclic -factor 8 -dim 0 \"kernel_gramschmidt\" A",
+                "set_directive_array_partition -type block -factor 16 -dim 0 \"kernel_gramschmidt\" A",
+                "set_directive_array_partition -type cyclic -factor 16 -dim 0 \"kernel_gramschmidt\" A",
+                "set_directive_array_partition -type block -factor 32 -dim 0 \"kernel_gramschmidt\" A",
+                "set_directive_array_partition -type cyclic -factor 32 -dim 0 \"kernel_gramschmidt\" A",
+                "set_directive_array_partition -type block -factor 2 -dim 1 \"kernel_gramschmidt\" A",
+                "set_directive_array_partition -type cyclic -factor 2 -dim 1 \"kernel_gramschmidt\" A",
+                "set_directive_array_partition -type block -factor 4 -dim 1 \"kernel_gramschmidt\" A",
+                "set_directive_array_partition -type cyclic -factor 4 -dim 1 \"kernel_gramschmidt\" A",
+                "set_directive_array_partition -type block -factor 8 -dim 1 \"kernel_gramschmidt\" A",
+                "set_directive_array_partition -type cyclic -factor 8 -dim 1 \"kernel_gramschmidt\" A",
+                "set_directive_array_partition -type block -factor 16 -dim 1 \"kernel_gramschmidt\" A",
+                "set_directive_array_partition -type cyclic -factor 16 -dim 1 \"kernel_gramschmidt\" A",
+                "set_directive_array_partition -type block -factor 32 -dim 1 \"kernel_gramschmidt\" A",
+                "set_directive_array_partition -type cyclic -factor 32 -dim 1 \"kernel_gramschmidt\" A"],
+            "function":"kernel_gramschmidt",
+            "label":"",
+            "variable": "A",
+            "directive_type":"array_partition"
+        },
+        "array_partition kernel_gramschmidt R":{
+            "possible_directives":["", 
+                "set_directive_array_partition -type block -factor 2 -dim 0 \"kernel_gramschmidt\" R",
+                "set_directive_array_partition -type cyclic -factor 2 -dim 0 \"kernel_gramschmidt\" R",
+                "set_directive_array_partition -type block -factor 4 -dim 0 \"kernel_gramschmidt\" R",
+                "set_directive_array_partition -type cyclic -factor 4 -dim 0 \"kernel_gramschmidt\" R",
+                "set_directive_array_partition -type block -factor 8 -dim 0 \"kernel_gramschmidt\" R",
+                "set_directive_array_partition -type cyclic -factor 8 -dim 0 \"kernel_gramschmidt\" R",
+                "set_directive_array_partition -type block -factor 16 -dim 0 \"kernel_gramschmidt\" R",
+                "set_directive_array_partition -type cyclic -factor 16 -dim 0 \"kernel_gramschmidt\" R",
+                "set_directive_array_partition -type block -factor 32 -dim 0 \"kernel_gramschmidt\" R",
+                "set_directive_array_partition -type cyclic -factor 32 -dim 0 \"kernel_gramschmidt\" R",
+                "set_directive_array_partition -type block -factor 2 -dim 1 \"kernel_gramschmidt\" R",
+                "set_directive_array_partition -type cyclic -factor 2 -dim 1 \"kernel_gramschmidt\" R",
+                "set_directive_array_partition -type block -factor 4 -dim 1 \"kernel_gramschmidt\" R",
+                "set_directive_array_partition -type cyclic -factor 4 -dim 1 \"kernel_gramschmidt\" R",
+                "set_directive_array_partition -type block -factor 8 -dim 1 \"kernel_gramschmidt\" R",
+                "set_directive_array_partition -type cyclic -factor 8 -dim 1 \"kernel_gramschmidt\" R",
+                "set_directive_array_partition -type block -factor 16 -dim 1 \"kernel_gramschmidt\" R",
+                "set_directive_array_partition -type cyclic -factor 16 -dim 1 \"kernel_gramschmidt\" R",
+                "set_directive_array_partition -type block -factor 32 -dim 1 \"kernel_gramschmidt\" R",
+                "set_directive_array_partition -type cyclic -factor 32 -dim 1 \"kernel_gramschmidt\" R"],
+            "function":"kernel_gramschmidt",
+            "label":"",
+            "variable": "R",
+            "directive_type":"array_partition"
+        },
+        "array_partition kernel_gramschmidt Q":{
+            "possible_directives":["", 
+                "set_directive_array_partition -type block -factor 2 -dim 0 \"kernel_gramschmidt\" Q",
+                "set_directive_array_partition -type cyclic -factor 2 -dim 0 \"kernel_gramschmidt\" Q",
+                "set_directive_array_partition -type block -factor 4 -dim 0 \"kernel_gramschmidt\" Q",
+                "set_directive_array_partition -type cyclic -factor 4 -dim 0 \"kernel_gramschmidt\" Q",
+                "set_directive_array_partition -type block -factor 8 -dim 0 \"kernel_gramschmidt\" Q",
+                "set_directive_array_partition -type cyclic -factor 8 -dim 0 \"kernel_gramschmidt\" Q",
+                "set_directive_array_partition -type block -factor 16 -dim 0 \"kernel_gramschmidt\" Q",
+                "set_directive_array_partition -type cyclic -factor 16 -dim 0 \"kernel_gramschmidt\" Q",
+                "set_directive_array_partition -type block -factor 32 -dim 0 \"kernel_gramschmidt\" Q",
+                "set_directive_array_partition -type cyclic -factor 32 -dim 0 \"kernel_gramschmidt\" Q",
+                "set_directive_array_partition -type block -factor 2 -dim 1 \"kernel_gramschmidt\" Q",
+                "set_directive_array_partition -type cyclic -factor 2 -dim 1 \"kernel_gramschmidt\" Q",
+                "set_directive_array_partition -type block -factor 4 -dim 1 \"kernel_gramschmidt\" Q",
+                "set_directive_array_partition -type cyclic -factor 4 -dim 1 \"kernel_gramschmidt\" Q",
+                "set_directive_array_partition -type block -factor 8 -dim 1 \"kernel_gramschmidt\" Q",
+                "set_directive_array_partition -type cyclic -factor 8 -dim 1 \"kernel_gramschmidt\" Q",
+                "set_directive_array_partition -type block -factor 16 -dim 1 \"kernel_gramschmidt\" Q",
+                "set_directive_array_partition -type cyclic -factor 16 -dim 1 \"kernel_gramschmidt\" Q",
+                "set_directive_array_partition -type block -factor 32 -dim 1 \"kernel_gramschmidt\" Q",
+                "set_directive_array_partition -type cyclic -factor 32 -dim 1 \"kernel_gramschmidt\" Q"],
+            "function":"kernel_gramschmidt",
+            "label":"",
+            "variable": "Q",
+            "directive_type":"array_partition"
+        }
+    },
+    "nested_loops": [
+        {
+            "function":"kernel_gramschmidt",
+            "label":"loop1",
+            "nest": {
+                "function":"kernel_gramschmidt",
+                "label":"loop2",
+                "nest": {}
+            }
+        },
+        {
+            "function":"kernel_gramschmidt",
+            "label":"loop1",
+            "nest": {
+                "function":"kernel_gramschmidt",
+                "label":"loop3",
+                "nest": {}
+            }
+        },
+        {
+            "function":"kernel_gramschmidt",
+            "label":"loop1",
+            "nest": {
+                "function":"kernel_gramschmidt",
+                "label":"loop4",
+                "nest": {
+                    "function":"kernel_gramschmidt",
+                    "label":"loop5",
+                    "nest": {}
+                }
+            }
+        },
+        {
+            "function":"kernel_gramschmidt",
+            "label":"loop1",
+            "nest": {
+                "function":"kernel_gramschmidt",
+                "label":"loop4",
+                "nest": {
+                    "function":"kernel_gramschmidt",
+                    "label":"loop6",
+                    "nest": {}
+                }
+            }
+        }
+    ]
+
+}
