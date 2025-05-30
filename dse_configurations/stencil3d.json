@@ -235,6 +235,8 @@
             "directive_type":"array_partition"
         }
     },
+    "possible_periods" : [3,5,8,10,15],
+
     "nested_loops": [
         {
             "function":"stencil3d",
