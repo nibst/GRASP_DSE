@@ -10,9 +10,9 @@
     "SPAM":{"cFiles":["./benchmarks/spam-filter/src/sw/sgd_sw.cpp"],"dFile": "./dse_configurations/spam_filter_reduced.json", "prjFile": "SgdLR_sw"},
     "DIGIT": {"cFiles":["./benchmarks/digit-recognition/src/sw/digitrec_sw.cpp"] ,"dFile": "./dse_configurations/digit_recognition.json" ,"prjFile": "DigitRec_sw"},
     "OPTICAL": {"cFiles":["./benchmarks/optical-flow/src/sw/optical_flow_sw.cpp"] ,"dFile": "./dse_configurations/optical_flow.json" ,"prjFile": "optical_flow_sw"},
-    "STENCIL3D": {"cFiles":["./benchmarks/stencil3d/stencil.c"], "dFile":"./directives_files/stencil3d.json", "prjFile":"stencil3d"},
-    "VITERBI": {"cFiles":["./benchmarks/viterbi/viterbi.c"], "dFile":"./directives_files/viterbi.json", "prjFile":"viterbi"},
-    "GRAMSCHMIDT": {"cFiles":["./benchmarks/gramschmidt/gramschmidt.c"], "dFile":"./directives_files/gramschmidt.json", "prjFile":"kernel_gramschmidt"}
+    "STENCIL3D": {"cFiles":["./benchmarks/stencil3d/stencil.c"], "dFile":"./dse_configurations/stencil3d.json", "prjFile":"stencil3d"},
+    "VITERBI": {"cFiles":["./benchmarks/viterbi/viterbi.c"], "dFile":"./dse_configurations/viterbi.json", "prjFile":"viterbi"},
+    "GRAMSCHMIDT": {"cFiles":["./benchmarks/gramschmidt/gramschmidt.c"], "dFile":"./dse_configurations/gramschmidt.json", "prjFile":"kernel_gramschmidt"}
 
 }
 
