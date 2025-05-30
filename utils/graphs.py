@@ -30,13 +30,13 @@ class Graphs:
         orderedPaths = Graphs.__getOrderedSavesPaths(path)
         return Graphs.__saveFilesToSolutionsList(orderedPaths)
     @staticmethod
-    def plotParetoPercentage(plotMaker:PlotMaker,comparer:HeuristicComparer,solutions1:List[List[Solution]],solutions2:List[List[Solution]],label, saveInterval,linewidth=None):
+    def plotParetoPercentage(plotMaker:PlotMaker,comparer:HeuristicComparer,solutions1:List[List[Solution]],reference_sey_by_timestamp:List[List[Solution]],label, saveInterval,linewidth=None):
         x = []
         y = []
         
         saveInterval = saveInterval/60 #convert seconds to minutes
         for i in range(len(solutions1)):
-            y.append(comparer.compare(solutions1[i],solutions2[i]))
+            y.append(comparer.compare(solutions1[i],reference_sey_by_timestamp[i]))
             x.append(saveInterval*(i+1))
         plotMaker.plot(x,y,label,linewidth=linewidth)
     @staticmethod
@@ -93,6 +93,35 @@ class Graphs:
         else:
             return None 
     @staticmethod
+    def plot_solutions(plot_maker:PlotMaker,solutions:List[Solution], label):
+        metrics = ['resources','latency']
+        x = []
+        y = []
+        for solution in solutions:
+            x.append(solution.results[metrics[0]])
+            y.append(solution.results[metrics[1]])
+        plot_maker.ylim(0, max(y))
+        plot_maker.scatter_plot(x,y,label)
+
+    def plot_paretos(plot_maker:PlotMaker,solutions:List[Solution],label, main_color='blue',main_opacity=1):    
+        metrics = ['resources','latency']
+        x = []
+        y = []
+        x_diff = []
+        y_diff = []
+        paretos = Heuristic.paretoSolutions(metrics[0],metrics[1],solutions=solutions)
+        for solution in paretos:
+            if solution.period != 8:
+                x_diff.append(solution.results[metrics[0]])
+                y_diff.append(solution.results[metrics[1]])
+            else :
+                x.append(solution.results[metrics[0]])
+                y.append(solution.results[metrics[1]])
+        combined_y = y + y_diff
+        plot_maker.ylim(0, max(combined_y) + max(combined_y)/10)
+        plot_maker.scatter_plot(x, y, color=main_color, marker='o', size=40, label="Paretos with period 8",opacity=main_opacity)
+        plot_maker.scatter_plot(x_diff, y_diff, color='red', marker='o', size=50,label="Paretos with period != 8")
+
     def plotADRS(plotMaker:PlotMaker,comparer:HeuristicComparer,referenceSet:List[Solution], approximateSet:List[List[Solution]],label, saveInterval,linewidth=None):
         x = []
         y = []
@@ -101,6 +130,10 @@ class Graphs:
         for i in range(len(approximateSet)):
             y.append(comparer.compare(referenceSet,approximateSet[i]))
             x.append(saveInterval*(i+1))
+        bot,top = plotMaker.get_ylim()
+        max_y = max(filter(lambda val: val is not None, y))
+        if top < max_y:
+            plotMaker.ylim(bot, max_y + max_y/10)
         plotMaker.plot(x,y,label,linewidth=linewidth)
     @staticmethod
     def plotAllBenchmarksSummarized():

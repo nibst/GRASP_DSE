@@ -11,18 +11,19 @@ import pickle
 
 class Heuristic(ABC):
 
-    def __init__(self,filesDict):
-        self.filesDict = filesDict
-        self.directivesTxt = Path(filesDict['dFile']).read_text()
-        self.cFiles = filesDict['cFiles']
-        self.prjFile = filesDict['prjFile']
+    def __init__(self,files_dict):
+        self.files_dict = files_dict
+        self.cFiles = files_dict['cFiles']
+        self.prjFile = files_dict['prjFile']
 
-        with open(filesDict['dFile']) as jsonFile:
+        with open(files_dict['dFile']) as jsonFile:
             self.DSEconfig:dict =  json.load(jsonFile)
         directivesDict = copy.deepcopy(self.DSEconfig['directives'])
         self.dictDir = {}
         for key in directivesDict:
             self.dictDir[key] = directivesDict[key]['possible_directives']
+        #exploration knobs is all groups that we can explore, including period and directives
+        self.exploration_knobs = {**self.dictDir, 'period': self.DSEconfig['possible_periods']}
         self.solutions = []
     
 
@@ -46,6 +47,10 @@ class Heuristic(ABC):
         paretoCandidates = [] #armazena indice das solucoes candidatas a pareto, é inicializada com todos indices
         solutionsIndex = []
         #inicializa
+        if not isinstance(solutions, list):
+            return [solutions]
+        if len(solutions) < 1:
+            return solutions
         for i in range(len(solutions)):
             paretoCandidates.append(i)
             solutionsIndex.append(i)
@@ -145,14 +150,16 @@ class Heuristic(ABC):
             elif item['pipeline'] == '' or item['unroll'] == '':
                 pass
             #if there isnt a factor argument on directive, then its fully unrolled    
-            elif re.search(factorRegex,item['unroll']) is None:
+            elif isinstance(item['unroll'], int):
+                pass
+            elif re.search(factorRegex, item['unroll']) is None:
                 return True
 
         for loop in loopsInformation:
             innerLoop = loop
             function = loop['function']
             pipelineLoop=None
-            #get the inner loop that has pipeline active, if any
+            #get the loop that has pipeline active, if any
             while innerLoop['nest']:
                 label = innerLoop['label']
                 key = function + '/' + label

@@ -3,7 +3,9 @@ import os
 from typing import List
 from domain.solution import Solution
 from predictor.estimators.randomforest.randomForest import RandomForestEstimator
-from utils.graphs import Graphs
+from utils.benchmark_manager import BenchmarkManager
+from utils.graphs import Graphs 
+from utils.heuristic_solutions import HeuristicSolutions
 from utils.paretoComparer import ParetoComparer
 import matplotlib.pyplot as plt
 from utils.plotMaker import PlotMaker
@@ -11,117 +13,57 @@ from utils.ADRS import ADRS
 import pickle
 import numpy as np
 from heuristics.heuristic import Heuristic
+from utils.plot_manager import PlotManager
 
-# benchmarks = ["SHA","GSM","AES","SPAM","MOTION","ADPCM","DIGIT"]
-benchmarks = ["ADPCM"]
+benchmarks = ["SHA", "AES", "ADPCM","GSM","TRANS_FFT","GEMM","KNN"]
 
-class HeuristicSolutions:
-    def __init__(self, heuristic_name: str, solutions_timestamps_per_benchmark: dict[list[List[Solution]]]):
-        self.heuristic_name = heuristic_name
-        self.solutions_timestamps_per_benchmark = solutions_timestamps_per_benchmark
 
 def main():
-    grasp_timestamps_per_benchmark = {}
-    genetic_timestamps_per_benchmark = {} 
-    aco_timestamps_per_benchmark = {}
-    grasp_v2_timestamps_per_benchmark = {}
-    # for benchmark in benchmarks:
-    #     model_file = f"./models/{benchmark}_MODEL"
-    #     with open(model_file, "rb") as f:
-    #         model: RandomForestEstimator = pickle.load(f)
-    #     a = model.processor.dataset
-    #     grasp_dir = f"./saves/with_period_exploration_at_the_end/GRASP_{benchmark}_2h/"
-    #     for filename in os.listdir(grasp_dir):
-    #         with open(os.path.join(grasp_dir, filename), "rb") as heuristicfile:
-    #             b = pickle.load(heuristicfile)
-    #         with open(os.path.join(f"./saves/with_period_exploration_at_the_end/saves_with_model/GRASP_{benchmark}_2h/", filename), "wb") as heuristicfile:
-    #             b.extend(a)
-    #             pickle.dump(b, heuristicfile)
-    for benchmark in benchmarks:
-        #genetic = Graphs.pathToListsOfSolutions(f"./saves/without_period/genetic_{benchmark}_2h/")
-        grasp  = Graphs.pathToListsOfSolutions(f"./saves/GRASP_{benchmark}_2h/")
-        #grasp_period_at_end  = Graphs.pathToListsOfSolutions(f"./saves/with_period_exploration_at_the_end/GRASP_{benchmark}_2h/")
-        aco = Graphs.pathToListsOfSolutions(f"./saves/ACO_{benchmark}_2h/")
-        # soft_grasp = Graphs.pathToListsOfSolutions(f"../saves_patati/savesWithModel/SOFT_PRUNING_GRASP_{benchmark}_2h/")
-        grasp_timestamps_per_benchmark[benchmark] = grasp
-        #grasp_v2_timestamps_per_benchmark[benchmark] = grasp_period_at_end
-        #genetic_timestamps_per_benchmark[benchmark] = genetic
-        aco_timestamps_per_benchmark[benchmark] = aco
-    solutions_of_all_heuristics = []    
-    solutions_of_all_heuristics.append(HeuristicSolutions("ACO", aco_timestamps_per_benchmark)) 
-    solutions_of_all_heuristics.append(HeuristicSolutions("GRASP", grasp_timestamps_per_benchmark))
-    # solutions_of_all_heuristics.append(HeuristicSolutions("GRASP_v2", grasp_v2_timestamps_per_benchmark))
 
-    #solutions_of_all_heuristics.append(HeuristicSolutions("GENETIC", genetic_timestamps_per_benchmark))
-                                    
-    all_heuristics_in_one_bar("PERCENTAGE", solutions_of_all_heuristics, 10)
-    all_heuristics_in_one_bar("ADRS", solutions_of_all_heuristics, 10)
 
-    plot_heuristics_comparison("PERCENTAGE", solutions_of_all_heuristics, 12*60, 10)
-    plot_heuristics_comparison("ADRS", solutions_of_all_heuristics, 12*60, 10)
+    base_path = "."
+    output_dir = "./plots_png"
 
-def plot_heuristics_comparison(method: str, solutions_of_all_heuristics: List[HeuristicSolutions], save_interval, number_of_timestamps):
-    method = method.upper()
-    benchmarks = ["ADPCM"]
-    DEFAULT_LINEWIDTH = 4
-    DEFAULT_LINEWIDTH_DECAY = 0.8
-    for benchmark in benchmarks:
-        # all_solutions = copy.deepcopy(solutions_of_all_heuristics[0].solutions_timestamps_per_benchmark[benchmark][number_of_timestamps-1])
-        # for i in range(1, len(solutions_of_all_heuristics)):
-        #     all_solutions.extend(solutions_of_all_heuristics[i].solutions_timestamps_per_benchmark[benchmark][number_of_timestamps-1])
-        all_solutions = get_all_solutions_from_benchmark(benchmark)
+    # Initialize managers
+    benchmark_manager = BenchmarkManager(base_path)
+    plot_manager = PlotManager(output_dir)
 
-        if method == "PERCENTAGE":
-            myplt = PlotMaker(benchmark, 'minutes', "Pareto Dominance")
-            myplt.ylim(0, 1.1)
-            all_solutions = [all_solutions] * number_of_timestamps # solutions_of_all_heuristics[0].number_of_timestamps
+    # Load heuristic solutions
+    solutions_of_all_heuristics = []
+    for heuristic_name in ["GRASP_FREQUENCY_end", "GRASP_FREQUENCY_start","GRASP_FREQUENCY_mid"]:
+        timestamps_per_benchmark = {
+            benchmark: benchmark_manager.load_solutions_timestamps(heuristic_name, benchmark)
+            for benchmark in benchmarks
+        }
+        solutions_of_all_heuristics.append(HeuristicSolutions(heuristic_name, timestamps_per_benchmark))
 
-            comparer = ParetoComparer('resources', 'latency')
-            linewidth = DEFAULT_LINEWIDTH
-            for i in range(len(solutions_of_all_heuristics)):
-                Graphs.plotParetoPercentage(myplt, comparer, solutions_of_all_heuristics[i].solutions_timestamps_per_benchmark[benchmark], all_solutions,
-                                            solutions_of_all_heuristics[i].heuristic_name, save_interval, linewidth=linewidth)
-                linewidth = linewidth * DEFAULT_LINEWIDTH_DECAY
+    for heuristic_solutions in solutions_of_all_heuristics:
+        for benchmark in heuristic_solutions.solutions_timestamps_per_benchmark:
+            # save the solutions of each heuristic to a file
+            heuristic_name = heuristic_solutions.heuristic_name
+            benchmark_timestamps = heuristic_solutions.solutions_timestamps_per_benchmark[benchmark]
+            filtered_solutions = [sol for sol in benchmark_timestamps[-1] if sol.period != 8]
+            with open(f"{heuristic_name}_data.txt", "a") as output_file:
+                all_solutions_per_timestamp = plot_manager.get_all_solutions_from_benchmark(solutions_of_all_heuristics, benchmark,include_model=False)
+                percentage = len(filtered_solutions)/len(benchmark_timestamps[-1]) * 100
+                pareto_comparer = ParetoComparer("resources", "latency")
+                pareto_comparsion = pareto_comparer.compare(filtered_solutions, all_solutions_per_timestamp[-1])
+                paretos = f"Percentage of paretos that have period != 8: {pareto_comparsion*100}%"
+                proportion = f"{benchmark} {len(filtered_solutions)}/{len(benchmark_timestamps[-1])} {percentage}%\n{paretos}\n"
 
-            lns = myplt.lns[0]
-            for i in range(len(myplt.lns) -1):
-                lns += myplt.lns[i+1]
-            
-            labs = [l.get_label() for l in lns]
-            myplt.ax.legend(lns, labs, loc=0)
-            
-        if method == "ADRS":
-            myplt = PlotMaker(benchmark, 'minutes', "ADRS")
+                output_file.write(proportion)
+    # Generate plots
+    # plot_manager.all_heuristics_in_one_bar("ADRS", solutions_of_all_heuristics, benchmarks,10)
+    # plot_manager.all_heuristics_in_one_bar("PERCENTAGE", solutions_of_all_heuristics, benchmarks,10)
+    # plot_manager.plot_heuristics_comparison("PERCENTAGE", solutions_of_all_heuristics, benchmarks, 24 * 60, 10)
+    # plot_manager.plot_heuristics_comparison("ADRS", solutions_of_all_heuristics, benchmarks, 24 * 60, 10)
 
-            comparer = ADRS('resources', 'latency')
-            worst_adrs = float("-inf")
-            for i in range(len(solutions_of_all_heuristics)):
-                adrs = comparer.compare(all_solutions, solutions_of_all_heuristics[i].solutions_timestamps_per_benchmark[benchmark][0])
-                if adrs is None:
-                    adrs = 0
-                if adrs > worst_adrs:
-                    worst_adrs = adrs
-            plt.ylim(0, worst_adrs + worst_adrs / 7)
 
-            linewidth = DEFAULT_LINEWIDTH
-            for i in range(len(solutions_of_all_heuristics)):
-                Graphs.plotADRS(myplt, comparer, all_solutions, solutions_of_all_heuristics[i].solutions_timestamps_per_benchmark[benchmark],
-                                solutions_of_all_heuristics[i].heuristic_name, save_interval, linewidth=linewidth)
-                linewidth = DEFAULT_LINEWIDTH_DECAY
 
-            lns = myplt.lns[0]
-            for i in range(len(myplt.lns) -1):
-                lns += myplt.lns[i+1]
-                
-            labs = [l.get_label() for l in lns]
-            myplt.ax.legend(lns, labs, loc=0)
 
-        # plt.savefig(f'../schwarzenegger/plotsPNG/{method}/{method}_allHeuristics_{benchmark}.png')
-        myplt.showPlot()
 
 def all_heuristics_in_one_bar(method: str, solutions_of_all_heuristics: List[HeuristicSolutions], number_of_timestamps):
     method = method.upper()
-    benchmarks = ["ADPCM"]
     myplt = PlotMaker(method, 'Heuristics', "Average")
     averages = {}
     means = {}
@@ -133,26 +75,26 @@ def all_heuristics_in_one_bar(method: str, solutions_of_all_heuristics: List[Heu
         # all_solutions = copy.deepcopy(solutions_of_all_heuristics[0].solutions_timestamps_per_benchmark[benchmark][number_of_timestamps-1])
         # for i in range(1, len(solutions_of_all_heuristics)):
         #     all_solutions.extend(solutions_of_all_heuristics[i].solutions_timestamps_per_benchmark[benchmark][number_of_timestamps-1])
-        all_solutions = get_all_solutions_from_benchmark(benchmark)
+        all_solutions = get_all_solutions_from_benchmark(solutions_of_all_heuristics,benchmark)
         if method == "PERCENTAGE":
             all_solutions = [all_solutions] * 10
-            averages = {}
-            means = {}
             for i in range(len(solutions_of_all_heuristics)):
                 name = solutions_of_all_heuristics[i].heuristic_name
-                averages[name] = []
-                means[name] = []
+                if name not in averages:
+                    averages[name] = []
+                if name not in means:
+                    means[name] = 0
                 averages[name].append(arithmetic_mean_percentage(solutions_of_all_heuristics[i].solutions_timestamps_per_benchmark[benchmark], all_solutions))
                 means[name] = sum(averages[name]) / len(averages[name])
 
         if method == "ADRS":
             # average ADRS: avg of all best ADRS through time from one heuristic
-            averages = {}
-            means = {}
             for i in range(len(solutions_of_all_heuristics)):
                 heuristic_name = solutions_of_all_heuristics[i].heuristic_name
-                averages[heuristic_name] = []
-                means[heuristic_name] = []
+                if heuristic_name not in averages:
+                    averages[heuristic_name] = []
+                if heuristic_name not in means:
+                    means[heuristic_name] = 0
 
                 averages[heuristic_name].append(arithmetic_mean_adrs(all_solutions, solutions_of_all_heuristics[i].solutions_timestamps_per_benchmark[benchmark]))
                 means[heuristic_name] = geometric_mean(averages[heuristic_name])
@@ -163,7 +105,7 @@ def all_heuristics_in_one_bar(method: str, solutions_of_all_heuristics: List[Heu
     max_value = max([mean for mean in means.values()])
     plt.ylim(0, max_value + max_value / 6)
     myplt.barPlot(heuristics, [mean for mean in means.values()], width=0.6)
-    # plt.savefig(f'../schwarzenegger/plotsPNG/{method}/{method}_summarizedBarPlot.png')
+    plt.savefig(f'./plots_png/{method}/{method}_summarizedBarPlot.png')
 
     myplt.showPlot()
 
@@ -173,16 +115,21 @@ def geometric_mean(iterable: list):
     for i in range(length):
         #add a little e value to all elements of array
         e = 0.1
-        a[i] += e
-    return a.prod() ** (1.0 / len(a))
+        if a[i]:
+            a[i] += e
+    # remove None values
+    filtered_array = a[a != None]
+    return filtered_array.prod() ** (1.0 / len(filtered_array))
 
-def arithmetic_mean_adrs(reference_set, solutions):
+def arithmetic_mean_adrs(reference_set, timestamps):
     comparer = ADRS('resources', 'latency')
     all_best_adrs = []
-    for i in range(len(solutions)):
-        all_best_adrs.append(comparer.compare(reference_set, solutions[i]))
+    for i in range(len(timestamps)):
+        all_best_adrs.append(comparer.compare(reference_set, timestamps[i]))
     filtered_items = filter(lambda item: item is not None, all_best_adrs)
     new_lst = list(filtered_items)
+    if new_lst == []:
+        return None
     return np.mean(new_lst)
 
 def arithmetic_mean_percentage(solutions1, solutions2):
@@ -194,33 +141,13 @@ def arithmetic_mean_percentage(solutions1, solutions2):
     new_lst = list(filtered_items)
     return np.mean(new_lst)
 
-def get_all_solutions_from_benchmark(benchmark):
+def get_all_solutions_from_benchmark(solutions_of_all_heuristics,benchmark):
     all_solutions = []
-    grasp  = Graphs.pathToListsOfSolutions(f"./saves/without_period/GRASP_{benchmark}_2h/")
-    aco = Graphs.pathToListsOfSolutions(f"./saves/without_period/ACO_{benchmark}_2h/")
-    genetic = Graphs.pathToListsOfSolutions(f"./saves/without_period/genetic_{benchmark}_2h/")
-
     with open(f"./models/{benchmark}_MODEL", "rb") as f:
-        model: RandomForestEstimator = pickle.load(f)
-    all_solutions.extend(model.processor.dataset)
-    all_solutions.extend(grasp[9])
-    all_solutions.extend(aco[9])
-    all_solutions.extend(genetic[9])
+        model = pickle.load(f)
+    for heuristic in solutions_of_all_heuristics:
+        all_solutions.extend(heuristic.solutions_timestamps_per_benchmark[benchmark][9])
+    #all_solutions.extend(model.processor.dataset)
+
     return all_solutions
 main()
-
-# use for adding estimators solutions to heuristics solution
-"""
-    for benchmark in benchmarks:
-        model_file = f"./models/{benchmark}_MODEL"
-        with open(model_file, "rb") as f:
-            model: RandomForestEstimator = pickle.load(f)
-        a = model.processor.dataset
-        grasp_dir = f"./saves/GRASP_{benchmark}_2h/"
-        for filename in os.listdir(grasp_dir):
-            with open(os.path.join(grasp_dir, filename), "rb") as heuristicfile:
-                b = pickle.load(heuristicfile)
-            with open(os.path.join(f"./saves/saves_with_model/GRASP_{benchmark}_2h/", filename), "wb") as heuristicfile:
-                b.extend(a)
-                pickle.dump(b, heuristicfile)
-"""

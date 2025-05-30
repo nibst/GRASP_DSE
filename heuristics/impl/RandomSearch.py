@@ -24,8 +24,8 @@ from utils.abstractSolutionsSaver import SolutionsSaver
 
 class RandomSearch(Heuristic):
     
-    def __init__(self,filesDict,timeLimit=3600,solutionSaver:SolutionsSaver = None):
-        super().__init__(filesDict)
+    def __init__(self,files_dict,timeLimit=3600,solutionSaver:SolutionsSaver = None):
+        super().__init__(files_dict)
         self.solutionSaver = solutionSaver
         self._SECONDS = timeLimit
         seed()

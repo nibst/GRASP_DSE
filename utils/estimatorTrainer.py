@@ -4,8 +4,8 @@ from sklearn.model_selection import train_test_split
 
 
 class RandomSamplesEstimatorTrainer:
-    def __init__(self, filesDict, estimator, timeLimit,randomSampler=None):
-        self._filesDict = filesDict
+    def __init__(self, files_dict, estimator, timeLimit,randomSampler=None):
+        self._files_dict = files_dict
         self.estimator = estimator
         self._SECONDS = timeLimit
         self.score = -1
@@ -14,7 +14,7 @@ class RandomSamplesEstimatorTrainer:
         self.score = -1
         trainTime = trainTimeBetweenThresholdsChecks
         start = time.time()
-        sample = RandomSearch(self._filesDict,trainTime,solutionSaver=None) 
+        sample = RandomSearch(self._files_dict,trainTime,solutionSaver=None) 
         while self.score < threshold:
             try:    
                 train, test = train_test_split(sample.solutions, test_size=0.2)

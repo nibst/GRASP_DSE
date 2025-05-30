@@ -153,7 +153,7 @@ def getOpsMetadataFromBytecode(bytecodeFile: Path, legupSchedulingRptFile: Path,
     return opsMetadataFile
 
 
-def compileBytecode(bytecodeFile: Path, outputsDir: Path, filesDict = None) -> dict:
+def compileBytecode(bytecodeFile: Path, outputsDir: Path, files_dict = None) -> dict:
 
     assert (bytecodeFile.is_file() and outputsDir.is_dir())
 
@@ -170,8 +170,8 @@ def compileBytecode(bytecodeFile: Path, outputsDir: Path, filesDict = None) -> d
         subprocess.check_output(removeIOFunctionCallCmd, stderr=subprocess.STDOUT, shell=True)
     except subprocess.CalledProcessError as error:
         raise CompilationError(bytecodeFile.as_posix(), error.returncode, error.output) 
-    if(filesDict):
-        generateScriptWithInputIR(filesDict["cFiles"],filesDict["prjFile"],IOFunctionCallRemovedBytecodeFile.as_posix(),LLVM_OPT)
+    if(files_dict):
+        generateScriptWithInputIR(files_dict["cFiles"],files_dict["prjFile"],IOFunctionCallRemovedBytecodeFile.as_posix(),LLVM_OPT)
     designTool = DesignToolFactory().getDesignTool('vitis')
     solution = Solution({})
     try:

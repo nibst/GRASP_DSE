@@ -1,5 +1,5 @@
 from random import randrange
-from domain.desingTool import DesignTool
+from domain.designTool import DesignTool
 from domain.solution import Solution
 import xml.etree.ElementTree as ET
 import os.path

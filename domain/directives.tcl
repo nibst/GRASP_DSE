@@ -1,17 +1,21 @@
-set_directive_pipeline encode/encode_label0
-set_directive_pipeline decode/decode_label2
-set_directive_pipeline decode/decode_label3
-set_directive_pipeline reset/reset_label4
-set_directive_pipeline reset/reset_label6
-set_directive_pipeline filtez/filtez_label8
-set_directive_pipeline quantl/quantl_label9
-set_directive_unroll encode/encode_label0 -factor 4
-set_directive_unroll encode/encode_label1 -factor 4
-set_directive_unroll decode/decode_label2 -factor 2
-set_directive_unroll decode/decode_label3 -factor 4
-set_directive_unroll reset/reset_label5 -factor 2
-set_directive_unroll reset/reset_label6 -factor 2
-set_directive_unroll upzero/upzero_label11 -factor 4
-set_directive_unroll adpcm_main/adpcm_main_label12 -factor 8
-set_directive_unroll adpcm_main/adpcm_main_label13 -factor 2
-set_directive_loop_merge reset
+set_directive_unroll -factor 2 "fft1D_512/loop1"
+set_directive_unroll -factor 16 "fft1D_512/loop3"
+set_directive_unroll "fft1D_512/loop4"
+set_directive_unroll -factor 2 "fft1D_512/loop5"
+set_directive_unroll -factor 2 "fft1D_512/loop6"
+set_directive_unroll -factor 2 "fft1D_512/loop7"
+set_directive_unroll "fft1D_512/loop8"
+set_directive_unroll -factor 32 "fft1D_512/loop9"
+set_directive_unroll -factor 32 "fft1D_512/loop10"
+set_directive_unroll -factor 2 "fft1D_512/loop11"
+set_directive_pipeline "fft1D_512/loop2"
+set_directive_pipeline "fft1D_512/loop7"
+set_directive_pipeline "fft1D_512/loop9"
+set_directive_pipeline "fft1D_512/loop10"
+set_directive_pipeline "fft1D_512/loop11"
+set_directive_array_partition -type cyclic -factor 2 -dim 0 "fft1D_512" reversed
+set_directive_array_partition -type block -factor 64 -dim 0 "fft1D_512" DATA_y
+set_directive_array_partition -type block -factor 4 -dim 0 "fft1D_512" smem
+set_directive_array_partition -type block -factor 4 -dim 0 "fft1D_512" data_x
+set_directive_array_partition -type complete -dim 0 "fft1D_512" data_y
+10

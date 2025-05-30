@@ -10,12 +10,12 @@ import shutil
 
 
 class GreedyApprox(Heuristic): 
-    def __init__(self,filesDict):
-        super().__init__(filesDict)
-        self.inputByteCode = filesDict["exactDesignUpdatedBytecodeFile"]
-        self.trainingDataProfile = filesDict["dataStatsTraining"]
+    def __init__(self,files_dict):
+        super().__init__(files_dict)
+        self.inputByteCode = files_dict["exactDesignUpdatedBytecodeFile"]
+        self.trainingDataProfile = files_dict["dataStatsTraining"]
         llvmOpt = Path("/home/nikolas/Documents/llvm-project-7/llvm-7.0.0.src/mybuilddir/bin/opt")
-        generateScriptWithInputIR(filesDict["cFile"],filesDict["prjFile"], self.inputByteCode, llvmOpt.as_posix())
+        generateScriptWithInputIR(files_dict["cFile"],files_dict["prjFile"], self.inputByteCode, llvmOpt.as_posix())
         self.run()
 
     def run(self):
@@ -51,7 +51,7 @@ class GreedyApprox(Heuristic):
                     appliedApproximations[operation] = ''
                     print(e)
                 approxDesignOutputsValues = getOutputsValues(bytecode, trainingInputsDir, approxOpTrainingOutputsDir, deleteOutputFiles=True)
-                approxDesignMseValues = getMseValues(approxDesignOutputsValues, self.filesDict["goldenOutputsTraining"])
+                approxDesignMseValues = getMseValues(approxDesignOutputsValues, self.files_dict["goldenOutputsTraining"])
                 meanMseValue = numpy.mean(list(approxDesignMseValues.values()), dtype=numpy.float64)
                 currentFitness = self._fitness(meanMseValue, solution.results["resources"] * solution.results["latency"])   
                 if currentFitness < bestFitness:
@@ -116,13 +116,13 @@ def main():
         shutil.rmtree('./approx_results')
         print("Error: something went wrong when trying to profile the exact design.")
         raise
-    filesDict = {}
-    filesDict["exactDesignUpdatedBytecodeFile"] = exactDesignUpdatedBytecodeFile
-    filesDict["solution"] = exactDesignReportFiles
-    filesDict["goldenOutPutsTest"] = goldenOutputsTest
-    filesDict["goldenOutputsTraining"] = goldenOutputsTraining
-    filesDict["dataStatsTraining"] = dataStatsTraining
-    heuristic = GreedyApprox(filesDict)
+    files_dict = {}
+    files_dict["exactDesignUpdatedBytecodeFile"] = exactDesignUpdatedBytecodeFile
+    files_dict["solution"] = exactDesignReportFiles
+    files_dict["goldenOutPutsTest"] = goldenOutputsTest
+    files_dict["goldenOutputsTraining"] = goldenOutputsTraining
+    files_dict["dataStatsTraining"] = dataStatsTraining
+    heuristic = GreedyApprox(files_dict)
         
 if __name__ == '__main__':
     main()

@@ -9,6 +9,7 @@ from domain.mockDesignTool import MockDesignTool
 from domain.solution import Solution
 from domain.solution_factory import SolutionFactory
 from domain.vitisDesignTool import Vitis
+from heuristics.impl.grasp.grasp import Grasp
 from predictor.estimators.estimator import Estimator
 from heuristics.heuristic import Heuristic
 from heuristics.impl.antColony import AntColony
@@ -28,9 +29,9 @@ from utils.estimatorTrainer import RandomSamplesEstimatorTrainer
 from utils.timeLapsedSolutionsSaver import TimeLapsedSolutionsSaver
 import random
 
-def run_heuristic(filesDict, model):
+def run_heuristic(files_dict, model):
     hour = 3600
-    factory = RandomForestFactory(filesDict["dFile"]) 
+    factory = RandomForestFactory(files_dict["dFile"]) 
 
     GENETIC_HEURISTIC = 'genetic'
     GRASP_HEURISTIC = 'GRASP'
@@ -38,40 +39,51 @@ def run_heuristic(filesDict, model):
     RANDOM_SEARCH_HEURISTIC = 'random'
     ANT_COLONY_HEURISTIC = 'ACO'
     SOFT_PRUNING_GRASP = 'SOFT_PRUNING_GRASP'
-    times_dict = {"./models/SHA_MODEL": 5*hour, "./models/GSM_MODEL": 1.25*hour, "./models/AES_MODEL":40*hour,
+    times_dict = {"./models/SHA_MODEL": 5*hour, "./models/GSM_MODEL": 8*hour, "./models/AES_MODEL":40*hour,
                   "./models/DIGIT_MODEL":20*hour,"./models/OPTICAL_MODEL":30*hour,"./models/SPAM_MODEL":10*hour,
                   "./models/MOTION_MODEL":5*hour,"./models/ADPCM_MODEL":5*hour, "./models/new/AES_MODEL":40*hour,
-                  "./models/test/ADPCM_MODEL": 5*hour, "./models/KNN_MODEL": 10*hour}
+                  "./models/KNN_MODEL": 10*hour, "./models/GEMM_MODEL": 10*hour, "./models/TRANS_FFT_MODEL": 48*hour}
     #choose heuristic
-    if (GENETIC_HEURISTIC == filesDict['heuristic']):
-        solutionsSaver = TimeLapsedSolutionsSaver(int(filesDict['timeLimit'])/10)
-        heuristic = GA(filesDict,factory,timeLimit=(int(filesDict['timeLimit'])+10),baseEstimator=model,trainTime=1*hour,solutionSaver=solutionsSaver) 
-    elif(GRASP_HEURISTIC == filesDict['heuristic']):
-        solutionsSaver = TimeLapsedSolutionsSaver(int(filesDict['timeLimit'])/10)
-        heuristic = GRASP(filesDict,model,timeLimit=(int(filesDict['timeLimit'])+10),trainTime=1*hour,solutionSaver=solutionsSaver,timeSpentTraining=times_dict[filesDict['model']])   
+    if (GENETIC_HEURISTIC == files_dict['heuristic']):
+        solutionsSaver = TimeLapsedSolutionsSaver(int(files_dict['timeLimit'])/10)
+        heuristic = GA(files_dict,factory,timeLimit=(int(files_dict['timeLimit'])+10),baseEstimator=model,trainTime=1*hour,solutionSaver=solutionsSaver) 
+    elif(GRASP_HEURISTIC == files_dict['heuristic']):
+        solutionsSaver = TimeLapsedSolutionsSaver(int(files_dict['timeLimit'])/10)
+        heuristic = Grasp(files_dict,model,time_limit=(int(files_dict['timeLimit'])+10),solution_saver=solutionsSaver,time_spent_training=times_dict[files_dict['model']], explore_target_period=False)   
         heuristic.run()
-    elif(GRASP_WITH_FREQUENCY_EXPLORATION == filesDict['heuristic']):
-        solutionsSaver = TimeLapsedSolutionsSaver(int(filesDict['timeLimit'])/10)
-        heuristic = GRASP(filesDict,model,timeLimit=(int(filesDict['timeLimit'])+10),trainTime=1*hour,solutionSaver=solutionsSaver,timeSpentTraining=times_dict[filesDict['model']], explore_target_period=True)   
+    elif(GRASP_WITH_FREQUENCY_EXPLORATION == files_dict['heuristic']):
+        solutionsSaver = TimeLapsedSolutionsSaver(int(files_dict['timeLimit'])/10)
+        #heuristic = GRASP(files_dict,model,timeLimit=(int(files_dict['timeLimit'])+10),trainTime=1*hour,solutionSaver=solutionsSaver,timeSpentTraining=times_dict[files_dict['model']], explore_target_period=True, designTool="mock")   
+        if 'start' in files_dict['args'] :
+            heuristic = Grasp(files_dict,model,time_limit=(int(files_dict['timeLimit'])+10),solution_saver=solutionsSaver,time_spent_training=times_dict[files_dict['model']], explore_target_period=True, period_exploration_index=0)
+        elif 'mid' in files_dict['args']:
+            heuristic = Grasp(files_dict,model,time_limit=(int(files_dict['timeLimit'])+10),solution_saver=solutionsSaver,time_spent_training=times_dict[files_dict['model']], explore_target_period=True)
+            heuristic.period_exploration_index = int(len(heuristic.exploration_knobs.keys())/2)
+        elif 'end' in files_dict['args']:
+            heuristic = Grasp(files_dict,model,time_limit=(int(files_dict['timeLimit'])+10),solution_saver=solutionsSaver,time_spent_training=times_dict[files_dict['model']], explore_target_period=True)
+            heuristic.period_exploration_index = len(heuristic.exploration_knobs.keys())
+        else:
+            heuristic = Grasp(files_dict,model,time_limit=(int(files_dict['timeLimit'])+10),solution_saver=solutionsSaver,time_spent_training=times_dict[files_dict['model']], explore_target_period=True)
+            heuristic.period_exploration_index = len(heuristic.exploration_knobs.keys()) 
         heuristic.run()
 
-    elif (RANDOM_SEARCH_HEURISTIC == filesDict['heuristic']):
-        solutionsSaver = TimeLapsedSolutionsSaver(int(filesDict['timeLimit'])/10)
-        heuristic = RandomSearch(filesDict,timeLimit=(int(filesDict['timeLimit'])+10),solutionSaver=solutionsSaver) 
-    elif (ANT_COLONY_HEURISTIC == filesDict['heuristic']):
-        solutionsSaver = TimeLapsedSolutionsSaver(int(filesDict['timeLimit'])/10)
-        heuristic = AntColony(filesDict,model,12,0.9,alpha=1,beta=1,timeLimit=(int(filesDict['timeLimit'])+10),trainTime=1*hour,solutionSaver=solutionsSaver) 
+    elif (RANDOM_SEARCH_HEURISTIC == files_dict['heuristic']):
+        solutionsSaver = TimeLapsedSolutionsSaver(int(files_dict['timeLimit'])/10)
+        heuristic = RandomSearch(files_dict,timeLimit=(int(files_dict['timeLimit'])+10),solutionSaver=solutionsSaver) 
+    elif (ANT_COLONY_HEURISTIC == files_dict['heuristic']):
+        solutionsSaver = TimeLapsedSolutionsSaver(int(files_dict['timeLimit'])/10)
+        heuristic = AntColony(files_dict,model,12,0.9,alpha=1,beta=1,timeLimit=(int(files_dict['timeLimit'])+10),trainTime=1*hour,solutionSaver=solutionsSaver) 
         heuristic.run()
-    elif (SOFT_PRUNING_GRASP == filesDict['heuristic']):
+    elif (SOFT_PRUNING_GRASP == files_dict['heuristic']):
         designTool = "vivado"
         directiveImpactAnalyzer = SynthesisBasedDirectivesImpactAnalyzer(designTool)
-        with open(filesDict['dFile']) as jsonFile:
+        with open(files_dict['dFile']) as jsonFile:
             DSEconfig:dict =  json.load(jsonFile)
         directivesDict = DSEconfig['directives']
         dictDir = {}
         for key in directivesDict:
             dictDir[key] = directivesDict[key]['possible_directives']
-        directivesImpactFile = f"./directives_impact_analyzer/directives_impact/{designTool}SynthesisBased_{filesDict['benchmark']}.json"
+        directivesImpactFile = f"./directives_impact_analyzer/directives_impact/{designTool}SynthesisBased_{files_dict['benchmark']}.json"
         try:
             with open(directivesImpactFile) as jsonFile:
                 directivesImpact:dict =  json.load(jsonFile)
@@ -80,38 +92,39 @@ def run_heuristic(filesDict, model):
             directiveImpactAnalyzer.writeImpactsToFile(directivesImpactFile)
         else:
             directiveImpactAnalyzer.setImpacts(directivesImpact)
-        solutionsSaver = TimeLapsedSolutionsSaver(int(filesDict['timeLimit'])/10)
-        heuristic = SoftPruningGRASP(filesDict,
+        solutionsSaver = TimeLapsedSolutionsSaver(int(files_dict['timeLimit'])/10)
+        heuristic = SoftPruningGRASP(files_dict,
                                      model,
-                                     timeLimit=(int(filesDict['timeLimit'])+100),
+                                     timeLimit=(int(files_dict['timeLimit'])+100),
                                      trainTime=1*hour,
                                      solutionSaver=solutionsSaver,
-                                     timeSpentTraining=times_dict[filesDict['model']], 
+                                     timeSpentTraining=times_dict[files_dict['model']], 
                                      designTool=designTool, 
                                      directivesImpactAnalyzer=directiveImpactAnalyzer)   
         heuristic.run()
-    heuristic.writeToFile(filesDict['saveFile'])
+    heuristic.writeToFile(files_dict['saveFile'])
 
 def passArgumentsToDictionary(args):
-    filesDict = {}
+    files_dict = {}
     #choose between -b and -c,-d,-p as input for benchmark informations
     if args.cFiles is not None:
         if (args.dFile is None or args.prjFile is None):
             raise argparse.ArgumentError(None,"error: lacking required arguments")
-        filesDict['cFiles'] = args.cFiles
-        filesDict['dFile'] = args.dFile
-        filesDict['prjFile'] = args.prjFile
+        files_dict['cFiles'] = args.cFiles
+        files_dict['dFile'] = args.dFile
+        files_dict['prjFile'] = args.prjFile
     else:
-        filesDict['cFiles'] = benchmarks[args.benchmark]["cFiles"]
-        filesDict['dFile'] = benchmarks[args.benchmark]["dFile"]
-        filesDict['prjFile'] = benchmarks[args.benchmark]["prjFile"]
-    filesDict['timeLimit'] = args.timeLimit
-    filesDict['model'] = args.estimationModel
-    filesDict['heuristic'] = args.heuristic    
-    filesDict['saveFile'] = args.saveFile
-    filesDict['arguments'] = args.arguments
-    filesDict['benchmark'] = args.benchmark
-    return filesDict
+        files_dict['cFiles'] = benchmarks[args.benchmark]["cFiles"]
+        files_dict['dFile'] = benchmarks[args.benchmark]["dFile"]
+        files_dict['prjFile'] = benchmarks[args.benchmark]["prjFile"]
+    files_dict['timeLimit'] = args.timeLimit
+    files_dict['model'] = args.estimationModel
+    files_dict['heuristic'] = args.heuristic    
+    files_dict['saveFile'] = args.saveFile
+    files_dict['arguments'] = args.arguments
+    files_dict['benchmark'] = args.benchmark
+    files_dict['args'] = args.arguments
+    return files_dict
 
 def getEstimationModel(modelName):
     #try to open model file for estimation
@@ -146,13 +159,13 @@ def main():
 
     # Read arguments from command line
     args = parseArguments()
-    filesDict = passArgumentsToDictionary(args)
-    path = f"./dataset/{filesDict['benchmark']}/"
-    estimator = RandomForestEstimator(filesDict['dFile'])
-    train(path,estimator,filesDict)
-    modelName = filesDict['model']
+    files_dict = passArgumentsToDictionary(args)
+    path = f"./dataset/{files_dict['benchmark']}/"
+    estimator = RandomForestEstimator(files_dict['dFile'])
+    train(path,estimator,files_dict)
+    modelName = files_dict['model']
     model = getEstimationModel(modelName)
-    #run_heuristic(filesDict,model)
+    #run_heuristic(files_dict,model)
 
 def explore_different_periods(solution:Solution, arguments_dict):
     """
@@ -191,7 +204,7 @@ def gather_dataset(path, arguments_dict):
                     error_file.write(f"Error creating solution from {solution_path}: {e}\n")
 
     
-    # Select a random sample of 15 solutions
+
     random_solutions = random.sample(solutions, min(15, len(solutions)))
     solutions_with_error = []
     for solution in random_solutions:
@@ -200,38 +213,34 @@ def gather_dataset(path, arguments_dict):
         solutions_with_error.extend(impl_error_solutions)
         error_solutions_file = f"{arguments_dict['benchmark']}-error-solutions"
         if impl_error_solutions:
-            try:
-                # Try to read existing solutions from the file
-                with open(error_solutions_file, 'rb') as file:
-                    existing_error_solutions = pickle.load(file)
-            except (FileNotFoundError, EOFError):
-                # If the file does not exist or is empty, initialize an empty list
-                existing_error_solutions = []
-
-            # Extend the existing solutions with the new ones
-            existing_error_solutions.extend(impl_error_solutions)
-
-            # Write the updated list back to the file
-            with open(error_solutions_file, 'wb') as file:
-                pickle.dump(existing_error_solutions, file)
+            _extend_solutions_from_file(error_solutions_file,impl_error_solutions)
+        # Write the updated list back to the file
+        _extend_solutions_from_file(f"training-{arguments_dict['benchmark']}-solutions",new_solutions)
     return solutions
-    
+def _extend_solutions_from_file(file_name,new_solutions):
+    try:
+        # Try to read existing solutions from the file
+        with open(file_name, 'rb') as file:
+            existing_solutions = pickle.load(file)
+    except (FileNotFoundError, EOFError):
+        # If the file does not exist or is empty, initialize an empty list
+        existing_solutions = []
+    # Extend the existing solutions with the new ones
+    existing_solutions.extend(new_solutions)
+    # Write the updated list back to the file
+    with open(file_name, 'wb') as file:
+        pickle.dump(existing_solutions, file)
+
 def train(path,estimator:Estimator, arguments_dict):
-    #x = gather_dataset(path,arguments_dict)
-    with open(f"../models/{arguments_dict['benchmark']}_MODEL",'rb') as model_file:
-        x = pickle.load(model_file).processor.dataset
+    x = gather_dataset(path,arguments_dict)
     estimator.trainModel(x)
     score = estimator.cross_val(x,5)
     print(f"{arguments_dict['benchmark']}: {str(score)}")
-    #with open(f"./models/{arguments_dict['benchmark']}_MODEL", 'wb') as modelFile:
-    #    pickle.dump(estimator,modelFile)
+    with open(f"./models/{arguments_dict['benchmark']}_MODEL3", 'wb') as modelFile:
+       pickle.dump(estimator,modelFile)
 
 if __name__ == "__main__": 
     with open('./benchmarks/benchmarks.json') as jsonFile:
         benchmarks:dict =  json.load(jsonFile)
-    # with open('./models/KNN_MODEL', 'rb') as file:
-    #    solutions = pickle.load(file).processor.dataset
-    # print(len(solutions))
-    with open('KNN-error-solutions','rb') as file:
-        print(pickle.load(file))
+
     main()

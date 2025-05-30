@@ -30,7 +30,11 @@ class Solution:
         results['latency'] = None
         self.results = results
         self.FF_VALUE = 1; self.LUT_VALUE = 2; self.DSP_VALUE = 345.68; self.BRAM_VALUE = 547.33
-
+    def set_directive(self,directive_group, directive):
+        """
+        set a directive in the solution
+        """
+        self.directives[directive_group] = directive
     def set_directives(self,directives:dict):
         """
         set directives used in this solution
@@ -50,7 +54,8 @@ class Solution:
     
     def set_period(self,period):
         self.period = period
-
+    def get_period(self):
+        return self.period
     def has_valid_results(self):
         """
         Validate the results of the synthesis. 

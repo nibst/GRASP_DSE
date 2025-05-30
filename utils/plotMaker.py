@@ -24,7 +24,20 @@ class PlotMaker:
 
 
         self.lns = []
-
+    def scatter_plot(self, x, y, label=None, color=None, marker='o', size=20,opacity=1):
+        """
+        Create a scatter plot.
+        
+        Parameters:
+        - x: List of x-coordinates
+        - y: List of y-coordinates
+        - label: Label for the scatter points
+        - color: Color of the points
+        - marker: Marker style (default is 'o')
+        - size: Size of the points (default is 20)
+        """
+        scatter = self.ax.scatter(x, y, label='aasd', color=color, marker=marker, s=size, alpha=opacity)
+        self.lns.append(scatter)
     def plot(self,x,y,label=None,color=None,linewidth=None):
         ln = self.ax.plot(x,y,label=label,marker = 'o',color=color,linewidth=linewidth)
         self.lns.append(ln)
@@ -46,3 +59,5 @@ class PlotMaker:
 
     def ylim(self,bot,top):
         self.ax.set_ylim(bot,top)
+    def get_ylim(self):
+        return self.ax.get_ylim()

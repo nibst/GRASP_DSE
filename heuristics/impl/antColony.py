@@ -26,7 +26,7 @@ calculate pheromones for each directive in each node ("atributte" in schafer pap
 """
 class AntColony(Heuristic):
 
-    def __init__(self,filesDict,model:Estimator, n_ants, evaporationRate, alpha=1, beta=1,timeLimit=43200,trainTime = 7200, solutionSaver:SolutionsSaver = None,seed=None ):
+    def __init__(self,files_dict,model:Estimator, n_ants, evaporationRate, alpha=1, beta=1,timeLimit=43200,trainTime = 7200, solutionSaver:SolutionsSaver = None,seed=None ):
         """
         Args:
             n_ants (int): Number of ants running per iteration
@@ -36,14 +36,14 @@ class AntColony(Heuristic):
         Example:
             ant_colony = AntColony(german_distances, 100, 20, 2000, 0.95, alpha=1, beta=2)          
         """
-        super().__init__(filesDict)
+        super().__init__(files_dict)
         self.TRAIN_TIME = trainTime 
         self.SECONDS = timeLimit
         self.start = time.time()
         self.estimator = model
         self.solutionSaver = solutionSaver
         if not self.estimator.isTrained():
-            sample = RandomSearch(filesDict,self.TRAIN_TIME,solutionSaver=solutionSaver)
+            sample = RandomSearch(files_dict,self.TRAIN_TIME,solutionSaver=solutionSaver)
             try:
                 self.estimator.trainModel(sample.solutions)
             except Exception as error:

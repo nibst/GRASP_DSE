@@ -15,11 +15,11 @@ from directives_impact_analyzer.estimatorBasedDirectivesImpactAnalyzer import Es
 
 class SoftPruningGRASP(GRASP):
     
-    def __init__(self,filesDict,model:Estimator,timeSpentTraining=0,timeLimit=43200,
+    def __init__(self,files_dict,model:Estimator,timeSpentTraining=0,timeLimit=43200,
                 trainTime = 7200, solutionSaver:SolutionsSaver = None,seed=None,
                 RCLSynthesisInterval = None, designTool = 'vitis', directivesImpactAnalyzer:DirectivesImpactAnalyzer=None):
         
-        super().__init__(filesDict,model,timeSpentTraining,timeLimit,trainTime, solutionSaver,seed,RCLSynthesisInterval,designTool)
+        super().__init__(files_dict,model,timeSpentTraining,timeLimit,trainTime, solutionSaver,seed,RCLSynthesisInterval,designTool)
         defaultDirectiveAnalzer = EstimatorBasedDirectivesImpactAnalyzer(self.estimator)
         self.directivesImpactAnalyzer = directivesImpactAnalyzer if directivesImpactAnalyzer is not None else defaultDirectiveAnalzer
         self.cutThreshold = 0.5 #take just the 50% best

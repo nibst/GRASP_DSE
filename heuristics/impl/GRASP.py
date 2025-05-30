@@ -14,18 +14,18 @@ class GRASP(Heuristic):
     
     
     def __init__(self,
-                 filesDict,
+                 files_dict,
                  model:Estimator,
                  timeSpentTraining=0,
                  timeLimit=43200,trainTime = 7200, 
                  solutionSaver:SolutionsSaver = None,
                  seed=None,
                  RCLSynthesisInterval = None, 
-                 desingTool='vitis',
+                 designTool='vitis',
                  explore_target_period = False,
         ):
-        super().__init__(filesDict)
-        self.desingTool = desingTool
+        super().__init__(files_dict)
+        self.designTool = designTool
         self.TRAIN_TIME = trainTime #3
         self._SECONDS = timeLimit
         self.alpha = 0.7
@@ -34,7 +34,7 @@ class GRASP(Heuristic):
         self.explore_target_period = explore_target_period
     
         if not self.estimator.isTrained():
-            sample = RandomSearch(filesDict,self.TRAIN_TIME,solutionSaver=solutionSaver)
+            sample = RandomSearch(files_dict,self.TRAIN_TIME,solutionSaver=solutionSaver)
             try:
                 self.estimator.trainModel(sample.solutions)
             except Exception as error:
@@ -162,7 +162,7 @@ class GRASP(Heuristic):
                 constructedSolution = Solution(solutionToBuild)
                 try:
                     synthesisTimeLimit = self._SECONDS - (time.time() - self.start) 
-                    self.synthesisWrapper(constructedSolution,synthesisTimeLimit,self.solutionSaver, self.desingTool)
+                    self.synthesisWrapper(constructedSolution,synthesisTimeLimit,self.solutionSaver, self.designTool)
                     trainingSet = copy.deepcopy(self.solutions)
                     trainingSet.extend(self.estimatorSolutions)
                     self.estimator.trainModel(trainingSet)
@@ -222,7 +222,7 @@ class GRASP(Heuristic):
         while i < len(solutionsSorted):
             try:
                 synthesisTimeLimit = self._SECONDS - (time.time() - self.start)#totalTimeAvailable - timePassed
-                self.synthesisWrapper(solutionsSorted[i],synthesisTimeLimit,self.solutionSaver,self.desingTool)
+                self.synthesisWrapper(solutionsSorted[i],synthesisTimeLimit,self.solutionSaver,self.designTool)
             except Exception as error:
                 print(error)
             else:

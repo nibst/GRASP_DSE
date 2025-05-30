@@ -1,7 +1,7 @@
 import os
 import re
 import xml.etree.ElementTree as ET
-from typing import Tuple, Union
+from typing import List, Tuple, Union
 from pathlib import Path
 def parse_available_resources(xml_path: Path):
     available_resources = {}
@@ -41,8 +41,13 @@ def parse_utilization_rpt_xml(rpt_path: Path):
     clb = root.find('AreaReport/Resources/CLB').text
     latch = root.find('AreaReport/Resources/LATCH').text
 
-    return lut, bram, ff, dsp, clb, latch
+    return {'LUT': int(lut), 'FF': int(ff), 'DSP': int(dsp), 'BRAM': int(bram)}
 
+def _find_line_containing(lines: List[str], *keywords) -> int:
+    for i, line in enumerate(lines):
+        if all(s in line for s in keywords):
+            return i
+    return -1
 def parse_timing_rpt_xml(rpt_path: Path):
     tree = ET.parse(rpt_path)
     root = tree.getroot()
@@ -55,37 +60,53 @@ def parse_timing_rpt_xml(rpt_path: Path):
     return wns, tns, target_clk, achieved_clk
 
 def parse_utilization_rpt_txt(rpt_path: Path):
+    integer_pattern = '-?\d+'
+    rx = re.compile(integer_pattern, re.VERBOSE)
+    
+    lut = bram = ff = dsp = -1
+        
+    with open(rpt_path, "r") as rpt:
+        lines = rpt.readlines()
+
+    lut_line = _find_line_containing(lines, 'CLB LUTs')
+    ff_line = _find_line_containing(lines, 'Register as Flip Flop')
+    dsp_line = _find_line_containing(lines, 'DSPs')
+    bram_line = _find_line_containing(lines, 'Block RAM Tile')
+
+    if lut_line != -1:
+        lut = int((rx.findall(lines[lut_line]))[0])
+    if ff_line != -1:
+        ff = int((rx.findall(lines[ff_line]))[0])
+    if dsp_line != -1:
+        dsp = int((rx.findall(lines[dsp_line]))[0])
+    if bram_line != -1:
+        bram = int((rx.findall(lines[bram_line]))[0])
+        
+    return {'LUT': int(lut), 'FF': int(ff), 'DSP': int(dsp), 'BRAM': int(bram)}
+
+def parse_export_impl_rpt(rpt_path: Path):
     numeric_const_pattern = r'-?\d+'
     rx = re.compile(numeric_const_pattern, re.VERBOSE)
 
-    lut = bram = ff = dsp = clb = latch = -1
+    lut = bram = ff = dsp  = -1
         
     with open(rpt_path, "r") as rpt:
         lines = rpt.readlines()
 
     for line in lines:
-        if lut != -1 and ff != -1 and latch != -1:
-            if clb == -1:
-                if line.find('CLB') != -1:
-                    clb = int((rx.findall(line))[0])
-            else:
-                if line.find('Block RAM Tile') != -1 and bram == -1:
-                    bram = int((rx.findall(line))[0])
-                elif line.find('DSPs') != -1 and dsp == -1:
-                    dsp = int((rx.findall(line))[0])
-        else:
-            if line.find('CLB LUTs') != -1 and lut == -1:
-                lut = int((rx.findall(line))[0])
-            elif line.find('Register as Flip Flop') != -1 and ff == -1:
-                ff = int((rx.findall(line))[0])
-            elif line.find('Register as Latch') != -1 and latch == -1:
-                latch = int((rx.findall(line))[0])
+        if line.find('BRAM:') != -1 and bram == -1:
+            bram = int((rx.findall(line))[0])
+        elif line.find('DSP:') != -1 and dsp == -1:
+            dsp = int((rx.findall(line))[0])
+        elif line.find('LUT:') != -1 and lut == -1:
+            lut = int((rx.findall(line))[0])
+        elif line.find('FF:') != -1 and ff == -1:
+            ff = int((rx.findall(line))[0])
         
-        if lut != -1 and bram != -1 and ff != -1 and \
-           dsp != -1 and clb != -1 and latch != -1:
+        if lut != -1 and bram != -1 and ff != -1 and dsp != -1:
             break
 
-    return lut, bram, ff, dsp, clb, latch
+    return {'LUT': int(lut), 'FF': int(ff), 'DSP': int(dsp), 'BRAM': int(bram)}
 
 def parse_timing_rpt_txt(rpt_path: Path):
     numeric_const_pattern = r'-?[0-9]\d*(\.\d+)?'
@@ -142,20 +163,28 @@ def extract_timing_summary(
 def extract_impl_utilization(
     solution_path: Union[Path, str], 
     filtered: bool = False,
+    top_function: str = None,
 ) -> Tuple[int, int, int, int, int, int]:
     if filtered:
         path = f'{solution_path}/reports/'
     else:
         path = f'{solution_path}/impl/report/verilog/'
 
+    lut = bram = ff = dsp = clb = latch = -1
     rpt_path = Path(f'{path}export_impl.xml')
     if rpt_path.is_file() == False:
-        rpt_path = Path(f'{path}impl_utilization_placed.rpt')
-        if rpt_path.is_file() == False:
-            lut = bram = ff = dsp = clb = latch = -1
-        lut, bram, ff, dsp, clb, latch = parse_utilization_rpt_txt(rpt_path)
+        rpt_path = Path(f'{path}export_impl.rpt')
+        if rpt_path.is_file():
+            return parse_export_impl_rpt(rpt_path)
+        if top_function:
+            rpt_path = Path(f'{path}{top_function}_export.rpt')
+            if rpt_path.is_file():
+                return parse_export_impl_rpt(rpt_path)
+        rpt_path = Path(path + 'impl_utilization_placed.rpt')
+        if rpt_path.is_file():
+            return parse_utilization_rpt_txt(rpt_path)
     else:
-        lut, bram, ff, dsp, clb, latch = parse_utilization_rpt_xml(rpt_path)
+        return parse_utilization_rpt_xml(rpt_path)
     return {
         "LUT": int(lut),
         "BRAM": int(bram),
