@@ -12,7 +12,7 @@
     "OPTICAL": {"cFiles":["./benchmarks/optical-flow/src/sw/optical_flow_sw.cpp"] ,"dFile": "./dse_configurations/optical_flow.json" ,"prjFile": "optical_flow_sw"},
     "STENCIL3D": {"cFiles":["./benchmarks/stencil3d/stencil.c"], "dFile":"./dse_configurations/stencil3d.json", "prjFile":"stencil3d"},
     "VITERBI": {"cFiles":["./benchmarks/viterbi/viterbi.c"], "dFile":"./dse_configurations/viterbi.json", "prjFile":"viterbi"},
-    "GRAMSCHMIDT": {"cFiles":["./benchmarks/gramschmidt/gramschmidt.c"], "dFile":"./dse_configurations/gramschmidt.json", "prjFile":"kernel_gramschmidt"}
-
+    "GRAMSCHMIDT": {"cFiles":["./benchmarks/gramschmidt/gramschmidt.c"], "dFile":"./dse_configurations/gramschmidt.json", "prjFile":"kernel_gramschmidt"},
+    "BACKPROP": {"cFiles":["./benchmarks/backprop/backprop.c"], "dFile":"./dse_configurations/backprop.json", "prjFile":"backprop"}
 }
 

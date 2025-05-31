@@ -73,7 +73,7 @@ class GreedySolutionConstructor(Heuristic):
             estimated_results = self.estimator.estimateSynthesis(candidate)
             candidate.set_results_with_results_list(estimated_results)
             candidates.append(candidate)
-            resource_latency_product =  candidate.results['resources'] * candidate.results['latency']
+            resource_latency_product =  self.get_results_latency_product(candidate)
             if  resource_latency_product < best_resource_latency_product:
                 best_resource_latency_product = resource_latency_product
         
@@ -82,7 +82,7 @@ class GreedySolutionConstructor(Heuristic):
         
         #v = candidate, Vk = candidates, dv = resource_latency_product of candidate
         for candidate in candidates:
-            resource_latency_product=  candidate.results['resources'] * candidate.results['latency']
+            resource_latency_product=  self.get_results_latency_product(candidate)
             if  resource_latency_product < (1+self.alpha)*best_resource_latency_product:
                 if exploration_group ==  'period':
                     rcl.append(candidate.period)

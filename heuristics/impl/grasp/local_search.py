@@ -27,7 +27,7 @@ class LocalSearch(Heuristic):
     def run(self, solution: Solution):
         neighbors = self._generate_neighbors(solution)
         top_solutions = self._synthesize_top_n_solutions(1, neighbors)
-        return max(top_solutions, key=lambda s: s.results['resources'] * s.results['latency'], default=None)
+        return max(top_solutions, key=lambda s:self.get_results_latency_product(s), default=None)
 
     def _generate_neighbors(self, solution: Solution):
         neighbors = [] #in resources x latency
@@ -49,7 +49,7 @@ class LocalSearch(Heuristic):
     def _synthesize_top_n_solutions(self, n, solutions):
         #synthesize top n solutions in the solutions list
         #sort the solutions in ascending order of resource X latency
-        solutions_sorted = sorted(solutions,key=lambda k: k.results['resources'] * k.results['latency'])
+        solutions_sorted = sorted(solutions,key=lambda k: self.get_results_latency_product(k))
         synthesis_count = 0
         top_n_synthesis = []
         for solution in solutions_sorted:

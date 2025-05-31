@@ -235,7 +235,11 @@ class Heuristic(ABC):
         check tree of solution directives to know if solution exists already in self.solutions
         """
         pass
-
+    def get_results_latency_product(self, solution:Solution):
+        """
+        returns the product of resources and latency of a solution
+        """ 
+        return solution.results['resources'] * solution.results['latency'] * solution.period
     def appendSolution(self,solution):
         deep = copy.deepcopy(solution)   
         #if get cached solution
