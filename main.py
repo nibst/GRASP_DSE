@@ -3,6 +3,7 @@ import copy
 import json
 import os
 import pickle
+import time
 from directives_impact_analyzer.synthesisBasedDirectivesImpactAnalyzer import  SynthesisBasedDirectivesImpactAnalyzer
 from domain.designToolFactory import DesignToolFactory
 from domain.mockDesignTool import MockDesignTool
@@ -158,6 +159,7 @@ def parseArguments():
 def main():
 
     # Read arguments from command line
+    start = time.time()
     args = parseArguments()
     files_dict = passArgumentsToDictionary(args)
     path = f"./dataset/{files_dict['benchmark']}/"
@@ -166,6 +168,8 @@ def main():
     modelName = files_dict['model']
     model = getEstimationModel(modelName)
     #run_heuristic(files_dict,model)
+    end = time.time()
+    print(f"Total time taken for {files_dict['bencmark']}: {end - start} seconds")
 
 def explore_different_periods(solution:Solution, arguments_dict):
     """
