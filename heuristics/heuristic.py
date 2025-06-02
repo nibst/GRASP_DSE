@@ -177,9 +177,8 @@ class Heuristic(ABC):
                     key = function + '/' + label
                     item = directivesByLabel[key]
                     #if inner loop has pipeline or unroll, return true
-                    if 'pipeline'in item or 'unroll' in item:
-                        if item['pipeline'] != '' or item['unroll'] != '':
-                            return True
+                    if item.get('pipeline','') != '' or item.get('unroll','') != '':
+                        return True
         return False 
     
 
