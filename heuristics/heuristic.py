@@ -145,14 +145,12 @@ class Heuristic(ABC):
         #check if a pipeline is applied to a fully unrolled loop 
         factorRegex = '\s-factor\s'
         for item in directivesByLabel.values():
-            if 'pipeline' not in item or 'unroll' not in item:
+            if item.get('pipeline', '') == '' or item.get('unroll', '') == '':
                 pass
-            elif item['pipeline'] == '' or item['unroll'] == '':
+            # If there isn’t a factor argument on directive, then it’s fully unrolled
+            elif isinstance(item.get('unroll', ''), int):
                 pass
-            #if there isnt a factor argument on directive, then its fully unrolled    
-            elif isinstance(item['unroll'], int):
-                pass
-            elif re.search(factorRegex, item['unroll']) is None:
+            elif re.search(factorRegex, item.get('unroll', '')) is None:
                 return True
 
         for loop in loopsInformation:
