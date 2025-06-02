@@ -43,7 +43,8 @@ def run_heuristic(files_dict, model):
     times_dict = {"./models/SHA_MODEL": 5*hour, "./models/GSM_MODEL": 8*hour, "./models/AES_MODEL":40*hour,
                   "./models/DIGIT_MODEL":20*hour,"./models/OPTICAL_MODEL":30*hour,"./models/SPAM_MODEL":10*hour,
                   "./models/MOTION_MODEL":5*hour,"./models/ADPCM_MODEL":5*hour, "./models/new/AES_MODEL":40*hour,
-                  "./models/KNN_MODEL": 10*hour, "./models/GEMM_MODEL": 10*hour, "./models/TRANS_FFT_MODEL": 48*hour}
+                  "./models/KNN_MODEL": 10*hour, "./models/GEMM_MODEL": 10*hour, "./models/TRANS_FFT_MODEL": 48*hour,
+                  "./models/STENCIL3D_MODEL": 5*hour,"./models/BACKPROP_MODEL": 11*hour}
     #choose heuristic
     if (GENETIC_HEURISTIC == files_dict['heuristic']):
         solutionsSaver = TimeLapsedSolutionsSaver(int(files_dict['timeLimit'])/10)
@@ -164,12 +165,12 @@ def main():
     files_dict = passArgumentsToDictionary(args)
     path = f"./dataset/{files_dict['benchmark']}/"
     estimator = RandomForestEstimator(files_dict['dFile'])
-    train(path,estimator,files_dict)
+    #train(path,estimator,files_dict)
     modelName = files_dict['model']
     model = getEstimationModel(modelName)
-    #run_heuristic(files_dict,model)
+    run_heuristic(files_dict,model)
     end = time.time()
-    print(f"Total time taken for {files_dict['bencmark']}: {end - start} seconds")
+    print(f"Total time taken for {files_dict['benchmark']}: {end - start} seconds")
 
 def explore_different_periods(solution:Solution, arguments_dict):
     """
@@ -246,5 +247,7 @@ def train(path,estimator:Estimator, arguments_dict):
 if __name__ == "__main__": 
     with open('./benchmarks/benchmarks.json') as jsonFile:
         benchmarks:dict =  json.load(jsonFile)
-
+    #with open('./models/BACKPROP_MODEL3','rb') as file:
+    #    a = pickle.load(file)
+    #print(len([solution for solution in a.processor.dataset if solution.period != 8]))
     main()
