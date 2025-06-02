@@ -161,7 +161,7 @@ class Heuristic(ABC):
             while innerLoop['nest']:
                 label = innerLoop['label']
                 key = function + '/' + label
-                item = directivesByLabel[key]
+                item = directivesByLabel.get(key,{})
                 #if loop has pipeline
                 if 'pipeline' in item and item['pipeline'] != '':
                     pipelineLoop = innerLoop
@@ -175,7 +175,7 @@ class Heuristic(ABC):
                     innerLoop = innerLoop['nest']
                     label = innerLoop['label']
                     key = function + '/' + label
-                    item = directivesByLabel[key]
+                    item = directivesByLabel.get(key,{})
                     #if inner loop has pipeline or unroll, return true
                     if item.get('pipeline','') != '' or item.get('unroll','') != '':
                         return True
