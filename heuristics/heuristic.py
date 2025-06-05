@@ -54,7 +54,11 @@ class Heuristic(ABC):
         for i in range(len(solutions)):
             paretoCandidates.append(i)
             solutionsIndex.append(i)
-            
+        
+        if metric1 == 'time_latency' or metric2 == 'time_latency':
+            for solution in solutions:
+                solution.results['time_latency'] = solution.results['latency'] * solution.period
+        
         for currentSolutionIndex in solutionsIndex:
             if currentSolutionIndex in paretoCandidates:
                 for paretoSolutionIndex in paretoCandidates:
