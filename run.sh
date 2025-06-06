@@ -121,30 +121,30 @@ which python
 #   mkdir ./saves/GRASP_TRANS_FFT_4h
 # fi
 # mv ./time_stamps/* ./saves/GRASP_TRANS_FFT_4h/
-echo "GRASP BACKPROP"
-python3 main.py GRASP -b BACKPROP -o GRASP_BACKPROP4h_preTrained -t 14400 -model ./models/BACKPROP_MODEL 
-mv ./GRASP_BACKPROP4h_preTrained ./dse/
-if [ ! -d "./saves/GRASP_BACKPROP_4h" ]; then 
-  mkdir ./saves/GRASP_BACKPROP_4h
-fi
-mv ./time_stamps/* ./saves/GRASP_BACKPROP_4h/
+# echo "GRASP BACKPROP"
+# python3 main.py GRASP -b BACKPROP -o GRASP_BACKPROP4h_preTrained -t 14400 -model ./models/BACKPROP_MODEL 
+# mv ./GRASP_BACKPROP4h_preTrained ./dse/
+# if [ ! -d "./saves/GRASP_BACKPROP_4h" ]; then 
+#   mkdir ./saves/GRASP_BACKPROP_4h
+# fi
+# mv ./time_stamps/* ./saves/GRASP_BACKPROP_4h/
 
-echo "GRASP STENCIL3D"
-python3 main.py GRASP -b STENCIL3D -o GRASP_STENCIL3D4h_preTrained -t 14400 -model ./models/STENCIL3D_MODEL
-mv ./GRASP_STENCIL3D4h_preTrained ./dse/
-if [ ! -d "./saves/GRASP_STENCIL3D_4h" ]; then 
-  mkdir ./saves/GRASP_STENCIL3D_4h
-fi
-mv ./time_stamps/* ./saves/GRASP_STENCIL3D_4h/
+# echo "GRASP STENCIL3D"
+# python3 main.py GRASP -b STENCIL3D -o GRASP_STENCIL3D4h_preTrained -t 14400 -model ./models/STENCIL3D_MODEL
+# mv ./GRASP_STENCIL3D4h_preTrained ./dse/
+# if [ ! -d "./saves/GRASP_STENCIL3D_4h" ]; then 
+#   mkdir ./saves/GRASP_STENCIL3D_4h
+# fi
+# mv ./time_stamps/* ./saves/GRASP_STENCIL3D_4h/
 # Period explored at the start   ------------------------------------------------------------------------------------------
 
-echo "GRASP_FREQUENCY SHA"
-python3 main.py GRASP_FREQUENCY -b SHA -o GRASP_FREQUENCY_start_SHA4h_preTrained -t 14400 -model ./models/SHA_MODEL -args start
-mv ./GRASP_FREQUENCY_start_SHA4h_preTrained ./dse/
-if [ ! -d "./saves/GRASP_FREQUENCY_start_SHA_4h" ]; then 
-   mkdir ./saves/GRASP_FREQUENCY_start_SHA_4h
-fi
-mv ./time_stamps/* ./saves/GRASP_FREQUENCY_start_SHA_4h/
+# echo "GRASP_FREQUENCY SHA"
+# python3 main.py GRASP_FREQUENCY -b SHA -o GRASP_FREQUENCY_start_SHA4h_preTrained -t 14400 -model ./models/SHA_MODEL -args start
+# mv ./GRASP_FREQUENCY_start_SHA4h_preTrained ./dse/
+# if [ ! -d "./saves/GRASP_FREQUENCY_start_SHA_4h" ]; then 
+#    mkdir ./saves/GRASP_FREQUENCY_start_SHA_4h
+# fi
+# mv ./time_stamps/* ./saves/GRASP_FREQUENCY_start_SHA_4h/
 
 echo "GRASP_FREQUENCY GSM"
 python3 main.py GRASP_FREQUENCY -b GSM -o GRASP_FREQUENCY_start_GSM4h_preTrained -t 14400 -model ./models/GSM_MODEL -args start
@@ -154,70 +154,71 @@ if [ ! -d "./saves/GRASP_FREQUENCY_start_GSM_4h" ]; then
 fi
 mv ./time_stamps/* ./saves/GRASP_FREQUENCY_start_GSM_4h/
 
-# echo "GRASP_FREQUENCY ADPCM"
-# python3 main.py GRASP_FREQUENCY -b ADPCM -o GRASP_FREQUENCY_start_ADPCM4h_preTrained -t 14400 -model ./models/ADPCM_MODEL -args start
-# mv ./GRASP_FREQUENCY_start_ADPCM4h_preTrained ./dse/
-# if [ ! -d "./saves/GRASP_FREQUENCY_start_ADPCM_4h" ]; then 
-#     mkdir ./saves/GRASP_FREQUENCY_start_ADPCM_4h
-# fi
-# mv ./time_stamps/* ./saves/GRASP_FREQUENCY_start_ADPCM_4h/
-
-# echo "GRASP_FREQUENCY AES"
-# python3 main.py GRASP_FREQUENCY -b AES -o GRASP_FREQUENCY_start_AES4h_preTrained -t 14400 -model ./models/AES_MODEL -args start
-# mv ./GRASP_FREQUENCY_start_AES4h_preTrained ./dse/
-# if [ ! -d "./saves/GRASP_FREQUENCY_start_AES_4h" ]; then 
-#   mkdir ./saves/GRASP_FREQUENCY_start_AES_4h
-# fi
-# mv ./time_stamps/* ./saves/GRASP_FREQUENCY_start_AES_4h/
-
-
-# echo "GRASP_FREQUENCY GEMM"
-# python3 main.py GRASP_FREQUENCY -b GEMM -o GRASP_FREQUENCY_start_GEMM4h_preTrained -t 14400 -model ./models/GEMM_MODEL -args start
-# mv ./GRASP_FREQUENCY_start_GEMM4h_preTrained ./dse/
-# if [ ! -d "./saves/GRASP_FREQUENCY_start_GEMM_4h" ]; then 
-#   mkdir ./saves/GRASP_FREQUENCY_start_GEMM_4h
-# fi
-# mv ./time_stamps/* ./saves/GRASP_FREQUENCY_start_GEMM_4h/
-
-
-# echo "GRASP_FREQUENCY KNN"
-# python3 main.py GRASP_FREQUENCY -b KNN -o GRASP_FREQUENCY_start_KNN4h_preTrained -t 14400 -model ./models/KNN_MODEL -args start
-# mv ./GRASP_FREQUENCY_start_KNN4h_preTrained ./dse/
-# if [ ! -d "./saves/GRASP_FREQUENCY_start_KNN_4h" ]; then 
-#   mkdir ./saves/GRASP_FREQUENCY_start_KNN_4h
-# fi
-# mv ./time_stamps/* ./saves/GRASP_FREQUENCY_start_KNN_4h/
-
-# echo "GRASP_FREQUENCY TRANS_FFT"
-# python3 main.py GRASP_FREQUENCY -b TRANS_FFT -o GRASP_FREQUENCY_start_TRANS_FFT4h_preTrained -t 14400 -model ./models/TRANS_FFT_MODEL -args start
-# mv ./GRASP_FREQUENCY_start_TRANS_FFT4h_preTrained ./dse/
-# if [ ! -d "./saves/GRASP_FREQUENCY_start_TRANS_FFT_4h" ]; then 
-#   mkdir ./saves/GRASP_FREQUENCY_start_TRANS_FFT_4h
-# fi
-# mv ./time_stamps/* ./saves/GRASP_FREQUENCY_start_TRANS_FFT_4h/
-echo "GRASP_FREQUENCY BACKPROP"
-python3 main.py GRASP_FREQUENCY -b BACKPROP -o GRASP_FREQUENCY_start_BACKPROP4h_preTrained -t 14400 -model ./models/BACKPROP_MODEL -args start
-mv ./GRASP_FREQUENCY_start_BACKPROP4h_preTrained ./dse/
-if [ ! -d "./saves/GRASP_FREQUENCY_start_BACKPROP_4h" ]; then 
-  mkdir ./saves/GRASP_FREQUENCY_start_BACKPROP_4h
+echo "GRASP_FREQUENCY ADPCM"
+python3 main.py GRASP_FREQUENCY -b ADPCM -o GRASP_FREQUENCY_start_ADPCM4h_preTrained -t 14400 -model ./models/ADPCM_MODEL -args start
+mv ./GRASP_FREQUENCY_start_ADPCM4h_preTrained ./dse/
+if [ ! -d "./saves/GRASP_FREQUENCY_start_ADPCM_4h" ]; then 
+    mkdir ./saves/GRASP_FREQUENCY_start_ADPCM_4h
 fi
-mv ./time_stamps/* ./saves/GRASP_FREQUENCY_start_BACKPROP_4h/
+mv ./time_stamps/* ./saves/GRASP_FREQUENCY_start_ADPCM_4h/
 
-echo "GRASP_FREQUENCY STENCIL3D"
-python3 main.py GRASP_FREQUENCY -b STENCIL3D -o GRASP_FREQUENCY_start_STENCIL3D4h_preTrained -t 14400 -model ./models/STENCIL3D_MODEL -args start
-mv ./GRASP_FREQUENCY_start_STENCIL3D4h_preTrained ./dse/
-if [ ! -d "./saves/GRASP_FREQUENCY_start_STENCIL3D_4h" ]; then 
-  mkdir ./saves/GRASP_FREQUENCY_start_STENCIL3D_4h
+echo "GRASP_FREQUENCY AES"
+python3 main.py GRASP_FREQUENCY -b AES -o GRASP_FREQUENCY_start_AES4h_preTrained -t 14400 -model ./models/AES_MODEL -args start
+mv ./GRASP_FREQUENCY_start_AES4h_preTrained ./dse/
+if [ ! -d "./saves/GRASP_FREQUENCY_start_AES_4h" ]; then 
+  mkdir ./saves/GRASP_FREQUENCY_start_AES_4h
 fi
-mv ./time_stamps/* ./saves/GRASP_FREQUENCY_start_STENCIL3D_4h/
+mv ./time_stamps/* ./saves/GRASP_FREQUENCY_start_AES_4h/
+
+
+echo "GRASP_FREQUENCY GEMM"
+python3 main.py GRASP_FREQUENCY -b GEMM -o GRASP_FREQUENCY_start_GEMM8h_preTrained -t 28800 -model ./models/GEMM_MODEL -args start
+mv ./GRASP_FREQUENCY_start_GEMM8h_preTrained ./dse/
+if [ ! -d "./saves/GRASP_FREQUENCY_start_GEMM_8h" ]; then 
+  mkdir ./saves/GRASP_FREQUENCY_start_GEMM_8h
+fi
+mv ./time_stamps/* ./saves/GRASP_FREQUENCY_start_GEMM_8h/
+
+
+echo "GRASP_FREQUENCY KNN"
+python3 main.py GRASP_FREQUENCY -b KNN -o GRASP_FREQUENCY_start_KNN4h_preTrained -t 14400 -model ./models/KNN_MODEL -args start
+mv ./GRASP_FREQUENCY_start_KNN4h_preTrained ./dse/
+if [ ! -d "./saves/GRASP_FREQUENCY_start_KNN_4h" ]; then 
+  mkdir ./saves/GRASP_FREQUENCY_start_KNN_4h
+fi
+mv ./time_stamps/* ./saves/GRASP_FREQUENCY_start_KNN_4h/
+
+echo "GRASP_FREQUENCY TRANS_FFT"
+python3 main.py GRASP_FREQUENCY -b TRANS_FFT -o GRASP_FREQUENCY_start_TRANS_FFT8h_preTrained -t 28800 -model ./models/TRANS_FFT_MODEL -args start
+mv ./GRASP_FREQUENCY_start_TRANS_FFT8h_preTrained ./dse/
+if [ ! -d "./saves/GRASP_FREQUENCY_start_TRANS_FFT_8h" ]; then 
+  mkdir ./saves/GRASP_FREQUENCY_start_TRANS_FFT_8h
+fi
+mv ./time_stamps/* ./saves/GRASP_FREQUENCY_start_TRANS_FFT_8h/
+
+# echo "GRASP_FREQUENCY BACKPROP"
+# python3 main.py GRASP_FREQUENCY -b BACKPROP -o GRASP_FREQUENCY_start_BACKPROP4h_preTrained -t 14400 -model ./models/BACKPROP_MODEL -args start
+# mv ./GRASP_FREQUENCY_start_BACKPROP4h_preTrained ./dse/
+# if [ ! -d "./saves/GRASP_FREQUENCY_start_BACKPROP_4h" ]; then 
+#   mkdir ./saves/GRASP_FREQUENCY_start_BACKPROP_4h
+# fi
+# mv ./time_stamps/* ./saves/GRASP_FREQUENCY_start_BACKPROP_4h/
+
+# echo "GRASP_FREQUENCY STENCIL3D"
+# python3 main.py GRASP_FREQUENCY -b STENCIL3D -o GRASP_FREQUENCY_start_STENCIL3D4h_preTrained -t 14400 -model ./models/STENCIL3D_MODEL -args start
+# mv ./GRASP_FREQUENCY_start_STENCIL3D4h_preTrained ./dse/
+# if [ ! -d "./saves/GRASP_FREQUENCY_start_STENCIL3D_4h" ]; then 
+#   mkdir ./saves/GRASP_FREQUENCY_start_STENCIL3D_4h
+# fi
+# mv ./time_stamps/* ./saves/GRASP_FREQUENCY_start_STENCIL3D_4h/
 # Period explored at the middle ------------------------------------------------------------------------------------------
-echo "GRASP_FREQUENCY SHA"
-python3 main.py GRASP_FREQUENCY -b SHA -o GRASP_FREQUENCY_mid_SHA4h_preTrained -t 14400 -model ./models/SHA_MODEL -args mid
-mv ./GRASP_FREQUENCY_mid_SHA4h_preTrained ./dse/
-if [ ! -d "./saves/GRASP_FREQUENCY_mid_SHA_4h" ]; then 
-   mkdir ./saves/GRASP_FREQUENCY_mid_SHA_4h
-fi
-mv ./time_stamps/* ./saves/GRASP_FREQUENCY_mid_SHA_4h/
+# echo "GRASP_FREQUENCY SHA"
+# python3 main.py GRASP_FREQUENCY -b SHA -o GRASP_FREQUENCY_mid_SHA4h_preTrained -t 14400 -model ./models/SHA_MODEL -args mid
+# mv ./GRASP_FREQUENCY_mid_SHA4h_preTrained ./dse/
+# if [ ! -d "./saves/GRASP_FREQUENCY_mid_SHA_4h" ]; then 
+#    mkdir ./saves/GRASP_FREQUENCY_mid_SHA_4h
+# fi
+# mv ./time_stamps/* ./saves/GRASP_FREQUENCY_mid_SHA_4h/
 
 echo "GRASP_FREQUENCY GSM"
 python3 main.py GRASP_FREQUENCY -b GSM -o GRASP_FREQUENCY_mid_GSM4h_preTrained -t 14400 -model ./models/GSM_MODEL -args mid
@@ -227,68 +228,68 @@ if [ ! -d "./saves/GRASP_FREQUENCY_mid_GSM_4h" ]; then
 fi
 mv ./time_stamps/* ./saves/GRASP_FREQUENCY_mid_GSM_4h/
 
-# echo "GRASP_FREQUENCY ADPCM"
-# python3 main.py GRASP_FREQUENCY -b ADPCM -o GRASP_FREQUENCY_mid_ADPCM4h_preTrained -t 14400 -model ./models/ADPCM_MODEL -args mid
-# mv ./GRASP_FREQUENCY_mid_ADPCM4h_preTrained ./dse/
-# if [ ! -d "./saves/GRASP_FREQUENCY_mid_ADPCM_4h" ]; then 
-#     mkdir ./saves/GRASP_FREQUENCY_mid_ADPCM_4h
-# fi
-# mv ./time_stamps/* ./saves/GRASP_FREQUENCY_mid_ADPCM_4h/
-
-# echo "GRASP_FREQUENCY AES"
-# python3 main.py GRASP_FREQUENCY -b AES -o GRASP_FREQUENCY_mid_AES4h_preTrained -t 14400 -model ./models/AES_MODEL -args mid
-# mv ./GRASP_FREQUENCY_mid_AES4h_preTrained ./dse/
-# if [ ! -d "./saves/GRASP_FREQUENCY_mid_AES_4h" ]; then 
-#   mkdir ./saves/GRASP_FREQUENCY_mid_AES_4h
-# fi
-# mv ./time_stamps/* ./saves/GRASP_FREQUENCY_mid_AES_4h/
-
-
-# echo "GRASP_FREQUENCY GEMM"
-# python3 main.py GRASP_FREQUENCY -b GEMM -o GRASP_FREQUENCY_mid_GEMM4h_preTrained -t 14400 -model ./models/GEMM_MODEL -args mid
-# mv ./GRASP_FREQUENCY_mid_GEMM4h_preTrained ./dse/
-# if [ ! -d "./saves/GRASP_FREQUENCY_mid_GEMM_4h" ]; then 
-#   mkdir ./saves/GRASP_FREQUENCY_mid_GEMM_4h
-# fi
-# mv ./time_stamps/* ./saves/GRASP_FREQUENCY_mid_GEMM_4h/
-# echo "GRASP_FREQUENCY KNN"
-# python3 main.py GRASP_FREQUENCY -b KNN -o GRASP_FREQUENCY_mid_KNN4h_preTrained -t 14400 -model ./models/KNN_MODEL -args mid
-# mv ./GRASP_FREQUENCY_mid_KNN4h_preTrained ./dse/
-# if [ ! -d "./saves/GRASP_FREQUENCY_mid_KNN_4h" ]; then 
-#   mkdir ./saves/GRASP_FREQUENCY_mid_KNN_4h
-# fi
-# mv ./time_stamps/* ./saves/GRASP_FREQUENCY_mid_KNN_4h/
-
-# echo "GRASP_FREQUENCY TRANS_FFT"
-# python3 main.py GRASP_FREQUENCY -b TRANS_FFT -o GRASP_FREQUENCY_mid_TRANS_FFT4h_preTrained -t 14400 -model ./models/TRANS_FFT_MODEL -args mid
-# mv ./GRASP_FREQUENCY_mid_TRANS_FFT4h_preTrained ./dse/
-# if [ ! -d "./saves/GRASP_FREQUENCY_mid_TRANS_FFT_4h" ]; then 
-#   mkdir ./saves/GRASP_FREQUENCY_mid_TRANS_FFT_4h
-# fi
-# mv ./time_stamps/* ./saves/GRASP_FREQUENCY_mid_TRANS_FFT_4h/
-echo "GRASP_FREQUENCY BACKPROP"
-python3 main.py GRASP_FREQUENCY -b BACKPROP -o GRASP_FREQUENCY_mid_BACKPROP4h_preTrained -t 14400 -model ./models/BACKPROP_MODEL -args mid
-mv ./GRASP_FREQUENCY_mid_BACKPROP4h_preTrained ./dse/
-if [ ! -d "./saves/GRASP_FREQUENCY_mid_BACKPROP_4h" ]; then 
-  mkdir ./saves/GRASP_FREQUENCY_mid_BACKPROP_4h
+echo "GRASP_FREQUENCY ADPCM"
+python3 main.py GRASP_FREQUENCY -b ADPCM -o GRASP_FREQUENCY_mid_ADPCM4h_preTrained -t 14400 -model ./models/ADPCM_MODEL -args mid
+mv ./GRASP_FREQUENCY_mid_ADPCM4h_preTrained ./dse/
+if [ ! -d "./saves/GRASP_FREQUENCY_mid_ADPCM_4h" ]; then 
+    mkdir ./saves/GRASP_FREQUENCY_mid_ADPCM_4h
 fi
-mv ./time_stamps/* ./saves/GRASP_FREQUENCY_mid_BACKPROP_4h/
+mv ./time_stamps/* ./saves/GRASP_FREQUENCY_mid_ADPCM_4h/
 
-echo "GRASP_FREQUENCY STENCIL3D"
-python3 main.py GRASP_FREQUENCY -b STENCIL3D -o GRASP_FREQUENCY_mid_STENCIL3D4h_preTrained -t 14400 -model ./models/STENCIL3D_MODEL -args mid
-mv ./GRASP_FREQUENCY_mid_STENCIL3D4h_preTrained ./dse/
-if [ ! -d "./saves/GRASP_FREQUENCY_mid_STENCIL3D_4h" ]; then 
-  mkdir ./saves/GRASP_FREQUENCY_mid_STENCIL3D_4h
+echo "GRASP_FREQUENCY AES"
+python3 main.py GRASP_FREQUENCY -b AES -o GRASP_FREQUENCY_mid_AES4h_preTrained -t 14400 -model ./models/AES_MODEL -args mid
+mv ./GRASP_FREQUENCY_mid_AES4h_preTrained ./dse/
+if [ ! -d "./saves/GRASP_FREQUENCY_mid_AES_4h" ]; then 
+  mkdir ./saves/GRASP_FREQUENCY_mid_AES_4h
 fi
-mv ./time_stamps/* ./saves/GRASP_FREQUENCY_mid_STENCIL3D_4h/
+mv ./time_stamps/* ./saves/GRASP_FREQUENCY_mid_AES_4h/
+
+
+echo "GRASP_FREQUENCY GEMM"
+python3 main.py GRASP_FREQUENCY -b GEMM -o GRASP_FREQUENCY_mid_GEMM8h_preTrained -t 28800 -model ./models/GEMM_MODEL -args mid
+mv ./GRASP_FREQUENCY_mid_GEMM8h_preTrained ./dse/
+if [ ! -d "./saves/GRASP_FREQUENCY_mid_GEMM_8h" ]; then 
+  mkdir ./saves/GRASP_FREQUENCY_mid_GEMM_8h
+fi
+mv ./time_stamps/* ./saves/GRASP_FREQUENCY_mid_GEMM_8h/
+echo "GRASP_FREQUENCY KNN"
+python3 main.py GRASP_FREQUENCY -b KNN -o GRASP_FREQUENCY_mid_KNN4h_preTrained -t 14400 -model ./models/KNN_MODEL -args mid
+mv ./GRASP_FREQUENCY_mid_KNN4h_preTrained ./dse/
+if [ ! -d "./saves/GRASP_FREQUENCY_mid_KNN_4h" ]; then 
+  mkdir ./saves/GRASP_FREQUENCY_mid_KNN_4h
+fi
+mv ./time_stamps/* ./saves/GRASP_FREQUENCY_mid_KNN_4h/
+
+echo "GRASP_FREQUENCY TRANS_FFT"
+python3 main.py GRASP_FREQUENCY -b TRANS_FFT -o GRASP_FREQUENCY_mid_TRANS_FFT8h_preTrained -t 28800 -model ./models/TRANS_FFT_MODEL -args mid
+mv ./GRASP_FREQUENCY_mid_TRANS_FFT8h_preTrained ./dse/
+if [ ! -d "./saves/GRASP_FREQUENCY_mid_TRANS_FFT_8h" ]; then 
+  mkdir ./saves/GRASP_FREQUENCY_mid_TRANS_FFT_8h
+fi
+mv ./time_stamps/* ./saves/GRASP_FREQUENCY_mid_TRANS_FFT_8h/
+# echo "GRASP_FREQUENCY BACKPROP"
+# python3 main.py GRASP_FREQUENCY -b BACKPROP -o GRASP_FREQUENCY_mid_BACKPROP4h_preTrained -t 14400 -model ./models/BACKPROP_MODEL -args mid
+# mv ./GRASP_FREQUENCY_mid_BACKPROP4h_preTrained ./dse/
+# if [ ! -d "./saves/GRASP_FREQUENCY_mid_BACKPROP_4h" ]; then 
+#   mkdir ./saves/GRASP_FREQUENCY_mid_BACKPROP_4h
+# fi
+# mv ./time_stamps/* ./saves/GRASP_FREQUENCY_mid_BACKPROP_4h/
+
+# echo "GRASP_FREQUENCY STENCIL3D"
+# python3 main.py GRASP_FREQUENCY -b STENCIL3D -o GRASP_FREQUENCY_mid_STENCIL3D4h_preTrained -t 14400 -model ./models/STENCIL3D_MODEL -args mid
+# mv ./GRASP_FREQUENCY_mid_STENCIL3D4h_preTrained ./dse/
+# if [ ! -d "./saves/GRASP_FREQUENCY_mid_STENCIL3D_4h" ]; then 
+#   mkdir ./saves/GRASP_FREQUENCY_mid_STENCIL3D_4h
+# fi
+# mv ./time_stamps/* ./saves/GRASP_FREQUENCY_mid_STENCIL3D_4h/
 # Period explored at the end   ------------------------------------------------------------------------------------------
-echo "GRASP_FREQUENCY SHA"
-python3 main.py GRASP_FREQUENCY -b SHA -o GRASP_FREQUENCY_end_SHA4h_preTrained -t 14400 -model ./models/SHA_MODEL -args end
-mv ./GRASP_FREQUENCY_end_SHA4h_preTrained ./dse/
-if [ ! -d "./saves/GRASP_FREQUENCY_end_SHA_4h" ]; then 
-   mkdir ./saves/GRASP_FREQUENCY_end_SHA_4h
-fi
-mv ./time_stamps/* ./saves/GRASP_FREQUENCY_end_SHA_4h/
+# echo "GRASP_FREQUENCY SHA"
+# python3 main.py GRASP_FREQUENCY -b SHA -o GRASP_FREQUENCY_end_SHA4h_preTrained -t 14400 -model ./models/SHA_MODEL -args end
+# mv ./GRASP_FREQUENCY_end_SHA4h_preTrained ./dse/
+# if [ ! -d "./saves/GRASP_FREQUENCY_end_SHA_4h" ]; then 
+#    mkdir ./saves/GRASP_FREQUENCY_end_SHA_4h
+# fi
+# mv ./time_stamps/* ./saves/GRASP_FREQUENCY_end_SHA_4h/
 
 echo "GRASP_FREQUENCY GSM"
 python3 main.py GRASP_FREQUENCY -b GSM -o GRASP_FREQUENCY_end_GSM4h_preTrained -t 14400 -model ./models/GSM_MODEL -args end
@@ -298,61 +299,61 @@ if [ ! -d "./saves/GRASP_FREQUENCY_end_GSM_4h" ]; then
 fi
 mv ./time_stamps/* ./saves/GRASP_FREQUENCY_end_GSM_4h/
 
-# echo "GRASP_FREQUENCY ADPCM"
-# python3 main.py GRASP_FREQUENCY -b ADPCM -o GRASP_FREQUENCY_end_ADPCM4h_preTrained -t 14400 -model ./models/ADPCM_MODEL -args end
-# mv ./GRASP_FREQUENCY_end_ADPCM4h_preTrained ./dse/
-# if [ ! -d "./saves/GRASP_FREQUENCY_end_ADPCM_4h" ]; then 
-#     mkdir ./saves/GRASP_FREQUENCY_end_ADPCM_4h
-# fi
-# mv ./time_stamps/* ./saves/GRASP_FREQUENCY_end_ADPCM_4h/
-
-# echo "GRASP_FREQUENCY AES"
-# python3 main.py GRASP_FREQUENCY -b AES -o GRASP_FREQUENCY_end_AES4h_preTrained -t 14400 -model ./models/AES_MODEL -args end
-# mv ./GRASP_FREQUENCY_end_AES4h_preTrained ./dse/
-# if [ ! -d "./saves/GRASP_FREQUENCY_end_AES_4h" ]; then 
-#   mkdir ./saves/GRASP_FREQUENCY_end_AES_4h
-# fi
-# mv ./time_stamps/* ./saves/GRASP_FREQUENCY_end_AES_4h/
-
-
-# echo "GRASP_FREQUENCY GEMM"
-# python3 main.py GRASP_FREQUENCY -b GEMM -o GRASP_FREQUENCY_end_GEMM4h_preTrained -t 14400 -model ./models/GEMM_MODEL -args end
-# mv ./GRASP_FREQUENCY_end_GEMM4h_preTrained ./dse/
-# if [ ! -d "./saves/GRASP_FREQUENCY_end_GEMM_4h" ]; then 
-#   mkdir ./saves/GRASP_FREQUENCY_end_GEMM_4h
-# fi
-# mv ./time_stamps/* ./saves/GRASP_FREQUENCY_end_GEMM_4h/
-
-# echo "GRASP_FREQUENCY KNN"
-# python3 main.py GRASP_FREQUENCY -b KNN -o GRASP_FREQUENCY_end_KNN4h_preTrained -t 14400 -model ./models/KNN_MODEL -args end
-# mv ./GRASP_FREQUENCY_end_KNN4h_preTrained ./dse/
-# if [ ! -d "./saves/GRASP_FREQUENCY_end_KNN_4h" ]; then 
-#   mkdir ./saves/GRASP_FREQUENCY_end_KNN_4h
-# fi
-# mv ./time_stamps/* ./saves/GRASP_FREQUENCY_end_KNN_4h/
-
-# echo "GRASP_FREQUENCY TRANS_FFT"
-# python3 main.py GRASP_FREQUENCY -b TRANS_FFT -o GRASP_FREQUENCY_end_TRANS_FFT4h_preTrained -t 14400 -model ./models/TRANS_FFT_MODEL -args end
-# mv ./GRASP_FREQUENCY_end_TRANS_FFT4h_preTrained ./dse/
-# if [ ! -d "./saves/GRASP_FREQUENCY_end_TRANS_FFT_4h" ]; then 
-#   mkdir ./saves/GRASP_FREQUENCY_end_TRANS_FFT_4h
-# fi
-# mv ./time_stamps/* ./saves/GRASP_FREQUENCY_end_TRANS_FFT_4h/
-
-echo "GRASP_FREQUENCY BACKPROP"
-python3 main.py GRASP_FREQUENCY -b BACKPROP -o GRASP_FREQUENCY_end_BACKPROP4h_preTrained -t 14400 -model ./models/BACKPROP_MODEL -args end
-mv ./GRASP_FREQUENCY_end_BACKPROP4h_preTrained ./dse/
-if [ ! -d "./saves/GRASP_FREQUENCY_end_BACKPROP_4h" ]; then 
-  mkdir ./saves/GRASP_FREQUENCY_end_BACKPROP_4h
+echo "GRASP_FREQUENCY ADPCM"
+python3 main.py GRASP_FREQUENCY -b ADPCM -o GRASP_FREQUENCY_end_ADPCM4h_preTrained -t 14400 -model ./models/ADPCM_MODEL -args end
+mv ./GRASP_FREQUENCY_end_ADPCM4h_preTrained ./dse/
+if [ ! -d "./saves/GRASP_FREQUENCY_end_ADPCM_4h" ]; then 
+    mkdir ./saves/GRASP_FREQUENCY_end_ADPCM_4h
 fi
-mv ./time_stamps/* ./saves/GRASP_FREQUENCY_end_BACKPROP_4h/
-echo "GRASP_FREQUENCY STENCIL3D"
-python3 main.py GRASP_FREQUENCY -b STENCIL3D -o GRASP_FREQUENCY_end_STENCIL3D4h_preTrained -t 14400 -model ./models/STENCIL3D_MODEL -args end
-mv ./GRASP_FREQUENCY_end_STENCIL3D4h_preTrained ./dse/
-if [ ! -d "./saves/GRASP_FREQUENCY_end_STENCIL3D_4h" ]; then 
-  mkdir ./saves/GRASP_FREQUENCY_end_STENCIL3D_4h
+mv ./time_stamps/* ./saves/GRASP_FREQUENCY_end_ADPCM_4h/
+
+echo "GRASP_FREQUENCY AES"
+python3 main.py GRASP_FREQUENCY -b AES -o GRASP_FREQUENCY_end_AES4h_preTrained -t 14400 -model ./models/AES_MODEL -args end
+mv ./GRASP_FREQUENCY_end_AES4h_preTrained ./dse/
+if [ ! -d "./saves/GRASP_FREQUENCY_end_AES_4h" ]; then 
+  mkdir ./saves/GRASP_FREQUENCY_end_AES_4h
 fi
-mv ./time_stamps/* ./saves/GRASP_FREQUENCY_end_STENCIL3D_4h/
+mv ./time_stamps/* ./saves/GRASP_FREQUENCY_end_AES_4h/
+
+
+echo "GRASP_FREQUENCY GEMM"
+python3 main.py GRASP_FREQUENCY -b GEMM -o GRASP_FREQUENCY_end_GEMM8h_preTrained -t 28800 -model ./models/GEMM_MODEL -args end
+mv ./GRASP_FREQUENCY_end_GEMM8h_preTrained ./dse/
+if [ ! -d "./saves/GRASP_FREQUENCY_end_GEMM_8h" ]; then 
+  mkdir ./saves/GRASP_FREQUENCY_end_GEMM_8h
+fi
+mv ./time_stamps/* ./saves/GRASP_FREQUENCY_end_GEMM_8h/
+
+echo "GRASP_FREQUENCY KNN"
+python3 main.py GRASP_FREQUENCY -b KNN -o GRASP_FREQUENCY_end_KNN4h_preTrained -t 14400 -model ./models/KNN_MODEL -args end
+mv ./GRASP_FREQUENCY_end_KNN4h_preTrained ./dse/
+if [ ! -d "./saves/GRASP_FREQUENCY_end_KNN_4h" ]; then 
+  mkdir ./saves/GRASP_FREQUENCY_end_KNN_4h
+fi
+mv ./time_stamps/* ./saves/GRASP_FREQUENCY_end_KNN_4h/
+
+echo "GRASP_FREQUENCY TRANS_FFT"
+python3 main.py GRASP_FREQUENCY -b TRANS_FFT -o GRASP_FREQUENCY_end_TRANS_FFT8h_preTrained -t 28800 -model ./models/TRANS_FFT_MODEL -args end
+mv ./GRASP_FREQUENCY_end_TRANS_FFT8h_preTrained ./dse/
+if [ ! -d "./saves/GRASP_FREQUENCY_end_TRANS_FFT_8h" ]; then 
+  mkdir ./saves/GRASP_FREQUENCY_end_TRANS_FFT_8h
+fi
+mv ./time_stamps/* ./saves/GRASP_FREQUENCY_end_TRANS_FFT_8h/
+
+# echo "GRASP_FREQUENCY BACKPROP"
+# python3 main.py GRASP_FREQUENCY -b BACKPROP -o GRASP_FREQUENCY_end_BACKPROP4h_preTrained -t 14400 -model ./models/BACKPROP_MODEL -args end
+# mv ./GRASP_FREQUENCY_end_BACKPROP4h_preTrained ./dse/
+# if [ ! -d "./saves/GRASP_FREQUENCY_end_BACKPROP_4h" ]; then 
+#   mkdir ./saves/GRASP_FREQUENCY_end_BACKPROP_4h
+# fi
+# mv ./time_stamps/* ./saves/GRASP_FREQUENCY_end_BACKPROP_4h/
+# echo "GRASP_FREQUENCY STENCIL3D"
+# python3 main.py GRASP_FREQUENCY -b STENCIL3D -o GRASP_FREQUENCY_end_STENCIL3D4h_preTrained -t 14400 -model ./models/STENCIL3D_MODEL -args end
+# mv ./GRASP_FREQUENCY_end_STENCIL3D4h_preTrained ./dse/
+# if [ ! -d "./saves/GRASP_FREQUENCY_end_STENCIL3D_4h" ]; then 
+#   mkdir ./saves/GRASP_FREQUENCY_end_STENCIL3D_4h
+# fi
+# mv ./time_stamps/* ./saves/GRASP_FREQUENCY_end_STENCIL3D_4h/
 # -----------------------------------------------------------------------------------------------------------------------------------------------
 
 deactivate
