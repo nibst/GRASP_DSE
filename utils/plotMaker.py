@@ -20,7 +20,6 @@ class PlotMaker:
         plt.title(self.plotName)
         plt.xlabel(self.xAxis)
         plt.ylabel(self.yAxis)
-        plt.ylim(bottom=0)
 
 
         self.lns = []
@@ -36,7 +35,10 @@ class PlotMaker:
         - marker: Marker style (default is 'o')
         - size: Size of the points (default is 20)
         """
-        scatter = self.ax.scatter(x, y, label='aasd', color=color, marker=marker, s=size, alpha=opacity)
+        scatter = self.ax.scatter(x, y, label=label, color=color, marker=marker, s=size, alpha=opacity)
+        if label:
+            self.ax.legend()
+        
         self.lns.append(scatter)
     def plot(self,x,y,label=None,color=None,linewidth=None):
         ln = self.ax.plot(x,y,label=label,marker = 'o',color=color,linewidth=linewidth)

@@ -103,8 +103,10 @@ class Graphs:
         plot_maker.ylim(0, max(y))
         plot_maker.scatter_plot(x,y,label)
 
-    def plot_paretos(plot_maker:PlotMaker,solutions:List[Solution],label, main_color='blue',main_opacity=1):    
-        metrics = ['resources','latency']
+    def plot_paretos(plot_maker:PlotMaker,solutions:List[Solution], my_solutions = [], 
+                     only_default_freq=False, only_non_default_freq=False,
+                     label='', main_color='blue',secondary_color='red',main_opacity=1, secondary_opacity=1 ,marker='o', secondary_marker='^'):    
+        metrics = ['resources','time_latency']
         x = []
         y = []
         x_diff = []
@@ -118,9 +120,25 @@ class Graphs:
                 x.append(solution.results[metrics[0]])
                 y.append(solution.results[metrics[1]])
         combined_y = y + y_diff
-        plot_maker.ylim(0, max(combined_y) + max(combined_y)/10)
-        plot_maker.scatter_plot(x, y, color=main_color, marker='o', size=40, label="Paretos with period 8",opacity=main_opacity)
-        plot_maker.scatter_plot(x_diff, y_diff, color='red', marker='o', size=50,label="Paretos with period != 8")
+        if len(combined_y) == 0:
+            combined_y = [0]
+        if not only_non_default_freq:
+            plot_maker.scatter_plot(x, y, color=main_color, marker=marker, size=80, label=label,opacity=main_opacity)
+        if len(x_diff) > 0 and len(y_diff) > 0 and not only_default_freq:
+            plot_maker.scatter_plot(x_diff, y_diff, color=secondary_color, marker=secondary_marker, size=80,label=label, opacity=secondary_opacity)
+
+    
+    def plot_solutions_intersections(plot_maker:PlotMaker,solutions:List[Solution], my_solutions:List[Solution], metrics, color='blue', marker='o', label=''):
+        intersection = []
+        for solution1 in my_solutions:
+            for solution2 in solutions:
+                if solution1.results[metrics[0]] == solution2.results[metrics[0]] \
+                and solution1.results[metrics[1]] == solution2.results[metrics[1]]:
+                    intersection.append(solution1)
+        if len(intersection) > 0:
+            intersection_x = [sol.results[metrics[0]] for sol in intersection]
+            intersection_y = [sol.results[metrics[1]] for sol in intersection]
+            plot_maker.scatter_plot(intersection_x, intersection_y, color=color, marker=marker, size=80, opacity=1, label=label)
 
     def plotADRS(plotMaker:PlotMaker,comparer:HeuristicComparer,referenceSet:List[Solution], approximateSet:List[List[Solution]],label, saveInterval,linewidth=None):
         x = []
