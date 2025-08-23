@@ -30,13 +30,13 @@ class Graphs:
         orderedPaths = Graphs.__getOrderedSavesPaths(path)
         return Graphs.__saveFilesToSolutionsList(orderedPaths)
     @staticmethod
-    def plotParetoPercentage(plotMaker:PlotMaker,comparer:HeuristicComparer,solutions1:List[List[Solution]],reference_sey_by_timestamp:List[List[Solution]],label, saveInterval,linewidth=None):
+    def plotParetoPercentage(plotMaker:PlotMaker,comparer:HeuristicComparer,solutions:List[List[Solution]],reference_sey_by_timestamp:List[List[Solution]],label, saveInterval,linewidth=None):
         x = []
         y = []
         
         saveInterval = saveInterval/60 #convert seconds to minutes
-        for i in range(len(solutions1)):
-            y.append(comparer.compare(solutions1[i],reference_sey_by_timestamp[i]))
+        for i in range(len(solutions)):
+            y.append(comparer.compare(solutions[i],reference_sey_by_timestamp[i]))
             x.append(saveInterval*(i+1))
         plotMaker.plot(x,y,label,linewidth=linewidth)
     @staticmethod
@@ -53,7 +53,7 @@ class Graphs:
         
         x = []
         y = []
-        metrics = ['resources','latency']
+        metrics = ['resources','time_latency']
         saveInterval = saveInterval/60 #convert seconds to minutes
         for i in range(len(solutions)):
             paretos = Heuristic.paretoSolutions(metrics[0],metrics[1],solutions=solutions[i])
@@ -94,7 +94,7 @@ class Graphs:
             return None 
     @staticmethod
     def plot_solutions(plot_maker:PlotMaker,solutions:List[Solution], label):
-        metrics = ['resources','latency']
+        metrics = ['resources','time_latency']
         x = []
         y = []
         for solution in solutions:
@@ -123,7 +123,7 @@ class Graphs:
         if len(combined_y) == 0:
             combined_y = [0]
         if not only_non_default_freq:
-            plot_maker.scatter_plot(x, y, color=main_color, marker=marker, size=80, label=label,opacity=main_opacity)
+            plot_maker.scatter_plot(x, y, color=main_color, marker=marker, size=90, label=label,opacity=main_opacity)
         if len(x_diff) > 0 and len(y_diff) > 0 and not only_default_freq:
             plot_maker.scatter_plot(x_diff, y_diff, color=secondary_color, marker=secondary_marker, size=80,label=label, opacity=secondary_opacity)
 
@@ -138,7 +138,7 @@ class Graphs:
         if len(intersection) > 0:
             intersection_x = [sol.results[metrics[0]] for sol in intersection]
             intersection_y = [sol.results[metrics[1]] for sol in intersection]
-            plot_maker.scatter_plot(intersection_x, intersection_y, color=color, marker=marker, size=80, opacity=1, label=label)
+            plot_maker.scatter_plot(intersection_x, intersection_y, color=color, marker=marker, size=90, opacity=1, label=label)
 
     def plotADRS(plotMaker:PlotMaker,comparer:HeuristicComparer,referenceSet:List[Solution], approximateSet:List[List[Solution]],label, saveInterval,linewidth=None):
         x = []
@@ -150,6 +150,7 @@ class Graphs:
             x.append(saveInterval*(i+1))
         bot,top = plotMaker.get_ylim()
         max_y = max(filter(lambda val: val is not None, y))
+        print(y[-1])
         if top < max_y:
             plotMaker.ylim(bot, max_y + max_y/10)
         plotMaker.plot(x,y,label,linewidth=linewidth)

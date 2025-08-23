@@ -14,7 +14,7 @@ class MockDesignTool(DesignTool):
     def __init__(self, maxRAMUsage = 50, directivesFilename = './domain/directives.tcl'):
         pass
         
-    def runSynthesis(self, solution,cFiles,prjFile, timeLimit=None, solutionSaver=None, run_implementation=True):
+    def runSynthesis(self, solution,cFiles,topFunc, timeLimit=None, solutionSaver=None, run_implementation=True):
         if timeLimit is None:
             timeLimit = float('inf')
         if timeLimit<=0:

@@ -15,13 +15,12 @@ import numpy as np
 from heuristics.heuristic import Heuristic
 from utils.plot_manager import PlotManager
 
-benchmarks = ["SHA", "AES", "ADPCM","GSM","TRANS_FFT","GEMM","KNN"]
-
+benchmarks = ["SHA", "AES", "ADPCM","GSM","BACKPROP","STENCIL3D", "GEMM", "KNN"]
 
 def main():
 
 
-    base_path = "."
+    base_path = "../last_dse"
     output_dir = "./plots_png"
 
     # Initialize managers
@@ -30,7 +29,7 @@ def main():
 
     # Load heuristic solutions
     solutions_of_all_heuristics = []
-    for heuristic_name in ["GRASP_FREQUENCY_end", "GRASP_FREQUENCY_start","GRASP_FREQUENCY_mid"]:
+    for heuristic_name in ["GRASP","GRASP_FREQUENCY_start","GRASP_FREQUENCY_mid", "GRASP_FREQUENCY_end"]:
         timestamps_per_benchmark = {
             benchmark: benchmark_manager.load_solutions_timestamps(heuristic_name, benchmark)
             for benchmark in benchmarks
@@ -38,6 +37,9 @@ def main():
         solutions_of_all_heuristics.append(HeuristicSolutions(heuristic_name, timestamps_per_benchmark))
 
     for heuristic_solutions in solutions_of_all_heuristics:
+        # Clear the output file before writing new data
+        with open(f"{heuristic_solutions.heuristic_name}_data.txt", "w") as output_file:
+            pass
         for benchmark in heuristic_solutions.solutions_timestamps_per_benchmark:
             # save the solutions of each heuristic to a file
             heuristic_name = heuristic_solutions.heuristic_name
@@ -46,17 +48,21 @@ def main():
             with open(f"{heuristic_name}_data.txt", "a") as output_file:
                 all_solutions_per_timestamp = plot_manager.get_all_solutions_from_benchmark(solutions_of_all_heuristics, benchmark,include_model=False)
                 percentage = len(filtered_solutions)/len(benchmark_timestamps[-1]) * 100
-                pareto_comparer = ParetoComparer("resources", "latency")
+                pareto_comparer = ParetoComparer("resources", "time_latency")
                 pareto_comparsion = pareto_comparer.compare(filtered_solutions, all_solutions_per_timestamp[-1])
                 paretos = f"Percentage of paretos that have period != 8: {pareto_comparsion*100}%"
                 proportion = f"{benchmark} {len(filtered_solutions)}/{len(benchmark_timestamps[-1])} {percentage}%\n{paretos}\n"
 
+
                 output_file.write(proportion)
+                output_file.write(f"Proportion of all solutions with period != 8 for {(len(filtered_solutions)/len(benchmark_timestamps[-1]))*100}:\n")
+
     # Generate plots
-    # plot_manager.all_heuristics_in_one_bar("ADRS", solutions_of_all_heuristics, benchmarks,10)
-    # plot_manager.all_heuristics_in_one_bar("PERCENTAGE", solutions_of_all_heuristics, benchmarks,10)
-    # plot_manager.plot_heuristics_comparison("PERCENTAGE", solutions_of_all_heuristics, benchmarks, 24 * 60, 10)
-    # plot_manager.plot_heuristics_comparison("ADRS", solutions_of_all_heuristics, benchmarks, 24 * 60, 10)
+    metrics = ['resources', 'time_latency']
+    plot_manager.all_heuristics_in_one_bar("ADRS", solutions_of_all_heuristics, benchmarks,10, metrics=metrics)
+    plot_manager.all_heuristics_in_one_bar("PERCENTAGE", solutions_of_all_heuristics, benchmarks,10,metrics=metrics)
+    plot_manager.plot_heuristics_comparison("PERCENTAGE", solutions_of_all_heuristics, benchmarks, 24 * 60, metrics=metrics)
+    plot_manager.plot_heuristics_comparison("ADRS", solutions_of_all_heuristics, benchmarks, 24 * 60, metrics=metrics)
 
 
 
@@ -122,7 +128,7 @@ def geometric_mean(iterable: list):
     return filtered_array.prod() ** (1.0 / len(filtered_array))
 
 def arithmetic_mean_adrs(reference_set, timestamps):
-    comparer = ADRS('resources', 'latency')
+    comparer = ADRS('resources', 'time_latency')
     all_best_adrs = []
     for i in range(len(timestamps)):
         all_best_adrs.append(comparer.compare(reference_set, timestamps[i]))
@@ -133,7 +139,7 @@ def arithmetic_mean_adrs(reference_set, timestamps):
     return np.mean(new_lst)
 
 def arithmetic_mean_percentage(solutions1, solutions2):
-    comparer = ParetoComparer('resources', 'latency')
+    comparer = ParetoComparer('resources', 'time_latency')
     all_best_percentage = []
     for i in range(len(solutions1)):
         all_best_percentage.append(comparer.compare(solutions1[i], solutions2[i]))

@@ -15,7 +15,7 @@ class GreedyApprox(Heuristic):
         self.inputByteCode = files_dict["exactDesignUpdatedBytecodeFile"]
         self.trainingDataProfile = files_dict["dataStatsTraining"]
         llvmOpt = Path("/home/nikolas/Documents/llvm-project-7/llvm-7.0.0.src/mybuilddir/bin/opt")
-        generateScriptWithInputIR(files_dict["cFile"],files_dict["prjFile"], self.inputByteCode, llvmOpt.as_posix())
+        generateScriptWithInputIR(files_dict["cFile"],files_dict["topFunc"], self.inputByteCode, llvmOpt.as_posix())
         self.run()
 
     def run(self):

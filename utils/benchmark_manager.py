@@ -32,6 +32,9 @@ class BenchmarkManager:
             path = file_path
         else:
             path = os.path.join(self.base_path, f"saves/{heuristic_name}_{benchmark}_4h/")
+            if not os.path.exists(path):
+                # if 4h path does not exist, try 8h path
+                path = os.path.join(self.base_path, f"saves/{heuristic_name}_{benchmark}_8h/")
         timestamps = self.path_to_lists_of_solutions_timestamps(path)
         # the number of timestamps often is one less than the number desired for some reason, 
         # than we just assume the last timestamp as the solutions from the completed heuristic which is saved in dse/
@@ -44,7 +47,11 @@ class BenchmarkManager:
         return timestamps
 
     def complete_time_stamps(self, heuristic_name: str, benchmark: str) -> List[Solution]:
-        with open(f"{self.base_path}/dse/{heuristic_name}_{benchmark}4h_preTrained", "rb") as f:
-            heuristic = pickle.load(f)
+        try:
+            with open(f"{self.base_path}/dse/{heuristic_name}_{benchmark}4h_preTrained", "rb") as f:
+                heuristic = pickle.load(f)
+        except FileNotFoundError:
+            with open(f"{self.base_path}/dse/{heuristic_name}_{benchmark}8h_preTrained", "rb") as f:
+                heuristic = pickle.load(f)
         return heuristic.solutions
 

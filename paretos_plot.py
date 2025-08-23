@@ -1,3 +1,4 @@
+import pickle
 import matplotlib.pyplot as plt
 from heuristics.heuristic import Heuristic
 from utils.benchmark_manager import BenchmarkManager
@@ -17,12 +18,14 @@ def plot_pareto_frontiers_with_highlight(plot_manager, solutions_of_all_heuristi
     2. One for GRASP_FREQUENCY_mid (different frequencies).
     Combine the two and highlight Pareto solutions with different frequencies.
     """
+    plt.rcParams["figure.figsize"] = (10, 6)  
+
     metrics = ['resources', 'time_latency']
     colors = ['blue', 'seagreen']
     # Initialize PlotMaker
-    plot_maker = PlotMaker(benchmark, metrics[0], metrics[1])
+    plot_maker = PlotMaker(benchmark, "SNRU", 'Latency (ns)')
 
-    # Load solutions for GRASP and GRASP_FREQUENCY_mid
+    # Load solutions for all GRASP heuristics
     all_solutions = plot_manager.get_all_solutions_from_benchmark(solutions_of_all_heuristics, benchmark, include_model=False)
 
     # Extract solutions from the last timestamp
@@ -35,9 +38,10 @@ def plot_pareto_frontiers_with_highlight(plot_manager, solutions_of_all_heuristi
     Transparents solutions are the solutions that were pareto optimal in one of the groups but not in the pareto frontier of the whole set.
     """
     paretos_of_solutions_without_frequency = Heuristic.paretoSolutions(metrics[0], metrics[1], solutions=all_solutions_without_frequency)
-    top_ylim = max([solution.results[metrics[1]] for solution in paretos_of_solutions_without_frequency])
+    y = [solution.results[metrics[1]] for solution in paretos_of_solutions_without_frequency]
+    y.append(0)  # Ensure y has at least one point for plotting
+    top_ylim = max(y)
 
-    top_ylim = 0
     for heuristic in solutions_of_all_heuristics:
         marker = 'o'  # Default marker
         if heuristic.get_name() == "GRASP_FREQUENCY_start":
@@ -58,15 +62,42 @@ def plot_pareto_frontiers_with_highlight(plot_manager, solutions_of_all_heuristi
     # Create custom legend handles
     non_default_freq_patch = mpatches.Patch(color=colors[1], label='Non-default frequency')
     default_freq_patch = mpatches.Patch(color=colors[0], label='Default frequency')     
-    Graphs.plot_paretos(plot_maker, solutions=all_solutions_from_last_timestamp,main_opacity=1,secondary_opacity=0.0, only_default_freq=True)
-    Graphs.plot_paretos(plot_maker, solutions=all_solutions_without_frequency,main_opacity=0.3,secondary_opacity=0.0)
-    plt.savefig(f"{output_dir}/frequency/pareto_with_frequency{benchmark}.png")
+    Graphs.plot_paretos(plot_maker, solutions=all_solutions_from_last_timestamp,main_opacity=1,secondary_opacity=0.0, only_default_freq=True) #plot default pareto sol
+    Graphs.plot_paretos(plot_maker, solutions=all_solutions_without_frequency,main_opacity=0.3,secondary_opacity=0.0) # plot default freq solutions that were dominated 
 
-    marker_triangle = mlines.Line2D([], [], color=colors[1], marker='^', markersize=10, linestyle='None', label='Frequency explored at start of GRC')
-    marker_star     = mlines.Line2D([], [], color=colors[1], marker='*', markersize=10, linestyle='None', label='Frequency explored at middle of GRC')
-    marker_plus     = mlines.Line2D([], [], color=colors[1], marker='+', markersize=10, linestyle='None', label='Frequency explored at end of GRC')
+    marker_triangle = mlines.Line2D([], [], color=colors[1], marker='^', markersize=25, linestyle='None', label='Frequency explored at start of GRC')
+    marker_star     = mlines.Line2D([], [], color=colors[1], marker='*', markersize=25, linestyle='None', label='Frequency explored at middle of GRC')
+    marker_plus     = mlines.Line2D([], [], color=colors[1], marker='+', markersize=25, linestyle='None', label='Frequency explored at end of GRC')
     # Generate smooth curve
     paretos = Heuristic.paretoSolutions(metrics[0],metrics[1],solutions=all_solutions_from_last_timestamp)
+    frequency_solution_map_for_paretos = {}
+    for solution in paretos:
+        if not frequency_solution_map_for_paretos.get(solution.period,None):
+            frequency_solution_map_for_paretos[solution.period] = [solution]
+        else:
+            frequency_solution_map_for_paretos[solution.period].append(solution)
+
+    frequency_solution_map_for_all_solutions = {}       
+    for solution in all_solutions_from_last_timestamp:
+        if not frequency_solution_map_for_all_solutions.get(solution.period,None):
+            frequency_solution_map_for_all_solutions[solution.period] = [solution]
+        else:
+            frequency_solution_map_for_all_solutions[solution.period].append(solution)
+    
+    # Write counts to a file
+    output_file = "data.txt"
+    with open(output_file, "a") as f:
+        f.write(f"Benchmark: {benchmark}\n")
+        f.write(f"Total solutions: {len(all_solutions_from_last_timestamp)}\n")
+        for period in frequency_solution_map_for_all_solutions:
+            percentage = (len(frequency_solution_map_for_all_solutions[period]) / len(all_solutions_from_last_timestamp)) * 100
+            f.write(f"Period: {period}, solutions: {len(frequency_solution_map_for_all_solutions[period])}, percentage: {percentage:.2f}%\n")
+        f.write(f"Total Pareto solutions: {len(paretos)}\n")
+        for period in frequency_solution_map_for_paretos:
+            percentage = (len(frequency_solution_map_for_paretos[period]) / len(paretos)) * 100
+            f.write(f"Period: {period}, paretos: {len(frequency_solution_map_for_paretos[period])}, percentage: {percentage:.2f}%\n")
+        f.write("\n")
+
     x = np.array([solution.results[metrics[0]] for solution in paretos])
     y = np.array([solution.results[metrics[1]] for solution in paretos])
     x_sorted, y_sorted = zip(*sorted(zip(x, y)))
@@ -74,7 +105,8 @@ def plot_pareto_frontiers_with_highlight(plot_manager, solutions_of_all_heuristi
     # Plot pareto frontier line
     plt.plot(x_sorted, y_sorted, color='darkred', alpha=0.5)
     # Add combined legend
-    plt.legend(handles=[non_default_freq_patch, default_freq_patch, marker_triangle, marker_star, marker_plus], loc='best',prop={'size': 10})
+    #plt.legend(handles=[non_default_freq_patch, default_freq_patch, marker_triangle, marker_star, marker_plus], loc='best',prop={'size': 30})
+    plt.savefig(f"{output_dir}/without_model/paretos{benchmark}.png")
 
     plot_maker.showPlot()
 
@@ -82,12 +114,18 @@ def plot_pareto_frontiers_with_highlight(plot_manager, solutions_of_all_heuristi
 def main():
     base_path = "."
     output_dir = "./plots_png"
-    benchmarks = ["SHA", "AES", "ADPCM","GSM","TRANS_FFT","GEMM","KNN","BACKPROP","STENCIL3D"]
-
+    benchmarks = ["SHA", "AES", "ADPCM","GSM","GEMM","BACKPROP","STENCIL3D", "KNN"]
     # Initialize PlotManager
     benchmark_manager = BenchmarkManager(base_path)
     plot_manager = PlotManager(output_dir)
-    
+    # for benchmark in benchmarks:
+    #     with open(f"./models/{benchmark}_MODEL", "rb") as f:
+    #         model = pickle.load(f)
+    #     solutions = model.processor.dataset
+    #     solutions_without_frequency = [sol for sol in solutions if sol.period == 8]
+    #     solutions_with_frequency = [sol for sol in solutions if sol.period != 8]
+
+    #     print(f"Model loaded for {benchmark}\n -total solutions: {len(solutions)}\n -solutions with period 8: {len(solutions_without_frequency)}\n -solutions with different period: {len(solutions_with_frequency)}")
     # Load heuristic solutions
     solutions_of_all_heuristics = []
     for heuristic_name in ["GRASP","GRASP_FREQUENCY_start","GRASP_FREQUENCY_mid","GRASP_FREQUENCY_end"]:
@@ -97,7 +135,8 @@ def main():
         }
         solutions_of_all_heuristics.append(HeuristicSolutions(heuristic_name, timestamps_per_benchmark))
 
-
+    with open("data.txt", "w") as f:
+        f.write("Benchmark, Total Solutions, Period 8 Solutions, Non-Period 8 Solutions, Pareto Solutions\n")
     # Generate the plots
     for benchmark in benchmarks:
         plot_pareto_frontiers_with_highlight(plot_manager, solutions_of_all_heuristics, benchmark, output_dir)

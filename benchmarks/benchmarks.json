@@ -1,18 +1,18 @@
 {
-    "SHA": {"cFiles": ["./benchmarks/sha/sha.c"], "dFile": "./dse_configurations/sha.json", "prjFile":"sha_stream"},
-    "GSM": {"cFiles":["./benchmarks/gsm/gsm_add.c", "./benchmarks/gsm/gsm_lpc.c", "./benchmarks/gsm/gsm.c"] ,"dFile": "./dse_configurations/gsm.json" ,"prjFile": "Gsm_LPC_Analysis"},
-    "AES": {"cFiles":["./benchmarks/aes/aes_dec.c","./benchmarks/aes/aes_enc.c", "./benchmarks/aes/aes_key.c", "./benchmarks/aes/aes.c"] ,"dFile": "./dse_configurations/aes.json" ,"prjFile": "aes_main"},
-    "ADPCM": {"cFiles":["./benchmarks/adpcm/adpcm.c"] ,"dFile": "./dse_configurations/adpcm.json" ,"prjFile": "adpcm_main"},
-    "GEMM": {"cFiles":["./benchmarks/gemm/gemm.c"], "dFile":"./dse_configurations/gemm.json", "prjFile":"bbgemm"},
-    "KNN": {"cFiles":["./benchmarks/knn/md.c"], "dFile":"./dse_configurations/knn.json", "prjFile":"md_kernel"},
-    "MOTION": {"cFiles":["./benchmarks/motion/getvlc.c","./benchmarks/motion/getbits.c","./benchmarks/motion/motion.c","./benchmarks/motion/mpeg2.c"],"dFile":"./dse_configurations/motion.json","prjFile":"main"},
-    "TRANS_FFT": {"cFiles":["./benchmarks/transposed_fft/transposed_fft.c"], "dFile":"./dse_configurations/transposed_fft.json", "prjFile":"fft1D_512"},
-    "SPAM":{"cFiles":["./benchmarks/spam-filter/src/sw/sgd_sw.cpp"],"dFile": "./dse_configurations/spam_filter_reduced.json", "prjFile": "SgdLR_sw"},
-    "DIGIT": {"cFiles":["./benchmarks/digit-recognition/src/sw/digitrec_sw.cpp"] ,"dFile": "./dse_configurations/digit_recognition.json" ,"prjFile": "DigitRec_sw"},
-    "OPTICAL": {"cFiles":["./benchmarks/optical-flow/src/sw/optical_flow_sw.cpp"] ,"dFile": "./dse_configurations/optical_flow.json" ,"prjFile": "optical_flow_sw"},
-    "STENCIL3D": {"cFiles":["./benchmarks/stencil3d/stencil.c"], "dFile":"./dse_configurations/stencil3d.json", "prjFile":"stencil3d"},
-    "VITERBI": {"cFiles":["./benchmarks/viterbi/viterbi.c"], "dFile":"./dse_configurations/viterbi.json", "prjFile":"viterbi"},
-    "GRAMSCHMIDT": {"cFiles":["./benchmarks/gramschmidt/gramschmidt.c"], "dFile":"./dse_configurations/gramschmidt.json", "prjFile":"kernel_gramschmidt"},
-    "BACKPROP": {"cFiles":["./benchmarks/backprop/backprop.c"], "dFile":"./dse_configurations/backprop.json", "prjFile":"backprop"}
+    "SHA": {"cFiles": ["./benchmarks/sha/sha.c"], "dFile": "./dse_configurations/sha.json", "topFunc":"sha_stream"},
+    "GSM": {"cFiles":["./benchmarks/gsm/gsm_add.c", "./benchmarks/gsm/gsm_lpc.c", "./benchmarks/gsm/gsm.c"] ,"dFile": "./dse_configurations/gsm.json" ,"topFunc": "Gsm_LPC_Analysis"},
+    "AES": {"cFiles":["./benchmarks/aes/aes_dec.c","./benchmarks/aes/aes_enc.c", "./benchmarks/aes/aes_key.c", "./benchmarks/aes/aes.c"] ,"dFile": "./dse_configurations/aes.json" ,"topFunc": "aes_main"},
+    "ADPCM": {"cFiles":["./benchmarks/adpcm/adpcm.c"] ,"dFile": "./dse_configurations/adpcm.json" ,"topFunc": "adpcm_main"},
+    "GEMM": {"cFiles":["./benchmarks/gemm/gemm.c"], "dFile":"./dse_configurations/gemm.json", "topFunc":"bbgemm"},
+    "KNN": {"cFiles":["./benchmarks/knn/md.c"], "dFile":"./dse_configurations/knn.json", "topFunc":"md_kernel"},
+    "MOTION": {"cFiles":["./benchmarks/motion/getvlc.c","./benchmarks/motion/getbits.c","./benchmarks/motion/motion.c","./benchmarks/motion/mpeg2.c"],"dFile":"./dse_configurations/motion.json","topFunc":"main"},
+    "TRANS_FFT": {"cFiles":["./benchmarks/transposed_fft/transposed_fft.c"], "dFile":"./dse_configurations/transposed_fft.json", "topFunc":"fft1D_512"},
+    "SPAM":{"cFiles":["./benchmarks/spam-filter/src/sw/sgd_sw.cpp"],"dFile": "./dse_configurations/spam_filter_reduced.json", "topFunc": "SgdLR_sw"},
+    "DIGIT": {"cFiles":["./benchmarks/digit-recognition/src/sw/digitrec_sw.cpp"] ,"dFile": "./dse_configurations/digit_recognition.json" ,"topFunc": "DigitRec_sw"},
+    "OPTICAL": {"cFiles":["./benchmarks/optical-flow/src/sw/optical_flow_sw.cpp"] ,"dFile": "./dse_configurations/optical_flow.json" ,"topFunc": "optical_flow_sw"},
+    "STENCIL3D": {"cFiles":["./benchmarks/stencil3d/stencil.c"], "dFile":"./dse_configurations/stencil3d.json", "topFunc":"stencil3d"},
+    "VITERBI": {"cFiles":["./benchmarks/viterbi/viterbi.c"], "dFile":"./dse_configurations/viterbi.json", "topFunc":"viterbi"},
+    "GRAMSCHMIDT": {"cFiles":["./benchmarks/gramschmidt/gramschmidt.c"], "dFile":"./dse_configurations/gramschmidt.json", "topFunc":"kernel_gramschmidt"},
+    "BACKPROP": {"cFiles":["./benchmarks/backprop/backprop.c"], "dFile":"./dse_configurations/backprop.json", "topFunc":"backprop"}
 }
 

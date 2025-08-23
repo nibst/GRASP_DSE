@@ -1,11 +1,11 @@
 from string import Template
 
-def generateScript(cFile, prjFile, period = 8):
+def generateScript(cFile, topFunc, period = 8):
      filesSeparatedBySpace = ""
      for file in cFile:
           filesSeparatedBySpace = (filesSeparatedBySpace+ file + " ")
      substitutions = {
-     'fun_top': prjFile,
+     'fun_top': topFunc,
      'arq_cpp': filesSeparatedBySpace,
      'period' :  period
      }
@@ -23,12 +23,12 @@ def generateScript(cFile, prjFile, period = 8):
 
      # close file
      text_file.close()
-def generateScriptWithInputIR(cFile, prjFile, inputIR, llvmOpt):
+def generateScriptWithInputIR(cFile, topFunc, inputIR, llvmOpt):
      filesSeparatedBySpace = ""
      for file in cFile:
           filesSeparatedBySpace = (filesSeparatedBySpace+ file + " ")
      substitutions = {
-     'fun_top': prjFile,
+     'fun_top': topFunc,
      'arq_cpp': filesSeparatedBySpace, 
      'input'  : inputIR,
      'opt_path'   : llvmOpt,

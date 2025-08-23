@@ -171,7 +171,7 @@ def compileBytecode(bytecodeFile: Path, outputsDir: Path, files_dict = None) -> 
     except subprocess.CalledProcessError as error:
         raise CompilationError(bytecodeFile.as_posix(), error.returncode, error.output) 
     if(files_dict):
-        generateScriptWithInputIR(files_dict["cFiles"],files_dict["prjFile"],IOFunctionCallRemovedBytecodeFile.as_posix(),LLVM_OPT)
+        generateScriptWithInputIR(files_dict["cFiles"],files_dict["topFunc"],IOFunctionCallRemovedBytecodeFile.as_posix(),LLVM_OPT)
     designTool = DesignToolFactory().getDesignTool('vitis')
     solution = Solution({})
     try:

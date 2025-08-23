@@ -110,15 +110,15 @@ def passArgumentsToDictionary(args):
     files_dict = {}
     #choose between -b and -c,-d,-p as input for benchmark informations
     if args.cFiles is not None:
-        if (args.dFile is None or args.prjFile is None):
+        if (args.dFile is None or args.topFunc is None):
             raise argparse.ArgumentError(None,"error: lacking required arguments")
         files_dict['cFiles'] = args.cFiles
         files_dict['dFile'] = args.dFile
-        files_dict['prjFile'] = args.prjFile
+        files_dict['topFunc'] = args.topFunc
     else:
         files_dict['cFiles'] = benchmarks[args.benchmark]["cFiles"]
         files_dict['dFile'] = benchmarks[args.benchmark]["dFile"]
-        files_dict['prjFile'] = benchmarks[args.benchmark]["prjFile"]
+        files_dict['topFunc'] = benchmarks[args.benchmark]["topFunc"]
     files_dict['timeLimit'] = args.timeLimit
     files_dict['model'] = args.estimationModel
     files_dict['heuristic'] = args.heuristic    
@@ -149,12 +149,15 @@ def parseArguments():
 
     parser.add_argument('heuristic')
     parser.add_argument("-d", "--dFile", help = "Directives input file",required=False)
-    parser.add_argument("-p", "--prjFile", help = "Prj. top file",required=False)
+    parser.add_argument("-p", "--topFunc", help = "Prj. top func",required=False)
 
     parser.add_argument("-o", "--saveFile", help = "name of save file",required=True)
     parser.add_argument("-model", "--estimationModel", help = "model used in heuristics for estimation of synthesis",required=True)
-    parser.add_argument("-t", "--timeLimit", help = "time limit for heuristic in seconds",required=True)
+    parser.add_argument("-t", "--timeLimit", help = "time limit in seconds",required=True)
     parser.add_argument("-args", "--arguments", help = "arguments of heuristic",required=False, nargs='+')
+    parser.add_argument("--threshold", help="Error threshold to stop training", type=float, default=0.9)
+    parser.add_argument("--trainInterval", help="Training time per threshold check (in seconds)", type=int, default=7200)
+    parser.add_argument("--trainOnly", help="Only train estimator, don't run heuristic", action="store_true")
     return parser.parse_args()
 
 def main():
@@ -165,10 +168,10 @@ def main():
     files_dict = passArgumentsToDictionary(args)
     path = f"./dataset/{files_dict['benchmark']}/"
     estimator = RandomForestEstimator(files_dict['dFile'])
-    #train(path,estimator,files_dict)
+    train(path,estimator,files_dict)
     modelName = files_dict['model']
     model = getEstimationModel(modelName)
-    run_heuristic(files_dict,model)
+    #run_heuristic(files_dict,model)
     end = time.time()
     print(f"Total time taken for {files_dict['benchmark']}: {end - start} seconds")
 
@@ -189,7 +192,7 @@ def explore_different_periods(solution:Solution, arguments_dict):
         new_solution.set_period(period)
         # Assuming there is a method to run synthesis
         try:
-            new_solution = vitis.runSynthesis(new_solution,arguments_dict['cFiles'],arguments_dict['prjFile'],run_implementation=True)
+            new_solution = vitis.runSynthesis(new_solution,arguments_dict['cFiles'],arguments_dict['topFunc'],run_implementation=True)
             solutions.append(new_solution)
         except Exception as e:
             impl_error_solutions.append(new_solution)
@@ -209,18 +212,18 @@ def gather_dataset(path, arguments_dict):
                     error_file.write(f"Error creating solution from {solution_path}: {e}\n")
 
     
-
-    random_solutions = random.sample(solutions, min(15, len(solutions)))
-    solutions_with_error = []
-    for solution in random_solutions:
-        new_solutions,impl_error_solutions = explore_different_periods(solution, arguments_dict)
-        solutions.extend(new_solutions)
-        solutions_with_error.extend(impl_error_solutions)
-        error_solutions_file = f"{arguments_dict['benchmark']}-error-solutions"
-        if impl_error_solutions:
-            _extend_solutions_from_file(error_solutions_file,impl_error_solutions)
-        # Write the updated list back to the file
-        _extend_solutions_from_file(f"training-{arguments_dict['benchmark']}-solutions",new_solutions)
+    print(f"{arguments_dict["benchmark"]} : {len(solutions)}")
+    # random_solutions = random.sample(solutions, min(15, len(solutions)))
+    # solutions_with_error = []
+    # for solution in random_solutions:
+    #     new_solutions,impl_error_solutions = explore_different_periods(solution, arguments_dict)
+    #     solutions.extend(new_solutions)
+    #     solutions_with_error.extend(impl_error_solutions)
+    #     error_solutions_file = f"{arguments_dict['benchmark']}-error-solutions"
+    #     if impl_error_solutions:
+    #         _extend_solutions_from_file(error_solutions_file,impl_error_solutions)
+    #     # Write the updated list back to the file
+    #     _extend_solutions_from_file(f"training-{arguments_dict['benchmark']}-solutions",new_solutions)
     return solutions
 def _extend_solutions_from_file(file_name,new_solutions):
     try:
@@ -240,14 +243,28 @@ def train(path,estimator:Estimator, arguments_dict):
     x = gather_dataset(path,arguments_dict)
     estimator.trainModel(x)
     score = estimator.cross_val(x,5)
-    print(f"{arguments_dict['benchmark']}: {str(score)}")
-    with open(f"./models/{arguments_dict['benchmark']}_MODEL3", 'wb') as modelFile:
-       pickle.dump(estimator,modelFile)
+    #print(f"{arguments_dict['benchmark']}: {str(score)}")
+    #with open(f"./models/{arguments_dict['benchmark']}_MODEL3", 'wb') as modelFile:
+    #   pickle.dump(estimator,modelFile)
 
 if __name__ == "__main__": 
     with open('./benchmarks/benchmarks.json') as jsonFile:
         benchmarks:dict =  json.load(jsonFile)
-    #with open('./models/BACKPROP_MODEL3','rb') as file:
-    #    a = pickle.load(file)
+    all_benchmarks = ["SHA", "AES", "ADPCM","GSM","GEMM","BACKPROP", "STENCIL3D", "KNN"]
+    for benchmark in all_benchmarks:
+        with open(f'../last_dse/models/{benchmark}_MODEL','rb') as file:
+            a = pickle.load(file)
+        x = a.processor.dataset
+
+        print(len(x))
+        estimator = RandomForestEstimator(benchmarks[benchmark]["dFile"])
+        # args_dict ={}
+        # args_dict["dFile"] = benchmarks[benchmark]["dFile"]
+        # args_dict["benchmark"] = benchmark
+        # train(f"./dataset/{benchmark}/",estimator,args_dict)
+
+        estimator.trainModel(x)
+        score = estimator.cross_val(x,5,scorer="cosine_sim").mean()
+        print(f"{benchmark} {str(score)}")
     #print(len([solution for solution in a.processor.dataset if solution.period != 8]))
-    main()
+    #main()

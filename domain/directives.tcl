@@ -1,21 +1,10 @@
-set_directive_unroll -factor 2 "fft1D_512/loop1"
-set_directive_unroll -factor 16 "fft1D_512/loop3"
-set_directive_unroll "fft1D_512/loop4"
-set_directive_unroll -factor 2 "fft1D_512/loop5"
-set_directive_unroll -factor 2 "fft1D_512/loop6"
-set_directive_unroll -factor 2 "fft1D_512/loop7"
-set_directive_unroll "fft1D_512/loop8"
-set_directive_unroll -factor 32 "fft1D_512/loop9"
-set_directive_unroll -factor 32 "fft1D_512/loop10"
-set_directive_unroll -factor 2 "fft1D_512/loop11"
-set_directive_pipeline "fft1D_512/loop2"
-set_directive_pipeline "fft1D_512/loop7"
-set_directive_pipeline "fft1D_512/loop9"
-set_directive_pipeline "fft1D_512/loop10"
-set_directive_pipeline "fft1D_512/loop11"
-set_directive_array_partition -type cyclic -factor 2 -dim 0 "fft1D_512" reversed
-set_directive_array_partition -type block -factor 64 -dim 0 "fft1D_512" DATA_y
-set_directive_array_partition -type block -factor 4 -dim 0 "fft1D_512" smem
-set_directive_array_partition -type block -factor 4 -dim 0 "fft1D_512" data_x
-set_directive_array_partition -type complete -dim 0 "fft1D_512" data_y
-10
+set_directive_unroll md_kernel/loop_i -factor 8
+set_directive_unroll md_kernel/loop_j -factor 8
+set_directive_pipeline md_kernel/loop_j
+set_directive_array_partition md_kernel -type cyclic -dim 0 -factor 4 force_x
+set_directive_array_partition md_kernel -type block -dim 0 -factor 16 force_y
+set_directive_array_partition md_kernel -type cyclic -dim 0 -factor 2 position_x
+set_directive_array_partition md_kernel -type block -dim 0 -factor 8 position_y
+set_directive_array_partition md_kernel -type cyclic -dim 0 -factor 16 position_z
+set_directive_array_partition md_kernel -type cyclic -dim 0 -factor 2 NL
+set_directive_loop_merge md_kernel/loop_i

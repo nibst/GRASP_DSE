@@ -14,7 +14,7 @@ class Heuristic(ABC):
     def __init__(self,files_dict):
         self.files_dict = files_dict
         self.cFiles = files_dict['cFiles']
-        self.prjFile = files_dict['prjFile']
+        self.topFunc = files_dict['topFunc']
 
         with open(files_dict['dFile']) as jsonFile:
             self.DSEconfig:dict =  json.load(jsonFile)
@@ -37,7 +37,7 @@ class Heuristic(ABC):
 
     def dominateInBothMetrics(Solution1,Solution2,metric1,metric2):
         #testa se a Solution1  domina a Solution2
-        return ((Solution2.results[metric1]>=Solution1.results[metric1]) and (Solution2.results[metric2] >= Solution1.results[metric2]))
+        return ((Solution2.results[metric1]> Solution1.results[metric1]) and (Solution2.results[metric2] > Solution1.results[metric2]))
     @staticmethod
     def paretoSolutions(metric1,metric2,solutions):
 
@@ -255,7 +255,7 @@ class Heuristic(ABC):
         """
         designTool = DesignToolFactory.getDesignTool(designToolChoice)
         try:
-            solution = designTool.runSynthesis(solution,self.cFiles,self.prjFile, timeLimit, solutionSaver, run_implementation)
+            solution = designTool.runSynthesis(solution,self.cFiles,self.topFunc, timeLimit, solutionSaver, run_implementation)
         except Exception as e:
             raise
         else:

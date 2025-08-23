@@ -1,11 +1,13 @@
 import matplotlib.pyplot as plt
 from matplotlib.widgets import Cursor
+from matplotlib.ticker import ScalarFormatter
+
 class PlotMaker:
     _PLOT_PATH = './Plot/plot.jpg'
     def __init__(self,plotName,xAxis,yAxis):
         self.plotName = plotName
-        SIZE = 16
-        BIGGER_SIZE = 16
+        SIZE = 20
+        BIGGER_SIZE = 20
         plt.rc('font', size=SIZE)          # controls default text sizes
         plt.rc('axes', titlesize=BIGGER_SIZE)     # fontsize of the axes title
         plt.rc('axes', labelsize=BIGGER_SIZE)    # fontsize of the x and y labels
@@ -17,6 +19,11 @@ class PlotMaker:
         self.yAxis = yAxis
         #plt.rcParams["font.size"] =7
         self.fig, self.ax = plt.subplots()
+        plain_formatter = ScalarFormatter(useMathText=False)
+        plain_formatter.set_scientific(True)
+        plain_formatter.set_powerlimits((0, 0))
+        self.ax.xaxis.set_major_formatter(plain_formatter)
+        self.ax.yaxis.set_major_formatter(plain_formatter)
         plt.title(self.plotName)
         plt.xlabel(self.xAxis)
         plt.ylabel(self.yAxis)

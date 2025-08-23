@@ -89,7 +89,7 @@ class Grasp(Heuristic):
             solution = self.construct_greedy_randomized_solution()
             solution = self.local_search(solution)
             self._save_heuristic_snapshot()
-
+        return self.paretoSolutions("time_latency","resources",self.solutions)
     def construct_greedy_randomized_solution(self):
         time_limit = self.time_limit - (time.time() - self.start_time)
         constructor = GreedySolutionConstructor(
