@@ -23,33 +23,17 @@
 /* heavily modified from Peter C. Gutmann's implementation */
 
 /* Useful defines & typedefs */
-
-typedef unsigned char BYTE;
-typedef unsigned int INT32;
-
-#define SHA_BLOCKSIZE		64
-
-INT32 sha_info_digest[5];	/* message digest */
-INT32 sha_info_count_lo, sha_info_count_hi;	/* 64-bit bit count */
-INT32 sha_info_data[16];
-
-void sha_init ();
-void sha_update (const BYTE *, int);
-void sha_final ();
-
-void sha_stream ();
-void sha_print ();
-
-
-
-/*
-+--------------------------------------------------------------------------+
-| * Test Vectors (added for CHStone)                                       |
-|     indata, in_i : input data                                            |
-+--------------------------------------------------------------------------+
-*/
+#define SHA_BUFFER_SIZE 64
+#define DIGEST_SIZE 5
 #define BLOCK_SIZE 8192
-#define VSIZE 2
-extern const BYTE indata[VSIZE][BLOCK_SIZE];
-extern const int in_i[VSIZE];
+#define NUM_BLOCKS 2
+
+/* top-level function */
+/* Compute SHA digest from input stream */
+void sha_stream (
+    const unsigned char indata[NUM_BLOCKS][BLOCK_SIZE], 
+    const int in_i[NUM_BLOCKS],
+    unsigned int outdata[DIGEST_SIZE]
+);
+
 #endif /* SHA_H */

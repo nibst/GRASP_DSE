@@ -3,9 +3,7 @@ from random import randint
 import re
 from domain.solution import Solution
 import copy
-from utils.Script_tcl import generateScript
 from domain.designToolFactory import DesignToolFactory
-import utils.readDirectivesFile as readDirectivesFile
 from pathlib import Path
 import json
 import pickle
@@ -13,25 +11,20 @@ import pickle
 
 class Heuristic(ABC):
 
-    def __init__(self,filesDict):
-        self.filesDict = filesDict
-        self.directivesTxt = Path(filesDict['dFile']).read_text()
-        self.cFiles = filesDict['cFiles']
-        self.prjFile = filesDict['prjFile']
-        generateScript(self.cFiles, self.prjFile)
+    def __init__(self,files_dict):
+        self.files_dict = files_dict
+        self.cFiles = files_dict['cFiles']
+        self.topFunc = files_dict['topFunc']
 
-        with open(filesDict['dFile']) as jsonFile:
+        with open(files_dict['dFile']) as jsonFile:
             self.DSEconfig:dict =  json.load(jsonFile)
         directivesDict = copy.deepcopy(self.DSEconfig['directives'])
         self.dictDir = {}
         for key in directivesDict:
             self.dictDir[key] = directivesDict[key]['possible_directives']
+        #exploration knobs is all groups that we can explore, including period and directives
+        self.exploration_knobs = {**self.dictDir, 'period': self.DSEconfig['possible_periods']}
         self.solutions = []
-
-    def parsedTxt(self):
-        return readDirectivesFile.fileParser(self.directivesTxt)
-    #Passa para o arquivo readDirectivesFile.py o texto lido do arquivo
-
     
 
     @abstractmethod                         # Método abstrato a sere herdados e implementado
@@ -44,7 +37,7 @@ class Heuristic(ABC):
 
     def dominateInBothMetrics(Solution1,Solution2,metric1,metric2):
         #testa se a Solution1  domina a Solution2
-        return ((Solution2.results[metric1]>=Solution1.results[metric1]) and (Solution2.results[metric2] >= Solution1.results[metric2]))
+        return ((Solution2.results[metric1]> Solution1.results[metric1]) and (Solution2.results[metric2] > Solution1.results[metric2]))
     @staticmethod
     def paretoSolutions(metric1,metric2,solutions):
 
@@ -54,10 +47,18 @@ class Heuristic(ABC):
         paretoCandidates = [] #armazena indice das solucoes candidatas a pareto, é inicializada com todos indices
         solutionsIndex = []
         #inicializa
+        if not isinstance(solutions, list):
+            return [solutions]
+        if len(solutions) < 1:
+            return solutions
         for i in range(len(solutions)):
             paretoCandidates.append(i)
             solutionsIndex.append(i)
-            
+        
+        if metric1 == 'time_latency' or metric2 == 'time_latency':
+            for solution in solutions:
+                solution.results['time_latency'] = solution.results['latency'] * solution.period
+        
         for currentSolutionIndex in solutionsIndex:
             if currentSolutionIndex in paretoCandidates:
                 for paretoSolutionIndex in paretoCandidates:
@@ -118,6 +119,8 @@ class Heuristic(ABC):
         newDict:dict = {}
         directivesInformation = self.DSEconfig['directives']
         for directiveGroup in directives:
+            if directiveGroup == 'period':
+                break
             label = directivesInformation[directiveGroup]['label']
             function = directivesInformation[directiveGroup]['function']
             key = function + '/' + label
@@ -146,23 +149,23 @@ class Heuristic(ABC):
         #check if a pipeline is applied to a fully unrolled loop 
         factorRegex = '\s-factor\s'
         for item in directivesByLabel.values():
-            if 'pipeline' not in item or 'unroll' not in item:
+            if item.get('pipeline', '') == '' or item.get('unroll', '') == '':
                 pass
-            elif item['pipeline'] == '' or item['unroll'] == '':
+            # If there isn’t a factor argument on directive, then it’s fully unrolled
+            elif isinstance(item.get('unroll', ''), int):
                 pass
-            #if there isnt a factor argument on directive, then its fully unrolled    
-            elif re.search(factorRegex,item['unroll']) is None:
+            elif re.search(factorRegex, item.get('unroll', '')) is None:
                 return True
 
         for loop in loopsInformation:
             innerLoop = loop
             function = loop['function']
             pipelineLoop=None
-            #get the inner loop that has pipeline active, if any
+            #get the loop that has pipeline active, if any
             while innerLoop['nest']:
                 label = innerLoop['label']
                 key = function + '/' + label
-                item = directivesByLabel[key]
+                item = directivesByLabel.get(key,{})
                 #if loop has pipeline
                 if 'pipeline' in item and item['pipeline'] != '':
                     pipelineLoop = innerLoop
@@ -176,11 +179,10 @@ class Heuristic(ABC):
                     innerLoop = innerLoop['nest']
                     label = innerLoop['label']
                     key = function + '/' + label
-                    item = directivesByLabel[key]
+                    item = directivesByLabel.get(key,{})
                     #if inner loop has pipeline or unroll, return true
-                    if 'pipeline'in item or 'unroll' in item:
-                        if item['pipeline'] != '' or item['unroll'] != '':
-                            return True
+                    if item.get('pipeline','') != '' or item.get('unroll','') != '':
+                        return True
         return False 
     
 
@@ -234,7 +236,11 @@ class Heuristic(ABC):
         check tree of solution directives to know if solution exists already in self.solutions
         """
         pass
-
+    def get_results_latency_product(self, solution:Solution):
+        """
+        returns the product of resources and latency of a solution
+        """ 
+        return solution.results['resources'] * solution.results['latency'] * solution.period
     def appendSolution(self,solution):
         deep = copy.deepcopy(solution)   
         #if get cached solution
@@ -243,13 +249,13 @@ class Heuristic(ABC):
         self.solutions.append(deep)               
 
 
-    def synthesisWrapper(self,solution:Solution, timeLimit=None, solutionSaver= None, designToolChoice = "vitis"):
+    def synthesisWrapper(self,solution:Solution, timeLimit=None, solutionSaver= None, designToolChoice = "vitis", run_implementation = True):
         """
         Calls synthesis and, if its successful, it saves solution in self.solutions.
         """
         designTool = DesignToolFactory.getDesignTool(designToolChoice)
         try:
-            designTool.runSynthesis(solution,timeLimit,solutionSaver)
+            solution = designTool.runSynthesis(solution,self.cFiles,self.topFunc, timeLimit, solutionSaver, run_implementation)
         except Exception as e:
             raise
         else:

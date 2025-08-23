@@ -30,9 +30,13 @@ class ADRS(HeuristicComparer):
         return 1/(len(referenceParetoFrontSet)) * adrs
     
     def distance(self,referenceSetSolution:Solution, approximateSetSolution:Solution):
-        aw = approximateSetSolution.results['resources']
-        lw = approximateSetSolution.results['latency']
+        if self.metric1 == 'time_latency' or self.metric2 == 'time_latency':
+            referenceSetSolution.results['time_latency'] = referenceSetSolution.results['latency'] * referenceSetSolution.period
+            approximateSetSolution.results['time_latency'] = approximateSetSolution.results['latency'] * approximateSetSolution.period
 
-        ay = referenceSetSolution.results['resources']
-        ly = referenceSetSolution.results['latency']
+        aw = approximateSetSolution.results[self.metric1]
+        lw = approximateSetSolution.results[self.metric2]
+
+        ay = referenceSetSolution.results[self.metric1]
+        ly = referenceSetSolution.results[self.metric2]
         return max(abs((aw-ay)/ay) , abs((lw-ly)/ly))

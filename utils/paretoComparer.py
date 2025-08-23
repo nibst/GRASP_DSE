@@ -24,15 +24,16 @@ class ParetoComparer(HeuristicComparer):
         paretosJoint.extend(paretos2)
         #take paretos of the junction of paretos1 and paretos2
         paretosOfParetosJoint = Heuristic.paretoSolutions(self.metric1,self.metric2,paretosJoint)
+        paretosOfParetosJoint = self.__remove_duplicates(paretosOfParetosJoint)
         #return proportion between 0 and 1
         return self.__calculateProportionOfParetosOnParetosJoint(paretos1,paretosOfParetosJoint)
 
-    def __calculateProportionOfParetosOnParetosJoint(self,paretos,ParetosJoint):
-        intersection  = self.__intersect(paretos,ParetosJoint)
+    def __calculateProportionOfParetosOnParetosJoint(self,paretos,paretosJoint):
+        intersection  = self.__intersect(paretos,paretosJoint)
         intersectionLenght = len(intersection)
-        totalNumberOfParetos = len(ParetosJoint)
+        totalNumberOfParetos = len(paretosJoint)
         #if paretosJoint is empty, then there isnt any design space to begin with.
-        #so, paretos is empty too, then (paretos and ParetosJoint) have the same paretos, which is empty
+        #so, paretos is empty too, then (paretos and paretosJoint) have the same paretos, which is empty
         if totalNumberOfParetos == 0:
             return 1
         else:
@@ -41,17 +42,32 @@ class ParetoComparer(HeuristicComparer):
     def __intersect(self,solutions1:list,solutions2:list):
         """
         returns the solutions in solutions1 that intersect with solutions2
-        the intersection takes in account the results in self.metric1 and self.metric2
+        the intersection takes in account the directives and period of the solutions.
         """
-        intersection = []
-        for solution1 in solutions1:
-            for solution2 in solutions2:
-                try:
-                    if solution1.resultados[self.metric1] == solution2.resultados[self.metric1] \
-                    and solution1.resultados[self.metric2] == solution2.resultados[self.metric2]:
-                        intersection.append(solution1)
-                except:
-                    if solution1.results[self.metric1] == solution2.results[self.metric1] \
-                    and solution1.results[self.metric2] == solution2.results[self.metric2]:
-                        intersection.append(solution1)
+        # Build a set of (directives_tuple, period) for list1
+        set1 = set(
+            (tuple(sorted(sol.directives.items())), sol.period)
+            for sol in solutions1
+        )
+        # Now, for each solution in list2, check if its key is in set1
+        intersection = [
+            sol for sol in solutions2
+            if (tuple(sorted(sol.directives.items())), sol.period) in set1
+        ]
         return intersection
+    
+    def __remove_duplicates(self, solutions: List[Solution]) -> List[Solution]:
+        """
+        Removes duplicate solutions based on their directives and period.
+        """
+        seen = set()
+        unique_solutions = []
+        for sol in solutions:
+            # Convert directives dict to a tuple of sorted items for hashing
+            directives_tuple = tuple(sorted(sol.directives.items()))
+            period = sol.period
+            key = (directives_tuple, period)
+            if key not in seen:
+                seen.add(key)
+                unique_solutions.append(sol)
+        return unique_solutions

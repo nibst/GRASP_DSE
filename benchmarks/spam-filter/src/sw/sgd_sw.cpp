@@ -5,6 +5,7 @@
 /*              Software version for spam filtering.             */
 /*                                                               */
 /*===============================================================*/
+#define SW
 
 #include "sgd_sw.h"
 #include "math.h"

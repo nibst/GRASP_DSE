@@ -60,77 +60,62 @@
  *
  */
 
-/*  ******* encrypto ************ */
-#include "aes_enc.h"  //modificacao Heitor
-#include "aes.h"  //modificacao Heitor
-#include <stdio.h>  //modificacao Heitor
+#include <stdint.h>
+#include "aes.h"
 
-int
-encrypt (int statemt[32], int key[32], int type)
-{
-  int i;
-/*
-+--------------------------------------------------------------------------+
-| * Test Vector (added for CHStone)                                        |
-|     out_enc_statemt : expected output data for "encrypt"                 |
-+--------------------------------------------------------------------------+
-*/
-  const int out_enc_statemt[16] =
-    { 0x39, 0x25, 0x84, 0x1d, 0x2, 0xdc, 0x9, 0xfb, 0xdc, 0x11, 0x85, 0x97,
-    0x19, 0x6a, 0xb, 0x32
-  };
+int encrypt(int statemt[IN_SIZE], int key[IN_SIZE], int type) {
+    int i;
+    int nb;
+    int round_val;
 
-  KeySchedule (type, key);
-  switch (type)
-    {
-    case 128128:
-      round_val = 0;
-      nb = 4;
-      break;
-    case 192128:
-      round_val = 2;
-      nb = 4;
-      break;
-    case 256128:
-      round_val = 4;
-      nb = 4;
-      break;
-    case 128192:
-    case 192192:
-      round_val = 2;
-      nb = 6;
-      break;
-    case 256192:
-      round_val = 4;
-      nb = 6;
-      break;
-    case 128256:
-    case 192256:
-    case 256256:
-      round_val = 4;
-      nb = 8;
-      break;
-    }
-  AddRoundKey (statemt, type, 0);
-  encrypt_label1: for (i = 1; i <= round_val + 9; ++i)
-    {
-#pragma HLS LOOP_TRIPCOUNT min=9 max=13 avg=11
-      ByteSub_ShiftRow (statemt, nb);
-      MixColumn_AddRoundKey (statemt, nb, i);
-    }
-  ByteSub_ShiftRow (statemt, nb);
-  AddRoundKey (statemt, type, i);
+    // Perform key scheduling
+    KeySchedule(type, key);
 
-  printf ("encrypted message \t");
-  encrypt_label2: for (i = 0; i < nb * 4; ++i)
-    {
-      if (statemt[i] < 16)
-	printf ("0");
-      printf ("%x", statemt[i]);
+    // Determine round values and nb based on the encryption type
+    switch (type) {
+        case 128128:
+            round_val = 0;
+            nb = 4;
+            break;
+        case 192128:
+            round_val = 2;
+            nb = 4;
+            break;
+        case 256128:
+            round_val = 4;
+            nb = 4;
+            break;
+        case 128192:
+        case 192192:
+            round_val = 2;
+            nb = 6;
+            break;
+        case 256192:
+            round_val = 4;
+            nb = 6;
+            break;
+        case 128256:
+        case 192256:
+        case 256256:
+            round_val = 4;
+            nb = 8;
+            break;
     }
 
-  encrypt_label3: for (i = 0; i < 16; i++)
-    main_result += (statemt[i] != out_enc_statemt[i]);
+    // Initial round key addition
+    AddRoundKey(statemt, type, 0);
 
-  return 0;
+    // Main encryption loop
+    encrypt_label1:
+    for (i = 1; i <= round_val + 9; ++i) {
+        #pragma HLS LOOP_TRIPCOUNT min=9 max=13 avg=11
+        ByteSub_ShiftRow(statemt, nb);
+        MixColumn_AddRoundKey(statemt, nb, i);
+    }
+
+    // Final round
+    ByteSub_ShiftRow(statemt, nb);
+    AddRoundKey(statemt, type, i);
+
+    return 0;
 }

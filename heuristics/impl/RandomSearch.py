@@ -16,7 +16,6 @@ import time
 from heuristics.heuristic import Heuristic
 from pathlib import Path
 from domain.solution import Solution
-from utils.Script_tcl import generateScript
 import copy
 from random import seed
 from random import randint
@@ -25,9 +24,10 @@ from utils.abstractSolutionsSaver import SolutionsSaver
 
 class RandomSearch(Heuristic):
     
-    def __init__(self,filesDict,timeLimit=3600,solutionSaver:SolutionsSaver = None):
-        super().__init__(filesDict)
+    def __init__(self,files_dict,timeLimit=3600,solutionSaver:SolutionsSaver = None, no_mid_synthesis_interruption=False):
+        super().__init__(files_dict)
         self.solutionSaver = solutionSaver
+        self.no_mid_synthesis_interruption = no_mid_synthesis_interruption
         self._SECONDS = timeLimit
         seed()
         self.run()
@@ -44,8 +44,12 @@ class RandomSearch(Heuristic):
             if onePermutation:    #se tiver uma permutacao na variavel
                 solution = Solution(onePermutation)         #Solutions a partir deste
                 try:
-                    synthesisTimeLimit = self._SECONDS - (time.time() - start) 
-                    self.synthesisWrapper(solution,synthesisTimeLimit,self.solutionSaver)
+                    synthesisTimeLimit = self._SECONDS - (time.time() - start)
+                    if self.no_mid_synthesis_interruption: 
+                        self.synthesisWrapper(solution,self.solutionSaver)
+                    else:
+                        self.synthesisWrapper(solution,synthesisTimeLimit,self.solutionSaver)
+
                 except Exception as e:
                     print(e)
                 #executa else qnd try roda sem erros

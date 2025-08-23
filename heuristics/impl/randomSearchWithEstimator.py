@@ -17,7 +17,7 @@ class RandomSearchWithEstimator(Heuristic):
     Random search with estimator:
 
     Use an estimator to get the top "_NUM_OF_TOP" designs
-    out of the "_NUM_OF_ESTIMATED" random estimated designs. The top desings get synthesized 
+    out of the "_NUM_OF_ESTIMATED" random estimated designs. The top designs get synthesized 
     and are added to the dict that will be returned.
     The top designs are used to retrain the model (after them beign synthesized)
     
@@ -36,11 +36,11 @@ class RandomSearchWithEstimator(Heuristic):
     _SECONDS = 1
     _NUM_OF_TOP = 10
     _NUM_OF_ESTIMATED = 1000
-    def __init__(self,filesDict,model:Estimator):#TODO receber como parametro de modelo preditivo
+    def __init__(self,files_dict,model:Estimator):#TODO receber como parametro de modelo preditivo
         
-        super().__init__(filesDict)       
-        sample = RandomSearch(filesDict,timeLimit=1)
-        sample2 = Greedy(filesDict,'resources')
+        super().__init__(files_dict)       
+        sample = RandomSearch(files_dict,timeLimit=1)
+        sample2 = Greedy(files_dict,'resources')
 
         for solution in sample2.solutions:
             sample.solutions.append(solution)
@@ -103,7 +103,7 @@ class RandomSearchWithEstimator(Heuristic):
             if onePermutation:
                 estimatedSolution = Solution(onePermutation)         #Solutions a partir deste     
                 estimatedResults = self.estimator.estimateSynthesis(estimatedSolution)
-                estimatedSolution.setresults(estimatedResults)
+                estimatedSolution.set_results_with_results_list(estimatedResults)
                 estimatedSolutions.append(estimatedSolution)
                 #print(f'estimated solution: {estimatedSolution.results}')
                 topSolutions.append(estimatedSolution)

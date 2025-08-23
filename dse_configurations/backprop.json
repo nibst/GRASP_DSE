@@ -1,0 +1,957 @@
+{
+  "directives": {
+    "unroll matrix_vector_product_with_bias_input_layer_loop1": {
+      "possible_directives": [
+        "",
+        "set_directive_unroll \"matrix_vector_product_with_bias_input_layer/matrix_vector_product_with_bias_input_layer_loop1\"",
+        "set_directive_unroll -factor 2 \"matrix_vector_product_with_bias_input_layer/matrix_vector_product_with_bias_input_layer_loop1\"",
+        "set_directive_unroll -factor 4 \"matrix_vector_product_with_bias_input_layer/matrix_vector_product_with_bias_input_layer_loop1\"",
+        "set_directive_unroll -factor 8 \"matrix_vector_product_with_bias_input_layer/matrix_vector_product_with_bias_input_layer_loop1\"",
+        "set_directive_unroll -factor 16 \"matrix_vector_product_with_bias_input_layer/matrix_vector_product_with_bias_input_layer_loop1\"",
+        "set_directive_unroll -factor 32 \"matrix_vector_product_with_bias_input_layer/matrix_vector_product_with_bias_input_layer_loop1\""
+      ],
+      "function": "matrix_vector_product_with_bias_input_layer",
+      "label": "matrix_vector_product_with_bias_input_layer_loop1",
+      "directive_type": "unroll"
+    },
+    "pipeline matrix_vector_product_with_bias_input_layer_loop1": {
+      "possible_directives": [
+        "set_directive_pipeline -off \"matrix_vector_product_with_bias_input_layer/matrix_vector_product_with_bias_input_layer_loop1\"",
+        "set_directive_pipeline \"matrix_vector_product_with_bias_input_layer/matrix_vector_product_with_bias_input_layer_loop1\""
+      ],
+      "function": "matrix_vector_product_with_bias_input_layer",
+      "label": "matrix_vector_product_with_bias_input_layer_loop1",
+      "directive_type": "pipeline"
+    },
+    "unroll matrix_vector_product_with_bias_input_layer_loop1_1": {
+      "possible_directives": [
+        "",
+        "set_directive_unroll \"matrix_vector_product_with_bias_input_layer/matrix_vector_product_with_bias_input_layer_loop1_1\"",
+        "set_directive_unroll -factor 2 \"matrix_vector_product_with_bias_input_layer/matrix_vector_product_with_bias_input_layer_loop1_1\"",
+        "set_directive_unroll -factor 4 \"matrix_vector_product_with_bias_input_layer/matrix_vector_product_with_bias_input_layer_loop1_1\"",
+        "set_directive_unroll -factor 8 \"matrix_vector_product_with_bias_input_layer/matrix_vector_product_with_bias_input_layer_loop1_1\"",
+        "set_directive_unroll -factor 16 \"matrix_vector_product_with_bias_input_layer/matrix_vector_product_with_bias_input_layer_loop1_1\"",
+        "set_directive_unroll -factor 32 \"matrix_vector_product_with_bias_input_layer/matrix_vector_product_with_bias_input_layer_loop1_1\""
+      ],
+      "function": "matrix_vector_product_with_bias_input_layer",
+      "label": "matrix_vector_product_with_bias_input_layer_loop1_1",
+      "directive_type": "unroll"
+    },
+    "pipeline matrix_vector_product_with_bias_input_layer_loop1_1": {
+      "possible_directives": [
+        "set_directive_pipeline -off \"matrix_vector_product_with_bias_input_layer/matrix_vector_product_with_bias_input_layer_loop1_1\"",
+        "set_directive_pipeline \"matrix_vector_product_with_bias_input_layer/matrix_vector_product_with_bias_input_layer_loop1_1\""
+      ],
+      "function": "matrix_vector_product_with_bias_input_layer",
+      "label": "matrix_vector_product_with_bias_input_layer_loop1_1",
+      "directive_type": "pipeline"
+    },
+    "pipeline matrix_vector_product_with_bias_second_layer_loop1": {
+      "possible_directives": [
+        "set_directive_pipeline -off \"matrix_vector_product_with_bias_second_layer/matrix_vector_product_with_bias_second_layer_loop1\"",
+        "set_directive_pipeline \"matrix_vector_product_with_bias_second_layer/matrix_vector_product_with_bias_second_layer_loop1\""
+      ],
+      "function": "matrix_vector_product_with_bias_second_layer",
+      "label": "matrix_vector_product_with_bias_second_layer_loop1",
+      "directive_type": "pipeline"
+    },
+    "pipeline matrix_vector_product_with_bias_second_layer_loop1_1": {
+      "possible_directives": [
+        "set_directive_pipeline -off \"matrix_vector_product_with_bias_second_layer/matrix_vector_product_with_bias_second_layer_loop1_1\"",
+        "set_directive_pipeline \"matrix_vector_product_with_bias_second_layer/matrix_vector_product_with_bias_second_layer_loop1_1\""
+      ],
+      "function": "matrix_vector_product_with_bias_second_layer",
+      "label": "matrix_vector_product_with_bias_second_layer_loop1_1",
+      "directive_type": "pipeline"
+    },
+    "unroll matrix_vector_product_with_bias_second_layer_loop1_1": {
+      "possible_directives": [
+        "",
+        "set_directive_unroll \"matrix_vector_product_with_bias_second_layer/matrix_vector_product_with_bias_second_layer_loop1_1\"",
+        "set_directive_unroll -factor 2 \"matrix_vector_product_with_bias_second_layer/matrix_vector_product_with_bias_second_layer_loop1_1\"",
+        "set_directive_unroll -factor 4 \"matrix_vector_product_with_bias_second_layer/matrix_vector_product_with_bias_second_layer_loop1_1\"",
+        "set_directive_unroll -factor 8 \"matrix_vector_product_with_bias_second_layer/matrix_vector_product_with_bias_second_layer_loop1_1\"",
+        "set_directive_unroll -factor 16 \"matrix_vector_product_with_bias_second_layer/matrix_vector_product_with_bias_second_layer_loop1_1\"",
+        "set_directive_unroll -factor 32 \"matrix_vector_product_with_bias_second_layer/matrix_vector_product_with_bias_second_layer_loop1_1\""
+      ],
+      "function": "matrix_vector_product_with_bias_second_layer",
+      "label": "matrix_vector_product_with_bias_second_layer_loop1_1",
+      "directive_type": "unroll"
+    },
+    "pipeline matrix_vector_product_with_bias_output_layer_loop1": {
+      "possible_directives": [
+        "set_directive_pipeline -off \"matrix_vector_product_with_bias_output_layer/matrix_vector_product_with_bias_output_layer_loop1\"",
+        "set_directive_pipeline \"matrix_vector_product_with_bias_output_layer/matrix_vector_product_with_bias_output_layer_loop1\""
+      ],
+      "function": "matrix_vector_product_with_bias_output_layer",
+      "label": "matrix_vector_product_with_bias_output_layer_loop1",
+      "directive_type": "pipeline"
+    },
+    "pipeline matrix_vector_product_with_bias_output_layer_loop1_1": {
+      "possible_directives": [
+        "set_directive_pipeline -off \"matrix_vector_product_with_bias_output_layer/matrix_vector_product_with_bias_output_layer_loop1_1\"",
+        "set_directive_pipeline \"matrix_vector_product_with_bias_output_layer/matrix_vector_product_with_bias_output_layer_loop1_1\""
+      ],
+      "function": "matrix_vector_product_with_bias_output_layer",
+      "label": "matrix_vector_product_with_bias_output_layer_loop1_1",
+      "directive_type": "pipeline"
+    },
+    "pipeline get_delta_matrix_weights3_loop1": {
+      "possible_directives": [
+        "set_directive_pipeline -off \"get_delta_matrix_weights3/get_delta_matrix_weights3_loop1\"",
+        "set_directive_pipeline \"get_delta_matrix_weights3/get_delta_matrix_weights3_loop1\""
+      ],
+      "function": "get_delta_matrix_weights3",
+      "label": "get_delta_matrix_weights3_loop1",
+      "directive_type": "pipeline"
+    },
+    "pipeline get_delta_matrix_weights3_loop1_1": {
+      "possible_directives": [
+        "set_directive_pipeline -off \"get_delta_matrix_weights3/get_delta_matrix_weights3_loop1_1\"",
+        "set_directive_pipeline \"get_delta_matrix_weights3/get_delta_matrix_weights3_loop1_1\""
+      ],
+      "function": "get_delta_matrix_weights3",
+      "label": "get_delta_matrix_weights3_loop1_1",
+      "directive_type": "pipeline"
+    },
+    "unroll get_delta_matrix_weights3_loop1_1": {
+      "possible_directives": [
+        "",
+        "set_directive_unroll \"get_delta_matrix_weights3/get_delta_matrix_weights3_loop1_1\""
+      ],
+      "function": "get_delta_matrix_weights3",
+      "label": "get_delta_matrix_weights3_loop1_1",
+      "directive_type": "unroll"
+    },
+    "pipeline get_oracle_activations2_loop1": {
+      "possible_directives": [
+        "set_directive_pipeline -off \"get_oracle_activations2/get_oracle_activations2_loop1\"",
+        "set_directive_pipeline \"get_oracle_activations2/get_oracle_activations2_loop1\""
+      ],
+      "function": "get_oracle_activations2",
+      "label": "get_oracle_activations2_loop1",
+      "directive_type": "pipeline"
+    },
+    "pipeline get_oracle_activations2_loop1_1": {
+      "possible_directives": [
+        "set_directive_pipeline -off \"get_oracle_activations2/get_oracle_activations2_loop1_1\"",
+        "set_directive_pipeline \"get_oracle_activations2/get_oracle_activations2_loop1_1\""
+      ],
+      "function": "get_oracle_activations2",
+      "label": "get_oracle_activations2_loop1_1",
+      "directive_type": "pipeline"
+    },
+    "unroll get_oracle_activations2_loop1_1": {
+      "possible_directives": [
+        "",
+        "set_directive_unroll \"get_oracle_activations2/get_oracle_activations2_loop1_1\""
+      ],
+      "function": "get_oracle_activations2",
+      "label": "get_oracle_activations2_loop1_1",
+      "directive_type": "unroll"
+    },
+    "pipeline get_delta_matrix_weights2_loop1": {
+      "possible_directives": [
+        "set_directive_pipeline -off \"get_delta_matrix_weights2/get_delta_matrix_weights2_loop1\"",
+        "set_directive_pipeline \"get_delta_matrix_weights2/get_delta_matrix_weights2_loop1\""
+      ],
+      "function": "get_delta_matrix_weights2",
+      "label": "get_delta_matrix_weights2_loop1",
+      "directive_type": "pipeline"
+    },
+    "pipeline get_delta_matrix_weights2_loop1_1": {
+      "possible_directives": [
+        "set_directive_pipeline -off \"get_delta_matrix_weights2/get_delta_matrix_weights2_loop1_1\"",
+        "set_directive_pipeline \"get_delta_matrix_weights2/get_delta_matrix_weights2_loop1_1\""
+      ],
+      "function": "get_delta_matrix_weights2",
+      "label": "get_delta_matrix_weights2_loop1_1",
+      "directive_type": "pipeline"
+    },
+    "unroll get_delta_matrix_weights2_loop1_1": {
+      "possible_directives": [
+        "",
+        "set_directive_unroll \"get_delta_matrix_weights2/get_delta_matrix_weights2_loop1_1\"",
+        "set_directive_unroll -factor 2 \"get_delta_matrix_weights2/get_delta_matrix_weights2_loop1_1\"",
+        "set_directive_unroll -factor 4 \"get_delta_matrix_weights2/get_delta_matrix_weights2_loop1_1\"",
+        "set_directive_unroll -factor 8 \"get_delta_matrix_weights2/get_delta_matrix_weights2_loop1_1\"",
+        "set_directive_unroll -factor 16 \"get_delta_matrix_weights2/get_delta_matrix_weights2_loop1_1\"",
+        "set_directive_unroll -factor 32 \"get_delta_matrix_weights2/get_delta_matrix_weights2_loop1_1\""
+      ],
+      "function": "get_delta_matrix_weights2",
+      "label": "get_delta_matrix_weights2_loop1_1",
+      "directive_type": "unroll"
+    },
+    "pipeline get_oracle_activations1_loop1": {
+      "possible_directives": [
+        "set_directive_pipeline -off \"get_oracle_activations1/get_oracle_activations1_loop1\"",
+        "set_directive_pipeline \"get_oracle_activations1/get_oracle_activations1_loop1\""
+      ],
+      "function": "get_oracle_activations1",
+      "label": "get_oracle_activations1_loop1",
+      "directive_type": "pipeline"
+    },
+    "pipeline get_oracle_activations1_loop1_1": {
+      "possible_directives": [
+        "set_directive_pipeline -off \"get_oracle_activations1/get_oracle_activations1_loop1_1\"",
+        "set_directive_pipeline \"get_oracle_activations1/get_oracle_activations1_loop1_1\""
+      ],
+      "function": "get_oracle_activations1",
+      "label": "get_oracle_activations1_loop1_1",
+      "directive_type": "pipeline"
+    },
+    "unroll get_oracle_activations1_loop1_1": {
+      "possible_directives": [
+        "",
+        "set_directive_unroll \"get_oracle_activations1/get_oracle_activations1_loop1_1\"",
+        "set_directive_unroll -factor 2 \"get_oracle_activations1/get_oracle_activations1_loop1_1\"",
+        "set_directive_unroll -factor 4 \"get_oracle_activations1/get_oracle_activations1_loop1_1\"",
+        "set_directive_unroll -factor 8 \"get_oracle_activations1/get_oracle_activations1_loop1_1\"",
+        "set_directive_unroll -factor 16 \"get_oracle_activations1/get_oracle_activations1_loop1_1\"",
+        "set_directive_unroll -factor 32 \"get_oracle_activations1/get_oracle_activations1_loop1_1\""
+      ],
+      "function": "get_oracle_activations1",
+      "label": "get_oracle_activations1_loop1_1",
+      "directive_type": "unroll"
+    },
+    "pipeline get_delta_matrix_weights1_loop1": {
+      "possible_directives": [
+        "set_directive_pipeline -off \"get_delta_matrix_weights1/get_delta_matrix_weights1_loop1\"",
+        "set_directive_pipeline \"get_delta_matrix_weights1/get_delta_matrix_weights1_loop1\""
+      ],
+      "function": "get_delta_matrix_weights1",
+      "label": "get_delta_matrix_weights1_loop1",
+      "directive_type": "pipeline"
+    },
+    "unroll get_delta_matrix_weights1_loop1_1": {
+      "possible_directives": [
+        "",
+        "set_directive_unroll \"get_delta_matrix_weights1/get_delta_matrix_weights1_loop1_1\"",
+        "set_directive_unroll -factor 2 \"get_delta_matrix_weights1/get_delta_matrix_weights1_loop1_1\"",
+        "set_directive_unroll -factor 4 \"get_delta_matrix_weights1/get_delta_matrix_weights1_loop1_1\"",
+        "set_directive_unroll -factor 8 \"get_delta_matrix_weights1/get_delta_matrix_weights1_loop1_1\"",
+        "set_directive_unroll -factor 16 \"get_delta_matrix_weights1/get_delta_matrix_weights1_loop1_1\"",
+        "set_directive_unroll -factor 32 \"get_delta_matrix_weights1/get_delta_matrix_weights1_loop1_1\""
+      ],
+      "function": "get_delta_matrix_weights1",
+      "label": "get_delta_matrix_weights1_loop1_1",
+      "directive_type": "unroll"
+    },
+    "pipeline get_delta_matrix_weights1_loop1_1": {
+      "possible_directives": [
+        "set_directive_pipeline -off \"get_delta_matrix_weights1/get_delta_matrix_weights1_loop1_1\"",
+        "set_directive_pipeline \"get_delta_matrix_weights1/get_delta_matrix_weights1_loop1_1\""
+      ],
+      "function": "get_delta_matrix_weights1",
+      "label": "get_delta_matrix_weights1_loop1_1",
+      "directive_type": "pipeline"
+    },
+    "loop_flatten get_delta_matrix_weights1_loop1_1": {
+      "possible_directives": [
+        "",
+        "set_directive_loop_flatten \"get_delta_matrix_weights1/get_delta_matrix_weights1_loop1_1\""
+      ],
+      "function": "get_delta_matrix_weights1",
+      "label": "get_delta_matrix_weights1_loop1_1",
+      "directive_type": "loop_flatten"
+    },
+    "pipeline update_weights_loop1": {
+      "possible_directives": [
+        "set_directive_pipeline -off \"update_weights/update_weights_loop1\"",
+        "set_directive_pipeline \"update_weights/update_weights_loop1\""
+      ],
+      "function": "update_weights",
+      "label": "update_weights_loop1",
+      "directive_type": "pipeline"
+    },
+    "unroll update_weights_loop1_1": {
+      "possible_directives": [
+        "",
+        "set_directive_unroll \"update_weights/update_weights_loop1_1\"",
+        "set_directive_unroll -factor 2 \"update_weights/update_weights_loop1_1\"",
+        "set_directive_unroll -factor 4 \"update_weights/update_weights_loop1_1\"",
+        "set_directive_unroll -factor 8 \"update_weights/update_weights_loop1_1\"",
+        "set_directive_unroll -factor 16 \"update_weights/update_weights_loop1_1\"",
+        "set_directive_unroll -factor 32 \"update_weights/update_weights_loop1_1\""
+      ],
+      "function": "update_weights",
+      "label": "update_weights_loop1_1",
+      "directive_type": "unroll"
+    },
+    "pipeline update_weights_loop1_1": {
+      "possible_directives": [
+        "set_directive_pipeline -off \"update_weights/update_weights_loop1_1\"",
+        "set_directive_pipeline \"update_weights/update_weights_loop1_1\""
+      ],
+      "function": "update_weights",
+      "label": "update_weights_loop1_1",
+      "directive_type": "pipeline"
+    },
+    "loop_flatten update_weights_loop1_1": {
+      "possible_directives": [
+        "",
+        "set_directive_loop_flatten \"update_weights/update_weights_loop1_1\""
+      ],
+      "function": "update_weights",
+      "label": "update_weights_loop1_1",
+      "directive_type": "loop_flatten"
+    },
+    "unroll update_weights_loop2": {
+      "possible_directives": [
+        "",
+        "set_directive_unroll \"update_weights/update_weights_loop2\"",
+        "set_directive_unroll -factor 2 \"update_weights/update_weights_loop2\"",
+        "set_directive_unroll -factor 4 \"update_weights/update_weights_loop2\"",
+        "set_directive_unroll -factor 8 \"update_weights/update_weights_loop2\"",
+        "set_directive_unroll -factor 16 \"update_weights/update_weights_loop2\"",
+        "set_directive_unroll -factor 32 \"update_weights/update_weights_loop2\""
+      ],
+      "function": "update_weights",
+      "label": "update_weights_loop2",
+      "directive_type": "unroll"
+    },
+    "pipeline update_weights_loop2": {
+      "possible_directives": [
+        "set_directive_pipeline -off \"update_weights/update_weights_loop2\"",
+        "set_directive_pipeline \"update_weights/update_weights_loop2\""
+      ],
+      "function": "update_weights",
+      "label": "update_weights_loop2",
+      "directive_type": "pipeline"
+    },
+    "pipeline update_weights_loop3": {
+      "possible_directives": [
+        "set_directive_pipeline -off \"update_weights/update_weights_loop3\"",
+        "set_directive_pipeline \"update_weights/update_weights_loop3\""
+      ],
+      "function": "update_weights",
+      "label": "update_weights_loop3",
+      "directive_type": "pipeline"
+    },
+    "unroll update_weights_loop3_1": {
+      "possible_directives": [
+        "",
+        "set_directive_unroll \"update_weights/update_weights_loop3_1\"",
+        "set_directive_unroll -factor 2 \"update_weights/update_weights_loop3_1\"",
+        "set_directive_unroll -factor 4 \"update_weights/update_weights_loop3_1\"",
+        "set_directive_unroll -factor 8 \"update_weights/update_weights_loop3_1\"",
+        "set_directive_unroll -factor 16 \"update_weights/update_weights_loop3_1\"",
+        "set_directive_unroll -factor 32 \"update_weights/update_weights_loop3_1\""
+      ],
+      "function": "update_weights",
+      "label": "update_weights_loop3_1",
+      "directive_type": "unroll"
+    },
+    "pipeline update_weights_loop3_1": {
+      "possible_directives": [
+        "set_directive_pipeline -off \"update_weights/update_weights_loop3_1\"",
+        "set_directive_pipeline \"update_weights/update_weights_loop3_1\""
+      ],
+      "function": "update_weights",
+      "label": "update_weights_loop3_1",
+      "directive_type": "pipeline"
+    },
+    "loop_flatten update_weights_loop3_1": {
+      "possible_directives": [
+        "",
+        "set_directive_loop_flatten \"update_weights/update_weights_loop3_1\""
+      ],
+      "function": "update_weights",
+      "label": "update_weights_loop3_1",
+      "directive_type": "loop_flatten"
+    },
+    "unroll update_weights_loop4": {
+      "possible_directives": [
+        "",
+        "set_directive_unroll \"update_weights/update_weights_loop4\"",
+        "set_directive_unroll -factor 2 \"update_weights/update_weights_loop4\"",
+        "set_directive_unroll -factor 4 \"update_weights/update_weights_loop4\"",
+        "set_directive_unroll -factor 8 \"update_weights/update_weights_loop4\"",
+        "set_directive_unroll -factor 16 \"update_weights/update_weights_loop4\"",
+        "set_directive_unroll -factor 32 \"update_weights/update_weights_loop4\""
+      ],
+      "function": "update_weights",
+      "label": "update_weights_loop4",
+      "directive_type": "unroll"
+    },
+    "pipeline update_weights_loop4": {
+      "possible_directives": [
+        "set_directive_pipeline -off \"update_weights/update_weights_loop4\"",
+        "set_directive_pipeline \"update_weights/update_weights_loop4\""
+      ],
+      "function": "update_weights",
+      "label": "update_weights_loop4",
+      "directive_type": "pipeline"
+    },
+    "pipeline update_weights_loop5": {
+      "possible_directives": [
+        "set_directive_pipeline -off \"update_weights/update_weights_loop5\"",
+        "set_directive_pipeline \"update_weights/update_weights_loop5\""
+      ],
+      "function": "update_weights",
+      "label": "update_weights_loop5",
+      "directive_type": "pipeline"
+    },
+    "unroll update_weights_loop5_1": {
+      "possible_directives": [
+        "",
+        "set_directive_unroll \"update_weights/update_weights_loop5_1\"",
+        "set_directive_unroll -factor 2 \"update_weights/update_weights_loop5_1\"",
+        "set_directive_unroll -factor 4 \"update_weights/update_weights_loop5_1\"",
+        "set_directive_unroll -factor 8 \"update_weights/update_weights_loop5_1\"",
+        "set_directive_unroll -factor 16 \"update_weights/update_weights_loop5_1\"",
+        "set_directive_unroll -factor 32 \"update_weights/update_weights_loop5_1\""
+      ],
+      "function": "update_weights",
+      "label": "update_weights_loop5_1",
+      "directive_type": "unroll"
+    },
+    "pipeline update_weights_loop5_1": {
+      "possible_directives": [
+        "set_directive_pipeline -off \"update_weights/update_weights_loop5_1\"",
+        "set_directive_pipeline \"update_weights/update_weights_loop5_1\""
+      ],
+      "function": "update_weights",
+      "label": "update_weights_loop5_1",
+      "directive_type": "pipeline"
+    },
+    "loop_flatten update_weights_loop5_1": {
+      "possible_directives": [
+        "",
+        "set_directive_loop_flatten \"update_weights/update_weights_loop5_1\""
+      ],
+      "function": "update_weights",
+      "label": "update_weights_loop5_1",
+      "directive_type": "loop_flatten"
+    },
+    "unroll update_weights_loop6": {
+      "possible_directives": [
+        "",
+        "set_directive_unroll \"update_weights/update_weights_loop6\"",
+        "set_directive_unroll -factor 2 \"update_weights/update_weights_loop6\"",
+        "set_directive_unroll -factor 4 \"update_weights/update_weights_loop6\"",
+        "set_directive_unroll -factor 8 \"update_weights/update_weights_loop6\"",
+        "set_directive_unroll -factor 16 \"update_weights/update_weights_loop6\"",
+        "set_directive_unroll -factor 32 \"update_weights/update_weights_loop6\""
+      ],
+      "function": "update_weights",
+      "label": "update_weights_loop6",
+      "directive_type": "unroll"
+    },
+    "pipeline update_weights_loop6": {
+      "possible_directives": [
+        "set_directive_pipeline -off \"update_weights/update_weights_loop6\"",
+        "set_directive_pipeline \"update_weights/update_weights_loop6\""
+      ],
+      "function": "update_weights",
+      "label": "update_weights_loop6",
+      "directive_type": "pipeline"
+    },
+    "pipeline update_weights_loop7": {
+      "possible_directives": [
+        "set_directive_pipeline -off \"update_weights/update_weights_loop7\"",
+        "set_directive_pipeline \"update_weights/update_weights_loop7\""
+      ],
+      "function": "update_weights",
+      "label": "update_weights_loop7",
+      "directive_type": "pipeline"
+    },
+    "unroll update_weights_loop7_1": {
+      "possible_directives": [
+        "",
+        "set_directive_unroll \"update_weights/update_weights_loop7_1\"",
+        "set_directive_unroll -factor 2 \"update_weights/update_weights_loop7_1\"",
+        "set_directive_unroll -factor 4 \"update_weights/update_weights_loop7_1\"",
+        "set_directive_unroll -factor 8 \"update_weights/update_weights_loop7_1\"",
+        "set_directive_unroll -factor 16 \"update_weights/update_weights_loop7_1\"",
+        "set_directive_unroll -factor 32 \"update_weights/update_weights_loop7_1\""
+      ],
+      "function": "update_weights",
+      "label": "update_weights_loop7_1",
+      "directive_type": "unroll"
+    },
+    "pipeline update_weights_loop7_1": {
+      "possible_directives": [
+        "set_directive_pipeline -off \"update_weights/update_weights_loop7_1\"",
+        "set_directive_pipeline \"update_weights/update_weights_loop7_1\""
+      ],
+      "function": "update_weights",
+      "label": "update_weights_loop7_1",
+      "directive_type": "pipeline"
+    },
+    "loop_flatten update_weights_loop7_1": {
+      "possible_directives": [
+        "",
+        "set_directive_loop_flatten \"update_weights/update_weights_loop7_1\""
+      ],
+      "function": "update_weights",
+      "label": "update_weights_loop7_1",
+      "directive_type": "loop_flatten"
+    },
+    "unroll update_weights_loop8": {
+      "possible_directives": [
+        "",
+        "set_directive_unroll \"update_weights/update_weights_loop8\"",
+        "set_directive_unroll -factor 2 \"update_weights/update_weights_loop8\"",
+        "set_directive_unroll -factor 4 \"update_weights/update_weights_loop8\"",
+        "set_directive_unroll -factor 8 \"update_weights/update_weights_loop8\"",
+        "set_directive_unroll -factor 16 \"update_weights/update_weights_loop8\"",
+        "set_directive_unroll -factor 32 \"update_weights/update_weights_loop8\""
+      ],
+      "function": "update_weights",
+      "label": "update_weights_loop8",
+      "directive_type": "unroll"
+    },
+    "pipeline update_weights_loop8": {
+      "possible_directives": [
+        "set_directive_pipeline -off \"update_weights/update_weights_loop8\"",
+        "set_directive_pipeline \"update_weights/update_weights_loop8\""
+      ],
+      "function": "update_weights",
+      "label": "update_weights_loop8",
+      "directive_type": "pipeline"
+    },
+    "pipeline update_weights_loop9": {
+      "possible_directives": [
+        "set_directive_pipeline -off \"update_weights/update_weights_loop9\"",
+        "set_directive_pipeline \"update_weights/update_weights_loop9\""
+      ],
+      "function": "update_weights",
+      "label": "update_weights_loop9",
+      "directive_type": "pipeline"
+    },
+    "pipeline update_weights_loop9_1": {
+      "possible_directives": [
+        "set_directive_pipeline -off \"update_weights/update_weights_loop9_1\"",
+        "set_directive_pipeline \"update_weights/update_weights_loop9_1\""
+      ],
+      "function": "update_weights",
+      "label": "update_weights_loop9_1",
+      "directive_type": "pipeline"
+    },
+    "unroll update_weights_loop9_1": {
+      "possible_directives": [
+        "",
+        "set_directive_unroll \"update_weights/update_weights_loop9_1\""
+      ],
+      "function": "update_weights",
+      "label": "update_weights_loop9_1",
+      "directive_type": "unroll"
+    },
+    "loop_flatten update_weights_loop9_1": {
+      "possible_directives": [
+        "",
+        "set_directive_loop_flatten \"update_weights/update_weights_loop9_1\""
+      ],
+      "function": "update_weights",
+      "label": "update_weights_loop9_1",
+      "directive_type": "loop_flatten"
+    },
+    "pipeline update_weights_loop10": {
+      "possible_directives": [
+        "set_directive_pipeline -off \"update_weights/update_weights_loop10\"",
+        "set_directive_pipeline \"update_weights/update_weights_loop10\""
+      ],
+      "function": "update_weights",
+      "label": "update_weights_loop10",
+      "directive_type": "pipeline"
+    },
+    "pipeline update_weights_loop11": {
+      "possible_directives": [
+        "set_directive_pipeline -off \"update_weights/update_weights_loop11\"",
+        "set_directive_pipeline \"update_weights/update_weights_loop11\""
+      ],
+      "function": "update_weights",
+      "label": "update_weights_loop11",
+      "directive_type": "pipeline"
+    },
+    "pipeline update_weights_loop11_1": {
+      "possible_directives": [
+        "set_directive_pipeline -off \"update_weights/update_weights_loop11_1\"",
+        "set_directive_pipeline \"update_weights/update_weights_loop11_1\""
+      ],
+      "function": "update_weights",
+      "label": "update_weights_loop11_1",
+      "directive_type": "pipeline"
+    },
+    "unroll update_weights_loop11_1": {
+      "possible_directives": [
+        "",
+        "set_directive_unroll \"update_weights/update_weights_loop11_1\""
+      ],
+      "function": "update_weights",
+      "label": "update_weights_loop11_1",
+      "directive_type": "unroll"
+    },
+    "loop_flatten update_weights_loop11_1": {
+      "possible_directives": [
+        "",
+        "set_directive_loop_flatten \"update_weights/update_weights_loop11_1\""
+      ],
+      "function": "update_weights",
+      "label": "update_weights_loop11_1",
+      "directive_type": "loop_flatten"
+    },
+    "pipeline update_weights_loop12": {
+      "possible_directives": [
+        "set_directive_pipeline -off \"update_weights/update_weights_loop12\"",
+        "set_directive_pipeline \"update_weights/update_weights_loop12\""
+      ],
+      "function": "update_weights",
+      "label": "update_weights_loop12",
+      "directive_type": "pipeline"
+    },
+    "array_partition weights1 backprop": {
+      "possible_directives": [
+        "",
+        "set_directive_array_partition \"backprop\" weights1",
+        "set_directive_array_partition -type block -factor 2 \"backprop\" weights1",
+        "set_directive_array_partition -type cyclic -factor 2 \"backprop\" weights1",
+        "set_directive_array_partition -type block -factor 4 \"backprop\" weights1",
+        "set_directive_array_partition -type cyclic -factor 4 \"backprop\" weights1",
+        "set_directive_array_partition -type block -factor 8 \"backprop\" weights1",
+        "set_directive_array_partition -type cyclic -factor 8 \"backprop\" weights1",
+        "set_directive_array_partition -type block -factor 16 \"backprop\" weights1",
+        "set_directive_array_partition -type cyclic -factor 16 \"backprop\" weights1",
+        "set_directive_array_partition -type block -factor 32 \"backprop\" weights1",
+        "set_directive_array_partition -type cyclic -factor 32 \"backprop\" weights1",
+        "set_directive_array_partition -type block -factor 64 \"backprop\" weights1",
+        "set_directive_array_partition -type cyclic -factor 64 \"backprop\" weights1"
+      ],
+      "function": "backprop",
+      "label": "",
+      "variable": "weights1",
+      "directive_type": "array_partition"
+    },
+    "array_partition weights2 backprop": {
+      "possible_directives": [
+        "",
+        "set_directive_array_partition \"backprop\" weights2",
+        "set_directive_array_partition -type block -factor 2 \"backprop\" weights2",
+        "set_directive_array_partition -type cyclic -factor 2 \"backprop\" weights2",
+        "set_directive_array_partition -type block -factor 4 \"backprop\" weights2",
+        "set_directive_array_partition -type cyclic -factor 4 \"backprop\" weights2",
+        "set_directive_array_partition -type block -factor 8 \"backprop\" weights2",
+        "set_directive_array_partition -type cyclic -factor 8 \"backprop\" weights2",
+        "set_directive_array_partition -type block -factor 16 \"backprop\" weights2",
+        "set_directive_array_partition -type cyclic -factor 16 \"backprop\" weights2",
+        "set_directive_array_partition -type block -factor 32 \"backprop\" weights2",
+        "set_directive_array_partition -type cyclic -factor 32 \"backprop\" weights2",
+        "set_directive_array_partition -type block -factor 64 \"backprop\" weights2",
+        "set_directive_array_partition -type cyclic -factor 64 \"backprop\" weights2"
+      ],
+      "function": "backprop",
+      "label": "",
+      "variable": "weights2",
+      "directive_type": "array_partition"
+    },
+    "array_partition weights3 backprop": {
+      "possible_directives": [
+        "",
+        "set_directive_array_partition \"backprop\" weights3",
+        "set_directive_array_partition -type block -factor 2 \"backprop\" weights3",
+        "set_directive_array_partition -type cyclic -factor 2 \"backprop\" weights3",
+        "set_directive_array_partition -type block -factor 4 \"backprop\" weights3",
+        "set_directive_array_partition -type cyclic -factor 4 \"backprop\" weights3",
+        "set_directive_array_partition -type block -factor 8 \"backprop\" weights3",
+        "set_directive_array_partition -type cyclic -factor 8 \"backprop\" weights3",
+        "set_directive_array_partition -type block -factor 16 \"backprop\" weights3",
+        "set_directive_array_partition -type cyclic -factor 16 \"backprop\" weights3",
+        "set_directive_array_partition -type block -factor 32 \"backprop\" weights3",
+        "set_directive_array_partition -type cyclic -factor 32 \"backprop\" weights3",
+        "set_directive_array_partition -type block -factor 64 \"backprop\" weights3",
+        "set_directive_array_partition -type cyclic -factor 64 \"backprop\" weights3"
+      ],
+      "function": "backprop",
+      "label": "",
+      "variable": "weights3",
+      "directive_type": "array_partition"
+    },
+    "array_partition biases1 backprop": {
+      "possible_directives": [
+        "",
+        "set_directive_array_partition \"backprop\" biases1",
+        "set_directive_array_partition -type block -factor 2 \"backprop\" biases1",
+        "set_directive_array_partition -type cyclic -factor 2 \"backprop\" biases1",
+        "set_directive_array_partition -type block -factor 4 \"backprop\" biases1",
+        "set_directive_array_partition -type cyclic -factor 4 \"backprop\" biases1",
+        "set_directive_array_partition -type block -factor 8 \"backprop\" biases1",
+        "set_directive_array_partition -type cyclic -factor 8 \"backprop\" biases1"
+      ],
+      "function": "backprop",
+      "label": "",
+      "variable": "biases1",
+      "directive_type": "array_partition"
+    },
+    "array_partition biases2 backprop": {
+      "possible_directives": [
+        "",
+        "set_directive_array_partition \"backprop\" biases2",
+        "set_directive_array_partition -type block -factor 2 \"backprop\" biases2",
+        "set_directive_array_partition -type cyclic -factor 2 \"backprop\" biases2",
+        "set_directive_array_partition -type block -factor 4 \"backprop\" biases2",
+        "set_directive_array_partition -type cyclic -factor 4 \"backprop\" biases2",
+        "set_directive_array_partition -type block -factor 8 \"backprop\" biases2",
+        "set_directive_array_partition -type cyclic -factor 8 \"backprop\" biases2"
+      ],
+      "function": "backprop",
+      "label": "",
+      "variable": "biases2",
+      "directive_type": "array_partition"
+    },
+    "array_partition biases3 backprop": {
+      "possible_directives": [
+        "",
+        "set_directive_array_partition \"backprop\" biases3"
+      ],
+      "function": "backprop",
+      "label": "",
+      "variable": "biases3",
+      "directive_type": "array_partition"
+    },
+    "array_partition training_data backprop": {
+      "possible_directives": [
+        "",
+        "set_directive_array_partition -type block -factor 13 \"backprop\" training_data",
+        "set_directive_array_partition -type cyclic -factor 13 \"backprop\" training_data",
+        "set_directive_array_partition -type block -factor 163 \"backprop\" training_data",
+        "set_directive_array_partition -type cyclic -factor 163 \"backprop\" training_data"
+      ],
+      "function": "backprop",
+      "label": "",
+      "variable": "training_data",
+      "directive_type": "array_partition"
+    },
+    "array_partition training_targets backprop": {
+      "possible_directives": [
+        "",
+        "set_directive_array_partition -type block -factor 3 \"backprop\" training_targets",
+        "set_directive_array_partition -type cyclic -factor 3 \"backprop\" training_targets",
+        "set_directive_array_partition -type block -factor 163 \"backprop\" training_targets",
+        "set_directive_array_partition -type cyclic -factor 163 \"backprop\" training_targets"
+      ],
+      "function": "backprop",
+      "label": "",
+      "variable": "training_targets",
+      "directive_type": "array_partition"
+    },
+    "array_partition delta_weights1 backprop": {
+      "possible_directives": [
+        "",
+        "set_directive_array_partition \"backprop\" delta_weights1",
+        "set_directive_array_partition -type block -factor 2 \"backprop\" delta_weights1",
+        "set_directive_array_partition -type cyclic -factor 2 \"backprop\" delta_weights1",
+        "set_directive_array_partition -type block -factor 4 \"backprop\" delta_weights1",
+        "set_directive_array_partition -type cyclic -factor 4 \"backprop\" delta_weights1",
+        "set_directive_array_partition -type block -factor 8 \"backprop\" delta_weights1",
+        "set_directive_array_partition -type cyclic -factor 8 \"backprop\" delta_weights1",
+        "set_directive_array_partition -type block -factor 16 \"backprop\" delta_weights1",
+        "set_directive_array_partition -type cyclic -factor 16 \"backprop\" delta_weights1",
+        "set_directive_array_partition -type block -factor 32 \"backprop\" delta_weights1",
+        "set_directive_array_partition -type cyclic -factor 32 \"backprop\" delta_weights1",
+        "set_directive_array_partition -type block -factor 64 \"backprop\" delta_weights1",
+        "set_directive_array_partition -type cyclic -factor 64 \"backprop\" delta_weights1"
+      ],
+      "function": "backprop",
+      "label": "",
+      "variable": "delta_weights1",
+      "directive_type": "array_partition"
+    },
+    "array_partition delta_weights2 backprop": {
+      "possible_directives": [
+        "",
+        "set_directive_array_partition -type block -factor 2 \"backprop\" delta_weights2",
+        "set_directive_array_partition -type cyclic -factor 2 \"backprop\" delta_weights2",
+        "set_directive_array_partition -type block -factor 4 \"backprop\" delta_weights2",
+        "set_directive_array_partition -type cyclic -factor 4 \"backprop\" delta_weights2",
+        "set_directive_array_partition -type block -factor 8 \"backprop\" delta_weights2",
+        "set_directive_array_partition -type cyclic -factor 8 \"backprop\" delta_weights2",
+        "set_directive_array_partition -type block -factor 16 \"backprop\" delta_weights2",
+        "set_directive_array_partition -type cyclic -factor 16 \"backprop\" delta_weights2",
+        "set_directive_array_partition -type block -factor 32 \"backprop\" delta_weights2",
+        "set_directive_array_partition -type cyclic -factor 32 \"backprop\" delta_weights2",
+        "set_directive_array_partition -type block -factor 64 \"backprop\" delta_weights2",
+        "set_directive_array_partition -type cyclic -factor 64 \"backprop\" delta_weights2"
+      ],
+      "function": "backprop",
+      "label": "",
+      "variable": "delta_weights2",
+      "directive_type": "array_partition"
+    },
+    "array_partition d_weights3 update_weights": {
+      "possible_directives": [
+        "",
+        "set_directive_array_partition \"update_weights\" d_weights3",
+        "set_directive_array_partition -type block -factor 2 \"update_weights\" d_weights3",
+        "set_directive_array_partition -type cyclic -factor 2 \"update_weights\" d_weights3",
+        "set_directive_array_partition -type block -factor 4 \"update_weights\" d_weights3",
+        "set_directive_array_partition -type cyclic -factor 4 \"update_weights\" d_weights3",
+        "set_directive_array_partition -type block -factor 8 \"update_weights\" d_weights3",
+        "set_directive_array_partition -type cyclic -factor 8 \"update_weights\" d_weights3",
+        "set_directive_array_partition -type block -factor 16 \"update_weights\" d_weights3",
+        "set_directive_array_partition -type cyclic -factor 16 \"update_weights\" d_weights3",
+        "set_directive_array_partition -type block -factor 32 \"update_weights\" d_weights3",
+        "set_directive_array_partition -type cyclic -factor 32 \"update_weights\" d_weights3",
+        "set_directive_array_partition -type block -factor 64 \"update_weights\" d_weights3",
+        "set_directive_array_partition -type cyclic -factor 64 \"update_weights\" d_weights3"
+      ],
+      "function": "update_weights",
+      "label": "",
+      "variable": "d_weights3",
+      "directive_type": "array_partition"
+    },
+    "pipeline backprop_loop1": {
+      "possible_directives": [
+        "set_directive_pipeline -off \"backprop/backprop_loop1\"",
+        "set_directive_pipeline \"backprop/backprop_loop1\""
+      ],
+      "function": "backprop",
+      "label": "backprop_loop1",
+      "directive_type": "pipeline"
+    }
+  },
+  "possible_periods" : [3,5,8,10,15],
+
+  "nested_loops": [
+    {
+      "function": "matrix_vector_product_with_bias_input_layer",
+      "label": "matrix_vector_product_with_bias_input_layer_loop1",
+      "nest": {
+        "function": "matrix_vector_product_with_bias_input_layer",
+        "label": "matrix_vector_product_with_bias_input_layer_loop1_1",
+        "nest": {}
+      }
+    },
+    {
+        "function":"matrix_vector_product_with_bias_second_layer",
+        "label":"matrix_vector_product_with_bias_second_layer_loop1",
+        "nest": {
+            "function":"matrix_vector_product_with_bias_second_layer",
+            "label":"matrix_vector_product_with_bias_second_layer_loop1_1",
+            "nest": {}
+        }
+    },
+    {
+        "function":"matrix_vector_product_with_bias_output_layer",
+        "label":"matrix_vector_product_with_bias_output_layer_loop1",
+        "nest": {
+            "function":"matrix_vector_product_with_bias_output_layer",
+            "label":"matrix_vector_product_with_bias_output_layer_loop1_1",
+            "nest": {}
+        }
+    },
+    {
+        "function":"get_delta_matrix_weights3",
+        "label":"get_delta_matrix_weights3_loop1",
+        "nest": {
+            "function":"get_delta_matrix_weights3",
+            "label":"get_delta_matrix_weights3_loop1_1",
+            "nest": {}
+        }
+    },
+    {
+      "function":"get_oracle_activations2",
+      "label":"get_oracle_activations2_loop1",
+      "nest": {
+          "function":"get_oracle_activations2",
+          "label":"get_oracle_activations2_loop1_1",
+          "nest": {}
+      }
+    },
+    {
+      "function":"get_delta_matrix_weights2",
+      "label":"get_delta_matrix_weights2_loop1",
+      "nest": {
+          "function":"get_delta_matrix_weights2",
+          "label":"get_delta_matrix_weights2_loop1_1",
+          "nest": {}
+      }
+    },
+    {
+      "function":"get_oracle_activations1",
+      "label":"get_oracle_activations1_loop1",
+      "nest": {
+          "function":"get_oracle_activations1",
+          "label":"get_oracle_activations1_loop1_1",
+          "nest": {}
+      }
+    },
+    {
+      "function":"get_delta_matrix_weights1",
+      "label":"get_delta_matrix_weights1_loop1",
+      "nest": {
+          "function":"get_delta_matrix_weights1",
+          "label":"get_delta_matrix_weights1_loop1_1",
+          "nest": {}
+      }
+    },
+    {
+      "function":"update_weights",
+      "label":"update_weights_loop1",
+      "nest": {
+          "function":"update_weights",
+          "label":"update_weights_loop1_1",
+          "nest": {}
+      }
+    },
+    {
+      "function":"update_weights",
+      "label":"update_weights_loop3",
+      "nest": {
+          "function":"update_weights",
+          "label":"update_weights_loop3_1",
+          "nest": {}
+      }
+    },
+    {
+      "function":"update_weights",
+      "label":"update_weights_loop5",
+      "nest": {
+          "function":"update_weights",
+          "label":"update_weights_loop5_1",
+          "nest": {}
+      }
+    },
+    {
+        "function":"update_weights",
+        "label":"update_weights_loop7",
+        "nest": {
+            "function":"update_weights",
+            "label":"update_weights_loop7_1",
+            "nest": {}
+        }
+    },
+    {
+        "function":"update_weights",
+        "label":"update_weights_loop9",
+        "nest": {
+            "function":"update_weights",
+            "label":"update_weights_loop9_1",
+            "nest": {}
+        }
+    },
+    {
+        "function":"update_weights",
+        "label":"update_weights_loop11",
+        "nest": {
+            "function":"update_weights",
+            "label":"update_weights_loop11_1",
+            "nest": {}
+        }
+    },
+    {
+      "function":"update_weights",
+      "label":"update_weights_loop12",
+      "nest": {}
+    },
+    {
+      "function":"backprop",
+      "label":"backprop_loop1",
+      "nest": {
+          "function":"backprop",
+          "label":"backprop_loop1_1",
+          "nest": {}
+      }
+    }
+  ]
+}

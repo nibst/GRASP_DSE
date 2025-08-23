@@ -1,14 +1,13 @@
 from heuristics.heuristic import Heuristic
 from pathlib import Path
 from domain.solution import Solution
-from utils.Script_tcl import generateScript
 import copy
 import itertools
 import time
 class ExhaustiveSearch(Heuristic):
     _SECONDS = 2
-    def __init__(self,filesDict):
-        super().__init__(filesDict)
+    def __init__(self,files_dict):
+        super().__init__(files_dict)
 
         self.run()
         

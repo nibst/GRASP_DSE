@@ -1,5 +1,11 @@
 import copy
-from utils.graphs import Graphs
+import os
+from typing import List
+from domain.solution import Solution
+from predictor.estimators.randomforest.randomForest import RandomForestEstimator
+from utils.benchmark_manager import BenchmarkManager
+from utils.graphs import Graphs 
+from utils.heuristic_solutions import HeuristicSolutions
 from utils.paretoComparer import ParetoComparer
 import matplotlib.pyplot as plt
 from utils.plotMaker import PlotMaker
@@ -7,149 +13,147 @@ from utils.ADRS import ADRS
 import pickle
 import numpy as np
 from heuristics.heuristic import Heuristic
-method = "PERCENTAGE"
+from utils.plot_manager import PlotManager
 
+benchmarks = ["SHA", "AES", "ADPCM","GSM","BACKPROP","STENCIL3D", "GEMM", "KNN"]
 
 def main():
-    for i in range(10,0,-1):
-        print(i)
-    benchmarks = ["SHA","GSM","AES","SPAM","MOTION","ADPCM","DIGIT"]
-    heuristic = 'GRASPX'
-    for benchmark in benchmarks:
-        
-        saveInterval = 720
-
-        genetic = Graphs.pathToListsOfSolutions(f"../IC_Things/schwarzenegger/savesWithModel/genetic_{benchmark}_2h/")
-        grasp  = Graphs.pathToListsOfSolutions(f"../IC_Things/schwarzenegger/savesWithModel/{heuristic}_{benchmark}_2h/")
-        ACO = Graphs.pathToListsOfSolutions(f"../IC_Things/schwarzenegger/savesWithModel/ACO_{benchmark}_2h/")
-        allSolutions = copy.deepcopy(genetic[9])
-        allSolutions.extend(grasp[9])
-        allSolutions.extend(ACO[9])
-
-        if method == "PERCENTAGE":
-            myplt = PlotMaker(benchmark,'minutes',"Pareto Dominance")
-            myplt.ylim(0, 1.1)
-            allSolutions = [allSolutions]*10
-            comparer = ParetoComparer('resources','latency')
-            Graphs.plotParetoPercentage(myplt,comparer,grasp,allSolutions,"GRASP",saveInterval,linewidth=4)
-            Graphs.plotParetoPercentage(myplt,comparer,ACO,allSolutions,"ACO",saveInterval,linewidth=2.5)
-            Graphs.plotParetoPercentage(myplt,comparer,genetic,allSolutions,"GA",saveInterval,linewidth=1.25)
 
 
-            lns = myplt.lns[0]
-            for i in range(len(myplt.lns) -1):
-                lns+=myplt.lns[i+1]
-            
-            labs = [l.get_label() for l in lns]
-            myplt.ax.legend(lns, labs, loc=0)
-            
-        if method == "ADRS":
-            myplt = PlotMaker(benchmark,'minutes',"ADRS")
+    base_path = "../last_dse"
+    output_dir = "./plots_png"
+
+    # Initialize managers
+    benchmark_manager = BenchmarkManager(base_path)
+    plot_manager = PlotManager(output_dir)
+
+    # Load heuristic solutions
+    solutions_of_all_heuristics = []
+    for heuristic_name in ["GRASP","GRASP_FREQUENCY_start","GRASP_FREQUENCY_mid", "GRASP_FREQUENCY_end"]:
+        timestamps_per_benchmark = {
+            benchmark: benchmark_manager.load_solutions_timestamps(heuristic_name, benchmark)
+            for benchmark in benchmarks
+        }
+        solutions_of_all_heuristics.append(HeuristicSolutions(heuristic_name, timestamps_per_benchmark))
+
+    for heuristic_solutions in solutions_of_all_heuristics:
+        # Clear the output file before writing new data
+        with open(f"{heuristic_solutions.heuristic_name}_data.txt", "w") as output_file:
+            pass
+        for benchmark in heuristic_solutions.solutions_timestamps_per_benchmark:
+            # save the solutions of each heuristic to a file
+            heuristic_name = heuristic_solutions.heuristic_name
+            benchmark_timestamps = heuristic_solutions.solutions_timestamps_per_benchmark[benchmark]
+            filtered_solutions = [sol for sol in benchmark_timestamps[-1] if sol.period != 8]
+            with open(f"{heuristic_name}_data.txt", "a") as output_file:
+                all_solutions_per_timestamp = plot_manager.get_all_solutions_from_benchmark(solutions_of_all_heuristics, benchmark,include_model=False)
+                percentage = len(filtered_solutions)/len(benchmark_timestamps[-1]) * 100
+                pareto_comparer = ParetoComparer("resources", "time_latency")
+                pareto_comparsion = pareto_comparer.compare(filtered_solutions, all_solutions_per_timestamp[-1])
+                paretos = f"Percentage of paretos that have period != 8: {pareto_comparsion*100}%"
+                proportion = f"{benchmark} {len(filtered_solutions)}/{len(benchmark_timestamps[-1])} {percentage}%\n{paretos}\n"
 
 
-            comparer = ADRS('resources','latency')
-            geneticADRS = comparer.compare(allSolutions,genetic[0])
-            GRASPADRS = comparer.compare(allSolutions,grasp[0])
-            ACOADRS = comparer.compare(allSolutions,ACO[0])
-            if ACOADRS is None:
-                ACOADRS = 0
-            if GRASPADRS is None:
-                GRASPADRS = 0
-            if geneticADRS is None:
-                geneticADRS = 0
-            worstADRS = max(geneticADRS,GRASPADRS,ACOADRS)
-            plt.ylim(0,worstADRS + worstADRS/7)
-            Graphs.plotADRS(myplt,comparer,allSolutions,grasp,"GRASP",saveInterval,linewidth=4)
-            Graphs.plotADRS(myplt,comparer,allSolutions,ACO,"ACO",saveInterval,linewidth=2.5)
-            Graphs.plotADRS(myplt,comparer,allSolutions,genetic,"GA",saveInterval,linewidth=1.25)
-            lns = myplt.lns[0]
-            for i in range(len(myplt.lns) -1):
-                lns+=myplt.lns[i+1]
-                
-            labs = [l.get_label() for l in lns]
-            myplt.ax.legend(lns, labs, loc=0)
+                output_file.write(proportion)
+                output_file.write(f"Proportion of all solutions with period != 8 for {(len(filtered_solutions)/len(benchmark_timestamps[-1]))*100}:\n")
 
-        plt.savefig(f'../IC_Things/schwarzenegger/plotsPNG/{method}/{method}_allHeuristics_{benchmark}.png')
-        myplt.showPlot()
+    # Generate plots
+    metrics = ['resources', 'time_latency']
+    plot_manager.all_heuristics_in_one_bar("ADRS", solutions_of_all_heuristics, benchmarks,10, metrics=metrics)
+    plot_manager.all_heuristics_in_one_bar("PERCENTAGE", solutions_of_all_heuristics, benchmarks,10,metrics=metrics)
+    plot_manager.plot_heuristics_comparison("PERCENTAGE", solutions_of_all_heuristics, benchmarks, 24 * 60, metrics=metrics)
+    plot_manager.plot_heuristics_comparison("ADRS", solutions_of_all_heuristics, benchmarks, 24 * 60, metrics=metrics)
 
 
-def all_heuristics_in_one_bar():
 
-    benchmarks = ["SHA","GSM","AES","SPAM","MOTION","ADPCM","DIGIT"]
-    heuristic = 'GRASPX'
-    myplt = PlotMaker("Pareto Dominance",'Heuristics',"Average")
-    avgACO = []
-    avgGRASP = []
-    avgGenetic = []
 
+
+def all_heuristics_in_one_bar(method: str, solutions_of_all_heuristics: List[HeuristicSolutions], number_of_timestamps):
+    method = method.upper()
+    myplt = PlotMaker(method, 'Heuristics', "Average")
+    averages = {}
+    means = {}
+    # initialize
+
+    heuristics = list(heuristic.heuristic_name for heuristic in solutions_of_all_heuristics)
 
     for benchmark in benchmarks:
-        genetic = Graphs.pathToListsOfSolutions(f"../IC_Things/schwarzenegger/savesWithModel/genetic_{benchmark}_2h/")
-        grasp  = Graphs.pathToListsOfSolutions(f"../IC_Things/schwarzenegger/savesWithModel/{heuristic}_{benchmark}_2h/")
-        ACO = Graphs.pathToListsOfSolutions(f"../IC_Things/schwarzenegger/savesWithModel/ACO_{benchmark}_2h/")
-        allSolutions = copy.deepcopy(genetic[9])
-        allSolutions.extend(grasp[9])
-        allSolutions.extend(ACO[9])
-        
+        # all_solutions = copy.deepcopy(solutions_of_all_heuristics[0].solutions_timestamps_per_benchmark[benchmark][number_of_timestamps-1])
+        # for i in range(1, len(solutions_of_all_heuristics)):
+        #     all_solutions.extend(solutions_of_all_heuristics[i].solutions_timestamps_per_benchmark[benchmark][number_of_timestamps-1])
+        all_solutions = get_all_solutions_from_benchmark(solutions_of_all_heuristics,benchmark)
         if method == "PERCENTAGE":
-            myplt.ylim(0, 1.1)
-            allSolutions = [allSolutions]*10
-            avgACO.append(arithmetic_mean_percentage(ACO,allSolutions))
-            avgGRASP.append(arithmetic_mean_percentage(grasp,allSolutions))
-            avgGenetic.append(arithmetic_mean_percentage(genetic,allSolutions))
-            meanACO = sum(avgACO)/len(avgACO)#geometric_mean(avgACO)
-            meanGrasp = sum(avgGRASP)/len(avgGRASP)#geometric_mean(avgGRASP)
-            meanGenetic = sum(avgGenetic)/len(avgGenetic)# geometric_mean(avgGenetic)
-
+            all_solutions = [all_solutions] * 10
+            for i in range(len(solutions_of_all_heuristics)):
+                name = solutions_of_all_heuristics[i].heuristic_name
+                if name not in averages:
+                    averages[name] = []
+                if name not in means:
+                    means[name] = 0
+                averages[name].append(arithmetic_mean_percentage(solutions_of_all_heuristics[i].solutions_timestamps_per_benchmark[benchmark], all_solutions))
+                means[name] = sum(averages[name]) / len(averages[name])
 
         if method == "ADRS":
-            #average ADRS: avg of all best ADRS through time from one heuristic
-            avgACO.append(arithmetic_mean_ADRS(allSolutions,ACO))
-            avgGRASP.append(arithmetic_mean_ADRS(allSolutions,grasp))
-            avgGenetic.append(arithmetic_mean_ADRS(allSolutions,genetic))
+            # average ADRS: avg of all best ADRS through time from one heuristic
+            for i in range(len(solutions_of_all_heuristics)):
+                heuristic_name = solutions_of_all_heuristics[i].heuristic_name
+                if heuristic_name not in averages:
+                    averages[heuristic_name] = []
+                if heuristic_name not in means:
+                    means[heuristic_name] = 0
 
-
-            meanACO = geometric_mean(avgACO)
-            meanGrasp = geometric_mean(avgGRASP)
-            meanGenetic = geometric_mean(avgGenetic)
+                averages[heuristic_name].append(arithmetic_mean_adrs(all_solutions, solutions_of_all_heuristics[i].solutions_timestamps_per_benchmark[benchmark]))
+                means[heuristic_name] = geometric_mean(averages[heuristic_name])
             
-    heuristics = ["ACO","GRASP","GA"]
-    maxValue = max(meanACO,meanGrasp,meanGenetic)
-    plt.ylim(0,maxValue + maxValue/6)
-    myplt.barPlot(heuristics,[meanACO,meanGrasp,meanGenetic],width=0.6)
-    plt.savefig(f'../IC_Things/schwarzenegger/plotsPNG/{method}/{method}_summarizedBarPlot.png')
+    # max_value = max(mean_soft_grasp, mean_grasp)
+    # plt.ylim(0, max_value + max_value / 6)
+    # myplt.barPlot(heuristics, [mean_soft_grasp, mean_grasp], width=0.6)
+    max_value = max([mean for mean in means.values()])
+    plt.ylim(0, max_value + max_value / 6)
+    myplt.barPlot(heuristics, [mean for mean in means.values()], width=0.6)
+    plt.savefig(f'./plots_png/{method}/{method}_summarizedBarPlot.png')
+
     myplt.showPlot()
-def geometric_mean(iterable:list):
+
+def geometric_mean(iterable: list):
     a = np.array(iterable)
-    lenght = len(a)
-    for i in range(lenght):
-        if a[i] == 0:
-            a = np.delete(a,i)
-    return a.prod()**(1.0/len(a))
+    length = len(a)
+    for i in range(length):
+        #add a little e value to all elements of array
+        e = 0.1
+        if a[i]:
+            a[i] += e
+    # remove None values
+    filtered_array = a[a != None]
+    return filtered_array.prod() ** (1.0 / len(filtered_array))
 
-
-def arithmetic_mean_ADRS(referenceSet,solutions):
-    comparer = ADRS('resources','latency')
-    allBestADRS = []
-    for i in range(len(solutions)):
-        allBestADRS.append(comparer.compare(referenceSet,solutions[i]))
-    filtered_items = filter(lambda item: item is not None, allBestADRS)
+def arithmetic_mean_adrs(reference_set, timestamps):
+    comparer = ADRS('resources', 'time_latency')
+    all_best_adrs = []
+    for i in range(len(timestamps)):
+        all_best_adrs.append(comparer.compare(reference_set, timestamps[i]))
+    filtered_items = filter(lambda item: item is not None, all_best_adrs)
     new_lst = list(filtered_items)
+    if new_lst == []:
+        return None
     return np.mean(new_lst)
 
-
-def arithmetic_mean_percentage(solutions1,solutions2):
-    comparer = ParetoComparer('resources','latency')
-    allBestPercentage = []
+def arithmetic_mean_percentage(solutions1, solutions2):
+    comparer = ParetoComparer('resources', 'time_latency')
+    all_best_percentage = []
     for i in range(len(solutions1)):
-        allBestPercentage.append(comparer.compare(solutions1[i],solutions2[i]))
-    filtered_items = filter(lambda item: item is not None, allBestPercentage)
+        all_best_percentage.append(comparer.compare(solutions1[i], solutions2[i]))
+    filtered_items = filter(lambda item: item is not None, all_best_percentage)
     new_lst = list(filtered_items)
     return np.mean(new_lst)
+
+def get_all_solutions_from_benchmark(solutions_of_all_heuristics,benchmark):
+    all_solutions = []
+    with open(f"./models/{benchmark}_MODEL", "rb") as f:
+        model = pickle.load(f)
+    for heuristic in solutions_of_all_heuristics:
+        all_solutions.extend(heuristic.solutions_timestamps_per_benchmark[benchmark][9])
+    #all_solutions.extend(model.processor.dataset)
+
+    return all_solutions
 main()
-all_heuristics_in_one_bar()
-
-
-
-
-

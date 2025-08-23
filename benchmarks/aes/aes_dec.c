@@ -59,83 +59,68 @@
  *   WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  *
  */
-#include "aes_dec.h" //modificacao Heitor
-#include "aes.h"  //modificacao Heitor
-#include <stdio.h>  //modificacao Heitor
 
-int
-decrypt (int statemt[32], int key[32], int type)
-{
-  int i;
-/*
-+--------------------------------------------------------------------------+
-| * Test Vector (added for CHStone)                                        |
-|     out_enc_statemt : expected output data for "decrypt"                 |
-+--------------------------------------------------------------------------+
-*/
-  const int out_dec_statemt[16] =
-    { 0x32, 0x43, 0xf6, 0xa8, 0x88, 0x5a, 0x30, 0x8d, 0x31, 0x31, 0x98, 0xa2,
-    0xe0, 0x37, 0x7, 0x34
-  };
-  KeySchedule (type, key);
+#include <stdint.h>
+#include "aes.h"
 
-  switch (type)
-    {
-    case 128128:
-      round_val = 10;
-      nb = 4;
-      break;
-    case 128192:
-    case 192192:
-      round_val = 12;
-      nb = 6;
-      break;
-    case 192128:
-      round_val = 12;
-      nb = 4;
-      break;
-    case 128256:
-    case 192256:
-      round_val = 14;
-      nb = 8;
-      break;
-    case 256128:
-      round_val = 14;
-      nb = 4;
-      break;
-    case 256192:
-      round_val = 14;
-      nb = 6;
-      break;
-    case 256256:
-      round_val = 14;
-      nb = 8;
-      break;
+int decrypt(int statemt[IN_SIZE], int key[IN_SIZE], int type) {
+    int i;
+    int nb;
+    int round_val;
+
+    // Perform key scheduling
+    KeySchedule(type, key);
+
+    // Determine round values and nb based on the encryption type
+    switch (type) {
+        case 128128:
+            round_val = 10;
+            nb = 4;
+            break;
+        case 128192:
+        case 192192:
+            round_val = 12;
+            nb = 6;
+            break;
+        case 192128:
+            round_val = 12;
+            nb = 4;
+            break;
+        case 128256:
+        case 192256:
+            round_val = 14;
+            nb = 8;
+            break;
+        case 256128:
+            round_val = 14;
+            nb = 4;
+            break;
+        case 256192:
+            round_val = 14;
+            nb = 6;
+            break;
+        case 256256:
+            round_val = 14;
+            nb = 8;
+            break;
     }
 
-  AddRoundKey (statemt, type, round_val);
+    // Initial round key addition
+    AddRoundKey(statemt, type, round_val);
 
-  InversShiftRow_ByteSub (statemt, nb);
+    // Perform inverse shift row and byte substitution
+    InversShiftRow_ByteSub(statemt, nb);
 
-  decrypt_label4: for (i = round_val - 1; i >= 1; --i)
-    {
-#pragma HLS LOOP_TRIPCOUNT min=9 max=13 avg=12
-      AddRoundKey_InversMixColumn (statemt, nb, i);
-      InversShiftRow_ByteSub (statemt, nb);
+    // Main decryption loop
+    decrypt_label4:
+    for (i = round_val-1; i >= 1; --i) {
+        #pragma HLS LOOP_TRIPCOUNT min=9 max=13 avg=12
+        AddRoundKey_InversMixColumn(statemt, nb, i);
+        InversShiftRow_ByteSub(statemt, nb);
     }
 
-  AddRoundKey (statemt, type, 0);
+    // Final round key addition
+    AddRoundKey(statemt, type, 0);
 
-  printf ("\ndecrypto message\t");
-  decrypt_label5: for (i = 0; i < ((type % 1000) / 8); ++i)
-    {
-      if (statemt[i] < 16)
-	    printf ("0");
-      printf ("%x", statemt[i]);
-    }
-
-  decrypt_label6: for (i = 0; i < 16; i++)
-    main_result += (statemt[i] != out_dec_statemt[i]);
-
-  return 0;
+    return 0;
 }

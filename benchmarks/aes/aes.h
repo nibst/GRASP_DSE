@@ -60,25 +60,37 @@
  *
  */
 
-/* ************* data type define ************************* */
-int type;
-int nb;
-int round_val;
-int key[32];
-int statemt[32];
-int word[4][120];
-int main_result;
+#ifndef AES_H
+#define AES_H
 
+/* constants for input/output sizes */
+#define IN_SIZE 32
+#define OUT_SIZE 16
+
+#define AES_POLY 0x11B // AES irreducible polynomial (283 in decimal)
+
+// Define constants for AES
+#define AES_BLOCK_SIZE 4 // Number of words in a block
+#define MAX_WORDS 60     // Maximum number of words for expanded keys (256-bit AES with 14 rounds)
 
 /* key generate */
-int KeySchedule (int, int *);
-int SubByte (int);
+int KeySchedule (int type, int key[32]);
+/* ********* ByteSub & ShiftRow ********* */
+void ByteSub_ShiftRow (int statemt[32], int nb);
+/* ********* InversShiftRow & ByteSub ********* */
+void InversShiftRow_ByteSub (int statemt[32], int nb);
+/* ******** MixColumn ********** */
+int MixColumn_AddRoundKey (int statemt[32], int nb, int n);
+/* ******** InversMixColumn ********** */
+int AddRoundKey_InversMixColumn (int statemt[32], int nb, int n);
+/* ******** AddRoundKey ********** */
+int AddRoundKey (int statemt[32], int type, int n);
 
-/* encrypto decrypto */
-void ByteSub_ShiftRow (int *, int);
-void InversShiftRow_ByteSub (int *, int);
-int MixColumn_AddRoundKey (int *, int, int);
-int AddRoundKey_InversMixColumn (int *, int, int);
-int AddRoundKey (int *, int, int);
-int encrypt (int *, int *, int);
-int decrypt (int *, int *, int);
+/* encrypt/decrypt functions */
+int encrypt(int statemt[IN_SIZE], int key[IN_SIZE], int type);
+int decrypt(int statemt[IN_SIZE], int key[IN_SIZE], int type);
+
+/* top-level function */
+int aes_main (int statemt[IN_SIZE], int key[IN_SIZE]);
+
+#endif // AES_H

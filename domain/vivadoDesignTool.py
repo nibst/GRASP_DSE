@@ -1,5 +1,5 @@
 from random import randrange
-from domain.desingTool import DesignTool
+from domain.designTool import DesignTool
 from domain.solution import Solution
 import xml.etree.ElementTree as ET
 import os.path
@@ -9,6 +9,7 @@ import subprocess
 import psutil
 import sys
 from exceptions.timeExceededException import TimeExceededException
+from utils.Script_tcl import generateScript
 class Vivado(DesignTool):
     
     
@@ -22,22 +23,9 @@ class Vivado(DesignTool):
             self._PROCESSNAME = 'vivado_hls.exe'
             self._SCRIPT_PATH = './domain/callVivado.bat'
         
-    def runSynthesisTeste(self, solution: Solution, timeLimit=None, solutionSaver = None):
-        if timeLimit is None:
-            timeLimit = float('inf')
-        if timeLimit<=0:
-            raise Exception(f"****{self._PROCESSNAME} has exceed max time usage****")
-        results = {}
-        results['FF'] = randrange(10)
-        results['DSP'] = randrange(1)
-        results['LUT'] = randrange(10)
-        results['BRAM'] = randrange(2)
-        results['resources'] = randrange(3)
-        results['latency'] = randrange(4)
-        solution.setresults(results)
-        return solution
+
     
-    def runSynthesis(self, solution: Solution, timeLimit = None, solutionSaver= None):
+    def runSynthesis(self, solution: Solution, c_files, top_func, timeLimit = None, solutionSaver= None):
         self.__killOnGoingVivadoProcessIfAny()    
         #if not especified, there is infinite time to run synthesis
         if timeLimit is None:
@@ -45,6 +33,8 @@ class Vivado(DesignTool):
         if timeLimit<=0:
             raise Exception(f"****{self._PROCESSNAME} has exceed max time usage****")
         self.__writeDirectivesIntoFile(solution.directives)
+        generateScript(c_files,top_func)
+
         print('Running Synthesis...')
         #vivado call using subprocess
         subprocess.Popen([self._SCRIPT_PATH])
@@ -52,7 +42,7 @@ class Vivado(DesignTool):
         xml='./Raise_dse/solution1/syn/report/csynth.xml'
         results = self.__getResultsFromSynthesis(xml)
         for key in results:
-            solution.setOneResult(key, results[key])
+            solution.set_one_result(key, results[key])
         return solution
 
     def __writeDirectivesIntoFile(self,directives):

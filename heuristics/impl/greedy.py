@@ -1,15 +1,14 @@
 from heuristics.heuristic import Heuristic
 from pathlib import Path
 from domain.solution import Solution
-from utils.Script_tcl import generateScript
 import copy
 
 class Greedy(Heuristic):
     
     
     
-    def __init__(self,filesDict,metricName):
-        super().__init__(filesDict)
+    def __init__(self,files_dict,metricName):
+        super().__init__(files_dict)
         self.metric = metricName
 
         #Gera soluções conforme métodos abaixo e as salva num dict em self.solutions

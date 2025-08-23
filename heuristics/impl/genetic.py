@@ -1,7 +1,6 @@
 import time
 from exceptions.timeExceededException import TimeExceededException
 from heuristics.impl.RandomSearch import RandomSearch
-from utils.Script_tcl import generateScript
 from predictor.estimators.estimatorFactory import EstimatorFactory
 from heuristics.heuristic import Heuristic
 from domain.solution import Solution
@@ -14,8 +13,8 @@ from utils.abstractSolutionsSaver import SolutionsSaver
 
 class GA(Heuristic):
 
-    def __init__(self,filesDict,estimatorFactory:EstimatorFactory,baseEstimator = None,timeLimit=43200,trainTime=3600,solutionSaver:SolutionsSaver = None,seed=None ):
-        super().__init__(filesDict)
+    def __init__(self,files_dict,estimatorFactory:EstimatorFactory,baseEstimator = None,timeLimit=43200,trainTime=3600,solutionSaver:SolutionsSaver = None,seed=None ):
+        super().__init__(files_dict)
         self._SECONDS = timeLimit
         self.TRAIN_TIME = trainTime
         self.populationSize = 60 #any number
@@ -81,7 +80,7 @@ class GA(Heuristic):
         offspring = self.crossover(parent1,parent2)
         offspring = self.mutation(offspring)    
         estimatedResults = self.estimator.estimateSynthesis(offspring)
-        offspring.setresults(estimatedResults)
+        offspring.set_results_with_results_list(estimatedResults)
         newParent1,newParent2 = self.overwriteParent(parent1,parent2,offspring)
         return (newParent1,newParent2)
 
@@ -120,7 +119,7 @@ class GA(Heuristic):
             timeTraining = remainingTime
         else:
             timeTraining = self.TRAIN_TIME
-        randomSearchHeuristic = RandomSearch(self.filesDict,timeTraining,solutionSaver=self.solutionSaver)
+        randomSearchHeuristic = RandomSearch(self.files_dict,timeTraining,solutionSaver=self.solutionSaver)
         while score < threshold and self.withinTime():
             try:    
                 train, test = train_test_split(randomSearchHeuristic.solutions, test_size=0.2, random_state=0)
@@ -158,7 +157,7 @@ class GA(Heuristic):
             #This will estimate all parents in population and pair each parent to a diferent parent
             try:
                 estimatedResults = self.estimator.estimateSynthesis(parent1)
-                parent1.setresults(estimatedResults)
+                parent1.set_results_with_results_list(estimatedResults)
             except Exception as e:
                 print(e)
             parent2 =random.choice(population)

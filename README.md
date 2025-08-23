@@ -1,15 +1,29 @@
-# raise_dse
 
-Design Space Exploration
 
 # Usage
 
  
+
 ```
-python main.py <heuristic> -c <c files of benchmark> -d <json of directives> -p <top function> -o <output file> -t <time limit for heuristic in seconds> -model <model of estimation chosen> 
+
+python main.py <heuristic> -c <c files of benchmark> -d <json of directives> -p <top function> -o <output file> -t <time limit for heuristic in seconds> -model <model of estimation chosen>
+
 ```
-`heuristic`: it's currently possible to choose between 5 heuristics. `hill`, `greedy`, `GRASP`, `genetic`and `random`
-`model of estimation`: if the model of estimation with the name `<model of estimation chosen> ` don't exists, then the application train an estimator and create a model with the name specified.
+
+`heuristic`: it's currently possible to choose between 4 heuristics, `Ant Colony`, `GRASP`, `genetic`and `randomSearch`
+
+`model of estimation`: if the model of estimation with the name `<model of estimation chosen> ` don't exists, then you should create your model with that name.
+## Using benchmarks/benchmarks.json:
+If we use this file, we can specify all fixed benchmark parameters, like files, directives file and top function. For example:
+```
+{
+"SHA": {"cFiles": ["./benchmarks/sha/sha.c",  "./benchmarks/sha/sha_driver.c"],  "dFile":  "./dse_configurations_files/sha.json",  "topFunc":"sha_stream"}
+}
+```
+Now we can call an heuristic for SHA benchmark this way:
+```
+python main.py <heuristic> -b SHA -o <output file> -t <time limit for heuristic in seconds> -model <model of estimation chosen>
+```
 ## Modifying benchmark for usage
 To apply directives to a C/C++ program we need to know where to apply these directives. That is what labels serves for. Here is an example:
 ```

@@ -1,7 +1,13 @@
 Plot/
 domain/script.tcl
+saves/
+trainers/
 time_stamps/
 Raise_dse/
+dataset/
+approx_results/
+dse/
+models/
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *__pycache__/
@@ -17,7 +23,7 @@ build/
 develop-eggs/
 dist/
 eggs/
-lib/
+#lib/
 lib64/
 parts/
 sdist/
